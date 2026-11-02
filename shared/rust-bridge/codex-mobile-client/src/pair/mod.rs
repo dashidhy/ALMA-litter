@@ -289,6 +289,7 @@ impl PairHostHandle {
 /// Start the Mac-side pair host. Binds an OS-assigned TCP port, returns
 /// the bound port + suggested TXT entries so Swift can publish a Bonjour
 /// service. The handle owns the listener and any in-flight pair session.
+#[cfg(feature = "remote-pairing")]
 pub async fn start_pair_host(
     device_name: String,
     mac_id: String,
@@ -346,6 +347,16 @@ pub async fn start_pair_host(
             ],
         },
     ))
+}
+
+#[cfg(not(feature = "remote-pairing"))]
+pub async fn start_pair_host(
+    device_name: String,
+    mac_id: String,
+    codex_port: u16,
+) -> Result<(Arc<PairHostHandle>, PairServiceInfo), PairError> {
+    let _ = (device_name, mac_id, codex_port);
+    Err(PairError::Transport(crate::network_scope::PAIRING_UNSUPPORTED.into()))
 }
 
 async fn handle_incoming(
@@ -531,6 +542,7 @@ impl PairClientHandle {
 /// and return a handle the platform polls for events. The handshake itself
 /// happens asynchronously on the spawned reader task — Swift drives state
 /// purely via `poll_event`.
+#[cfg(feature = "remote-pairing")]
 pub async fn pair_from_iphone(
     host: String,
     port: u16,
@@ -649,6 +661,17 @@ pub async fn pair_from_iphone(
         reader_task: Mutex::new(Some(reader_task)),
         writer_task: Mutex::new(Some(writer_task)),
     }))
+}
+
+#[cfg(not(feature = "remote-pairing"))]
+pub async fn pair_from_iphone(
+    host: String,
+    port: u16,
+    device_name: String,
+    ni_discovery_token_b64: String,
+) -> Result<Arc<PairClientHandle>, PairError> {
+    let _ = (host, port, device_name, ni_discovery_token_b64);
+    Err(PairError::Transport(crate::network_scope::PAIRING_UNSUPPORTED.into()))
 }
 
 #[cfg(test)]

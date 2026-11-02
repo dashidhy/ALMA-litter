@@ -1,0 +1,58 @@
+{
+  "phoneRun": true,
+  "phase": "native account inspection before model inference",
+  "exception": {
+    "codes": "0x0000000000000002, 0x000000016d473090",
+    "message": "Could not determine thread index for stack guard region",
+    "rawCodes": [
+      2,
+      6128349328
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGBUS",
+    "subtype": "KERN_PROTECTION_FAILURE at 0x000000016d473090"
+  },
+  "threadQueue": "com.apple.root.user-initiated-qos.cooperative",
+  "firstFrames": [
+    {
+      "symbol": "_RNCNvMNtCsk0NKRGOGsdx_16codex_app_server14config_managerNtB4_13ConfigManager18load_latest_config0Cs9QforRjVOsK_19codex_mobile_client",
+      "symbolLocation": 36
+    },
+    {
+      "symbol": "_RNCNvMNtCsk0NKRGOGsdx_16codex_app_server14config_managerNtB4_13ConfigManager19load_startup_config0Cs9QforRjVOsK_19codex_mobile_client",
+      "symbolLocation": 340
+    },
+    {
+      "symbol": "_RNCNvNtNtCsk0NKRGOGsdx_16codex_app_server10in_process9bootstrap9configure0Cs9QforRjVOsK_19codex_mobile_client",
+      "symbolLocation": 1180
+    },
+    {
+      "symbol": "_RNCNvNtCsk0NKRGOGsdx_16codex_app_server10in_process33start_uninitialized_with_provider0Cs9QforRjVOsK_19codex_mobile_client",
+      "symbolLocation": 260
+    },
+    {
+      "symbol": "_RNCNvMs_NtCs9QforRjVOsK_19codex_mobile_client15mobile_tah_hostNtB6_13MobileTahHost5start0B8_",
+      "symbolLocation": 3340
+    },
+    {
+      "symbol": "_RNCNvMsn_NtCs9QforRjVOsK_19codex_mobile_client15mobile_tah_hostNtB7_13MobileTahHost4call0B9_",
+      "symbolLocation": 6312
+    },
+    {
+      "symbol": "_RNvXs0_Cshpm2K3NEjg_12async_compatINtB5_6CompatNCNvMsn_NtCs9QforRjVOsK_19codex_mobile_client15mobile_tah_hostNtBR_13MobileTahHost4call0ENtNtNtCs3HtPxIXGqTU_4core6future6future6Future4pollBT_",
+      "symbolLocation": 152
+    },
+    {
+      "symbol": "_RINvNtNtCsiRTYAzUNZ4R_11uniffi_core3ffi9rustcalls13try_rust_callINtNtNtCs3HtPxIXGqTU_4core5panic11unwind_safe16AssertUnwindSafeNCNCNCINvMNtNtB4_10rustfuture6futureINtB2b_13WrappedFutureNtNtB4_10rustbuffer10RustBufferE3newNCNvNtCs9QforRjVOsK_19codex_mobile_client15mobile_tah_host55uniffi_codex_mobile_client_fn_method_mobiletahhost_calls_0INtNtB17_6result6ResultNtNtCs9gly6F9pFH1_5alloc6string6StringNtB3B_14MobileTahErrorENtB3D_9UniFfiTagE000EINtNtNtB17_4task4poll4PollB2X_EEB3D_",
+      "symbolLocation": 236
+    }
+  ],
+  "fix": "Explicitly spawn provider futures on two owned Tokio workers with 8 MiB stacks; UniFFI async_runtime alone only enters runtime context.",
+  "status": "fix passes iOS check; device rerun pending",
+  "disassembly": {
+    "prologueFrameBytes": 152128,
+    "faultInstruction": "ldr xzr, [sp] in page-by-page stack probe",
+    "nativePollThread": "Swift cooperative executor",
+    "change": "heap-box inner futures before awaiting them on owned Tokio workers"
+  }
+}

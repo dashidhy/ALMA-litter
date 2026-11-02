@@ -1,0 +1,9 @@
+{
+  "id": "codex",
+  "displayName": "Codex",
+  "authRouteID": "codex.auth",
+  "taskRouteID": "codex.task",
+  "guardianModel": "gpt-5.6-luna",
+  "guardianEffort": "low",
+  "disabledModels": []
+}

@@ -32,6 +32,11 @@ pub(crate) async fn open_backend(
     match kind {
         TerminalBackendKind::LocalIsh { cwd } => super::local_ish::open(cwd, size).await,
         TerminalBackendKind::LocalProot { cwd } => super::local_proot::open(cwd, size).await,
+        #[cfg(not(feature = "remote-alleycat"))]
+        TerminalBackendKind::RemoteAlleycat { .. } => Err(TerminalError::Unsupported {
+            detail: crate::network_scope::ALLEYCAT_UNSUPPORTED.into(),
+        }),
+        #[cfg(feature = "remote-alleycat")]
         TerminalBackendKind::RemoteAlleycat {
             node_id,
             token,

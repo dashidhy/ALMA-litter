@@ -1,0 +1,16 @@
+{
+  "removed": [
+    {
+      "removedBuildCache": "official_code_mode_probe/.cache/target",
+      "logicalBytes": 2922196083
+    },
+    {
+      "removedBuildCache": "v8_plain_probe/.cache/target",
+      "logicalBytes": 675627038
+    }
+  ],
+  "freeBytesBefore": 18455908352,
+  "freeBytesAfter": 20815990784,
+  "observedFreeChange": 2360082432,
+  "preserved": "scripts, source/asset locks, original native V8 archives, signed probe apps, results; active shared/rust-bridge/target untouched"
+}

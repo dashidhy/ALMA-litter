@@ -6,8 +6,74 @@
 // Upstream app-server dispatch futures exceed the default layout query depth on iOS.
 #![recursion_limit = "256"]
 
+pub mod auth_refresh;
+pub mod tah_attempt;
+pub mod execution_fence;
+#[cfg(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe"))]
+mod tah_runner;
+
+#[uniffi::export(async_runtime="tokio")]
+pub async fn tah_qualification_inspect(server_id:String,account_fingerprint:String) -> String {
+    #[cfg(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe"))]
+    { return tah_runner::discover(server_id,account_fingerprint).await.to_string(); }
+    #[cfg(not(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe")))]
+    { let _=(server_id,account_fingerprint); "{\"outcome\":\"failure\",\"failure\":\"qualification_unavailable\"}".into() }
+}
+
+#[uniffi::export(async_runtime="tokio")]
+pub async fn tah_qualification_execute(server_id:String,account_fingerprint:String) -> String {
+    #[cfg(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe"))]
+    {
+        let mut report=tah_runner::run(server_id.clone(),account_fingerprint).await;
+        alma_workspace::close_attempt_admission();
+        if let Ok(session)=ffi::shared::shared_mobile_client().get_session(&server_id) {session.disconnect().await;}
+        let deadline=tokio::time::Instant::now()+std::time::Duration::from_secs(15);
+        loop {
+            match alma_workspace::attempt_health() {
+                Some((0,false))=>{report["quiescenceObserved"]=serde_json::json!(true);break;}
+                Some((_,true))|None=>{report["outcome"]=serde_json::json!("failure");report["failure"]=serde_json::json!("attempt_quarantined_or_missing");break;}
+                _ if tokio::time::Instant::now()>=deadline=>{report["outcome"]=serde_json::json!("failure");report["failure"]=serde_json::json!("attempt_drain_timeout");break;}
+                _=>tokio::time::sleep(std::time::Duration::from_millis(25)).await,
+            }
+        }
+        if report["outcome"]=="observed" {
+            match tah_attempt::capture_candidates() {
+                Ok(snapshot)=>report["snapshot"]=snapshot,
+                Err(_)=>{report["outcome"]=serde_json::json!("failure");report["failure"]=serde_json::json!("candidate_snapshot_failed");}
+            }
+        }
+        report["requiresExternalProcessExitVerification"]=serde_json::json!(true);
+        return report.to_string();
+    }
+    #[cfg(not(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe")))]
+    { let _=(server_id,account_fingerprint); "{\"outcome\":\"failure\",\"failure\":\"qualification_unavailable\"}".into() }
+}
+mod alma_local_profile;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod alma_code_mode;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod provider_backend;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod provider_scope;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod provider_bridge;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod provider_runtime_config;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod mobile_tah_host;
+
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
-pub mod ish_exec;
+mod embedded_runtime;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+mod alma_workspace;
+
+#[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+pub mod ish_exec_backend;
+
+#[cfg(unix)]
+pub mod scoped_files;
+#[cfg(unix)]
+pub mod scoped_executor_fs;
 
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
 pub mod ish_runtime;
@@ -24,7 +90,7 @@ pub use proot_types::ProotBootstrapError;
 
 /// One-time iSH bootstrap. Swift passes the bundle's `fs/` resource dir, the
 /// app's Application Support dir, and the Documents dir; Rust does the
-/// rootfs extraction, boot, and exec-hook registration. Replaces the old
+/// rootfs extraction and owned-job kernel boot. Replaces the old
 /// `codex_ish_init` + `litter_install_ish_hook` C entry points.
 ///
 /// Non-iOS targets (Catalyst, Android, host bindgen) return
@@ -140,6 +206,12 @@ pub mod proot_runtime;
 ))]
 pub mod shell_preflight;
 
+mod alleycat_types;
+pub mod network_scope;
+#[cfg(feature = "remote-alleycat")]
+pub mod alleycat;
+#[cfg(not(feature = "remote-alleycat"))]
+#[path = "alleycat_disabled.rs"]
 pub mod alleycat;
 pub mod cloud_sync;
 pub mod conversation;

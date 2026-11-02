@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-01",
+  "device": "iPhone12Pro A14 iOS27.0.1",
+  "runID": "cfaf3ab4-8251-4be7-94bf-81958544d9b7",
+  "cases": [
+    {
+      "peakAppFootprintBytes": 18237160,
+      "id": "unicode",
+      "passed": true,
+      "seconds": 0.027201209,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 21153512,
+      "id": "stdin",
+      "passed": true,
+      "seconds": 0.020344583,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 22513408,
+      "id": "interrupt",
+      "passed": true,
+      "seconds": 1.0377589170000001,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 22595328,
+      "id": "cancel",
+      "passed": true,
+      "seconds": 0.684552,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 21628672,
+      "id": "fast",
+      "passed": true,
+      "seconds": 0.048807625,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 24004328,
+      "id": "budget",
+      "passed": true,
+      "seconds": 0.142210958,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 24004328,
+      "id": "leases",
+      "passed": true,
+      "quarantined": 0,
+      "completed": 6,
+      "type": "case"
+    }
+  ],
+  "elapsedSeconds": 4.525383749976754,
+  "peakFootprintBytes": 24004328,
+  "processEnded": true,
+  "hostStoppedProcess": false,
+  "scope": "Actual Codex0.166 ExecBackend + owned iSH; trusted fixtures only; no model, account, or production permission acceptance",
+  "sources": {
+    "shared/rust-bridge/alma-backend-probe/src/lib.rs": "4e0850dec779af1fbdce9d34641600e4f8ce9d0a9841ac0c105b585b5dc34821",
+    "shared/rust-bridge/codex-mobile-client/src/ish_exec_backend.rs": "04f6bb620fdbef8911bb3256e332f3d4b2a0840ae5814224b2cddc23ea71b0ad",
+    "patches/ish-lifecycle/owned-session-jobs.patch": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7"
+  }
+}

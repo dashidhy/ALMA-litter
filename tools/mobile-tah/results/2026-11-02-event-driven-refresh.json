@@ -1,0 +1,352 @@
+{
+  "date": "2026-11-02",
+  "status": "installed_and_phone_functional_validation_passed",
+  "branch": "dev/ios",
+  "imageUUID": "2DEAF6C5-535F-3574-9C4E-F8BF3AE3BF07",
+  "scope": {
+    "macApp": "read-only audit, no edits/build/tests/launch",
+    "phone": "functional validation, plugged in",
+    "powerMeasured": false
+  },
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "c6825d4ae6915b530a9adc20ce84b2afaf08ed0a2f173c66b8805f2f9936dac1",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift": "6ae69044d29f13bcdc78b7ded1e6696f2c7cd6c71d2234dbddb70eddd77b37cd",
+    "tools/mobile-tah/Sources/TauriNativeHost.swift": "ae855c8552c36ed9cef21eb35bf92bd0ad441042cab9b0c12616e38b46a22bfd",
+    "apps/ios/tah-ui/src-tauri/src/lib.rs": "e0f5714427ea13f78a6da32a0fefad58eeb88d474a83358af1e0853a5de86481",
+    "apps/ios/tah-ui/src/controller.ts": "7f6494f65f0be8d350fefdab1f79d34916fe2e6bc69de622215fafc5aa1ffb4e",
+    "apps/ios/tah-ui/src/bridge.ts": "69f3a0376069449b1ff34acae152b7ccfa18061be0ba5eefc29920258f39dfa9",
+    "shared/tah-runtime/platform/runtime.ts": "821c5ab75dd5803ba5878ebda0458b1883403592c141bb45e28405185fa59408",
+    "tools/mobile-tah/runtime_notifications.mjs": "e1f26b9db16b5411120e67ab25221d70840101c299bc50958e6c850bcf613b6f",
+    "shared/tah-runtime/generated/alma-tah.js": "eb769e207186fb48dc463adfe0d48f01961939e4116960ad64e9c3dc91794873"
+  },
+  "checks": {
+    "controller": {
+      "passed": true,
+      "count": 110,
+      "configurations": 3,
+      "iOS18Typecheck": true,
+      "steadyProgress": {
+        "events": 500,
+        "additionalCoreRPC": 0
+      }
+    },
+    "rawNotifications": {
+      "passed": true,
+      "modelCalls": false,
+      "realCredentials": false,
+      "hostOnly": true,
+      "checks": 80,
+      "cases": [
+        {
+          "name": "allow",
+          "state": "allowed",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "allow/throwing-observer",
+          "state": "allowed",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "block",
+          "state": "blocked",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "block/throwing-observer",
+          "state": "blocked",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "fail",
+          "state": "failed",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "fail/throwing-observer",
+          "state": "failed",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "cancel",
+          "state": "cancelled",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "cancel/throwing-observer",
+          "state": "cancelled",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "allow/delayed-commit-ACK",
+          "state": "allowed",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "block/delayed-commit-ACK",
+          "state": "blocked",
+          "observations": 2,
+          "providerCalls": 1
+        },
+        {
+          "name": "allow/throwing-observer/pending-save",
+          "state": "allowed",
+          "observations": 4,
+          "providerCalls": 1
+        },
+        {
+          "name": "mobile-runtime/delayed-ui-ACK",
+          "state": "cancelled",
+          "deliveries": 2,
+          "revisions": [
+            1,
+            4
+          ]
+        }
+      ],
+      "assertions": [
+        "capture synthetic provider: unchanged replay provider captured",
+        "allow: start notification follows active assignment and precedes first write",
+        "allow: finally notification observes cleared active and authoritative terminal state",
+        "allow: one final active-cleared observation",
+        "allow: no pending save or duplicate provider run",
+        "allow: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "allow: cached replay does not invent lifecycle notifications",
+        "allow/throwing-observer: start notification follows active assignment and precedes first write",
+        "allow/throwing-observer: finally notification observes cleared active and authoritative terminal state",
+        "allow/throwing-observer: one final active-cleared observation",
+        "allow/throwing-observer: no pending save or duplicate provider run",
+        "allow/throwing-observer: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "allow/throwing-observer: cached replay does not invent lifecycle notifications",
+        "block: start notification follows active assignment and precedes first write",
+        "block: finally notification observes cleared active and authoritative terminal state",
+        "block: one final active-cleared observation",
+        "block: no pending save or duplicate provider run",
+        "block: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "block: cached replay does not invent lifecycle notifications",
+        "block/throwing-observer: start notification follows active assignment and precedes first write",
+        "block/throwing-observer: finally notification observes cleared active and authoritative terminal state",
+        "block/throwing-observer: one final active-cleared observation",
+        "block/throwing-observer: no pending save or duplicate provider run",
+        "block/throwing-observer: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "block/throwing-observer: cached replay does not invent lifecycle notifications",
+        "fail: start notification follows active assignment and precedes first write",
+        "fail: finally notification observes cleared active and authoritative terminal state",
+        "fail: one final active-cleared observation",
+        "fail: no pending save or duplicate provider run",
+        "fail: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "fail/throwing-observer: start notification follows active assignment and precedes first write",
+        "fail/throwing-observer: finally notification observes cleared active and authoritative terminal state",
+        "fail/throwing-observer: one final active-cleared observation",
+        "fail/throwing-observer: no pending save or duplicate provider run",
+        "fail/throwing-observer: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "cancel: start notification follows active assignment and precedes first write",
+        "cancel: finally notification observes cleared active and authoritative terminal state",
+        "cancel: one final active-cleared observation",
+        "cancel: no pending save or duplicate provider run",
+        "cancel: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "cancel/throwing-observer: start notification follows active assignment and precedes first write",
+        "cancel/throwing-observer: finally notification observes cleared active and authoritative terminal state",
+        "cancel/throwing-observer: one final active-cleared observation",
+        "cancel/throwing-observer: no pending save or duplicate provider run",
+        "cancel/throwing-observer: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "allow/delayed-commit-ACK: start notification follows active assignment and precedes first write",
+        "allow/delayed-commit-ACK: durable terminal commit before JS ACK is still checking",
+        "allow/delayed-commit-ACK: no terminal notification before final ACK",
+        "allow/delayed-commit-ACK: finally notification observes cleared active and authoritative terminal state",
+        "allow/delayed-commit-ACK: one final active-cleared observation",
+        "allow/delayed-commit-ACK: no pending save or duplicate provider run",
+        "allow/delayed-commit-ACK: terminal notification follows ACK continuation",
+        "allow/delayed-commit-ACK: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "allow/delayed-commit-ACK: cached replay does not invent lifecycle notifications",
+        "block/delayed-commit-ACK: start notification follows active assignment and precedes first write",
+        "block/delayed-commit-ACK: durable terminal commit before JS ACK is still checking",
+        "block/delayed-commit-ACK: no terminal notification before final ACK",
+        "block/delayed-commit-ACK: finally notification observes cleared active and authoritative terminal state",
+        "block/delayed-commit-ACK: one final active-cleared observation",
+        "block/delayed-commit-ACK: no pending save or duplicate provider run",
+        "block/delayed-commit-ACK: terminal notification follows ACK continuation",
+        "block/delayed-commit-ACK: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "block/delayed-commit-ACK: cached replay does not invent lifecycle notifications",
+        "allow/throwing-observer/pending-save: start notification follows active assignment and precedes first write",
+        "allow/throwing-observer/pending-save: onPending notification exposes real pending save without polling",
+        "allow/throwing-observer/pending-save: failed initial save has not reached provider",
+        "allow/throwing-observer/pending-save: successful retry notifies pending-save clearance before provider completion",
+        "allow/throwing-observer/pending-save: finally notification observes cleared active and authoritative terminal state",
+        "allow/throwing-observer/pending-save: one final active-cleared observation",
+        "allow/throwing-observer/pending-save: no pending save or duplicate provider run",
+        "allow/throwing-observer/pending-save: only start/finally and actual pending-save changes notify; repeated null saves stay silent",
+        "allow/throwing-observer/pending-save: cached replay does not invent lifecycle notifications",
+        "mobile-runtime/delayed-ui-ACK: one in-flight UI delivery; Raw revision independent from Auth",
+        "mobile-runtime/delayed-ui-ACK: Core finishes while first UI ACK remains blocked",
+        "mobile-runtime/delayed-ui-ACK: two lifecycle completions coalesce behind in-flight ACK",
+        "mobile-runtime/delayed-ui-ACK: two start/finally pairs yield exactly four revisions; queue retains the last",
+        "mobile-runtime/delayed-ui-ACK: exactly one follow-up notification reads final state without polling",
+        "mobile-runtime/delayed-ui-ACK: Raw event remains a small invalidation, not a guessed permission/state",
+        "mobile-runtime/delayed-ui-ACK: delayed delivery was the exact last revision, verified by next-start fence",
+        "mobile-runtime/delayed-ui-ACK: no native provider or model access"
+      ],
+      "bundleSHA256": "eb769e207186fb48dc463adfe0d48f01961939e4116960ad64e9c3dc91794873"
+    },
+    "webSnapshots": {
+      "passed": true,
+      "count": 45,
+      "sequentialRequests": 101,
+      "concurrentRequests": 32,
+      "encodesPerSameKey": 1
+    },
+    "frontend": {
+      "passed": true,
+      "tests": 158
+    },
+    "coreReplay": {
+      "passed": true,
+      "publishedRevisions": 3,
+      "outputFiles": 6,
+      "workingLogs": 3
+    },
+    "workingLog": {
+      "passed": true,
+      "count": 26
+    },
+    "deviceBuild": true
+  },
+  "beforeInstall": {
+    "events": 90,
+    "publications": 16,
+    "allOperationsCompleted": true,
+    "backup": "tools/mobile-tah/.cache/event-before-install"
+  },
+  "phone": {
+    "actionID": "83e2a11e-828e-4288-b4ab-171a3fa8c36f",
+    "transcriptTitle": "EventTest",
+    "transcriptCharacters": 129,
+    "rawLifecycle": [
+      {
+        "phase": "checking",
+        "errorCode": null
+      },
+      {
+        "phase": "completed",
+        "errorCode": null
+      }
+    ],
+    "revisions": [
+      {
+        "revision": 0,
+        "phase": "completed",
+        "inference": {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        "language": "en",
+        "webEnabled": false,
+        "seconds": 19.331,
+        "files": [
+          {
+            "path": "structured-notes.md",
+            "bytes": 674,
+            "sha256Verified": true
+          },
+          {
+            "path": "suspicious-asr-terms.md",
+            "bytes": 382,
+            "sha256Verified": true
+          }
+        ],
+        "workingLogSHA256Verified": true,
+        "stages": [
+          "preparing",
+          "actor",
+          "critic",
+          "completed"
+        ],
+        "critic": [
+          "PASS"
+        ]
+      },
+      {
+        "revision": 1,
+        "phase": "completed",
+        "inference": {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        "language": "en",
+        "webEnabled": false,
+        "seconds": 29.71,
+        "files": [
+          {
+            "path": "structured-notes.md",
+            "bytes": 821,
+            "sha256Verified": true
+          },
+          {
+            "path": "suspicious-asr-terms.md",
+            "bytes": 382,
+            "sha256Verified": true
+          }
+        ],
+        "workingLogSHA256Verified": true,
+        "stages": [
+          "preparing",
+          "extra_guardian",
+          "saving_safety",
+          "actor",
+          "critic",
+          "completed"
+        ],
+        "critic": [
+          "PASS"
+        ]
+      }
+    ],
+    "manualRefreshUsedToAdvanceTask": false,
+    "notesAndASRViewsVerified": true,
+    "oldRevisionWorkingLogVerified": true,
+    "foregroundRestoreVerified": true,
+    "foregroundSamePID": true,
+    "powerMeasured": false,
+    "charging": "plugged in per user instruction and green battery icon",
+    "retention": {
+      "oldEvents": 90,
+      "newEvents": 103,
+      "missingOrChanged": 0,
+      "oldPublications": 16,
+      "newPublications": 18,
+      "sqliteIntegrity": "ok"
+    }
+  },
+  "macAudit": {
+    "scope": "static read-only; no changes, builds, tests or launches",
+    "gitHead": "ba75b0f579822bfdf11a1e74ffd1c3717686f312",
+    "sourceSHA256": {
+      "app/Sources/AlmaApp/TAH/TAHNativeActions.swift": "4bdfa396c14576d38a4e5cad269502d47d793cc759d16f8317d12f76a1b73d36",
+      "app/Sources/AlmaApp/TAH/TAHWorkingLogReader.swift": "0262e77281683d1eca4a09402b3ba3b2469d005f27f0fe6e881bb26d350fe1bd",
+      "app/Sources/AlmaApp/Desktop/DesktopAppService.swift": "9c1e08c9685b169416194ca99d10729ed252eeedc3afbe6e547c809a5b575a34",
+      "app/Sources/AlmaTAHAppRuntime/TAHRuntimeProcess.swift": "631dce3c5aa7e02ad1135097f29b0b6de124d35ce55e2d1ec444083833f87953",
+      "app/TAH/src/app-runtime/actions.ts": "6a9f33faaa55f40dbe25472229e927ba8a42e95751b6471dbb5d5cac63fcfa20",
+      "app/TAH/src/app-runtime/durable-persistence.ts": "db56e8ba8542e01ef7db7bda358d1c6db5b80193b81d79d6294010cfdd070933",
+      "app/TAH/src/app-runtime/raw-safety.ts": "7c5439a0a981b32554e442cf34b164f2e889b06b0211dbcb0c36af30803a3d45",
+      "app/TAH/src/app-runtime/presentation.ts": "9c71b77b108c607d3550263d6c95858d7d3b350160a167b261bb21ca508774b9",
+      "app/TAH/src/app-runtime/journal.ts": "3eaaa185647338fb13956faae157f4424762dc9c39ae046079dbabc0d09af3f0"
+    },
+    "handoff": "docs/ios/frontend-integration-notes.md: 交给 Mac Session 的只读发现与建议修法",
+    "implementedOnMac": false
+  },
+  "cleanup": {
+    "screenSharing": false,
+    "keyboardCapture": false,
+    "activeTestTasks": 0,
+    "commitOrPush": false
+  }
+}

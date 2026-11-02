@@ -1,0 +1,15 @@
+{
+  "sourceLibrary": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/libcodex_mobile_client.a",
+  "sourceLibrarySHA256": "9e2c8f4af5be746255b46a9c980c14e3dcb4c71e76baca0182efa65478bc825b",
+  "selectedMembers": 257,
+  "allMembers": 35038,
+  "generatorSHA256": "7c16d6a63d20395757e7112eae52e16f5d2929e00ff8ec60d83dd88bdb4e6cf7",
+  "metadataNoDeps": true,
+  "scope": "actual production UniFFI metadata, not fixture API signatures; metadata archive not used for linking",
+  "outputs": {
+    "shared/rust-bridge/generated/swift/codex_mobile_clientFFI.modulemap": "6b6b837d1f0e7aee780418aed02a008f2589ed669f5379f6d4e9dc05d5e9bee4",
+    "shared/rust-bridge/generated/swift/codex_mobile_client.swift": "f5cf91b8c1842660e4ec22aa38626fc615055af0e0951af013f6254c0548c63f",
+    "shared/rust-bridge/generated/swift/module.modulemap": "6b6b837d1f0e7aee780418aed02a008f2589ed669f5379f6d4e9dc05d5e9bee4",
+    "shared/rust-bridge/generated/swift/codex_mobile_clientFFI.h": "64c3437f079c666c3233d0ddfc2bcb523133de30f63adc3b5f993798244447a3"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "removed": [
+    {
+      "bundle": "com.alma.litter.v8-probe",
+      "exit": 0
+    },
+    {
+      "bundle": "com.alma.litter.code-mode-probe",
+      "exit": 0
+    },
+    {
+      "bundle": "com.alma.litter.backend-probe",
+      "exit": 0
+    }
+  ],
+  "preserved": [
+    "com.alma.litter.agent-probe",
+    "com.alma.frontier.ui-preview"
+  ],
+  "evidenceRetainedOnMac": true
+}

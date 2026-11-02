@@ -1,0 +1,50 @@
+name: AlmaV8Probe
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: C6635V7W82
+    CODE_SIGN_STYLE: Automatic
+    CLANG_ENABLE_OBJC_ARC: YES
+    DEBUG_INFORMATION_FORMAT: dwarf
+targets:
+  AlmaV8Probe:
+    type: application
+    platform: iOS
+    entitlements:
+      path: .cache/AlmaV8Probe.entitlements
+      properties:
+        com.apple.developer.kernel.extended-virtual-addressing: true
+    sources:
+      - path: Sources
+      - path: .cache/payload
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alma.litter.v8-probe
+        TARGETED_DEVICE_FAMILY: "1"
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "$(SRCROOT)/.cache/target/aarch64-apple-ios/debug/libalma_v8_plain_probe.a"
+          - "-lc++"
+    info:
+      path: .cache/Info.plist
+      properties:
+        CFBundleDisplayName: Alma V8 Probe
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "3"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: Scene
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: Foundation.framework
+      - sdk: CoreFoundation.framework
+      - sdk: Security.framework

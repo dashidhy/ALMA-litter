@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-01",
+  "branch": "dev/ios",
+  "appVersion": "0.2.0 (5)",
+  "scope": "iOS Tauri TAH chat presentation; no Mac edits, no workflow/Provider boundary rewrite; no final full-App integration claim",
+  "device": {
+    "model": "iPhone 12 Pro",
+    "os": "27.0.1",
+    "bundleID": "com.alma.litter.agent-probe"
+  },
+  "automated": {
+    "frontendTests": 124,
+    "frontendBuild": "passed",
+    "nativeLogChecks": 26,
+    "nativeControllerRegressions": 19,
+    "originalCoreMultiChunkLogs": 3,
+    "coreReplayReport": "tools/mobile-tah/results/2026-11-01-working-core-replay.json",
+    "nativeReaderReport": "apps/ios/Sources/AlmaTAH/Presentation/working-log-checks-result.json"
+  },
+  "installed": true,
+  "physicalChecks": [
+    "Default Double bubbles shows right user / left Agent with distinct surfaces and per-message revision labels",
+    "Settings Lightweight switches Agent replies to unboxed; local style preference survives in-place updates",
+    "Settings and Working events header drag closes via common sheet callback",
+    "Historical SAM v0 full working log opens and displays stored events and real duration",
+    "Completed messages directly open full logs without recent-event summary",
+    "Manual upward history browsing stays in position across subsequent snapshots; Latest events returns to tail",
+    "One synthetic qualification revision v3 completed through phone-native TAH and displayed final reply, outcome links and working-log entry",
+    "Shared static-heading outline correction installed; Transcript library heading visually verified without initial focus border"
+  ],
+  "limitations": [
+    "Running latest-three event preview is covered by automated projection/component checks, not visually captured during the short physical revision",
+    "Final focus-only package was visually checked on Transcript library; Settings/Working events share the same h2 style but their final-package visual recheck was interrupted by Device Hub noWindowsAvailable",
+    "No separate final physical Library swipe, screen-reader or hardware-keyboard acceptance in this round",
+    "Complete recording/ASR/mobile integration and background/lock-screen workflow are outside this UI acceptance"
+  ],
+  "dataPreservation": {
+    "integrity": "ok",
+    "oldEventsUnchanged": true,
+    "oldChunksUnchanged": true,
+    "publicationCount": 9,
+    "newPublications": [
+      {
+        "operationID": "a31e9f95-c18d-4607-a4d9-0c621a1d231a",
+        "stream": "action/a0a42ff8-847b-4c7c-894f-f03084e5ca2c",
+        "revisionIndex": 3,
+        "actionInstanceID": "a0a42ff8-847b-4c7c-894f-f03084e5ca2c"
+      }
+    ],
+    "pending": 0
+  },
+  "discoveredAndFixed": [
+    "First open must synchronously publish loading log identity before async content read and command response",
+    "Same-action editor token change on publication must preserve the open log route",
+    "Content pointer/touch gesture intent must suspend tail-follow before delayed native scroll",
+    "Static heading programmatic accessibility focus must not inherit control-like global focus outline"
+  ],
+  "finalPhoneSelection": {
+    "transcript": "SAM & Vision Foundation Models",
+    "style": "bubbles",
+    "theme": "ink",
+    "draft": "empty"
+  },
+  "buildLogs": [
+    "tools/mobile-tah/.cache/chat-heading-rust.log",
+    "tools/mobile-tah/.cache/chat-heading-xcode.log",
+    "tools/mobile-tah/.cache/chat-heading-install.log"
+  ],
+  "frontendAssets": [
+    "index-AwF59jeN.css",
+    "index-DeLLz5aG.js"
+  ],
+  "sourceSHA256": {
+    "apps/ios/tah-ui/src/components/Sheet.tsx": "2f043a0e785d00f5b35049690d2576a61b73cf167bac6ae907ac56e4078400b1",
+    "apps/ios/tah-ui/src/components/sheet-gesture.css": "14b0733ec80a06f2cf91b85cf07b995842a59f349c5a1f63a0a479fe1e7462ab",
+    "apps/ios/tah-ui/src/useEventLogScroll.ts": "6332834411f28ff90f16c824127964e57ecdeb0aa2e6fe5f132d6a7d542c627d",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "bf26b166cd10f92fc9b4ad2c03e153ae5462cd92366a6841c3b99161314343af"
+  },
+  "screenshot": {
+    "path": "tools/mobile-tah/.cache/chat-ui-final-phone.png",
+    "sha256": "6826741798e90ad59189403d99e738e960efdac3705432b3f8260645d5aca149"
+  }
+}

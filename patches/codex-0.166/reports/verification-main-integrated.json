@@ -1,0 +1,281 @@
+{
+  "scope": "strict patch applicability and source integrity only; not build or runtime acceptance",
+  "target_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "old_commit": "be2951ea34f0d295ed0becf97079f92fa5f6950e",
+  "target_baseline": {
+    "archive_sha256": "718c86dcd7104919f2820aa79db0fa0083b5f240aa16da704f43e4acf7b544e5",
+    "verified_entries": 9732
+  },
+  "old_baseline": {
+    "archive_sha256": "cd5a884836b53422052989479c6662f06e2ee8bb768c1a86a5ff7326b887d4d6",
+    "verified_entries": 7688
+  },
+  "required_series": [
+    "mobile-crypto-compat.patch",
+    "thread-read-permissions.patch",
+    "mxc-desktop-platform.patch"
+  ],
+  "optional_series": [
+    "ios-shell-snapshot-timeout.patch"
+  ],
+  "original_patches_sha256": {
+    "README.md": "ba552846696252714c6fc30cb2efb526d5912de8e915b65e149921221a7c4a4c",
+    "absolute-path-cross-platform.patch": "1e1636366585a8cf9d13e3e1b4f3c3582876c28602e396f2c2e3d3fe666034eb",
+    "android-installation-id-lock.patch": "4673d630c9fdfffef9524c2b422951610080aa2e2954b43a2da273cc6c43099d",
+    "approval-timestamps-serde-default.patch": "9ce41abd30cb9faf1688b4df3863df64745b29fe191995211385b6bcdafd60f1",
+    "dynamic-tool-call-arguments-delta.patch": "107211d9ace0b5586e9a1d104f38b9c26a2836ac4a73002289bed592d3244b53",
+    "ios-exec-hook.patch": "5764f39805836878d0ed52c6d84b93b94ba6862792e583d1e483790f097b3048",
+    "mobile-crypto-compat.patch": "28611fb28ea68f1b4a41f49ba91a94291cb04a176b38e0eaa00c4d70a3cdd206",
+    "mobile-shell-snapshot-timeout.patch": "130c34f4a7daddff33d1014ec7fb5349fcd335114a0007039f3ba5304208a64e",
+    "realtime-client-controlled-handoff.patch": "03e7722098b565bb625ac597f990ed00c4800797b93e3a487a9999d5106b6f1d",
+    "realtime-dynamic-tools.patch": "1350b5b7015679afcc71d27f74b8d4d213a2d045108c8d1c0bf2dee90e0aad1e",
+    "realtime-handoff-server-hint.patch": "fe8ce61f083ecbfeeb2ae4dab87a8487eab2a2d50d2b6e856830692ffc20e683",
+    "realtime-webrtc-env-apikey.patch": "934526d2cd3ac4426b0c954dc5a3916edcd26444485e6434d3ccedc344fbae3e",
+    "remote-app-server-websocket-cap.patch": "7be587bdff2bfeadc1b0e76f598dd9ca2dbc5999730de35e09b30860566687e6",
+    "thread-list-fork-lineage.patch": "42d99e5305e82071b1c7bca055953a955efb37eadb07dc7d7116d71714015867",
+    "thread-read-permissions.patch": "d08fcaed776b4b31ec64399c227d5e889585b19e06130b78181d69432a939428"
+  },
+  "sync_script_sha256": "7fcca859ea243d6b5e0a34116fc0a92e60bd02361735d63b43ca19b3e8341006",
+  "original_independent_checks_on_target": {
+    "mobile-crypto-compat.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "ios-exec-hook.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/core/src/exec.rs:58\nerror: codex-rs/core/src/exec.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/unified_exec/async_watcher.rs:48\nerror: codex-rs/core/src/unified_exec/async_watcher.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/unified_exec/process_manager.rs:501\nerror: codex-rs/core/src/unified_exec/process_manager.rs: patch does not apply"
+    },
+    "thread-read-permissions.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/app-server-protocol/src/protocol/v2/thread.rs:1679\nerror: codex-rs/app-server-protocol/src/protocol/v2/thread.rs: patch does not apply\nerror: patch failed: codex-rs/app-server/src/request_processors/thread_processor.rs:2872\nerror: codex-rs/app-server/src/request_processors/thread_processor.rs: patch does not apply"
+    },
+    "thread-list-fork-lineage.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/rollout/src/list.rs:113\nerror: codex-rs/rollout/src/list.rs: patch does not apply\nerror: patch failed: codex-rs/thread-store/src/local/helpers.rs:156\nerror: codex-rs/thread-store/src/local/helpers.rs: patch does not apply"
+    },
+    "mobile-shell-snapshot-timeout.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "remote-app-server-websocket-cap.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/app-server-client/src/remote.rs:52\nerror: codex-rs/app-server-client/src/remote.rs: patch does not apply"
+    },
+    "absolute-path-cross-platform.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/utils/absolute-path/src/lib.rs:384\nerror: codex-rs/utils/absolute-path/src/lib.rs: patch does not apply"
+    },
+    "android-installation-id-lock.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "dynamic-tool-call-arguments-delta.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/core/src/session/turn.rs:97\nerror: codex-rs/core/src/session/turn.rs: patch does not apply\nerror: patch failed: codex-rs/app-server/src/notification_media.rs:134\nerror: codex-rs/app-server/src/notification_media.rs: patch does not apply"
+    },
+    "approval-timestamps-serde-default.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "realtime-webrtc-env-apikey.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/core/src/client.rs:599\nerror: codex-rs/core/src/client.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/realtime_conversation.rs:29\nerror: codex-rs/core/src/realtime_conversation.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/realtime_conversation_tests.rs:355\nerror: codex-rs/core/src/realtime_conversation_tests.rs: patch does not apply"
+    },
+    "realtime-handoff-server-hint.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "realtime-dynamic-tools.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/protocol/src/protocol.rs:251\nerror: codex-rs/protocol/src/protocol.rs: patch does not apply\nerror: patch failed: codex-rs/codex-api/src/endpoint/realtime_websocket/methods.rs:1335\nerror: codex-rs/codex-api/src/endpoint/realtime_websocket/methods.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/realtime_conversation.rs:362\nerror: codex-rs/core/src/realtime_conversation.rs: patch does not apply"
+    },
+    "realtime-client-controlled-handoff.patch": {
+      "ok": false,
+      "returncode": 1,
+      "detail": "error: patch failed: codex-rs/protocol/src/protocol.rs:251\nerror: codex-rs/protocol/src/protocol.rs: patch does not apply\nerror: patch failed: codex-rs/app-server-protocol/src/protocol/v2/realtime.rs:264\nerror: codex-rs/app-server-protocol/src/protocol/v2/realtime.rs: patch does not apply\nerror: patch failed: codex-rs/app-server-protocol/src/protocol/common.rs:4380\nerror: codex-rs/app-server-protocol/src/protocol/common.rs: patch does not apply\nerror: patch failed: codex-rs/app-server/src/request_processors/turn_processor.rs:1269\nerror: codex-rs/app-server/src/request_processors/turn_processor.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/realtime_conversation.rs:27\nerror: codex-rs/core/src/realtime_conversation.rs: patch does not apply\nerror: patch failed: codex-rs/core/src/session/handlers.rs:591\nerror: codex-rs/core/src/session/handlers.rs: patch does not apply\nerror: patch failed: codex-rs/app-server/tests/suite/v2/realtime_conversation.rs:3770\nerror: codex-rs/app-server/tests/suite/v2/realtime_conversation.rs: patch does not apply\nerror: patch failed: codex-rs/core/tests/suite/realtime_conversation.rs:5599\nerror: codex-rs/core/tests/suite/realtime_conversation.rs: patch does not apply"
+    }
+  },
+  "selected_original_independent_checks_on_old": {
+    "mobile-crypto-compat.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "ios-exec-hook.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "thread-read-permissions.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    },
+    "mobile-shell-snapshot-timeout.patch": {
+      "ok": true,
+      "returncode": 0,
+      "detail": ""
+    }
+  },
+  "patches": [
+    {
+      "name": "mobile-crypto-compat.patch",
+      "sha256": "d4cbe22b4440411c93769a3271a3db0f11276b0f3c4d1aee2b1e06f8cfb9809f",
+      "targets": [
+        "codex-rs/Cargo.toml"
+      ],
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "apply": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "duplicate_forward_rejected": true,
+      "before_sha256": {
+        "codex-rs/Cargo.toml": "4f9c16fb73cc8487e40dcbfca545f69e7595e6806e1a59b81ea8045b15364e49"
+      },
+      "after_sha256": {
+        "codex-rs/Cargo.toml": "3ecadcd00afefca20481feafe9af0334a7cfccc47581176ceb535edd43c662c1"
+      }
+    },
+    {
+      "name": "thread-read-permissions.patch",
+      "sha256": "171ffafeb033c87a484cf772042d950ad9be6c385917d00562ee818b47498b74",
+      "targets": [
+        "codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+        "codex-rs/app-server/src/request_processors/thread_processor.rs",
+        "codex-rs/app-server/tests/suite/v2/thread_read.rs"
+      ],
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "apply": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "duplicate_forward_rejected": true,
+      "before_sha256": {
+        "codex-rs/app-server-protocol/src/protocol/v2/thread.rs": "edc34b2b8cdbeefd48756f7f540b96ab7c4dc4580b9a17c0b8e3aa4f686ae7ce",
+        "codex-rs/app-server/src/request_processors/thread_processor.rs": "c03d31e07c8831c7cf153e6429f4ab908d1035b21ba593e701d5a3767121b5a8",
+        "codex-rs/app-server/tests/suite/v2/thread_read.rs": "9efdb9b540df44ca301be517a1a03a7dabc613dbf2bb59e38322f430148b922b"
+      },
+      "after_sha256": {
+        "codex-rs/app-server-protocol/src/protocol/v2/thread.rs": "f63bccdac375d235fd1eba285da8d60d0328e91bf7dbbc1ddf6467ca4fcc9c15",
+        "codex-rs/app-server/src/request_processors/thread_processor.rs": "c2649fbd03900bb5159d3d42125479f242ebf6db7bdf4b32b53b69f2a29181f9",
+        "codex-rs/app-server/tests/suite/v2/thread_read.rs": "49c189d245027cb586cfde8977f0f3587e577710a3480a5ea8efaae63ff65504"
+      }
+    },
+    {
+      "name": "mxc-desktop-platform.patch",
+      "sha256": "5f780df7d6a56d6d416ac113b121fe51b1bf8e2198e4d24c3c6ff588838792be",
+      "targets": [
+        "codex-rs/mxc-sandbox/Cargo.toml",
+        "codex-rs/mxc-sandbox/src/lib.rs"
+      ],
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "apply": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "duplicate_forward_rejected": true,
+      "before_sha256": {
+        "codex-rs/mxc-sandbox/Cargo.toml": "fdc1865fda5f33a0ddb5caa9ff4e03b37cb33e94396da1a5e85e15dc98648051",
+        "codex-rs/mxc-sandbox/src/lib.rs": "89f0bac707752eacee22b6d4fda530e82db1e66b2d0bb67758849f94b7170319"
+      },
+      "after_sha256": {
+        "codex-rs/mxc-sandbox/Cargo.toml": "8034511f1ab5b907061ba3423692ccfe9a14d2394dd57db62011aab2aa94e1d1",
+        "codex-rs/mxc-sandbox/src/lib.rs": "584b422cf08b059a7be6ed962de60c61fc7e7fed7d5b4cef533e1213ff713e5a"
+      }
+    },
+    {
+      "name": "ios-shell-snapshot-timeout.patch",
+      "sha256": "b1dc1ead466e3763583fffc71f203c150f493e4954fcbdbc63bd266157e351d9",
+      "targets": [
+        "codex-rs/core/src/shell_snapshot.rs"
+      ],
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "apply": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "duplicate_forward_rejected": true,
+      "before_sha256": {
+        "codex-rs/core/src/shell_snapshot.rs": "f6964357daf8ab806f43b922234b482d5a26fc5a4ced099d60f64aa56d9132d6"
+      },
+      "after_sha256": {
+        "codex-rs/core/src/shell_snapshot.rs": "493210c742d2aa1cc2dcfe2198c4054da3ec724a0326ad79204f7bbd0da565c7"
+      }
+    }
+  ],
+  "changed_source_paths": [
+    "codex-rs/Cargo.toml",
+    "codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+    "codex-rs/app-server/src/request_processors/thread_processor.rs",
+    "codex-rs/app-server/tests/suite/v2/thread_read.rs",
+    "codex-rs/core/src/shell_snapshot.rs",
+    "codex-rs/mxc-sandbox/Cargo.toml",
+    "codex-rs/mxc-sandbox/src/lib.rs"
+  ],
+  "all_other_upstream_files_identical": true,
+  "reverse_restores_pristine_tree": true,
+  "inputs_unchanged": true,
+  "not_verified": [
+    "Rust type checking and integration tests",
+    "Cargo dependency resolution and lockfile regeneration",
+    "generated protocol schemas",
+    "iOS compilation/linking",
+    "iSH exec backend and cancellation",
+    "filesystem/network enforcement",
+    "phone/background/auth/Web/TAH execution"
+  ]
+}

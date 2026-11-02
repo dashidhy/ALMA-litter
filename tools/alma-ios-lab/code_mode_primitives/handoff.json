@@ -1,0 +1,149 @@
+{
+  "status": "FROZEN_PRIMITIVES_ONLY",
+  "node": "v22.23.4",
+  "requested_primitive_cases_passed_across_runs": 16,
+  "separate_process_alternative_cases_passed": 2,
+  "full_protocol_or_provider_implemented": false,
+  "phone_tested": false,
+  "runs": [
+    {
+      "report": "results.json",
+      "group": "modules",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "SourceTextModule_top_level_await",
+        "fresh_module_and_context",
+        "static_import_rejected_by_link_hook",
+        "dynamic_import_rejected_by_callback",
+        "ordinary_private_scratch_roundtrip"
+      ],
+      "host_seconds": 5.2567,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "results.json",
+      "group": "settled",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "preserves_settlement_order_before_and_during_iteration",
+        "accepts_iterables_values_thenables_and_duplicate_promises",
+        "preserves_map_keys_and_completes_empty_inputs",
+        "awaits_each_callback_including_rejected_inputs",
+        "propagates_callback_errors_and_closes_early_iterations",
+        "preserves_identity_of_keys_values_and_rejections"
+      ],
+      "host_seconds": 5.397,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "results.json",
+      "group": "exit-sync",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "catch_finally_queued_microtask",
+        "exit_stops_following_cpu_loop"
+      ],
+      "host_seconds": 7.5219,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "results.json",
+      "group": "exit-async",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "exit_after_top_level_await",
+        "exit_in_timer_while_awaiting"
+      ],
+      "host_seconds": 7.5908,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "cpu-handshake-results.json",
+      "group": "cpu",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "external_Worker_terminate_cpu_loop"
+      ],
+      "host_seconds": 7.2527,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "process-alternative-results.json",
+      "group": "process-exit",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "separate_process_exit_preserves_prior_write_set"
+      ],
+      "host_seconds": 4.8676,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    },
+    {
+      "report": "process-alternative-results.json",
+      "group": "process-cpu",
+      "node": "v22.23.4",
+      "passed_cases": [
+        "separate_owned_process_cpu_cancel"
+      ],
+      "host_seconds": 4.409,
+      "cleanup_confirmed": true,
+      "live_after_cleanup": 0,
+      "host_process_group_gone": true
+    }
+  ],
+  "limitations": [
+    "Original immediate-loop Worker pattern stalled before parent observed startup; two CPU-limit deaths at ~20 host seconds, without owned-job acknowledgment. Root cause not established.",
+    "Worker CPU cancellation passed once with ready/start handshake and independently armed parent timer; not an exhaustive reliability claim.",
+    "15 original successful cases were not rerun after the targeted CPU handshake edit.",
+    "No full callback cancellation, store commit race, media helper, transport/output cap, heap/RSS or model qualification.",
+    "vm context used for API shape only; no VM-escape/security-isolation claim."
+  ],
+  "controls": {
+    "external_host_watchdog_seconds": 30,
+    "bootstrap_watchdog_seconds": 10,
+    "native_cpu_soft_seconds": 20,
+    "native_cpu_hard_seconds": 24,
+    "core_dump_bytes": 0,
+    "readonly_runtime_and_fixture": true,
+    "rw_private_scratch_only": true,
+    "model_workspace_grant": false,
+    "workspace_policy_semaphore": false,
+    "direct_network_policy": "deny; no network calls/tests"
+  },
+  "inputs_unchanged": true,
+  "history": [
+    "controller-fix-history.json",
+    "startup-abort-results.json",
+    "stdio-diagnostic-results.json",
+    "stdio-fixed-results.json",
+    "results.json",
+    "cpu-trace-results.json"
+  ],
+  "current_artifact_sha256": {
+    ".gitignore": "046032151fe6113c18a8d7d9971c557e81129ca1ba244e5263d54b7e0e6f9643",
+    "README.md": "83791c6cfe8151cd0fdb9e946fa56ea739443b01d3aff18bb564037da96bf98d",
+    "controller-fix-history.json": "190a1f368c35fe169e028676c2038f9ea68e5b2d4662ba7ae21733c5a7ffe6f3",
+    "controller.py": "104fd3df2dd426ffca9e422085e637d4401a44765c308e140e261500955ccebd",
+    "cpu-handshake-results.json": "a94103e421f4182c1ee3619db4c7437bbf7ead23ac0880abc78d8a3e9c2d3d32",
+    "cpu-trace-results.json": "e9ed4ea961aac10b198072b191ec79e1285e6191b948f24ce424eb095bdcf8c2",
+    "primitives.cjs": "7fafbc4ac8a02fa435cf5923d1f6d31c32d20fdba5143b951349cbe284a4680c",
+    "process-alternative-results.json": "b9ed422d3f1992308bcb63322a5624af9ad42c59526e04c99a27c87ee85942a5",
+    "process-alternative.cjs": "3a6cea24513524a58e8fc5aea5994662684b8ca82d6ce52f42bb8c1fad7e3997",
+    "results.json": "f192496e7cb957bfe816868c7e1e0771277afc9d6682ec30c657218065207244",
+    "run.py": "ba8cee3655dba89aafac67478e39294562c2208cc1ee16c689edf42c36487158",
+    "startup-abort-results.json": "aa19b05049930da3e16982d79a6b54098bb196783dc0ce4440bf97297602792b",
+    "stdio-diagnostic-results.json": "cd2adef649750f8e3ebbb961837c8963b6953ab65d956890d5e05ed08f7b595d",
+    "stdio-fixed-results.json": "42e4a212debfc5c07590b128dd220b3e65b2a32199e5cc8282d45e52c5f1492e"
+  }
+}

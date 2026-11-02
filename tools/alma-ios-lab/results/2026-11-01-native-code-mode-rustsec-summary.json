@@ -1,0 +1,5 @@
+{
+  "findings": 20,
+  "sameAdvisoryPackagePairsAsPrevious": true,
+  "scope": "whole lock graph; existing findings not suppressed; iOS reachability has not been reclassified"
+}

@@ -1,0 +1,56 @@
+diff --git a/kernel/workspace_policy.c b/kernel/workspace_policy.c
+--- a/kernel/workspace_policy.c
++++ b/kernel/workspace_policy.c
+@@ -164,6 +164,24 @@
+     for(unsigned i=0;i<a->depth;i++)if(same_identity(b->ancestry[b->depth-1],a->ancestry[i]))return true;
+     return false;
+ }
++// The only permitted same-grant overlap is a strictly read-only ancestor
++// plus an explicitly writable descendant. OR-based runtime rights then remain
++// correct: the ancestor never contributes write authority. This is not a
++// general longest-prefix policy and must not admit writable ancestors.
++static bool readonly_parent_candidate(const struct wp_root *parent, const struct wp_root *candidate) {
++    return parent->rights==WP_READ && candidate->rights==(WP_READ|WP_WRITE) &&
++        strcmp(parent->path,candidate->path) && under(candidate->path,parent->path);
++}
++static bool verified_readonly_parent_candidate(const struct wp_root *parent, const struct wp_root *candidate) {
++    if (!readonly_parent_candidate(parent,candidate) || !parent->depth || parent->depth>=candidate->depth)
++        return false;
++    // Both walks used the selected authorized mount and O_NOFOLLOW. Require
++    // the entire retained device/inode ancestry prefix, not just path strings
++    // or one coincident inode. This also rejects identical physical roots.
++    for (unsigned i=0;i<parent->depth;i++)
++        if (!same_identity(parent->ancestry[i],candidate->ancestry[i])) return false;
++    return true;
++}
+ static void free_grant(struct ish_workspace_grant *g) {
+     for (unsigned i=0;i<WP_GRANTS;i++) if (grants[i]==g) { grants[i]=NULL; free(g); return; }
+ }
+@@ -177,12 +195,24 @@
+         const char *p=i<nro?ro[i]:rw[i-nro];
+         if (!canonical_root(p)) { free(g); return _EINVAL; }
+         strcpy(g->roots[i].path,p); g->roots[i].rights=i<nro?WP_READ:WP_READ|WP_WRITE;
+-        for (unsigned j=0;j<i;j++) if (under(p,g->roots[j].path)||under(g->roots[j].path,p)) { free(g);return _ENOTSUP; }
++        for (unsigned j=0;j<i;j++) {
++            struct wp_root *a=&g->roots[i], *b=&g->roots[j];
++            if ((under(a->path,b->path)||under(b->path,a->path)) &&
++                !readonly_parent_candidate(a,b) && !readonly_parent_candidate(b,a)) {
++                free(g);return _ENOTSUP;
++            }
++        }
+     }
+     lock(&pids_lock); int slot=-1,result=0;
+     for(unsigned i=0;i<g->count && !result;i++)result=verify_root(&g->roots[i]);
+-    for(unsigned i=0;i<g->count && !result;i++)for(unsigned j=0;j<i;j++)
+-        if(roots_overlap(&g->roots[i],&g->roots[j]))result=_ENOTSUP;
++    for(unsigned i=0;i<g->count && !result;i++)for(unsigned j=0;j<i;j++) {
++        struct wp_root *a=&g->roots[i], *b=&g->roots[j];
++        if (readonly_parent_candidate(a,b)) {
++            if (!verified_readonly_parent_candidate(a,b)) result=_ENOTSUP;
++        } else if (readonly_parent_candidate(b,a)) {
++            if (!verified_readonly_parent_candidate(b,a)) result=_ENOTSUP;
++        } else if (roots_overlap(a,b)) result=_ENOTSUP;
++    }
+     if(result){free(g);unlock(&pids_lock);return result;}
+     for (unsigned k=0;k<WP_GRANTS;k++) {
+         if (!grants[k]) { slot=k; continue; }

@@ -1,0 +1,52 @@
+{
+  "acceptedRevision": 1,
+  "checks": [
+    "RPC begin/putChunk/pendingIsComplete",
+    "strict transcript commit/read",
+    "RPC publication commit/head/read",
+    "pending cleared",
+    "close/reopen bytes and digests",
+    "same-ID idempotent replay without duplicate events"
+  ],
+  "cutoversInvoked": false,
+  "materialBytes": 88898,
+  "passed": true,
+  "publicationCount": 2,
+  "sqlite": {
+    "header": "SQLite format 3\u0000",
+    "userVersion": 1,
+    "journalMode": "wal",
+    "eventCount": 3,
+    "cutoverRecords": 0
+  },
+  "hostOnly": true,
+  "compiler": "Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)\nTarget: arm64-apple-macosx27.0.0",
+  "command": [
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+    "-swift-version",
+    "6",
+    "-strict-concurrency=complete",
+    "-parse-as-library",
+    "-sdk",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk",
+    "-module-cache-path",
+    "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-original-journal-smoke-3wn8jtxi/module-cache",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/AlmaTAH/Persistence/TAHJournalStore.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/AlmaTAH/Persistence/TAHJournalRPC.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeWire.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeResources.swift",
+    "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-original-journal-smoke-3wn8jtxi/JournalSmoke.swift",
+    "-lsqlite3",
+    "-o",
+    "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-original-journal-smoke-3wn8jtxi/journal-smoke"
+  ],
+  "compilerDiagnostics": "",
+  "artifacts": "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-original-journal-smoke-3wn8jtxi",
+  "sourceSHA256": {
+    "TAHJournalStore.swift": "e2eff11be950601fce8272837ac636c5be07732036cd513b343f7992b211215f",
+    "TAHJournalRPC.swift": "08b32098f0cf4f2877dc77dc19376cd411c291fef3042919cc20335dc59b5b6d",
+    "TAHRuntimeWire.swift": "148601cfae190d902833e1ee88654c6da3dc35ad51b5675221b045d5167a48f4",
+    "TAHRuntimeResources.swift": "64962420cf4800948f7cef18a159e048ef376807c3d46189f4e45ea9d7d7189e"
+  },
+  "fixtureSHA256": "40beb3a0c22b6b9e6cff8ce0396a5919a3f2bc79075f448a66431b097013035a"
+}

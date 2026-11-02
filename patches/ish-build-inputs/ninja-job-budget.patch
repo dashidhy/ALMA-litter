@@ -1,0 +1,12 @@
+--- a/embed/host/build.rs
++++ b/embed/host/build.rs
+@@ -180,7 +180,9 @@
+             panic!("meson setup failed (status {status})");
+         }
+     }
++    let jobs = env::var("NUM_JOBS").ok().and_then(|value| value.parse::<u32>().ok()).unwrap_or(2).clamp(1, 2);
+     let status = Command::new("ninja")
++        .arg("-j").arg(jobs.to_string())
+         .arg("-C")
+         .arg(build_dir)
+         .arg("libish.a")

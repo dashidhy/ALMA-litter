@@ -1,0 +1,1 @@
+Actual iOS protocol metadata check passed; tests compiled, not executed.

@@ -223,19 +223,30 @@ impl From<codex_protocol::account::PlanType> for PlanType {
             codex_protocol::account::PlanType::Go => Self::Go,
             codex_protocol::account::PlanType::Plus => Self::Plus,
             codex_protocol::account::PlanType::Pro => Self::Pro,
+            codex_protocol::account::PlanType::ProLite => Self::ProLite,
+            codex_protocol::account::PlanType::ProMax => Self::ProMax,
             codex_protocol::account::PlanType::Team => Self::Team,
+            codex_protocol::account::PlanType::SelfServeBusinessProLite => {
+                Self::SelfServeBusinessProLite
+            }
+            codex_protocol::account::PlanType::SelfServeBusinessUsageBased => {
+                Self::SelfServeBusinessUsageBased
+            }
             codex_protocol::account::PlanType::Business => Self::Business,
+            codex_protocol::account::PlanType::Ent26 => Self::Ent26,
+            codex_protocol::account::PlanType::EnterpriseCbpAutomation => {
+                Self::EnterpriseCbpAutomation
+            }
+            codex_protocol::account::PlanType::EnterpriseCbpUsageBased => {
+                Self::EnterpriseCbpUsageBased
+            }
             codex_protocol::account::PlanType::Enterprise => Self::Enterprise,
             codex_protocol::account::PlanType::Edu => Self::Edu,
+            codex_protocol::account::PlanType::EduPlus => Self::EduPlus,
+            codex_protocol::account::PlanType::EduPro => Self::EduPro,
+            codex_protocol::account::PlanType::Sci => Self::Sci,
+            codex_protocol::account::PlanType::SciPlus => Self::SciPlus,
             codex_protocol::account::PlanType::Unknown => Self::Unknown,
-            codex_protocol::account::PlanType::ProLite => Self::Pro,
-            codex_protocol::account::PlanType::SelfServeBusinessProLite => Self::Business,
-            codex_protocol::account::PlanType::Ent26
-            | codex_protocol::account::PlanType::EnterpriseCbpAutomation => Self::Enterprise,
-            codex_protocol::account::PlanType::EduPlus
-            | codex_protocol::account::PlanType::EduPro => Self::Edu,
-            codex_protocol::account::PlanType::SelfServeBusinessUsageBased => Self::Business,
-            codex_protocol::account::PlanType::EnterpriseCbpUsageBased => Self::Enterprise,
         }
     }
 }
@@ -412,74 +423,120 @@ pub enum AppRealtimeVoice {
     Alloy,
     Arbor,
     Ash,
+    Aube,
     Ballad,
     Breeze,
+    Bubbie,
     Cedar,
     Coral,
     Cove,
     Echo,
     Ember,
+    Haetsal,
+    Hanul,
+    Himari,
     Juniper,
+    Leher,
     Maple,
     Marin,
+    Miko,
+    Neer,
+    Porto,
+    Rindo,
+    Rio,
+    Rivage,
     Sage,
+    Selva,
     Shimmer,
     Sol,
+    Sonna,
     Spruce,
+    Tinta,
     Vale,
     Verse,
+    Viola,
 }
 
 impl From<AppRealtimeVoice> for codex_protocol::protocol::RealtimeVoice {
     fn from(value: AppRealtimeVoice) -> Self {
-        use codex_protocol::protocol::RealtimeVoice as V;
         match value {
-            AppRealtimeVoice::Alloy => V::Alloy,
-            AppRealtimeVoice::Arbor => V::Arbor,
-            AppRealtimeVoice::Ash => V::Ash,
-            AppRealtimeVoice::Ballad => V::Ballad,
-            AppRealtimeVoice::Breeze => V::Breeze,
-            AppRealtimeVoice::Cedar => V::Cedar,
-            AppRealtimeVoice::Coral => V::Coral,
-            AppRealtimeVoice::Cove => V::Cove,
-            AppRealtimeVoice::Echo => V::Echo,
-            AppRealtimeVoice::Ember => V::Ember,
-            AppRealtimeVoice::Juniper => V::Juniper,
-            AppRealtimeVoice::Maple => V::Maple,
-            AppRealtimeVoice::Marin => V::Marin,
-            AppRealtimeVoice::Sage => V::Sage,
-            AppRealtimeVoice::Shimmer => V::Shimmer,
-            AppRealtimeVoice::Sol => V::Sol,
-            AppRealtimeVoice::Spruce => V::Spruce,
-            AppRealtimeVoice::Vale => V::Vale,
-            AppRealtimeVoice::Verse => V::Verse,
+            AppRealtimeVoice::Alloy => Self::Alloy,
+            AppRealtimeVoice::Arbor => Self::Arbor,
+            AppRealtimeVoice::Ash => Self::Ash,
+            AppRealtimeVoice::Aube => Self::Aube,
+            AppRealtimeVoice::Ballad => Self::Ballad,
+            AppRealtimeVoice::Breeze => Self::Breeze,
+            AppRealtimeVoice::Bubbie => Self::Bubbie,
+            AppRealtimeVoice::Cedar => Self::Cedar,
+            AppRealtimeVoice::Coral => Self::Coral,
+            AppRealtimeVoice::Cove => Self::Cove,
+            AppRealtimeVoice::Echo => Self::Echo,
+            AppRealtimeVoice::Ember => Self::Ember,
+            AppRealtimeVoice::Haetsal => Self::Haetsal,
+            AppRealtimeVoice::Hanul => Self::Hanul,
+            AppRealtimeVoice::Himari => Self::Himari,
+            AppRealtimeVoice::Juniper => Self::Juniper,
+            AppRealtimeVoice::Leher => Self::Leher,
+            AppRealtimeVoice::Maple => Self::Maple,
+            AppRealtimeVoice::Marin => Self::Marin,
+            AppRealtimeVoice::Miko => Self::Miko,
+            AppRealtimeVoice::Neer => Self::Neer,
+            AppRealtimeVoice::Porto => Self::Porto,
+            AppRealtimeVoice::Rindo => Self::Rindo,
+            AppRealtimeVoice::Rio => Self::Rio,
+            AppRealtimeVoice::Rivage => Self::Rivage,
+            AppRealtimeVoice::Sage => Self::Sage,
+            AppRealtimeVoice::Selva => Self::Selva,
+            AppRealtimeVoice::Shimmer => Self::Shimmer,
+            AppRealtimeVoice::Sol => Self::Sol,
+            AppRealtimeVoice::Sonna => Self::Sonna,
+            AppRealtimeVoice::Spruce => Self::Spruce,
+            AppRealtimeVoice::Tinta => Self::Tinta,
+            AppRealtimeVoice::Vale => Self::Vale,
+            AppRealtimeVoice::Verse => Self::Verse,
+            AppRealtimeVoice::Viola => Self::Viola,
         }
     }
 }
 
 impl From<codex_protocol::protocol::RealtimeVoice> for AppRealtimeVoice {
     fn from(value: codex_protocol::protocol::RealtimeVoice) -> Self {
-        use codex_protocol::protocol::RealtimeVoice as V;
         match value {
-            V::Alloy => AppRealtimeVoice::Alloy,
-            V::Arbor => AppRealtimeVoice::Arbor,
-            V::Ash => AppRealtimeVoice::Ash,
-            V::Ballad => AppRealtimeVoice::Ballad,
-            V::Breeze => AppRealtimeVoice::Breeze,
-            V::Cedar => AppRealtimeVoice::Cedar,
-            V::Coral => AppRealtimeVoice::Coral,
-            V::Cove => AppRealtimeVoice::Cove,
-            V::Echo => AppRealtimeVoice::Echo,
-            V::Ember => AppRealtimeVoice::Ember,
-            V::Juniper => AppRealtimeVoice::Juniper,
-            V::Maple => AppRealtimeVoice::Maple,
-            V::Marin => AppRealtimeVoice::Marin,
-            V::Sage => AppRealtimeVoice::Sage,
-            V::Shimmer => AppRealtimeVoice::Shimmer,
-            V::Sol => AppRealtimeVoice::Sol,
-            V::Spruce => AppRealtimeVoice::Spruce,
-            V::Vale => AppRealtimeVoice::Vale,
-            V::Verse => AppRealtimeVoice::Verse,
+            codex_protocol::protocol::RealtimeVoice::Alloy => Self::Alloy,
+            codex_protocol::protocol::RealtimeVoice::Arbor => Self::Arbor,
+            codex_protocol::protocol::RealtimeVoice::Ash => Self::Ash,
+            codex_protocol::protocol::RealtimeVoice::Aube => Self::Aube,
+            codex_protocol::protocol::RealtimeVoice::Ballad => Self::Ballad,
+            codex_protocol::protocol::RealtimeVoice::Breeze => Self::Breeze,
+            codex_protocol::protocol::RealtimeVoice::Bubbie => Self::Bubbie,
+            codex_protocol::protocol::RealtimeVoice::Cedar => Self::Cedar,
+            codex_protocol::protocol::RealtimeVoice::Coral => Self::Coral,
+            codex_protocol::protocol::RealtimeVoice::Cove => Self::Cove,
+            codex_protocol::protocol::RealtimeVoice::Echo => Self::Echo,
+            codex_protocol::protocol::RealtimeVoice::Ember => Self::Ember,
+            codex_protocol::protocol::RealtimeVoice::Haetsal => Self::Haetsal,
+            codex_protocol::protocol::RealtimeVoice::Hanul => Self::Hanul,
+            codex_protocol::protocol::RealtimeVoice::Himari => Self::Himari,
+            codex_protocol::protocol::RealtimeVoice::Juniper => Self::Juniper,
+            codex_protocol::protocol::RealtimeVoice::Leher => Self::Leher,
+            codex_protocol::protocol::RealtimeVoice::Maple => Self::Maple,
+            codex_protocol::protocol::RealtimeVoice::Marin => Self::Marin,
+            codex_protocol::protocol::RealtimeVoice::Miko => Self::Miko,
+            codex_protocol::protocol::RealtimeVoice::Neer => Self::Neer,
+            codex_protocol::protocol::RealtimeVoice::Porto => Self::Porto,
+            codex_protocol::protocol::RealtimeVoice::Rindo => Self::Rindo,
+            codex_protocol::protocol::RealtimeVoice::Rio => Self::Rio,
+            codex_protocol::protocol::RealtimeVoice::Rivage => Self::Rivage,
+            codex_protocol::protocol::RealtimeVoice::Sage => Self::Sage,
+            codex_protocol::protocol::RealtimeVoice::Selva => Self::Selva,
+            codex_protocol::protocol::RealtimeVoice::Shimmer => Self::Shimmer,
+            codex_protocol::protocol::RealtimeVoice::Sol => Self::Sol,
+            codex_protocol::protocol::RealtimeVoice::Sonna => Self::Sonna,
+            codex_protocol::protocol::RealtimeVoice::Spruce => Self::Spruce,
+            codex_protocol::protocol::RealtimeVoice::Tinta => Self::Tinta,
+            codex_protocol::protocol::RealtimeVoice::Vale => Self::Vale,
+            codex_protocol::protocol::RealtimeVoice::Verse => Self::Verse,
+            codex_protocol::protocol::RealtimeVoice::Viola => Self::Viola,
         }
     }
 }
@@ -645,10 +702,29 @@ pub enum PlanType {
     Go,
     Plus,
     Pro,
+    ProLite,
+    ProMax,
     Team,
+    #[serde(rename = "self_serve_business_prolite")]
+    SelfServeBusinessProLite,
+    #[serde(rename = "self_serve_business_usage_based")]
+    SelfServeBusinessUsageBased,
     Business,
+    Ent26,
+    #[serde(rename = "enterprise_cbp_automation")]
+    EnterpriseCbpAutomation,
+    #[serde(rename = "enterprise_cbp_usage_based")]
+    EnterpriseCbpUsageBased,
     Enterprise,
     Edu,
+    #[serde(rename = "edu_plus")]
+    EduPlus,
+    #[serde(rename = "edu_pro")]
+    EduPro,
+    Sci,
+    #[serde(rename = "sci_plus")]
+    SciPlus,
+    #[serde(other)]
     Unknown,
 }
 
@@ -1157,6 +1233,7 @@ pub enum Account {
     #[serde(rename = "apiKey")]
     #[serde(rename_all = "camelCase")]
     ApiKey,
+    Gcp,
     #[serde(rename = "chatgpt")]
     #[serde(rename_all = "camelCase")]
     Chatgpt { email: String, plan_type: PlanType },
@@ -1166,8 +1243,11 @@ impl From<upstream::Account> for Account {
     fn from(value: upstream::Account) -> Self {
         match value {
             upstream::Account::ApiKey {} => Self::ApiKey,
+            upstream::Account::Gcp {} => Self::Gcp,
             upstream::Account::AmazonBedrock { .. } => Self::ApiKey,
-            upstream::Account::Chatgpt { email, plan_type } => Self::Chatgpt {
+            upstream::Account::Chatgpt {
+                email, plan_type, ..
+            } => Self::Chatgpt {
                 email: email.unwrap_or_default(),
                 plan_type: plan_type.into(),
             },
@@ -1489,7 +1569,9 @@ impl From<upstream::SkillMetadata> for SkillMetadata {
             short_description: value.short_description,
             interface: value.interface.map(Into::into),
             dependencies: value.dependencies.map(Into::into),
-            path: value.path.into(),
+            path: AbsolutePath {
+                value: value.path.to_string(),
+            },
             scope: value.scope.into(),
             enabled: value.enabled,
         }
@@ -2044,5 +2126,99 @@ mod reasoning_effort_compatibility_tests {
             Some(ReasoningEffort::High)
         );
         assert!(serde_json::from_str::<ReasoningEffort>("\"\"").is_err());
+    }
+}
+
+#[cfg(test)]
+mod protocol_alignment_tests {
+    use super::*;
+
+    #[test]
+    fn account_plan_conversion_preserves_every_wire_identity() {
+        use codex_protocol::account::PlanType as CorePlan;
+        for plan in [
+            CorePlan::Free,
+            CorePlan::Go,
+            CorePlan::Plus,
+            CorePlan::Pro,
+            CorePlan::ProLite,
+            CorePlan::ProMax,
+            CorePlan::Team,
+            CorePlan::SelfServeBusinessProLite,
+            CorePlan::SelfServeBusinessUsageBased,
+            CorePlan::Business,
+            CorePlan::Ent26,
+            CorePlan::EnterpriseCbpAutomation,
+            CorePlan::EnterpriseCbpUsageBased,
+            CorePlan::Enterprise,
+            CorePlan::Edu,
+            CorePlan::EduPlus,
+            CorePlan::EduPro,
+            CorePlan::Sci,
+            CorePlan::SciPlus,
+            CorePlan::Unknown,
+        ] {
+            let expected = serde_json::to_value(plan).unwrap();
+            let mobile = PlanType::from(plan);
+            assert_eq!(serde_json::to_value(&mobile).unwrap(), expected);
+            assert_eq!(
+                serde_json::from_value::<PlanType>(expected).unwrap(),
+                mobile
+            );
+        }
+    }
+
+    #[test]
+    fn realtime_voices_round_trip_without_aliasing() {
+        use codex_protocol::protocol::RealtimeVoice as CoreVoice;
+        for voice in [
+            CoreVoice::Alloy,
+            CoreVoice::Arbor,
+            CoreVoice::Ash,
+            CoreVoice::Aube,
+            CoreVoice::Ballad,
+            CoreVoice::Breeze,
+            CoreVoice::Bubbie,
+            CoreVoice::Cedar,
+            CoreVoice::Coral,
+            CoreVoice::Cove,
+            CoreVoice::Echo,
+            CoreVoice::Ember,
+            CoreVoice::Haetsal,
+            CoreVoice::Hanul,
+            CoreVoice::Himari,
+            CoreVoice::Juniper,
+            CoreVoice::Leher,
+            CoreVoice::Maple,
+            CoreVoice::Marin,
+            CoreVoice::Miko,
+            CoreVoice::Neer,
+            CoreVoice::Porto,
+            CoreVoice::Rindo,
+            CoreVoice::Rio,
+            CoreVoice::Rivage,
+            CoreVoice::Sage,
+            CoreVoice::Selva,
+            CoreVoice::Shimmer,
+            CoreVoice::Sol,
+            CoreVoice::Sonna,
+            CoreVoice::Spruce,
+            CoreVoice::Tinta,
+            CoreVoice::Vale,
+            CoreVoice::Verse,
+            CoreVoice::Viola,
+        ] {
+            let mobile = AppRealtimeVoice::from(voice);
+            assert_eq!(
+                serde_json::to_value(mobile).unwrap(),
+                serde_json::to_value(voice).unwrap()
+            );
+            assert_eq!(CoreVoice::from(mobile), voice);
+        }
+    }
+
+    #[test]
+    fn gcp_account_keeps_its_identity() {
+        assert_eq!(Account::from(upstream::Account::Gcp {}), Account::Gcp);
     }
 }

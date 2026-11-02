@@ -1,0 +1,51 @@
+{
+  "target_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "baseline": {
+    "archive_sha256": "718c86dcd7104919f2820aa79db0fa0083b5f240aa16da704f43e4acf7b544e5",
+    "verified_entries": 9732
+  },
+  "prerequisite_patch_sha256": "ffde8f1f32ac7edb0f63d7a4faa84a0179e1c92db43d6180e043de045a6d8e00",
+  "patch_sha256": "c2613975af1ea379b3a998b2dda63c5db364817cd69762bd778707aeb02a8736",
+  "changed_paths": [
+    "codex-rs/core/src/shell.rs",
+    "codex-rs/core/src/shell_tests.rs",
+    "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs",
+    "codex-rs/exec-server/src/environment/embedded.rs"
+  ],
+  "checks": [
+    {
+      "with_prerequisites": false,
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": true,
+      "duplicate_rejected": true,
+      "after_sha256": {
+        "codex-rs/core/src/shell.rs": "5a2b39101a5d22e9647ed7ea5e3f9ec043c5388bfcae9ca4dc6550cb3630b497",
+        "codex-rs/core/src/shell_tests.rs": "b537ad9dea948e9ba3b158643d774d606785b60e92ed058ffaeecd6a10085741",
+        "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs": "033de049f5a17b0f00bcb8fdf3f9e2c822edcfe3a92779803fea75813f71068d",
+        "codex-rs/exec-server/src/environment/embedded.rs": "0b936f33400b30adca6ae8c0189c22cb47b9069ba0e903fbccb83f5be1d210ce"
+      }
+    },
+    {
+      "with_prerequisites": true,
+      "strict_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "reverse_check": true,
+      "duplicate_rejected": true,
+      "after_sha256": {
+        "codex-rs/core/src/shell.rs": "5a2b39101a5d22e9647ed7ea5e3f9ec043c5388bfcae9ca4dc6550cb3630b497",
+        "codex-rs/core/src/shell_tests.rs": "b537ad9dea948e9ba3b158643d774d606785b60e92ed058ffaeecd6a10085741",
+        "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs": "033de049f5a17b0f00bcb8fdf3f9e2c822edcfe3a92779803fea75813f71068d",
+        "codex-rs/exec-server/src/environment/embedded.rs": "0b936f33400b30adca6ae8c0189c22cb47b9069ba0e903fbccb83f5be1d210ce"
+      }
+    }
+  ],
+  "baseline_unchanged": true,
+  "full_codex_build_verified": false
+}

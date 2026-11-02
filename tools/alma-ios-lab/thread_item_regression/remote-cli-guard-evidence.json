@@ -1,0 +1,46 @@
+{
+  "scope": "two runtime files; guards and accessor only",
+  "methods": [
+    "connect_remote",
+    "connect_remote_over_slingshot",
+    "connect_remote_over_ssh_bridges",
+    "connect_remote_over_ssh",
+    "finish_connect_remote_over_ssh"
+  ],
+  "existing_method_continuations_unchanged": true,
+  "network_scope_unchanged": true,
+  "runs": [
+    {
+      "mode": "disabled",
+      "compile_command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/remote-cli-guards/guards.rs",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/remote-cli-guards/disabled"
+      ],
+      "test_exit_code": 0
+    },
+    {
+      "mode": "enabled",
+      "compile_command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/remote-cli-guards/guards.rs",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/remote-cli-guards/enabled",
+        "--cfg",
+        "feature=\"remote-cli\""
+      ],
+      "test_exit_code": 0
+    }
+  ],
+  "full_mobile_build_rerun": false,
+  "source_sha256": {
+    "shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs": "80570e5f4fd9cfb24ef86ec818190a89e2578a7dec29c635f12b8bf97d94b4cb",
+    "shared/rust-bridge/codex-mobile-client/src/ffi/client.rs": "4b3a4fada8fdd721687ea58b85f4fceb6def33443385d25806fe3ebd2148b74f",
+    "shared/rust-bridge/codex-mobile-client/src/network_scope.rs": "058659476fd0ef8140bfd7b1a008bfc6dd61b801ca332bc2282e8c20e5b58143"
+  }
+}

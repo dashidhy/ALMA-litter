@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "status": "covered_tool_workloads_passed_with_documented_shell_limitation",
+  "build": {
+    "ishCommit": "4f783cd957b83de3019d6a843408d5bb3ff902c7",
+    "sourceUnmodified": true,
+    "binarySHA256": "527619df78e7d12744c3191f3260fb532f58711ee49ff8e7a0c23e36e2777452",
+    "vdsoBytes": 3056,
+    "vdsoSHA256": "372abc40e3a7af66933385198820097a158d7328bc65c933b72d833de93ab72d",
+    "scope": "macOS C host CLI with the pinned iSH kernel/interpreter; no embedded Rust supervisor or phone build",
+    "assets": [
+      {
+        "file": "ish-4f783cd9.tar.gz",
+        "sha256": "3df629379e1403821909f5e822b24b631f7e576f4fce6f8357e85423a3a46067",
+        "url": "https://codeload.github.com/dnakov/litter-ish/tar.gz/4f783cd957b83de3019d6a843408d5bb3ff902c7"
+      },
+      {
+        "file": "litter-rootfs-v0.1.2.tar.gz",
+        "sha256": "70e7d8acc9520ca45d53821dd3ffab1035620156dda3e513e66013e848f6ba0a",
+        "url": "https://api.github.com/repos/dnakov/litter-ish/releases/assets/424728088"
+      }
+    ]
+  },
+  "host": {
+    "model": "Apple M2 Pro",
+    "os": "macOS 27.0.1",
+    "architecture": "arm64"
+  },
+  "versions": {
+    "Python": "3.12.16-r0",
+    "Node": "22.23.4-r0",
+    "Bash": "5.2.37-r0",
+    "BusyBox": "1.37.0-r8",
+    "Alpine": "3.21"
+  },
+  "baseResults": [
+    {
+      "id": "base-sed-read",
+      "passed": true,
+      "checks": {
+        "exactReadback": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16144795902073383,
+      "stopReason": null,
+      "peakSampledRSSBytes": 1867776,
+      "note": null
+    },
+    {
+      "id": "base-shell-heredoc",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.1592886250000447,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "base-pipeline",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.1641296250745654,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2048000,
+      "note": null
+    },
+    {
+      "id": "base-exit-status",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 7,
+      "exit": 7,
+      "seconds": 0.16579591715708375,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "base-missing-python",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 127,
+      "exit": 127,
+      "seconds": 0.17084158398211002,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2277376,
+      "note": "Expected unavailable/unsupported behavior"
+    },
+    {
+      "id": "base-missing-node",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 127,
+      "exit": 127,
+      "seconds": 0.16633270890451968,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2277376,
+      "note": "Expected unavailable/unsupported behavior"
+    }
+  ],
+  "installation": [
+    {
+      "id": "install-install-apks",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 6.822768291924149,
+      "stopReason": null,
+      "peakSampledRSSBytes": 69500928,
+      "note": null
+    }
+  ],
+  "toolResults": [
+    {
+      "id": "tools-versions",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.15653487504459918,
+      "stopReason": null,
+      "peakSampledRSSBytes": 1703936,
+      "note": null
+    },
+    {
+      "id": "tools-python-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.4784421250224113,
+      "stopReason": null,
+      "peakSampledRSSBytes": 30310400,
+      "note": null
+    },
+    {
+      "id": "tools-python-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.3154154589865357,
+      "stopReason": null,
+      "peakSampledRSSBytes": 25886720,
+      "note": null
+    },
+    {
+      "id": "tools-node-default-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1099114581011236,
+      "stopReason": null,
+      "peakSampledRSSBytes": 65732608,
+      "note": null
+    },
+    {
+      "id": "tools-reset-note",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.3151547501329333,
+      "stopReason": null,
+      "peakSampledRSSBytes": 31047680,
+      "note": null
+    },
+    {
+      "id": "tools-node-jitless-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1034652921371162,
+      "stopReason": null,
+      "peakSampledRSSBytes": 66355200,
+      "note": null
+    },
+    {
+      "id": "tools-node-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1107256249524653,
+      "stopReason": null,
+      "peakSampledRSSBytes": 71368704,
+      "note": null
+    },
+    {
+      "id": "tools-bash-script",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16335179191082716,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "tools-sh-bash-array",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 2,
+      "exit": 2,
+      "seconds": 0.16734887519851327,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2277376,
+      "note": "Expected unavailable/unsupported behavior"
+    },
+    {
+      "id": "tools-readback",
+      "passed": true,
+      "checks": {
+        "exactFinalFile": true,
+        "expectedBytes": 117262
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.1719464580528438,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "tools-same-kernel-repeat",
+      "passed": true,
+      "checks": {
+        "exactFinalFile": true,
+        "expectedBytes": 117262
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 12.819314291933551,
+      "stopReason": null,
+      "peakSampledRSSBytes": 77086720,
+      "note": null
+    }
+  ],
+  "corpus": {
+    "turns": 254,
+    "bytes": 117155,
+    "characters": 44661,
+    "sha256": "4a6a25fc2470c69a228caf02c5b692cca6b357b279eac29bb12a2adff6894801"
+  },
+  "identityOutput": "{\"platform\": \"linux\", \"executable\": \"/usr/bin/python3\", \"architecture\": \"aarch64\"}\n{\"platform\":\"linux\",\"arch\":\"arm64\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"-p\",\"JSON.stringify({platform:process.platform,arch:process.arch,flags:process.execArgv,wasm:typeof WebAssembly})\"],\"wasm\":\"undefined\"}\n\n__ALMA_GUEST_EXIT__:0\n",
+  "limitations": [
+    "Host CLI of the same iSH C kernel/interpreter, not Litter Rust supervisor/exec hook and not iPhone.",
+    "Node automatically receives --jitless, --no-lazy, --max-old-space-size=512 from upstream iSH; explicit flag run is not an independent JIT-enabled comparison.",
+    "Bash array script works in Bash but fails under sh; Litter currently normalizes bash/zsh -c to sh -c.",
+    "No LLM inference or Codex 0.166 end-to-end Structured Note task.",
+    "No npm or third-party Python module compatibility claim, no tool-network coverage.",
+    "Wall times include host-CLI startup and 150ms polling; short-command peaks may be missed, RSS is not iPhone footprint."
+  ],
+  "setupIssues": [
+    {
+      "issue": "Host runner initially passed fs/data to CLI -f; CLI itself appends /data.",
+      "resolution": "Corrected runner argument; original failure retained, not classified as iSH incompatibility."
+    },
+    {
+      "issue": "Standalone host CLI can exit 0 for a nonzero guest exit.",
+      "resolution": "Record an explicit guest child wait status; require both valid guest status and normal host completion."
+    },
+    {
+      "issue": "Initial 4MiB RLIMIT_FSIZE also limited the Node executable being unpacked.",
+      "resolution": "Installer re-run from a fresh root with 256MiB per-file cap and separate 4MiB log guard; no runtime or signature bypass."
+    },
+    {
+      "issue": "Existing rust-lld could not find libLLVM.dylib.",
+      "resolution": "Package-local launcher supplies existing toolchain library directory; verified nonempty 3056-byte ARM64 ELF VDSO."
+    }
+  ],
+  "guardrails": {
+    "wallTimeoutSeconds": 45,
+    "installTimeoutSeconds": 180,
+    "hostRSSLimitMiB": 1536,
+    "logLimitMiBPerStream": 4,
+    "fileLimitMiB": 256,
+    "noCredentialsUsed": true,
+    "noDeviceChanges": true
+  }
+}

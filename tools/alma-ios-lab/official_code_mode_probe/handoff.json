@@ -1,0 +1,52 @@
+{
+  "status": "HANDOFF_STOPPED_AFTER_RESOURCE_LIMIT",
+  "c_abi": "void alma_official_code_mode_probe_run(const char *resources, const char *documents, void (*callback)(const char *json))",
+  "callback_format": "Existing ObjC probe phase/case/fatal/finished JSON, callback string lifetime limited to call",
+  "call_thread": "Background; blocking one-shot call; 60-second disposable-process watchdog exits 124 on stuck execution",
+  "staticlib": {
+    "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/official_code_mode_probe/.cache/target/aarch64-apple-ios/debug/libalma_official_code_mode_probe.a",
+    "exists": true,
+    "bytes": 509078984,
+    "sha256": "df6033ee4a179c445a24294df01c3242af5a41362c0d0c722e2993d2da440af2"
+  },
+  "rust_compile": "Cargo finished in 2m 47s; actual runtime copy, actual upstream protocol/dependencies",
+  "cache_limit": "Exceeded 3 GiB at final archive; stopped; removed only redundant private metadata",
+  "cache_bytes_observed": 3550218563,
+  "cache_bytes_after_cleanup": 2940375277,
+  "verified": [
+    "Verified existing V8 source/native archive/bindings hashes",
+    "Runtime source copy hashes match upstream; sandbox test preserved",
+    "Cargo build finished for aarch64-apple-ios; archive present"
+  ],
+  "unverified": [
+    "C ABI symbol inspection",
+    "Final iOS executable link",
+    "All nine runtime fixture groups",
+    "Phone execution and memory",
+    "Full upstream test suite",
+    "Security parity with V8 sandbox-enabled upstream runtime"
+  ],
+  "runtime_groups": 9,
+  "runtime_groups_executed": 0,
+  "source_change": "No official Rust/JS or native C++ edits. Only private manifest drops v8_enable_sandbox; copied metadata/dependencies expanded.",
+  "security_difference": "Plain V8 lacks upstream-required memory sandbox. Functional probe is not production acceptance.",
+  "network": "No auth/model/device/network-delegate calls. One locked ICU data crate downloaded and checksum-verified; Cargo build offline.",
+  "production_changes": false,
+  "driver_postbuild_changes_not_rerun": true,
+  "files": {
+    "icu-artifact.json": "3e03478b6c17b3a02b2fc95e2fd0365eca7d315226f76f9db53c9843a1b76ba4",
+    "build.py": "67d57a2ef6ae3b400c29680ddd4784a49b3d17d5f66e038b60378c5a807cf5e5",
+    "link-evidence.json": "d876e685f51890fa7fc0cebbf34ffca7e9b581e829c60e2e0d466b5a3067dac7",
+    "runtime-manifest.toml": "5a7b98417d0e17e80e91dc2ad1f366f9f9250570d0644fdc1ed8e3d34127e2cf",
+    "fixture-manifest.toml": "71363605df0245f0eb8a0f89717df2f6223db0b6ef5d0c29318ebab55f66899c",
+    "Cargo.lock": "7d3eb3ce7a815b0abfb610d5d3dc0a0ffe505bd5f39267360a93305c846f34a6",
+    "README.md": "d44769aa27f843d3be7a37f0210990f8a9d395f2b53e87affa6083312bc9f3df",
+    ".gitignore": "046032151fe6113c18a8d7d9971c557e81129ca1ba244e5263d54b7e0e6f9643",
+    "source-evidence.json": "5ff68ee36746a682f8441fce9252b21a2f6581d45da0c408eafcdfff5ce7cd5a",
+    "build-log.txt": "c31106c8fa2a90e20b50f977418b6869673f55c2f9b7d5490ff3d0c547842ddc",
+    "build-evidence.json": "3564fc51cf1642e227119cbed50e83cce24e52d250d31be688c04637104d7386",
+    "source-lock.json": "7825a814f039cc44d1a6969b558ff2f66588e72eb01f3229d52ef34d027a2943"
+  },
+  "runner_sha256": "fd95a5842f0bca1de96a989d9792f0b547eaeadaf519fc30bdaf411f24aad1d8",
+  "header_sha256": "91d6143b26bb7d61ba151f0affd8fd4e972c0770c29bb200bdef98bfd018a9f3"
+}

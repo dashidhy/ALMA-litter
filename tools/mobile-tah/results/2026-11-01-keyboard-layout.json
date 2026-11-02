@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "date": "2026-11-01",
+  "status": "fixed_and_verified_on_connected_phone",
+  "reportedIssues": [
+    {
+      "id": "UI-KEYBOARD-01",
+      "problem": "On first focus the iOS keyboard covers the revision-instructions composer.",
+      "cause": "App shell uses layout height 100dvh without tracking the visual viewport used by the on-screen keyboard.",
+      "fix": "Bind shell/composer to measured visible viewport; preserve independent content scroll and restore full size after dismissal."
+    },
+    {
+      "id": "UI-KEYBOARD-02",
+      "problem": "Subsequent focus leaves a dark gap in Paper appearance.",
+      "cause": "Native WKWebView background is fixed to Ink; keyboard and bottom safe-area space are not coordinated.",
+      "fix": "Synchronize native background with theme and avoid double bottom insets while keyboard is open."
+    },
+    {
+      "id": "UI-KEYBOARD-03",
+      "problem": "WebView previous/next/done accessory toolbar occupies an unnecessary extra row.",
+      "fix": "Use supported Tauri with_input_accessory_view_builder returning None; retain compact dismissal in the composer."
+    }
+  ],
+  "designDecision": "Floating rounded composer above the content plane, containing text and existing controls together; side margins, small keyboard gap, restrained frosted surface/shadow. Keep Alma colors. CSS frosting is not claimed to be native Apple Liquid Glass.",
+  "references": [
+    "https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport",
+    "https://docs.rs/tauri/2.12.1/x86_64-apple-ios/tauri/webview/struct.WebviewBuilder.html#method.with_input_accessory_view_builder",
+    "https://webkit.org/demos/backdrop-filter/"
+  ],
+  "beforeUpdate": {
+    "journalIntegrity": "ok",
+    "publications": 8,
+    "pending": 0
+  },
+  "scope": "Presentation only; Framework/Adapter/Backend and user tasks unchanged.",
+  "build": "0.2.0 (4)",
+  "checks": {
+    "frontendTests": 58,
+    "productionFrontendBuild": "passed",
+    "nativeCheck": "passed",
+    "nativeLibraryBuild": "passed",
+    "signedXcodeBuild": "passed",
+    "device": "iPhone 12 Pro, iOS 27.0.1",
+    "keyboard": "User-installed Sogou Chinese nine-key and English QWERTY",
+    "physicalChecks": [
+      "First focus after cold app launch keeps textarea and controls fully above keyboard",
+      "Native form accessory toolbar absent",
+      "Paper theme has no exposed dark band",
+      "Composer hide button dismisses keyboard and full layout returns",
+      "Second focus remains visible",
+      "Chinese nine-key -> English QWERTY -> Chinese nine-key stays aligned",
+      "On-screen q input and deletion preserve focus; no instructions sent",
+      "Original draft restored to empty; settings checkpoint saved",
+      "Existing SAM v1 remains published"
+    ]
+  },
+  "afterUpdate": {
+    "integrity": "ok",
+    "publications": 8,
+    "pending": 0,
+    "journalEventsUnchanged": true,
+    "journalChunksUnchanged": true,
+    "testCharacterDraftRemains": false
+  },
+  "evidence": {
+    "firstFocusScreenshot": "tools/mobile-tah/.cache/keyboard-first-focus.png",
+    "sha256": "c4116410cffc16592a7c2c099b10c634516e12c49a0b133c5e0bbb14fae537d2"
+  },
+  "limitations": [
+    "Physical keyboard/layout checks cover this phone and its installed Sogou keyboard; other iOS/IME combinations are not claimed.",
+    "Frosted appearance is CSS backdrop-filter, not native UIGlassEffect."
+  ]
+}

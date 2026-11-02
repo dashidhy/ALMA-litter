@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+    "test",
+    "--offline",
+    "--manifest-path",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/rust/Cargo.toml",
+    "-j",
+    "2"
+  ],
+  "exit_code": 0,
+  "production_source_sha256": "34a30a1df4fb83cabaaa5966601f6599f47f4aebcb7dada629202017e4c6765f",
+  "transport": "offline dummy reply closure",
+  "protocol": "DTOs extracted from actual source; not full upstream crate"
+}

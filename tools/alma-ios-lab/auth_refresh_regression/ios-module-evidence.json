@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+    "--crate-name",
+    "auth_refresh_ios_typecheck",
+    "--crate-type",
+    "lib",
+    "--edition=2024",
+    "--target=aarch64-apple-ios",
+    "--emit=metadata",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/ios/lib.rs",
+    "-o",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/ios/auth_refresh.rmeta",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps",
+    "--extern",
+    "uniffi=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libuniffi-10cd43a8a7239bd2.rmeta",
+    "--extern",
+    "codex_app_server_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_app_server_protocol-5b2b77658f59339d.rmeta",
+    "--extern",
+    "tokio=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libtokio-d1d0e798da8b6b7a.rmeta",
+    "--extern",
+    "thiserror=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libthiserror-93b57c3124dbba63.rmeta",
+    "--extern",
+    "async_trait=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps/libasync_trait-5b2c71562ecfa2f9.dylib"
+  ],
+  "exit_code": 0,
+  "source_sha256": "34a30a1df4fb83cabaaa5966601f6599f47f4aebcb7dada629202017e4c6765f",
+  "scope": "production module, real iOS metadata, standalone root; not whole-mobile wiring"
+}

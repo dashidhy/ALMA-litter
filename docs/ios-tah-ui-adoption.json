@@ -1,0 +1,261 @@
+{
+  "schema": 1,
+  "status": "2026-11-01: the initial SwiftUI shell below is retained as a fallback. The active installed phone UI is now Tauri + React with full Markdown block rendering over the same TAHMobileController and original phone-owned TAH core. Real-device reading, ASR file separation, settings and unchanged persisted publications are verified; see tools/mobile-tah/results/2026-11-01-tauri-ui-acceptance.json.",
+  "ownership": {
+    "writes": [
+      "apps/ios/Sources/AlmaTAH/Presentation/",
+      "docs/ios-tah-ui-adoption.json"
+    ],
+    "boundary": "TAHFramework -> ProviderAdapter -> ProviderBackend unchanged. Main owns original AppActions/Framework in JSCore and controller; backend agent owns execution. This shell only emits typed UI intents.",
+    "choice": "Initial adoption used a native SwiftUI shell; at the user's explicit request it is now superseded by apps/ios/tah-ui (Tauri + React) styled after Alma Preview. Existing presentation contracts/controller and Framework -> Adapter -> Backend remain unchanged. Historical SwiftUI implementation/evidence below are retained as provenance, not the active UI description."
+  },
+  "version_clarification": {
+    "actionTypeID": "structured-notes",
+    "frameworkActionID": "structured_notes",
+    "actionDefinitionID": "structured_notes/v1",
+    "outcomeContractID": "structured_notes/v2",
+    "evidence": [
+      "action_definition:7-28",
+      "outcome_contract:74-92"
+    ],
+    "correction": "Earlier core-feature contract v1 refers to the action definition, not the v2 outcome contract seen in execution. Do not set outcomeContractID to v1. This clarification supplements that document; the original file is outside this sidecar write scope."
+  },
+  "files": [
+    {
+      "file": "TAHPresentationContract.swift",
+      "provides": "Foundation Sendable/Equatable projections, typed settings/submission/material references, @MainActor Observable controller protocol; no wire DTO decoding."
+    },
+    {
+      "file": "TAHMobileView.swift",
+      "provides": "Transcript picker/text import, raw check/consent, Structured Notes action picker/create, output/interaction language, supplied model/effort/context choices, per-revision Web, instruction editor/send."
+    },
+    {
+      "file": "TAHHistoryView.swift",
+      "provides": "Public timeline with expansion/paging callbacks; accepted revisions and typed raw/notes/ASR requests; observed material sheet."
+    },
+    {
+      "file": "../Runtime/TAHMobileController.swift",
+      "provides": "@MainActor @Observable controller, original AppActions API calls, original SQLite store.* routing, opaque provider/credential delegation, allowlisted resource reads, snapshot projection, UI index/draft persistence and normal-path polling."
+    }
+  ],
+  "host_adoption": [
+    "Main adds these files to its target, retains TAHMobileController, and embeds TAHMobileView(controller:) inside NavigationStack. App entry, native provider/credential service and backend remain main/other-agent owned.",
+    "TAHMobileController implements TAHPresentationController with tracked presentation/draft. UI commands serialize admission and publish busy gates before enqueueing asynchronous calls. Main retains the controller and invokes shutdown() at runtime teardown.",
+    "Core AppActions retains authoritative authorization/receipt/catalog/policy/revision/publication validation. Controller owns UI editor-token checks, request UUIDs, local draft checkpoints, store.* routing, snapshot/history projection and coalesced normal-path polling; no role scheduling or Codex parsing.",
+    "Permissions default false. Supply all gates from controller validation; recompute send after draft edits. Set status/isBusy/error/disabledReason from real state. Busy in another action is not evidence of a raw check. Refresh is a read-only state refresh and never initiates inference.",
+    "updateDraft takes actionID+editorToken for composer edits; reject stale tokens. Nil context is only pre-action draft/consent editing. Model/provider changes normalize defaults in the controller, not in views. Unsupported saved selections remain visible as disabled values.",
+    "initialSettingsFrozen comes from AppActions; restore draft.outputLanguage from frozen action.language. Send initialLanguage only while unfrozen. canOmitInstructions comes from AppActions; UI permits blank only when true and send gate is true. Runtime still enforces nonblank later revisions, byte limits and all admission rules.",
+    "interactionLanguage is a separate app preference sampled on raw-check/send. Never infer it from transcript language or retroactively relabel historical text. settings.webEnabled maps to grantWeb for this revision, including false.",
+    "Project only public conversation/events into bounded AttributedString content (literal for user input, formatted Markdown for committed final/material). Preserve chronological journal order/stable IDs and expand by item ID. Never pass private reasoning, Guardian tool chatter or uncommitted actor finals.",
+    "revisions contains accepted publications only, keyed by commitID. configurationLabel derives provider/model/effort/context; no invented historical Web field. Controller invalidates pending material content on close/selection change and exposes only accepted outcomes.",
+    "Controller validates 48KiB chunks/constant byte counts/UTF-8 assembly; material and accepted final text use Foundation inline Markdown with preserved whitespace. Full desktop table/block Markdown fidelity remains unverified.",
+    "Text import is paste/manual entry; controller creates transcript identity and stages exact UTF-8 JSON material before check. Local form retains text across submission success/failure while mounted; no transcript transformation or fake upload is performed."
+  ],
+  "callback_map": [
+    [
+      "refresh",
+      "raw.status + action.list/action.snapshot/action.conversation reads as needed"
+    ],
+    [
+      "selectTranscript / importTranscript",
+      "Controller persists a local transcript/material ID index; import invokes original runtime material.put({transcriptID,materialID,title,rawTranscript}), which writes the original journal. No auto-consent/check."
+    ],
+    [
+      "selectAction",
+      "action.snapshot({actionID}) + action.conversation; checkpoint previous draft first"
+    ],
+    [
+      "updateDraft",
+      "native local draft checkpoint keyed by actionID/editorToken; not action.send"
+    ],
+    [
+      "selectInteractionLanguage",
+      "app preference; next raw.check/action.send interactionLanguage"
+    ],
+    [
+      "checkRawSafety",
+      "stage selected transcript -> raw.check({materialID,operationID,consent,interactionLanguage})"
+    ],
+    [
+      "createStructuredNotesAction",
+      "action.create({actionID,materialID,language,draftSettings}); metadata only"
+    ],
+    [
+      "sendAction",
+      "action.send({actionID:context.actionID,operationID,instructions,inference:{modelID,reasoningEffortID,contextWindowTokens?},initialLanguage?,expectedProviderID:settings.providerID,interactionLanguage,grantWeb:settings.webEnabled,consent}); validate editorToken locally; UUID generated by main"
+    ],
+    [
+      "loadMoreConversation / expandConversation",
+      "action.conversation({actionID,cursor}) / action.conversationText({actionID,position,offset})"
+    ],
+    [
+      "readMaterial(.rawTranscript)",
+      "action.transcriptMaterial({actionID,offset})"
+    ],
+    [
+      "readMaterial(.outcome)",
+      "action.outcome({actionID,revisionIndex,path:file.rawValue,offset}); accepted revisions only"
+    ],
+    [
+      "dismissMaterial",
+      "presentation-only close; invalidate pending read identity, not the workflow"
+    ]
+  ],
+  "validation": {
+    "performed": [
+      "All current AlmaTAH Swift files compiled as isolated macOS and arm64 iOS 18 Simulator libraries using Swift 6/complete concurrency; no diagnostics",
+      "19 snapshot/projection and real-bundle offline import checks passed",
+      "Original journal preserves exact imported UTF-8 across shutdown/reopen; zero provider/model operations",
+      "Snapshot copies prevent concurrent main-owned host edits from changing a build midway"
+    ],
+    "not_run": [
+      "Simulator/device launch or screenshots",
+      "Live authorization, RawGuardian, ExtraGuardian, actor or ProviderBackend execution",
+      "Full app/Rust linkage or background qualification"
+    ],
+    "result": "apps/ios/Sources/AlmaTAH/Presentation/controller-smoke-result.json",
+    "result_sha256": "3490f12bf93de327b082f651c047ce99f6a7ef11a3b2e5383b24cec7ea6e0055",
+    "reproduce": "python3 apps/ios/Sources/AlmaTAH/Presentation/controller-smoke.py",
+    "deferred": "Auth UI/native provider hookup, cancel/re-edit/recovery/background fault matrix, export, full desktop Markdown fidelity."
+  },
+  "source_root": "/Users/dashidhy/Public/projects/agent/ALMA",
+  "sources": [
+    {
+      "id": "action_definition",
+      "file": "app/TAH/src/framework/action-definition.ts",
+      "lines": "7-28",
+      "sha256": "649c32dda3bdf687e2c494c87386d5a5dced029197336e26fa7e3b3be1e9dc0b",
+      "adoption": "Definition ID and action ID; not outcome contract ID."
+    },
+    {
+      "id": "outcome_contract",
+      "file": "app/TAH/src/framework/outcome-contract.ts",
+      "lines": "74-92",
+      "sha256": "0d471e44b708f7c871c625511e2f748fbfa047d1b2c40b26e7f0fe4214f8b3f5",
+      "adoption": "Outcome contract v2 and accepted Markdown files."
+    },
+    {
+      "id": "native_dto",
+      "file": "app/Sources/AlmaTAHAppContracts/TAHAppProtocol.swift",
+      "lines": "54-245,338-359",
+      "sha256": "309d8965fd592ef10b6873a0b286acdd7df23e6f650cfb58a665a7e2968c4582",
+      "adoption": "Send/settings/snapshot/raw/history/catalog field semantics; adapted projections, no Codable/wire decoding."
+    },
+    {
+      "id": "native_controller",
+      "file": "app/Sources/AlmaApp/TAH/TAHNativeActions.swift",
+      "lines": "150-235,311-380,389-482,503-614,625-660",
+      "sha256": "4bdfa396c14576d38a4e5cad269502d47d793cc759d16f8317d12f76a1b73d36",
+      "adoption": "Draft tokens, material staging, capability gates, action/send/history callbacks."
+    },
+    {
+      "id": "language",
+      "file": "app/Sources/AlmaTAHAppContracts/TAHInteractionLanguage.swift",
+      "lines": "3-10",
+      "sha256": "7d4dc01d693ba4b657c50401ceebb002c1bff3db534ea47b2ea7be0cf5145f20",
+      "adoption": "en and zh-CN; public interaction language separate from notes/ASR."
+    },
+    {
+      "id": "react_actions",
+      "file": "app/desktop/src/Actions.tsx",
+      "lines": "16-78,112-177",
+      "sha256": "92639cb087afa64b361d21cf5a9585af90b1f5ffeaeedbf280cd901d0f01c5aa",
+      "adoption": "ActionHome, RawSafety, Composer; phone-native adaptation."
+    },
+    {
+      "id": "react_history",
+      "file": "app/desktop/src/Conversation.tsx",
+      "lines": "23-77,107-159",
+      "sha256": "442d4d13d8874a29bf440a726fb31e863ccb84955ee2169983aed432b3772880",
+      "adoption": "Timeline/Message/material tabs; accepted revision links."
+    },
+    {
+      "id": "app_actions",
+      "file": "app/TAH/src/app-runtime/actions.ts",
+      "lines": "112-134,215-274,401-453,491-543",
+      "sha256": "6a9f33faaa55f40dbe25472229e927ba8a42e95751b6471dbb5d5cac63fcfa20",
+      "adoption": "Core admission, output-language freeze, send, publication-derived reads."
+    },
+    {
+      "id": "service_mapping",
+      "file": "app/XPCServices/ALMATAHV42Service/Service.swift",
+      "lines": "121-174",
+      "sha256": "2bcdedb58878432209928053ca83a953045d342b829d8c29a379dc66faf317cb",
+      "adoption": "Native methods -> AppActions; main substitutes phone bridge transport."
+    },
+    {
+      "id": "public_history",
+      "file": "app/TAH/src/app-runtime/conversation.ts",
+      "lines": "17-94",
+      "sha256": "eccf32f73ba15465cc521e6f0f1e5255d678f56afb290f1fbb43904e84398063",
+      "adoption": "Public/accepted final only, stable positions and preview expansion."
+    },
+    {
+      "id": "public_events",
+      "file": "app/TAH/src/app-runtime/presentation.ts",
+      "lines": "24-67",
+      "sha256": "9c71b77b108c607d3550263d6c95858d7d3b350160a167b261bb21ca508774b9",
+      "adoption": "Actor public events + host Guardian verdict only."
+    }
+  ],
+  "controller_handoff": {
+    "initializer": "try await TAHMobileController(bundleURL: URL, promptURLs: [String: URL] = [:], configurationJSON: String, journalDirectory: URL, providerPlatform: @escaping AlmaTAHJavaScriptHost.PlatformCall)",
+    "bundle": "Use main boot-composed generated/alma-tah.js with installed global AlmaMobileRuntime. Factory-only exports are insufficient.",
+    "configuration": "Passed unchanged to runtime.initialize: {profiles:[AppProviderProfile including profileIdentity],resources:{actorPromptTemplate,rawGuardianPrompt,extraGuardianPrompt,safetyPolicy},actionInstructions}. Runtime owns startup inspection.",
+    "platform": [
+      "store.* decoded only as neutral TAHRuntimeValue -> original TAHJournalStore.handleRPC",
+      "resources.read({path}) accepts exact keys in promptURLs only and returns {base64}, matching platform/node-fs-promises.js",
+      "ui.actionChanged/ui.auth ACK immediately; reads coalesce separately to avoid reentrant notification deadlock",
+      "provider.* and credential.* delegate original method + opaque JSON to supplied async native closure; unknown methods rejected"
+    ],
+    "local_state": "journalDirectory must be a canonical app-owned 0700 directory. Original store owns tah.sqlite3; controller separately owns atomic 0600 mobile-ui.json for transcript/material IDs, language preference, editor-token drafts. No cutover calls.",
+    "readiness": "init is async and initializes the core, then reads auth/raw/actions. refresh is read-only. inspectAuthorization() is explicit; main supplies login/provider selection outside this screen.",
+    "normal_path": "Import -> explicit content consent -> raw.check/status polling -> create -> mutable initial draft -> send -> core snapshot/events/history -> accepted revisions. Language/model/effort/Web follow original App fields.",
+    "limits": [
+      "Provider closure receives credential traffic; controller never reads ambient credentials or parses provider wire",
+      "Exceptions and background remain deferred; shutdown awaits runtime.shutdown before closing host/journal",
+      "Full plain source file import picker and desktop Markdown renderer are not supplied"
+    ],
+    "coordination": "Attempted authorized async main message; available thread tool rejects native-ancestor delivery and no native collaboration messenger is exposed. Requirements recorded here and returned in final."
+  },
+  "controller_evidence": {
+    "checks": [
+      "empty V0 is allowed only by core snapshot",
+      "interaction language and live catalog projected independently",
+      "first-send language freeze and blank revision denial",
+      "nonblank later revision admission",
+      "per-revision Web false and omitted frozen language",
+      "exact nullable effort and optional context wire shape",
+      "expired receipt gates execution and permits recheck",
+      "no implicit content consent",
+      "explicit draft consent remains editable until persisted",
+      "provider-specific draft cannot cross provider",
+      "unavailable saved model is not silently substituted",
+      "valid credential without successful inspection is insufficient",
+      "accepted final and host Guardian verdict only",
+      "real core unauthenticated projection",
+      "real material.put through native journal",
+      "import never grants consent or invokes Guardian",
+      "transcript selection recovered from persisted UI index",
+      "production SQLite retains exact imported UTF-8",
+      "zero provider/model operations"
+    ],
+    "tested_bundle_sha256": "5d4229dafd57295a49b9e8e4b24172712708c8142c4536a6b19672764ce62947",
+    "tested_host_sha256": "277b42ab42511537413d21f15837cf0f7039790f19fb95f51e9a46e033ba1ea5",
+    "tested_controller_sha256": "7b733bbe1418a2ad970c61cb3cf9197f809d798b4d46aa7a2a88c386e02d9b94",
+    "simulator_platform": "IOSSIMULATOR, minimum iOS 18.0",
+    "diagnostics": {
+      "host": "",
+      "simulator": "",
+      "checks": ""
+    }
+  },
+  "active_frontend": {
+    "path": "apps/ios/tah-ui",
+    "nativeGateway": "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift",
+    "nativeHost": "tools/mobile-tah/Sources/TauriNativeHost.swift",
+    "reproduction": "tools/mobile-tah/README.md",
+    "markdown": "GFM via marked and DOMPurify; full headings/lists/tables/links/code. Original source text preserved. Native material admission remains authoritative.",
+    "scope": "iOS foreground presentation only; no new agent inference during this UI acceptance; original live V0/V1/V2 core qualification remains separately recorded."
+  }
+}

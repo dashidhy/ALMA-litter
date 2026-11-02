@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-02",
+  "scope": "Actual iOS Tauri test App as listed by prepare_tauri_app.py; UI audit and fixes only",
+  "notInPackage": [
+    "legacy MobileTAHApp SwiftUI entry",
+    "TAHMobileView/TAHHistoryView",
+    "original Litter UI screens"
+  ],
+  "changes": [
+    "Reduced-motion sheet dismissal fades in place for 120ms instead of skipping feedback",
+    "Reduced-motion cancelled drag fades out, repositions while hidden, fades in over 160ms",
+    "Busy states missing phase retain Processing/Preparing text",
+    "Local file reading shows status text and shared spinner",
+    "Pre-admission command waiting shows operation-specific text in main page and top-layer sheets"
+  ],
+  "reviewedUnchanged": [
+    "spinner reduce-motion opacity pulse",
+    "direct finger dragging",
+    "keyboard visual-viewport geometry",
+    "log following/manual history/latest",
+    "elapsed time and live events",
+    "completion/error messages",
+    "static icons and Markdown",
+    "native host startup and presentation",
+    "independent reduced-transparency preference"
+  ],
+  "validation": {
+    "frontendTests": 131,
+    "addedRegressions": 7,
+    "frontendBuild": "passed",
+    "iOSBuild": "passed",
+    "installed": true,
+    "modelCalls": 0,
+    "systemAccessibilitySettingsChanged": false
+  },
+  "physicalChecks": [
+    "Settings short pull restores panel without dismissal",
+    "Settings long pull dismisses and returns to the main page",
+    "Settings remains interactive after short-pull recovery; Paper theme applied",
+    "Record selection shows Processing text instead of a bare spinner"
+  ],
+  "limitations": [
+    "No new ASR/provider workflow was run",
+    "File-read and pre-admission delays were controlled component tests; no claimed real large-file delay capture",
+    "No full combined recording/ASR app or legacy UI qualification",
+    "Physical gesture verification checked final state; timing and zero-opacity relocation verified by animation regression tests"
+  ],
+  "assets": [
+    "index-CwmKEgKe.js",
+    "index-So_la7dY.css"
+  ],
+  "codeSHA256": {
+    "apps/ios/tah-ui/src/useSheetDismiss.ts": "5d4dca8c60fd1ad41b8f415ed472fe40f3ef632e5da60c889a28edd5645f4cd8",
+    "apps/ios/tah-ui/src/components/PendingCommand.tsx": "efe1d9dc0127f6f4b5110d410d2e2073474f99777baeddb48b920de8fe2077ee",
+    "apps/ios/tah-ui/src/components/Sheet.tsx": "a26408c7fb9b7dfe151d238117f1cc4726014283d61db7fa3549db5b978fa7ca",
+    "apps/ios/tah-ui/src/components/Library.tsx": "02853695ed09ca654a285cda7c712a54f209147bb1fabc904715f408cf104501",
+    "apps/ios/tah-ui/src/App.tsx": "0fe2194de0fc1afa27cfb78718f527fd9dd9e9948fdba60479324413af38f792",
+    "apps/ios/tah-ui/src/styles.css": "3ff3d3ef3eab4df9fa0ddb56b5a9d7cd1497755f5562a6f060d313848ff4bf41"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-02",
+  "status": "installed_regression_passed_phone_launch_verified",
+  "cause": "progress hash A was not pinned; identity snapshot pins B but old reader requested A",
+  "fix": "use same-operation snapshot digest; record effective digest; coalesce pending already loaded versions; at most one source retry after proven hash advance",
+  "scope": "iOS working-log display reader; no Framework, adapter, backend or Mac changes",
+  "userObservation": {
+    "transcript": "NVIDIA",
+    "revisions": [
+      "V0",
+      "V1"
+    ],
+    "durationMinutesApprox": 16,
+    "charging": false,
+    "displayedBatteryDropPercent": 0,
+    "measurementType": "user report; rounded display, not a power measurement"
+  },
+  "standardWorkingLogChecks": 26,
+  "hostAndSimulatorDiagnostics": "none",
+  "deviceBuild": {
+    "result": "BUILD SUCCEEDED",
+    "uuid": "75315C7D-B95C-3B95-AF79-33158556FAD0",
+    "bundleSHA256": "eb769e207186fb48dc463adfe0d48f01961939e4116960ad64e9c3dc91794873"
+  },
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "471e3b269db1cb793941871b9c388fa91a49eb27b23a7b723b1469dbe4691ccb",
+    "docs/ios/frontend-integration-notes.md": "923208e71091a76d188adc0e2a6cf65b6efa0af4bef17478d8b23f462653ecb2",
+    "tools/mobile-tah/README.md": "598d57b0016f4c7e01adbd8191b9926502b8458420c63d2b802982d934762e9e",
+    "apps/ios/Sources/AlmaTAH/Presentation/working-log-version-checks-result.json": "5b682647582b8fe7cb2ebbc0cfb37edac133e63da6f50d7870cc2a04709110a9",
+    "apps/ios/Sources/AlmaTAH/Presentation/working-log-version-checks.py": "101298bf82b61d172eefb0868c7eab3d6b69a65a634e2dec764caea1bf9c4b95"
+  },
+  "phonePowerMeasurement": false,
+  "modelCallsThisRound": 0,
+  "installed": true,
+  "versionRegression": {
+    "cases": 32,
+    "observedCallbacks": 219,
+    "chunkCalls": 96,
+    "resultPath": "apps/ios/Sources/AlmaTAH/Presentation/working-log-version-checks-result.json",
+    "simulatorTypecheckPassed": true
+  },
+  "phoneValidation": {
+    "launched": true,
+    "mainPageVisiblyReady": true,
+    "existingJournalRowsPreserved": 112,
+    "sqliteIntegrity": "ok",
+    "pendingWrites": 0,
+    "screenSharingStopped": true,
+    "keyboardCaptureOff": true,
+    "activeTaskScrollRetested": false,
+    "limitation": "No new live NVIDIA/model task run. Race covered by deterministic production-reader regressions; UI launch and data preservation checked on device."
+  }
+}

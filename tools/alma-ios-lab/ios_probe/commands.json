@@ -1,0 +1,20 @@
+{
+  "base-sed-read": "sed -n '2,4p' /work/transcript.txt > /work/sed-read.txt; test -s /work/sed-read.txt && printf 'SED_READ_OK\\n'",
+  "base-shell-heredoc": "cat > '/work/shell file.txt' <<'END'\n中文 'single' \"double\" $literal 😀\nEND\nsed -i 's/literal/edited/' '/work/shell file.txt' && grep -q edited '/work/shell file.txt' && printf 'SHELL_EDIT_OK\\n'",
+  "base-pipeline": "sed -n '1,20p' /work/transcript.txt | awk 'END {print NR}'",
+  "exit-seven": "printf 'OUT_OK\\n'; printf 'ERR_OK\\n' >&2; exit 7",
+  "missing-python": "python3 --version",
+  "install": "apk add --no-network /packages/*.apk && printf 'INSTALL_OK\\n'",
+  "versions": "python3 --version; node --version; bash --version | head -1",
+  "python-text": "python3 /work/python_probe.py",
+  "python-process": "python3 /work/python_process.py",
+  "node-default-text": "node /work/node_probe.cjs",
+  "reset-note": "python3 /work/python_probe.py",
+  "node-jitless-text": "node --jitless --no-lazy /work/node_probe.cjs",
+  "node-process": "node --jitless --no-lazy /work/node_process.cjs",
+  "bash-script": "bash -c 'a=(one two); test ${#a[@]} -eq 2 && printf BASH_OK'",
+  "sh-bash-array": "sh -c 'a=(one two); printf SHOULD_NOT_PASS'",
+  "readback": "sed -n '1p' '/work/中文 notes.md'",
+  "same-kernel-repeat": "i=0; while [ $i -lt 3 ]; do python3 /work/python_probe.py && node /work/node_probe.cjs || exit 1; i=$((i+1)); done; printf 'REPEAT_OK\\n'",
+  "identities": "python3 -c \"import sys,os,json;print(json.dumps(dict(platform=sys.platform,executable=sys.executable,architecture=os.uname().machine)))\"; node -p \"JSON.stringify({platform:process.platform,arch:process.arch,flags:process.execArgv,wasm:typeof WebAssembly})\""
+}

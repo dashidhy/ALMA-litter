@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "modelCalls": false,
+  "hostOnly": true,
+  "calls": [
+    {
+      "role": "raw_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "extra_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": null
+      },
+      "web": true
+    },
+    {
+      "role": "extra_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    }
+  ],
+  "outcomes": [
+    {
+      "revision": 0,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 1
+    },
+    {
+      "revision": 1,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 2
+    },
+    {
+      "revision": 2,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 3
+    }
+  ],
+  "workingLogs": [
+    {
+      "revision": 0,
+      "position": 2,
+      "sha256": "5ea255971daf84261e279897814b3da88ddbcdeebaa4a209c29aac112d87c6fe",
+      "parts": 3,
+      "bytes": 120233,
+      "wrongHashRejected": true
+    },
+    {
+      "revision": 1,
+      "position": 4,
+      "sha256": "6138f0e45ee626c48698ee6455b4527400eff7d5e7ca6f94ec0b57c1b92b9b39",
+      "parts": 3,
+      "bytes": 120425,
+      "wrongHashRejected": true
+    },
+    {
+      "revision": 2,
+      "position": 6,
+      "sha256": "d1afad91597af805a361bbd789444394af5ea5ccb5ef963e14734b162095613f",
+      "parts": 3,
+      "bytes": 120425,
+      "wrongHashRejected": true
+    }
+  ],
+  "previousLogStillReadable": true,
+  "historyItems": 6
+}

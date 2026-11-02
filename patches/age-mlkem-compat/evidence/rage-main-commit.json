@@ -1,0 +1,420 @@
+{
+  "sha": "b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f",
+  "html_url": "https://github.com/str4d/rage/commit/b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f",
+  "commit": {
+    "author": {
+      "name": "Jack Grigg",
+      "email": "thestr4d@gmail.com",
+      "date": "2026-07-14T03:06:08Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-07-14T03:06:08Z"
+    },
+    "message": "Merge pull request #634 from str4d/release-0.12.1\n\nRelease 0.12.1",
+    "tree": {
+      "sha": "098e373bc44ed79739d03303a84d12aae300ec98",
+      "url": "https://api.github.com/repos/str4d/rage/git/trees/098e373bc44ed79739d03303a84d12aae300ec98"
+    },
+    "url": "https://api.github.com/repos/str4d/rage/git/commits/b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqVaegCRC1aQ7uu5UhlAAA1iQQAJlWsGdnxXWaHGYJdLB34w1S\n2IJxONpeoKG7nytMBwcVWLx4T0e6JQrX7DdV93J5/VKaq2FvLkI+eGqvsBfLOzp0\n+dgF3wLMcF+gCsX4X00akST7P3ZE3LslIaQj2EdJZ7qHh9Rg0Y2lTeGvL4SkZLS+\nFfpOIUTrSVjdA+pP2aUCuDXa72iOKiuT55u4uipxv22WkdgI1f8QiCDA5Tixo2rU\nPsIQBVSVVQWlxPEWoBEVDZ636xCeTrvtWsATvMlp+lnVnqS/MtcS1TcBszfC6ymC\n1S1ZDdqSdzqnwWfv2o7U6esVZuEPlcBZPpVYh+kb+/VUDhlnC5qFom80tLt7wwCP\nxx4fuAD2M2Y2aYRVDmxI8O8TkdD2vsUQdDrYvr8Cgus3kjeKhfj8K+hJR4JSxwut\nIouFTwZW0LZ7pu9exxj9g9BlV/HH4bP3HdjEIv/3+sz4vZxwtrTO1s5q9amMAy3m\nUoyEgBhj8gKeMjt8e+8AUQDYt0Od7li8kuy/6Bp7OCVE9Hg5TKIYnxoFFcN3b+JR\n4CRA5GTfls9uJbc/FwErEFbC6Yfrz90BaCU3vPyHuX3xUziIrtpgzpTNzgNwCKxH\nS5BZ7nrg/Vl0hleONjuPfUJSOL0iPCtO72k2NxB9xhMBvkcGLgFA0vTckqO1sqH+\n1vv8yBtrU90GKkOdhcgJ\n=0maR\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 098e373bc44ed79739d03303a84d12aae300ec98\nparent 8d79deba3e1ce7f70795b6e6cf4f91de82d71beb\nparent c555f4dd302c7266668b23c4b1e8768a1d2de9f6\nauthor Jack Grigg <thestr4d@gmail.com> 1783998368 +0100\ncommitter GitHub <noreply@github.com> 1783998368 +0100\n\nMerge pull request #634 from str4d/release-0.12.1\n\nRelease 0.12.1",
+      "verified_at": "2026-07-14T03:06:09Z"
+    }
+  },
+  "parents": [
+    {
+      "sha": "8d79deba3e1ce7f70795b6e6cf4f91de82d71beb",
+      "url": "https://api.github.com/repos/str4d/rage/commits/8d79deba3e1ce7f70795b6e6cf4f91de82d71beb",
+      "html_url": "https://github.com/str4d/rage/commit/8d79deba3e1ce7f70795b6e6cf4f91de82d71beb"
+    },
+    {
+      "sha": "c555f4dd302c7266668b23c4b1e8768a1d2de9f6",
+      "url": "https://api.github.com/repos/str4d/rage/commits/c555f4dd302c7266668b23c4b1e8768a1d2de9f6",
+      "html_url": "https://github.com/str4d/rage/commit/c555f4dd302c7266668b23c4b1e8768a1d2de9f6"
+    }
+  ],
+  "files": [
+    {
+      "filename": "Cargo.lock",
+      "status": "modified"
+    },
+    {
+      "filename": "Cargo.toml",
+      "status": "modified"
+    },
+    {
+      "filename": "age/CHANGELOG.md",
+      "status": "modified"
+    },
+    {
+      "filename": "age/Cargo.toml",
+      "status": "modified"
+    },
+    {
+      "filename": "age/src/primitives/armor.rs",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_crlf",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_empty",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_empty_last_line",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_empty_line_begin",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_empty_line_end",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_eol_between_padding",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_full_last_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_garbage_encoded",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_garbage_leading",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_garbage_trailing",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_headers",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_invalid_character_header",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_invalid_character_payload",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_long_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_lowercase",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_no_end_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_no_eol",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_no_padding",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_not_canonical",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_pgp_checksum",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_short_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_begin",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_end",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_eol",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_last_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_line_start",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_whitespace_outside",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/armor_wrong_type",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/empty",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_bad_start",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_base64_padding",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_empty_argument",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_empty_body",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_empty_last_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_invalid_character",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_long_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_missing_body",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_missing_final_line",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_multiple_short_lines",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_no_arguments",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_not_canonical",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_spurious_cr",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stanza_valid_characters",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_257_chunks",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_257_chunks_full",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_258_chunks",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_bad_tag",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_bad_tag_second_chunk",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_bad_tag_second_chunk_full",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_empty_payload",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_last_chunk_empty",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_last_chunk_full",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_last_chunk_full_second",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_missing_tag",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_chunks",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_final",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_final_full",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_final_two_chunks",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_final_two_chunks_full",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_no_nonce",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_short_chunk",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_short_nonce",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_short_second_chunk",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_three_chunks",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_trailing_garbage_long",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_trailing_garbage_short",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_two_chunks",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_two_final_chunks",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_two_final_chunks_full",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_two_final_chunks_second",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/stream_two_final_chunks_short",
+      "status": "added"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/version_unsupported",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_bad_tag",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_extra_argument",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_grease",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_lowercase",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_multiple_recipients",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_not_canonical_body",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testdata/testkit/x25519_not_canonical_share",
+      "status": "modified"
+    },
+    {
+      "filename": "age/tests/testkit.rs",
+      "status": "modified"
+    },
+    {
+      "filename": "fuzz-afl/Cargo.lock",
+      "status": "modified"
+    },
+    {
+      "filename": "fuzz/Cargo.lock",
+      "status": "modified"
+    },
+    {
+      "filename": "rage/CHANGELOG.md",
+      "status": "modified"
+    },
+    {
+      "filename": "rage/Cargo.toml",
+      "status": "modified"
+    },
+    {
+      "filename": "rage/tests/cmd/rage-keygen/version.toml",
+      "status": "modified"
+    },
+    {
+      "filename": "rage/tests/cmd/rage-mount/version.toml",
+      "status": "modified"
+    },
+    {
+      "filename": "rage/tests/cmd/rage/version.toml",
+      "status": "modified"
+    }
+  ]
+}

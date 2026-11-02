@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "timed_out": false,
+  "host_exit": 0,
+  "seconds": 10.437787875067443,
+  "stdout": "WORKSPACE_POLICY_PASS\n\n\nPOLICY_CONTROLLER_PASS\n",
+  "stderr": "workspace fixture grant: 1\n",
+  "binary_sha256": "46a8629cee2734113c4d5aa013df8c14f2cd09afe9bc15b489fbbf3e4410f58e",
+  "scope": "ordinary own private fakefs fixture, real iSH C guest; no host bind mounts or intrusion probes; no native OpenAI/Web requests"
+}

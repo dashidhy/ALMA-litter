@@ -1,0 +1,56 @@
+   Compiling thread-item-source-regression v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.11s
+     Running unittests lib.rs (tools/alma-ios-lab/thread_item_regression/.build/target/debug/deps/thread_item_source_regression-f9500cabbd2168b5)
+
+running 42 tests
+test conversation::tests::streaming_extractor_returns_none_before_widget_code_opens ... ok
+test conversation::tests::streaming_extractor_yields_growing_widget_html_prefix ... ok
+test conversation::tests::streaming_extractor_defaults_missing_fields ... ok
+test conversation::tests::streaming_extractor_handles_escape_sequences ... ok
+test conversation::tests::streaming_extractor_handles_camel_case_alias ... ok
+test conversation::tests::streaming_extractor_reads_dimensions_when_complete ... ok
+test conversation::tests::test_command_execution ... ok
+test conversation::tests::test_claude_dynamic_tool_hydrates_namespace_and_display ... ok
+test conversation::tests::test_agent_message_markdown_stays_assistant ... ok
+test conversation::tests::test_agent_message ... ok
+test conversation::tests::legacy_web_search_wire_and_audio_inputs_remain_visible ... ok
+test conversation::tests::test_0166_partial_answer_is_nonterminal ... ok
+test conversation::tests::test_computer_use_mcp_hydrates_typed_view ... ok
+test conversation::tests::test_context_compaction ... ok
+test conversation::tests::test_diff_stats_ignores_headers ... ok
+test conversation::tests::test_empty_user_message_skipped ... ok
+test conversation::tests::test_failed_turn_surfaces_error_message ... ok
+test conversation::tests::test_image_generation_hydrates_typed_variant ... ok
+test conversation::tests::test_multi_turn_indexing ... ok
+test conversation::tests::test_0166_widget_timestamp_and_control_items ... ok
+test conversation::tests::test_review_mode ... ok
+test conversation::tests::test_command_hydration_truncates_large_mobile_fields ... ok
+test conversation::tests::test_0166_durable_image_refs_are_not_decoded_as_base64_or_paths ... ok
+test conversation::tests::test_user_message_text ... ok
+test focused::thread_item_parses_mcp_arguments_json ... ok
+test conversation::tests::test_0166_timestamps_and_optional_agent_data_survive_hydration ... ok
+test outgoing_inputs::image_reference_tests::outgoing_mobile_image_uses_inline_reference_and_unchanged_wire_url ... ok
+test outgoing_inputs::image_reference_tests::outgoing_non_image_inputs_keep_text_spans_and_paths ... ok
+test focused::untimed_item_updates_preserve_recorded_timestamp ... ok
+test conversation::tests::test_0166_web_actions_and_results_remain_intact ... ok
+test queue_projection::audio_compat_tests::queued_audio_draft_retains_original_inputs_and_wire_payloads ... ok
+test queue_projection::image_reference_tests::queued_file_image_retains_reference_and_reports_unavailable_preview ... ok
+test queue_projection::image_reference_tests::text_only_queue_projection_keeps_existing_shape ... ok
+test queue_projection::image_reference_tests::queued_inline_images_keep_legacy_urls_and_modern_references ... ok
+test queue_projection::image_reference_tests::queued_mixed_images_preserve_detail_without_duplicating_inline_urls ... ok
+test focused::thread_item_parses_collab_agent_states_json ... ok
+test conversation::tests::test_tool_and_subagent_items_hydrate ... ok
+test conversation::tests::test_agent_message_code_review_hydrates_as_code_review ... ok
+test source_audit::removed_optional_apis_fail_before_rpc_and_fork_uses_turn_id ... ok
+test profile_fixture::benchmark_fixture_keeps_ids_optional_metadata_and_turn_times ... ok
+test source_audit::completion_and_routing_guards_keep_the_wrapper ... ok
+test source_audit::all_scoped_files_parse_and_payload_constructors_match_upstream_fields ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 77 filtered out; finished in 0.35s
+
+   Doc-tests thread_item_source_regression
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

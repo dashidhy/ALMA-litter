@@ -1,0 +1,851 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-01T01:36:51.886Z",
+  "scope": {
+    "kind": "Bounded local-source integration design review; implementation remains main-owned.",
+    "only_written_file": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/code-mode-native-integration-review.json",
+    "network_requests": 0,
+    "downloads": 0,
+    "builds": 0,
+    "device_calls": 0,
+    "model_or_auth_calls": 0,
+    "production_source_edits": 0,
+    "method": "Read actual bridge, patched app-server injection hook, Core, official runtime/protocol and manifests. Compared eleven relevant runtime/protocol files byte-for-byte with the cached pristine 0.166.0 archive; all matched. Local source hashes and line anchors below identify this concurrent-working-tree snapshot.",
+    "tests": "JSON/schema facts and local source/archive equality only; no Rust compile, link, execution or security tests in this review."
+  },
+  "decision": {
+    "functional_integration": "Small typed provider adapter is feasible at the source/API level. Existing injection hook reaches ThreadManager before sharing, and official InProcessCodeModeSession implements the exact protocol trait.",
+    "production_security": "Not established. The proposed iOS plain asset removes the upstream-required V8 memory sandbox and runs model-generated JavaScript inside the credential-bearing app process. App/container and tool authorization boundaries do not replace that in-process memory boundary.",
+    "recommended_status": "Keep production enablement blocked on an explicit security architecture decision and unresolved lifecycle/resource controls. Functional qualification may proceed in its separately authorized fixed synthetic lane without claiming equivalent security.",
+    "no_fake_fallback": "Do not rewrite catalog selectors, claim sandbox availability from a plain build, or route unavailable CodeModeOnly through Direct. Surface unavailable/error states honestly."
+  },
+  "latest_main_report": {
+    "independently_verified": false,
+    "source": "User's latest message during this review; no logs, binary, phone or credentials inspected.",
+    "run_id": "c3f033e4-3b7f-485b-b619-5f3bdb238ad2",
+    "result": "All nine unchanged official-runtime synthetic groups passed; process ended.",
+    "link_result": "Release Xcode link passes. Debug -rdynamic retains otherwise unused Rust WasmModuleCompilation default/drop paths and fails on two missing native constructor/destructor symbols.",
+    "modifications": "Main reports no stubs or runtime source/archive edits; Release dead stripping resolves the link.",
+    "required_qualification_lane": "Use the verified Release linkage with DEBUG_INFORMATION_FORMAT=dwarf, exact pinned archive/bindings/features and recorded digests. Do not claim Debug linkage or complete archive symbol coverage. Requalify if exports, linker retention or runtime usage changes.",
+    "limits_of_evidence": "This proves the exercised synthetic behavior under that lane. It does not prove memory isolation, hard resource limits, production callback routing or all possible symbol paths."
+  },
+  "verified_findings": [
+    {
+      "id": "existing_injection",
+      "fact": "codex_app_server::in_process::start_with_code_mode_provider(args: InProcessStartArgs, provider: Arc<dyn codex_code_mode::CodeModeSessionProvider>) -> IoResult<InProcessClientHandle> is present. MessageProcessor installs it with manager.with_code_mode_session_provider before publishing the manager. ThreadManager replacement requires Arc::get_mut and cannot be deferred until thread/start.",
+      "source_ids": [
+        "in_process_api",
+        "provider_install",
+        "thread_manager"
+      ]
+    },
+    {
+      "id": "bridge_not_wired",
+      "fact": "Current ServerSession::connect_local still calls in_process::start(args). It already obtains installed trusted iOS EmbeddedRuntime, validates effective config, and passes its EnvironmentManager and EmbeddedNetworkPolicy. These inputs should remain intact when selecting the injected start function.",
+      "source_ids": [
+        "connect_local",
+        "embedded_runtime"
+      ]
+    },
+    {
+      "id": "exact_trait",
+      "fact": "codex_code_mode reexports codex_code_mode_protocol. Provider is Send+Sync; create_session returns a Send boxed future yielding Result<Arc<dyn CodeModeSession>, String>. InProcessCodeModeSession implements execute, wait, terminate and shutdown with those exact types.",
+      "source_ids": [
+        "code_mode_exports",
+        "protocol",
+        "runtime_exports",
+        "runtime_service"
+      ]
+    },
+    {
+      "id": "per_thread_session",
+      "fact": "CodeModeService owns a OnceCell<Arc<dyn CodeModeSession>> and lazily calls provider.create_session(), not create_session_with_limits(). Separate provider creations must return separate sessions; official SessionRuntime holds session-local stored values and active cells.",
+      "source_ids": [
+        "core_service",
+        "session_runtime"
+      ]
+    },
+    {
+      "id": "once_only_jit",
+      "fact": "Official initialize_v8(V8JitMode::Disabled) initializes ICU/platform/V8 under OnceLock and sets --jitless. Repeating Disabled is compatible, requesting a different mode errors, and an initialization error is retained. If no explicit call happens, the first cell defaults to Enabled.",
+      "source_ids": [
+        "v8_init",
+        "v8_runtime"
+      ]
+    },
+    {
+      "id": "heap_limit_ignored",
+      "fact": "Both with_limits and with_task_failure_handler overwrite max_heap_size_bytes with None. The runtime creates v8::Isolate::new(v8::CreateParams::default()). Forwarding a heap limit to the constructor is not enforcement.",
+      "source_ids": [
+        "runtime_service",
+        "v8_runtime"
+      ]
+    },
+    {
+      "id": "yield_not_deadline",
+      "fact": "max_yield_time_ms bounds foreground observation timeout (after yield-grace handling), not the cell's total execution time. Preempt tokens yield observations while cells continue. This is documented by the trait and source tests.",
+      "source_ids": [
+        "protocol",
+        "runtime_service",
+        "service_tests"
+      ]
+    },
+    {
+      "id": "termination_available",
+      "fact": "terminate(cell) reaches CellHandle termination; cell cancellation sends RuntimeCommand::Terminate and RuntimeControlCommand::Terminate and calls IsolateHandle::terminate_execution(). Callback cancellation is propagated and cell_closed removes session/broker bookkeeping.",
+      "source_ids": [
+        "runtime_service",
+        "session_runtime",
+        "cell_actor",
+        "callbacks"
+      ]
+    },
+    {
+      "id": "shutdown_limits",
+      "fact": "SessionRuntime.shutdown cancels admission/cells, closes its TaskTracker and awaits tracked tasks. Drop only begins cancellation. Callback cleanup waits on JoinSets without an intrinsic timeout. V8 runs on spawned std threads whose JoinHandles are not retained by spawn_supervised_runtime_thread, so tracked-task completion must not be described as an explicit join of every native thread.",
+      "source_ids": [
+        "session_runtime",
+        "callbacks",
+        "v8_runtime",
+        "cell_actor"
+      ]
+    },
+    {
+      "id": "interrupt_currently_disabled",
+      "fact": "Core abort terminates active Code Mode cells only for Interrupted when Feature::CodeModeInterrupt is enabled. ALMA's actual DISABLED_FEATURES contains code_mode_interrupt and its validator rejects enabling disabled-list features; simply injecting a provider does not change stop semantics.",
+      "source_ids": [
+        "core_interrupt",
+        "local_profile"
+      ]
+    },
+    {
+      "id": "disconnect_gap",
+      "fact": "The bridge's local SessionCommand::Shutdown branch exits its worker loop without awaiting InProcessClientHandle::shutdown. disconnect_inner uses try_send, waits 100 ms and aborts the worker. The app-server exposes a bounded shutdown API, and Core's session shutdown calls code_mode_service.shutdown. Current bridge code does not prove that full drain is awaited.",
+      "source_ids": [
+        "connect_local",
+        "in_process_api",
+        "core_shutdown"
+      ]
+    },
+    {
+      "id": "resource_retention",
+      "fact": "Official in-process actors use unbounded event/command channels and collect ContentItem values into a Vec. Stored JSON writes extend the session HashMap. There is no configured byte/cell/session quota in these inspected paths. Core truncates observations later; this is not a pre-allocation memory bound.",
+      "source_ids": [
+        "cell_actor",
+        "session_runtime",
+        "v8_runtime",
+        "core_service"
+      ]
+    },
+    {
+      "id": "output_contract",
+      "fact": "Official session retains CodeModeOutputTruncation::Client. Request output limits are not runtime collectors. The provider defaults reject Server truncation and reject non-default execution limits unless explicitly implemented. Preserve these honest errors.",
+      "source_ids": [
+        "protocol",
+        "runtime_service"
+      ]
+    },
+    {
+      "id": "tool_authority",
+      "fact": "Core supplies CodeModeCellDelegate, keeps the originating StepContext across yields, and submits nested invocations through ToolCallRuntime. Official runtime forwards the supplied delegate and cancellation token; its module resolver rejects imports. No replacement shell/file/network callback is required for this adapter.",
+      "source_ids": [
+        "core_service",
+        "runtime_service",
+        "module_loader"
+      ]
+    },
+    {
+      "id": "cargo_requirement",
+      "fact": "Actual upstream code-mode-runtime manifest unconditionally requests v8_enable_sandbox. Upstream workspace pins =152.2.0 and patches to fork 350c5a859a9b3c84ab8701b3ad51e3b7699b30c0. Its linked_v8_has_sandbox_enabled test asserts true. Current bridge manifest has no effective-root v8 patch or direct runtime dependency.",
+      "source_ids": [
+        "runtime_manifest",
+        "upstream_manifest",
+        "bridge_manifest",
+        "mobile_manifest",
+        "v8_runtime"
+      ]
+    }
+  ],
+  "minimal_integration_steps": [
+    {
+      "step": 1,
+      "title": "Resolve the intended memory boundary before production enablement",
+      "action": "Record native plain Code Mode as a deliberate reduced-isolation configuration, or retain a disabled provider until an acceptable isolated execution design exists. A source-compatible adapter and passing functional probe are not approval of equivalent security.",
+      "owner": "Main/security architecture; no implementation in this report."
+    },
+    {
+      "step": 2,
+      "title": "Add narrowly targeted, reproducible dependencies",
+      "action": "Add the official runtime and the shared CodeModeSessionProvider trait dependency from the same actual Codex source tree only to the supported iOS native lane. Use codex-code-mode (which reexports the protocol) or the identical codex-code-mode-protocol package; avoid copying traits or pulling a second protocol version. Carry the exact v8 fork patch in the effective shared/rust-bridge workspace root.",
+      "dependency_types": [
+        "codex-code-mode::CodeModeSessionProvider",
+        "codex-code-mode::CodeModeSessionProviderFuture",
+        "codex-code-mode::CodeModeSession",
+        "codex-code-mode::CodeModeSessionCellExecutionLimits",
+        "codex-code-mode-runtime::{InProcessCodeModeSession, initialize_v8, V8JitMode}"
+      ],
+      "source_ids": [
+        "bridge_manifest",
+        "mobile_manifest",
+        "upstream_manifest",
+        "protocol",
+        "runtime_exports"
+      ]
+    },
+    {
+      "step": 3,
+      "title": "Initialize JIT-disabled V8 in trusted native preparation",
+      "action": "Call initialize_v8(V8JitMode::Disabled) before publishing the provider and before any cell or competing V8 initialization. Treat failure or prior Enabled initialization as unavailable. Use the runtime's OnceLock; do not dispose/reinitialize process-global V8 per thread/session. Initialization must not trigger login or model requests.",
+      "source_ids": [
+        "v8_init",
+        "runtime_exports"
+      ]
+    },
+    {
+      "step": 4,
+      "title": "Implement the small provider and inject before app-server start",
+      "action": "A provider constructed only after trusted bootstrap and V8 initialization returns Ok availability without executing a cell. create_session constructs a fresh official InProcessCodeModeSession per Codex thread and coerces its Arc to Arc<dyn CodeModeSession>. A failure handler may record fixed metadata/error categories without source, tool bodies or credentials. Pass it to start_with_code_mode_provider while preserving the existing args, workspace and policy. Keep non-iOS on the existing start path.",
+      "limits_contract": "For a minimal honest adapter, keep default rejection of non-default limits. If implementing create_session_with_limits, explicitly reject max_heap_size_bytes=Some; max_yield_time_ms may be applied via with_limits but must be named as an observation limit. Default Core create_session needs provider-owned policy because Core does not pass limits here.",
+      "other_defaults": "Keep Client output truncation and Unsupported process metrics; do not report app-wide metrics as separate code-host metrics or claim Server truncation support.",
+      "source_ids": [
+        "protocol",
+        "runtime_service",
+        "core_service",
+        "in_process_api",
+        "connect_local"
+      ]
+    },
+    {
+      "step": 5,
+      "title": "Finish stop and teardown ownership",
+      "action": "Make user stop reach actual terminate for active cells. Review a narrowly scoped CodeModeInterrupt profile change and matching inventory validator, or an equally explicit host-owned session cancellation path; preempt/yield alone is insufficient. On thread/connection teardown await Core session shutdown and the in-process handle shutdown before releasing runtime ownership. Replace the local 100 ms worker-abort shortcut with a reviewed acknowledged drain path.",
+      "timeout_behavior": "Use an external bounded cleanup budget and report incomplete shutdown honestly. A timeout or aborting a Tokio future is not proof the native V8 thread stopped. Do not reopen a session or release its resource permits on an unproven cleanup outcome; no automatic retry of a possibly executed tool.",
+      "source_ids": [
+        "core_interrupt",
+        "local_profile",
+        "core_shutdown",
+        "connect_local",
+        "in_process_api",
+        "session_runtime",
+        "callbacks"
+      ]
+    },
+    {
+      "step": 6,
+      "title": "Implement only resource controls the adapter can enforce; expose remaining blockers",
+      "action": "Host-side admission can cap sessions and active cells, bound incoming source/catalog payloads, and keep a wall-clock watchdog that calls terminate on a known cell ID. Retain active-cell permits across Yielded states until terminal cleanup/cell_closed. These controls do not impose a V8 heap, retained-output or session-store byte cap.",
+      "blocker": "Hard heap/ArrayBuffer/native allocation bounds and bounded internal output/store queues are not supplied by the unchanged public runtime API. They require additional runtime support or an isolation design with enforceable resource limits; a wrapper must not advertise them as present. Per-cell timeouts also cannot roll back already completed nested tool side effects.",
+      "source_ids": [
+        "protocol",
+        "runtime_service",
+        "session_runtime",
+        "cell_actor",
+        "v8_runtime"
+      ]
+    },
+    {
+      "step": 7,
+      "title": "Qualify the actual production lane, then separately evaluate security",
+      "action": "Require Release linkage with DEBUG_INFORMATION_FORMAT=dwarf and the exact verified native archive/binding pair. Main's follow-up should cover real injected Core routing, two-session state separation, stop during JS and nested tool waits, disconnect drain, shutdown timeout reporting and admission-limit failures using authorized synthetic fixtures. Preserve the non-iOS sandbox requirement and prove target feature selection separately. Do not rerun phone/model tests automatically.",
+      "source_ids": [
+        "runtime_manifest",
+        "v8_runtime",
+        "protocol",
+        "core_service"
+      ]
+    }
+  ],
+  "cargo_feature_isolation": {
+    "status": "Design proposal only; no manifests, flags or artifacts changed.",
+    "smallest_manifest_design": "Replace only code-mode-runtime's unconditional v8 dependency feature declaration with mutually exclusive target dependency declarations: the expressly supported native iOS lane uses v8 without v8_enable_sandbox/v8_enable_pointer_compression; every complementary target retains v8 features=[v8_enable_sandbox]. Use the bridge's existing all(target_os=\"ios\", not(target_abi=\"macabi\")) lane as a starting boundary, with exact supported device/simulator artifacts checked separately. Catalyst and non-iOS retain sandbox requirement.",
+    "feature_rules": "Cargo features are additive. A downstream default-features=false or a new ios-plain feature cannot subtract the explicit sandbox feature requested by an upstream edge. Remove the unconditional requesting edge only in the reviewed iOS target branch, and ensure no other selected iOS dependency re-enables sandbox/pointer compression. Target-specific resolver behavior isolates inactive targets, not conflicting feature requests for the same active target.",
+    "patch_scope": "The effective workspace root controls [patch]; a dependency workspace's v8 patch is not inherited by the bridge root. Reproduce the exact pinned fork there. A version match alone is not sufficient ABI proof.",
+    "artifact_scope": "Use the correct per-target plain archive and generated binding with their digests and compatible flags. Scope RUSTY_V8_ARCHIVE / binding overrides to the native iOS invocation; a global override risks feeding the plain asset to a sandbox-enabled non-iOS build. Avoid linking plain and sandbox V8 libraries into one process; duplicate native symbols/global state are not a feature-isolation mechanism.",
+    "upstream_requirement": "Leave official runtime Rust/JS behavior and non-iOS manifest feature requirement intact. The existing linked_v8_has_sandbox_enabled assertion is an upstream invariant: it would fail for a plain link and must not be reported as passed or globally removed. If target-specific qualification expectations are introduced later, non-iOS must still require true and iOS must explicitly document/report false.",
+    "required_future_evidence": [
+      "Resolved iOS V8 feature tree lacks sandbox and pointer-compression features for the plain artifact.",
+      "Resolved non-iOS runtime dependency keeps v8_enable_sandbox and its implied pointer-compression feature.",
+      "Effective lock/source points to the exact fork revision and production native artifacts/bindings have recorded matching digests.",
+      "Release/dwarf production link and exercised runtime paths pass; Debug missing Wasm symbols remain documented until actually resolved."
+    ],
+    "source_ids": [
+      "bridge_manifest",
+      "mobile_manifest",
+      "upstream_manifest",
+      "runtime_manifest",
+      "v8_runtime"
+    ],
+    "not_performed": "No cargo metadata/tree/check/build or dependency resolution was run."
+  },
+  "security_boundary_review": {
+    "native_plain_v8": "Official runtime language globals and delegates restrict ordinary JavaScript capabilities, but without the V8 memory sandbox there is no claimed containment of a V8 memory-corruption vulnerability within this app process. An engine compromise could affect native Rust/Swift state, callback authorization objects and in-memory account material or invoke capabilities available to the app.",
+    "jitless": "Disabling JIT avoids runtime code generation; it is not a memory-safety or same-process isolation boundary.",
+    "ios_app_boundary": "The OS app/container/entitlement boundary concerns the app process relative to the rest of the system. It does not separate this V8 instance from the app's other data and authority. This is an architectural inference, not an iOS security test.",
+    "tool_boundary": "ScopedFiles roots, RO/RW policy, batch preflight, the guest backend, Core tool dispatch and network restrictions remain meaningful for normal mediated tool requests. They assume the trusted controller and native process remain intact; model-generated JS executing natively is outside the iSH guest's memory boundary.",
+    "partial_sandbox": "The previous exact-source report established a built-in iOS partial reservation with weaker guarantees. Compiled sandbox enabled or partial initialization success is not full reservation proof, and a plain asset establishes neither.",
+    "failure_domain": "Native fatal errors/OOM can affect the whole app. catch_unwind-based task handling does not establish recovery from native fatal errors; the bridge release profile also uses panic=abort. An external timeout does not provide a killable child-process boundary.",
+    "acceptable_claim": "Official Code Mode functions ran on iOS in an explicitly plain, jitless, fixed synthetic test configuration.",
+    "unacceptable_claim": "The nine-group probe proves acceptable full production security, VM equivalence, or isolation of credentials from a compromised native JS engine.",
+    "source_ids": [
+      "runtime_service",
+      "v8_runtime",
+      "module_loader",
+      "core_service",
+      "embedded_runtime",
+      "bridge_manifest",
+      "reservation_review"
+    ]
+  },
+  "blockers": [
+    {
+      "id": "security",
+      "severity": "production boundary",
+      "detail": "The proposed plain in-process configuration does not satisfy the upstream V8 memory sandbox invariant. No equivalent same-process memory boundary is established."
+    },
+    {
+      "id": "resources",
+      "severity": "production reliability/security",
+      "detail": "Heap limit silently discarded by official constructor; unbounded internal output/event/state paths; yield limits are not execution deadlines. Hard isolation/quotas cannot be obtained merely by provider wiring."
+    },
+    {
+      "id": "stop_and_disconnect",
+      "severity": "integration correctness",
+      "detail": "ALMA currently disables CodeModeInterrupt, and bridge local disconnect does not await the available shutdown API. Cancellation/drain needs explicit implementation and evidence."
+    },
+    {
+      "id": "cargo_and_artifacts",
+      "severity": "build integration",
+      "detail": "Runtime dependency, effective-root exact fork patch, target-specific feature split and artifact selection remain unwired in the inspected production bridge."
+    },
+    {
+      "id": "link_lane",
+      "severity": "qualification constraint",
+      "detail": "Main reports Release succeeds but Debug -rdynamic fails on unused Wasm-related symbols. Require Release/dwarf; do not claim full archive/Debug compatibility."
+    }
+  ],
+  "unknowns": [
+    "Whether concurrent main implementation changes any inspected source after the recorded hashes.",
+    "Actual production feature resolution and linkage after target-specific changes; not compiled here.",
+    "Time to terminate/drain under iOS backgrounding, memory pressure, an uncooperative delegate, or native failure.",
+    "Whether future resource-limit support can meet the intended budget without additional upstream runtime changes.",
+    "An acceptable memory-isolation architecture for production with account credentials in the same app; passing functional probes does not answer this."
+  ],
+  "source_evidence": [
+    {
+      "id": "bridge_manifest",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/Cargo.toml",
+      "sha256": "84b0e8b11da9135356ef80afb3021c95e9088bfc890d697bd1af483b025b8fd3",
+      "line_ranges": [
+        [
+          1,
+          25
+        ],
+        [
+          66,
+          118
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "mobile_manifest",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/Cargo.toml",
+      "sha256": "2105cc9fdac2101e50a66c702edd3a4b37a62fd41fc01380541a8637d9017d87",
+      "line_ranges": [
+        [
+          12,
+          24
+        ],
+        [
+          65,
+          90
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "connect_local",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "sha256": "47ae72c0a936057436b47d83ec075a3d1a9f456abdb258138f9f7c6e8ccdf100",
+      "line_ranges": [
+        [
+          635,
+          670
+        ],
+        [
+          762,
+          816
+        ],
+        [
+          888,
+          900
+        ],
+        [
+          1252,
+          1259
+        ],
+        [
+          1294,
+          1297
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "embedded_runtime",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/embedded_runtime.rs",
+      "sha256": "4d48a11802a1705914b5b35cf9ecd9ed055f0a61b937f39a9e7c498b406e0beb",
+      "line_ranges": [
+        [
+          1,
+          5
+        ],
+        [
+          24,
+          57
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "local_profile",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs",
+      "sha256": "3b4183201fc17a7ffbb73215b8d9b193a67b2d0482843cf45bab9fd1121f083f",
+      "line_ranges": [
+        [
+          29,
+          33
+        ],
+        [
+          87,
+          105
+        ],
+        [
+          159,
+          185
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "upstream_manifest",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/Cargo.toml",
+      "sha256": "3ecadcd00afefca20481feafe9af0334a7cfccc47581176ceb535edd43c662c1",
+      "line_ranges": [
+        [
+          560,
+          560
+        ],
+        [
+          675,
+          677
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "in_process_api",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/app-server/src/in_process.rs",
+      "sha256": "adb589436b39ba208de71aa80cc0d0acfc524317282ea618ca0ac686b04d79bf",
+      "line_ranges": [
+        [
+          347,
+          372
+        ],
+        [
+          380,
+          414
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "provider_install",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/app-server/src/message_processor.rs",
+      "sha256": "6d81a0b5bab7172bf9ab24a6e8e05375f5623f0a8ac6d6da97c4ed184ad1085f",
+      "line_ranges": [
+        [
+          394,
+          399
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "thread_manager",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/thread_manager.rs",
+      "sha256": "649c77f487598381a2d1a371b67a78b6d0c89582642aa9e4b2d122a7287a27fe",
+      "line_ranges": [
+        [
+          640,
+          650
+        ],
+        [
+          730,
+          739
+        ],
+        [
+          2555,
+          2563
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "code_mode_exports",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode/src/lib.rs",
+      "sha256": "672628d0254daded50e508875039d7dcdb95d4d850209ae3ac3f95161b0e470d",
+      "line_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "protocol",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-protocol/src/session.rs",
+      "sha256": "f1b18c63c37d5b080529d82652300861adbb99779a11270dcaeee546ca4c3a34",
+      "line_ranges": [
+        [
+          19,
+          32
+        ],
+        [
+          34,
+          60
+        ],
+        [
+          125,
+          146
+        ],
+        [
+          177,
+          277
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-protocol/src/session.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "runtime_manifest",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/Cargo.toml",
+      "sha256": "075eb58a5975625461eaef95731a83b39bb1a38b2f9bffb2916f6af769e41b4b",
+      "line_ranges": [
+        [
+          15,
+          31
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "runtime_exports",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/lib.rs",
+      "sha256": "fc3771ce78308735df18117a02f0862b7edef31ae4efda0df86149594769e265",
+      "line_ranges": [
+        [
+          10,
+          14
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/lib.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "v8_init",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "sha256": "d923e9be4ac679c0f3b09e3c0f84bf381eb2a0de81a8a88838aea64ac6d34ff7",
+      "line_ranges": [
+        [
+          16,
+          60
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "runtime_service",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/service.rs",
+      "sha256": "6ab08f1240b522de5e4c8879023dee7a6ee0daf13bba9f1a0f380f0bc8483a87",
+      "line_ranges": [
+        [
+          33,
+          63
+        ],
+        [
+          66,
+          92
+        ],
+        [
+          128,
+          143
+        ],
+        [
+          165,
+          175
+        ],
+        [
+          195,
+          217
+        ],
+        [
+          225,
+          254
+        ],
+        [
+          263,
+          316
+        ],
+        [
+          320,
+          340
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/service.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "session_runtime",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/session_runtime/mod.rs",
+      "sha256": "184791e3f1c4510559410e119b39923b22e79e7b36bd974e659f540032f16596",
+      "line_ranges": [
+        [
+          41,
+          75
+        ],
+        [
+          127,
+          151
+        ],
+        [
+          158,
+          220
+        ],
+        [
+          285,
+          307
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/session_runtime/mod.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "cell_actor",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/cell_actor/mod.rs",
+      "sha256": "13517bb0d4faca763c9761fd58890b66c43850612c88cbc39de5568eafcd6dfc",
+      "line_ranges": [
+        [
+          64,
+          80
+        ],
+        [
+          124,
+          166
+        ],
+        [
+          394,
+          394
+        ],
+        [
+          522,
+          539
+        ],
+        [
+          618,
+          627
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/cell_actor/mod.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "callbacks",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/cell_actor/callbacks.rs",
+      "sha256": "036bbe84374c54a29e13b6af628e4c1d3a21e938f5bc26678a79bef309404910",
+      "line_ranges": [
+        [
+          79,
+          92
+        ],
+        [
+          116,
+          123
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/cell_actor/callbacks.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "v8_runtime",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/mod.rs",
+      "sha256": "7bf71cd9dfa9653975841181fab096b83b0bf067a614a75fd34e879ec24dd2e3",
+      "line_ranges": [
+        [
+          73,
+          140
+        ],
+        [
+          185,
+          205
+        ],
+        [
+          370,
+          380
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/runtime/mod.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "module_loader",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/module_loader.rs",
+      "sha256": "01cb7f7b6016c92e84e3329ecc73704c7180eadaa5e0d6f7afcc3d53de9f6137",
+      "line_ranges": [
+        [
+          201,
+          213
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/runtime/module_loader.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "core_service",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/code_mode/mod.rs",
+      "sha256": "bc631027c964f6c3e381be869611be7e1b06bd110c2eb5700ebef13baae8c778",
+      "line_ranges": [
+        [
+          75,
+          101
+        ],
+        [
+          129,
+          193
+        ],
+        [
+          233,
+          258
+        ],
+        [
+          319,
+          326
+        ],
+        [
+          330,
+          409
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "core_shutdown",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/session/handlers.rs",
+      "sha256": "375d802b25141e547596a043627fbf9d733d92a99856809a68a1ffa139f85141",
+      "line_ranges": [
+        [
+          311,
+          325
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "core_interrupt",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tasks/mod.rs",
+      "sha256": "bcac37f56680229dcfc3925010bfa4f146ecab5c9f1cd7a00121d8bb5dcd670e",
+      "line_ranges": [
+        [
+          976,
+          988
+        ]
+      ],
+      "matches_pristine": null
+    },
+    {
+      "id": "service_tests",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977",
+      "line_ranges": [
+        [
+          30,
+          64
+        ],
+        [
+          186,
+          191
+        ]
+      ],
+      "matches_pristine": {
+        "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/service_tests.rs",
+        "matches_actual_source": true
+      }
+    },
+    {
+      "id": "reservation_review",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/v8-sandbox-reservation-analysis.json",
+      "sha256": "42b79660f16cf7af9d113d33f1c65834b2b04604a9f20b5f4a28a0683ce7824f",
+      "line_ranges": [],
+      "matches_pristine": null
+    }
+  ],
+  "validation": {
+    "checked_at_utc": "2026-11-01T01:37:35.232324+00:00",
+    "json_and_source_reference_ids_valid": true,
+    "source_snapshot_files": 25,
+    "pristine_runtime_protocol_files_matched": 11,
+    "concurrent_source_drift": [
+      {
+        "source_id": "bridge_manifest",
+        "current_sha256": "7ddb7b6070a81fd3862afe215626c720af5674c9ec2c92f582134f4c30fc69b5"
+      },
+      {
+        "source_id": "mobile_manifest",
+        "current_sha256": "051ed887783b641c58cf8530202d4456935aabfea15f4d4f58519fed957fa0da"
+      },
+      {
+        "source_id": "connect_local",
+        "current_sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526"
+      },
+      {
+        "source_id": "runtime_manifest",
+        "current_sha256": "0ab6a6b3ec1e751b329f16d31567212196591b552f5710471049c17b610dfe1c"
+      }
+    ],
+    "note": "Findings describe the recorded source hashes. Main is implementing concurrently; changed files were not rewritten or re-reviewed. Line ranges are verified for unchanged snapshots; changes may shift current lines."
+  }
+}

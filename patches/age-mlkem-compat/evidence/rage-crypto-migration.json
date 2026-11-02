@@ -1,0 +1,69 @@
+{
+  "sha": "f7c95f4c067049085944e914ef4e7321fe03e7b9",
+  "html_url": "https://github.com/str4d/rage/commit/f7c95f4c067049085944e914ef4e7321fe03e7b9",
+  "commit": {
+    "author": {
+      "name": "Jack Grigg",
+      "email": "thestr4d@gmail.com",
+      "date": "2026-07-13T19:27:00Z"
+    },
+    "committer": {
+      "name": "Jack Grigg",
+      "email": "thestr4d@gmail.com",
+      "date": "2026-07-13T20:22:33Z"
+    },
+    "message": "Migrate to latest Rust Crypto crate stack",
+    "tree": {
+      "sha": "961e1511cecc3943a246950cb2c10e7426658e06",
+      "url": "https://api.github.com/repos/str4d/rage/git/trees/961e1511cecc3943a246950cb2c10e7426658e06"
+    },
+    "url": "https://api.github.com/repos/str4d/rage/git/commits/f7c95f4c067049085944e914ef4e7321fe03e7b9",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "parents": [
+    {
+      "sha": "87c6a8e6b462ecfc3b205610b97f5e1046e8ccaf",
+      "url": "https://api.github.com/repos/str4d/rage/commits/87c6a8e6b462ecfc3b205610b97f5e1046e8ccaf",
+      "html_url": "https://github.com/str4d/rage/commit/87c6a8e6b462ecfc3b205610b97f5e1046e8ccaf"
+    }
+  ],
+  "files": [
+    {
+      "filename": "Cargo.toml",
+      "status": "modified",
+      "changes": 27,
+      "patch": "@@ -23,34 +23,39 @@ age-core = { version = \"0.12.0\", path = \"age-core\" }\n base64 = \"0.22\"\n \n # - ChaCha20-Poly1305 from RFC 7539\n-chacha20poly1305 = { version = \"0.10\", default-features = false, features = [\"alloc\"] }\n+chacha20poly1305 = { version = \"0.11\", default-features = false, features = [\n+    \"alloc\",\n+] }\n \n # - SHA3-256 from FIPS 202\n-sha3 = \"0.10\"\n+sha3 = \"0.12\"\n \n # - ML-KEM from FIPS 203\n-ml-kem = { version = \"0.2\", features = [\"deterministic\"] }\n+ml-kem = \"0.3\"\n \n # - X25519 from RFC 7748\n-x25519-dalek = { version = \"2\", features = [\"static_secrets\"] }\n+x25519-dalek = { version = \"3\", features = [\"static_secrets\"] }\n \n # - P-256\n-p256 = { version = \"0.13\", default-features = false, features = [\"arithmetic\"] }\n+p256 = { version = \"0.14\", default-features = false, features = [\"arithmetic\"] }\n \n # - HKDF from RFC 5869 with SHA-256\n # - HMAC from RFC 2104 with SHA-256\n-hkdf = \"0.12\"\n-hmac = \"0.12\"\n-sha2 = \"0.10\"\n+hkdf = \"0.13\"\n+hmac = \"0.13\"\n+sha2 = \"0.11\"\n \n # - HPKE from RFC 9180\n-hpke = { version = \"0.12\", default-features = false, features = [\"alloc\"] }\n+hpke = { version = \"0.14\", default-features = false, features = [\n+    \"alloc\",\n+    \"chacha\",\n+] }\n \n # - scrypt from RFC 7914\n-scrypt = { version = \"0.11\", default-features = false }\n+scrypt = { version = \"0.12\", default-features = false }\n \n # - CSPRNG\n-rand = \"0.8\"\n+rand = \"0.10\"\n \n # - Key encoding\n bech32 = \"0.11\""
+    },
+    {
+      "filename": "age-core/Cargo.toml",
+      "status": "modified",
+      "changes": 2,
+      "patch": "@@ -36,7 +36,7 @@ sha2.workspace = true\n tempfile = { version = \"3.2.0\", optional = true }\n \n [dev-dependencies]\n-hpke = { workspace = true, features = [\"p256\"] }\n+hpke = { workspace = true, features = [\"mlkem\", \"nistp\"] }\n \n [features]\n plugin = [\"tempfile\"]"
+    },
+    {
+      "filename": "age-core/src/primitives.rs",
+      "status": "modified",
+      "changes": 12,
+      "patch": "@@ -4,7 +4,7 @@ use core::fmt;\n \n use bech32::primitives::decode::CheckedHrpstring;\n use chacha20poly1305::{\n-    aead::{self, generic_array::typenum::Unsigned, Aead, AeadCore, KeyInit},\n+    aead::{self, common::typenum::Unsigned, Aead, AeadCore, KeyInit},\n     ChaCha20Poly1305,\n };\n use hkdf::Hkdf;\n@@ -135,13 +135,13 @@ where\n /// that you choose a KEM with equivalent properties.\n ///\n /// [RFC 9180]: https://tools.ietf.org/html/rfc9180\n-pub fn hpke_seal<Kem: hpke::Kem, R: rand::RngCore + rand::CryptoRng>(\n+pub fn hpke_seal<Kem: hpke::Kem, R: rand::CryptoRng>(\n     pk_recip: &Kem::PublicKey,\n     info: &[u8],\n     plaintext: &[u8],\n     rng: &mut R,\n ) -> (Kem::EncappedKey, Vec<u8>) {\n-    hpke::single_shot_seal::<hpke::aead::ChaCha20Poly1305, hpke::kdf::HkdfSha256, Kem, R>(\n+    hpke::single_shot_seal_with_rng::<hpke::aead::ChaCha20Poly1305, hpke::kdf::HkdfSha256, Kem>(\n         &hpke::OpModeS::Base,\n         pk_recip,\n         info,\n@@ -179,7 +179,7 @@ pub fn hpke_open<Kem: hpke::Kem>(\n #[cfg(test)]\n mod tests {\n     use hpke::Kem;\n-    use rand::rngs::OsRng;\n+    use rand::{rand_core::UnwrapErr, rngs::SysRng};\n \n     use super::{aead_decrypt, aead_encrypt, bech32_decode, bech32_encode, hpke_open, hpke_seal};\n \n@@ -210,9 +210,9 @@ mod tests {\n     #[test]\n     fn hpke_round_trip() {\n         type Kem = hpke::kem::DhP256HkdfSha256;\n-        let mut rng = OsRng;\n+        let mut rng = UnwrapErr(SysRng);\n \n-        let (sk_recip, pk_recip) = Kem::gen_keypair(&mut rng);\n+        let (sk_recip, pk_recip) = Kem::gen_keypair_with_rng(&mut rng);\n \n         let info = b\"foobar\";\n         let plaintext = b\"12345678\";"
+    },
+    {
+      "filename": "age/Cargo.toml",
+      "status": "modified",
+      "changes": 25,
+      "patch": "@@ -27,10 +27,12 @@ rand.workspace = true\n \n # OpenSSH-specific dependencies:\n # - RSAES-OAEP from RFC 8017 with SHA-256 and MGF1\n-rsa = { version = \"0.9\", default-features = false, optional = true }\n+rsa = { version = \"=0.10.0-rc.18\", default-features = false, features = [\n+    \"encoding\",\n+], optional = true }\n \n # - Conversion of public keys from Ed25519 to X25519\n-curve25519-dalek = { version = \"4\", optional = true }\n+curve25519-dalek = { version = \"5\", optional = true }\n \n # Async I/O\n futures = { version = \"0.3\", optional = true }\n@@ -42,10 +44,10 @@ pinentry = { workspace = true, optional = true }\n # Dependencies used internally:\n # (Breaking upgrades to these are usually backwards-compatible, but check MSRVs.)\n bech32.workspace = true\n-cipher = { version = \"0.4.3\", features = [\"alloc\"] }\n+cipher = { version = \"0.5\", features = [\"alloc\"] }\n cookie-factory.workspace = true\n hkdf.workspace = true\n-hpke = { workspace = true, features = [\"p256\"] }\n+hpke = { workspace = true, features = [\"mlkem\", \"nistp\"] }\n i18n-embed-fl.workspace = true\n lazy_static.workspace = true\n ml-kem.workspace = true\n@@ -64,14 +66,17 @@ zeroize.workspace = true\n num-traits = { version = \"0.2\", optional = true }\n \n # - Encrypted keys\n-aes = { version = \"0.8\", optional = true }\n-aes-gcm = { version = \"0.10\", optional = true }\n-bcrypt-pbkdf = { version = \"0.10\", optional = true }\n-cbc = { version = \"0.1\", optional = true }\n-ctr = { version = \"0.9\", optional = true }\n+aes = { version = \"0.9\", optional = true }\n+aes-gcm = { version = \"0.11\", optional = true }\n+bcrypt-pbkdf = { version = \"0.11\", optional = true }\n+cbc = { version = \"0.2\", optional = true }\n+ctr = { version = \"0.10\", optional = true }\n \n # scrypt Performance timer\n-web-sys = { version = \"0.3\", optional = true, features = [\"Window\", \"Performance\"]}\n+web-sys = { version = \"0.3\", optional = true, features = [\n+    \"Window\",\n+    \"Performance\",\n+] }\n \n # Async I/O\n memchr = { version = \"2.5\", optional = true }"
+    },
+    {
+      "filename": "age/src/native/tagpq.rs",
+      "status": "modified",
+      "changes": 39,
+      "patch": "@@ -6,43 +6,23 @@ use std::fmt;\n use age_core::{\n     format::{FileKey, Stanza},\n     primitives::{bech32_decode, bech32_encode_to_fmt, hpke_seal},\n-    secrecy::{zeroize::Zeroize, ExposeSecret},\n+    secrecy::ExposeSecret,\n };\n use base64::{prelude::BASE64_STANDARD_NO_PAD, Engine};\n+use cipher::{typenum::Unsigned, KeySizeUser};\n use hpke::{Deserializable, Serializable};\n-use ml_kem::{KemCore, MlKem768};\n-use p256::elliptic_curve::sec1::ToEncodedPoint;\n-use rand::rngs::OsRng;\n+use ml_kem::{Kem as KemCore, MlKem768};\n+use rand::{rand_core::UnwrapErr, rngs::SysRng};\n \n use crate::EncryptError;\n \n-mod kem;\n-\n const RECIPIENT_PREFIX: bech32::Hrp = bech32::Hrp::parse_unchecked(\"age1tagpq\");\n \n const MLKEM768P256TAG_RECIPIENT_TAG: &str = \"mlkem768p256tag\";\n const MLKEM768P256TAG_SALT: &str = \"age-encryption.org/mlkem768p256tag\";\n \n-type Kem = kem::MlKem768P256;\n-\n-pub(crate) fn expand_pq_key(\n-    seed: &[u8; 64],\n-) -> (\n-    <MlKem768 as KemCore>::DecapsulationKey,\n-    <MlKem768 as KemCore>::EncapsulationKey,\n-) {\n-    let mut d = [0; 32];\n-    let mut z = [0; 32];\n-    d.copy_from_slice(&seed[..32]);\n-    z.copy_from_slice(&seed[32..]);\n-\n-    let (dk_pq, ek_pq) = MlKem768::generate_deterministic(&d.into(), &z.into());\n-\n-    d.zeroize();\n-    z.zeroize();\n-\n-    (dk_pq, ek_pq)\n-}\n+type Kem = hpke::kem::MlKem768P256;\n+type KemNek = <<MlKem768 as KemCore>::EncapsulationKey as KeySizeUser>::KeySize;\n \n /// The hybrid post-quantum tagged age recipient type, designed for hardware keys where\n /// decryption potentially requires user presence.\n@@ -96,15 +76,14 @@ impl crate::Recipient for Recipient {\n             &self.0,\n             MLKEM768P256TAG_SALT.as_bytes(),\n             file_key.expose_secret(),\n-            &mut OsRng,\n+            &mut UnwrapErr(SysRng),\n         );\n \n+        let kem_nek = KemNek::to_usize();\n         let ikm = enc\n             .to_bytes()\n             .into_iter()\n-            .chain(super::static_tag(\n-                self.0.ek_t.to_encoded_point(false).as_bytes(),\n-            ))\n+            .chain(super::static_tag(&self.0.to_bytes()[kem_nek..]))\n             .collect::<Vec<u8>>();\n         let tag = super::stanza_tag(&ikm, MLKEM768P256TAG_SALT);\n "
+    }
+  ]
+}

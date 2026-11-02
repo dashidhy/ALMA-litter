@@ -1,0 +1,1 @@
+PASS: actual Keychain store declaration type-checks in Swift 5 targeted mode; no code executed.

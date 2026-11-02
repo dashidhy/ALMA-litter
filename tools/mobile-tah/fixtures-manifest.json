@@ -1,0 +1,7 @@
+{
+  "qualificationSource": "../alma-ios-lab/tah_fixture_pack/manifest.json",
+  "kind": "synthetic transcript and explicit three revision deltas",
+  "consent": "user-authorized testing; model calls require explicit mobile-tah-qualification launch flag or UI consent",
+  "hostReplayGolden": "../alma-ios-lab/results/tah-phone-v0-v1-v2-20261101-d/accepted",
+  "hostReplayContainsModelCalls": false
+}

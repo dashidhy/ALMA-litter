@@ -1,0 +1,14 @@
+{
+  "patch_sha256": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+  "c_host_build": true,
+  "c_ffi_compile": true,
+  "supervisor_musl_cross_build": true,
+  "host_rust_wrapper_compile": false,
+  "pinned_workspace_lock_used": false,
+  "isolated_supervisor_lock_sha256": "57acf45c2c3353d8dc76d0677fe5730a15da616f2eae2bdbfa1e7a55c6b335a9",
+  "host_binary_sha256": "2d7d4297dcbd6a5d87aa6686ea8c3bdf89cb16713a8f959b22e24c8d98e5ad21",
+  "supervisor_sha256": "d2f51b13d8cbb6467089badeeb0f07fbe16bdecd667f6d456304467f6d4bb6dd",
+  "vdso_sha256": "372abc40e3a7af66933385198820097a158d7328bc65c933b72d833de93ab72d",
+  "source_matches_verified_patch": true,
+  "scope": "private macOS C host + Linux ARM64 Rust supervisor; not iOS or Rust host-wrapper validation"
+}

@@ -1,0 +1,1 @@
+{"detail":"Rpc(\"server error -32600: ephemeral threads do not support includeTurns\")","errorType":"AlmaLocalAgentProbe.ClientError","phase":"failed","pid":35079,"scope":"explicit synthetic subscription check; no transcript or credential output"}

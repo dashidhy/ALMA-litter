@@ -1,0 +1,200 @@
+--- Mac/guest-adapter.ts
++++ Mobile/guest-adapter.ts
+@@ -1,30 +1,30 @@
+ import type {
+   AttemptTerminalV1,
+   FrozenAttemptV1,
+-} from "../../../../src/contract/index.js";
++} from "../../upstream/src/contract/index.js";
+ import type {
+   GuestProviderAdapterV1,
+   GuestProviderAttemptContextV1,
+-} from "../../../../src/guest/runtime/adapter.js";
++} from "../../upstream/src/guest/runtime/adapter.js";
+ import {
+   CODEX_CONTROLLER_HOME,
+   CodexAuthMaterialError,
+   CodexAuthMaterialGuardV1,
+-} from "./auth-material.js";
+-import { CodexEventNormalizerV1 } from "./event-normalizer.js";
+-import { nativeEventDiagnostic } from "./notification-diagnostics.js";
+-import { CodexWarningEmitterV1 } from "./warnings.js";
++} from "../../upstream/providers/codex/adapter/src/auth-material.js";
++import { CodexEventNormalizerV1 } from "../../upstream/providers/codex/adapter/src/event-normalizer.js";
++import { nativeEventDiagnostic } from "../../upstream/providers/codex/adapter/src/notification-diagnostics.js";
++import { CodexWarningEmitterV1 } from "../../upstream/providers/codex/adapter/src/warnings.js";
+ import {
+   codexAuthenticationFailure,
+   codexFailure,
+   codexFailureTerminal,
+   isCodexAuthenticationRPCError,
+-} from "./failure.js";
++} from "../../upstream/providers/codex/adapter/src/failure.js";
+ import {
+   CodexProfileError,
+   resolveCodexNativeProfile,
+   type CodexNativeProfileV1,
+-} from "./native-profile.js";
++} from "../../upstream/providers/codex/adapter/src/native-profile.js";
+ import {
+   CodexStdioAppServerFacadeV1,
+   CodexAppServerRPCErrorV1,
+@@ -32,8 +32,8 @@
+   type CodexAppServerConnectionV1,
+   type CodexAppServerFacadeV1,
+   type CodexAppServerInboundV1,
+-} from "./process-facade.js";
+-import { projectCodexPrompt } from "./prompt.js";
++} from "../../upstream/providers/codex/adapter/src/process-facade.js";
++import { projectCodexPrompt } from "../../upstream/providers/codex/adapter/src/prompt.js";
+ import {
+   assertAccountReceipt,
+   assertInitializeReceipt,
+@@ -42,7 +42,7 @@
+   assertThreadStartReceipt,
+   assertTurnStartReceipt,
+   parseModelPage,
+-} from "./receipts.js";
++} from "../../upstream/providers/codex/adapter/src/receipts.js";
+ import {
+   CODEX_SANDBOX_QUALIFICATION_INPUT_PATH,
+   CODEX_SANDBOX_QUALIFICATION_RECEIPT_PATH,
+@@ -51,13 +51,25 @@
+   prepareCodexNativeSandboxFixtureV1,
+   CodexSandboxQualificationError,
+   type CodexNativeToolLifecycleObserverV1,
+-} from "./sandbox-qualification.js";
++} from "../../upstream/providers/codex/adapter/src/sandbox-qualification.js";
+ 
+ const MAX_MODEL_PAGES = 16;
+ const MAX_MODELS = 4_096;
+ const STARTUP_EVENT_TIMEOUT_MS = 60_000;
+ 
++export interface MobileCodexAuthPort {
++  readonly home: string;
++  install(credential: import("../../upstream/src/guest/runtime/adapter.js").GuestOpaqueCredentialHandleV1 | null): Promise<void>;
++  verifyBeforeTurn(): Promise<void>;
++  removeBeforeTurn(): Promise<void>;
++  removeAfterProcessExit(): Promise<void>;
++}
+ export interface CodexGuestAdapterOptionsV1 {
++  readonly auth: MobileCodexAuthPort;
++  readonly requiresRemoteControlStatus: boolean;
++  readonly resolveProfile: typeof resolveCodexNativeProfile;
++  readonly assertRuntimeReceipt: typeof assertInitializeReceipt;
++  readonly assertClosed: (receipt: unknown) => void;
+   readonly executablePath: string;
+   readonly workspaceRoot: string;
+   /** Provider-appliance construction data; never part of the Host contract. */
+@@ -65,12 +77,13 @@
+   readonly appServer?: CodexAppServerFacadeV1;
+ }
+ 
+-/** One-operation Codex Adapter intended to run inside a fresh SuperBox Guest. */
++/** Original Codex Adapter with explicit mobile transport/auth/lifecycle seams. See adaptation.json. */
+ export class CodexGuestAdapterV1 implements GuestProviderAdapterV1 {
+   readonly #executablePath: string;
+   readonly #workspaceRoot: string;
+   readonly #appServer: CodexAppServerFacadeV1;
+-  readonly #auth: CodexAuthMaterialGuardV1;
++  readonly #auth: MobileCodexAuthPort;
++  readonly #options: CodexGuestAdapterOptionsV1;
+   #running = false;
+   #cancelRequested = false;
+   #connection: CodexAppServerConnectionV1 | undefined;
+@@ -85,10 +98,9 @@
+     this.#executablePath = options.executablePath;
+     this.#workspaceRoot = options.workspaceRoot;
+     this.#appServer = options.appServer ?? new CodexStdioAppServerFacadeV1();
+-    this.#auth = new CodexAuthMaterialGuardV1(
+-      options.controllerHome ?? CODEX_CONTROLLER_HOME,
+-      options.workspaceRoot,
+-    );
++    this.#options = options;
++    this.#auth = options.auth;
++    if (!options.appServer) throw new TypeError("Mobile Provider backend is required");
+     if (
+       options.executablePath.startsWith(`${options.workspaceRoot}/`)
+       || options.executablePath.startsWith(`${this.#auth.home}/`)
+@@ -120,13 +132,13 @@
+         this.#cancelRequested = true;
+         throw cancellationMarker();
+       }
+-      const profile = resolveCodexNativeProfile(context.attempt, this.#workspaceRoot);
++      const profile = this.#options.resolveProfile(context.attempt, this.#workspaceRoot);
+       const prompt = projectCodexPrompt(context.attempt.prompt);
+       qualification = createCodexNativeSandboxQualificationObserverV1(
+         context.attempt,
+         this.#workspaceRoot,
+       );
+-      this.#auth.install(context.credential);
++      await this.#auth.install(context.credential);
+       if (qualification !== null) verifyQualificationFixture = prepareCodexNativeSandboxFixtureV1(this.#auth.home);
+       signalListener = () => { void this.cancel().catch(() => {}); };
+       context.signal.addEventListener("abort", signalListener, { once: true });
+@@ -156,7 +168,7 @@
+           requestAttestation: false,
+         },
+       });
+-      assertInitializeReceipt(initialize, this.#auth.home);
++      this.#options.assertRuntimeReceipt(initialize, this.#auth.home);
+       await this.#connection.notify("initialized");
+ 
+       let account: unknown;
+@@ -191,8 +203,8 @@
+       // account/read, model/list and thread/start have consumed the filesystem
+       // credential needed to configure this ephemeral controller. Never release
+       // the untrusted prompt while auth.json still exists in the Guest.
+-      this.#auth.verifyBeforeTurn();
+-      this.#auth.removeBeforeTurn();
++      await this.#auth.verifyBeforeTurn();
++      await this.#auth.removeBeforeTurn();
+       const turn = assertTurnStartReceipt(await this.#connection.request("turn/start", {
+         threadId: thread.threadID,
+         input: [{ type: "text", text: prompt.turnInputText }],
+@@ -241,7 +253,7 @@
+         normalizer.acceptTail(next.value);
+       }
+       await closing;
+-      this.#auth.removeAfterProcessExit();
++      await this.#auth.removeAfterProcessExit();
+ 
+       if (qualification !== null) {
+         const verifyFixture = verifyQualificationFixture;
+@@ -444,12 +456,16 @@
+         continue;
+       }
+       if (event.method === "thread/started") {
+-        if (!remoteControlDisabled) throw startupRemoteControlFailure();
++        if (this.#options.requiresRemoteControlStatus && !remoteControlDisabled) throw startupRemoteControlFailure();
+         assertThreadStartedNotification(params, threadID, this.#workspaceRoot);
+         return;
+       }
++      if (event.method === "account/login/completed") {
++        if (params.success !== true || params.loginId != null || params.error != null) throw codexAuthenticationFailure();
++        continue;
++      }
+       if (event.method === "account/updated") {
+-        if (params.authMode !== "chatgpt" && params.authMode !== "apikey") {
++        if (params.authMode !== "chatgpt" && params.authMode !== "apikey" && params.authMode !== "chatgptAuthTokens") {
+           throw codexAuthenticationFailure();
+         }
+         continue;
+@@ -478,7 +494,7 @@
+     } else {
+       await this.#closeActiveConnection();
+     }
+-    this.#auth.removeAfterProcessExit();
++    await this.#auth.removeAfterProcessExit();
+   }
+ 
+   #closeActiveConnection(): Promise<void> {
+@@ -487,7 +503,7 @@
+     if (connection === undefined) return Promise.resolve();
+     this.#closePromise = (async () => {
+       const receipt = await connection.close();
+-      if (receipt.code !== 0) throw new Error("Codex app-server exited unsuccessfully");
++      this.#options.assertClosed(receipt);
+     })();
+     return this.#closePromise;
+   }

@@ -1,0 +1,255 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/diagnostics/src/lib.rs:35:14
+   |
+35 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+   |              ^^^^^^^^^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+   |
+35 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+35 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+   |
+
+warning: `codex-diagnostics` (lib) generated 1 warning (run `cargo fix --lib -p codex-diagnostics` to apply 1 suggestion)
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/executed_tool_calls.rs:372:14
+    |
+372 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |pending| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+372 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |pending| {
+372 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |pending| {
+    |
+
+warning: `codex-core` (lib) generated 1 warning (run `cargo fix --lib -p codex-core` to apply 1 suggestion)
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+    --> /Users/dashidhy/Public/projects/agent/ALMA-litter/.build/vendor/codex-v8/src/isolate.rs:2317:8
+     |
+2317 |       .fetch_update(
+     |        ^^^^^^^^^^^^
+     |
+     = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+     |
+2317 -       .fetch_update(
+2317 +       .try_update(
+     |
+
+warning: `v8` (lib) generated 1 warning (run `cargo fix --lib -p v8` to apply 1 suggestion)
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/code-mode-runtime/src/session_runtime/mod.rs:156:14
+    |
+156 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |next_cell_id| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+156 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |next_cell_id| {
+156 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |next_cell_id| {
+    |
+
+warning: `codex-code-mode-runtime` (lib) generated 1 warning (run `cargo fix --lib -p codex-code-mode-runtime` to apply 1 suggestion)
+    Checking codex-mobile-client v0.1.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client)
+warning: unused import: `TcpListener`
+  --> codex-mobile-client/src/pair/mod.rs:32:18
+   |
+32 | use tokio::net::{TcpListener, TcpStream};
+   |                  ^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `connect_async`
+  --> codex-mobile-client/src/pair/mod.rs:36:39
+   |
+36 | use tokio_tungstenite::{accept_async, connect_async};
+   |                                       ^^^^^^^^^^^^^
+
+warning: unused import: `info`
+  --> codex-mobile-client/src/pair/mod.rs:37:22
+   |
+37 | use tracing::{debug, info, warn};
+   |                      ^^^^
+
+warning: function `mount_apps_dir` is never used
+   --> codex-mobile-client/src/ish_runtime.rs:244:4
+    |
+244 | fn mount_apps_dir(documents_dir: &Path) {
+    |    ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `mobile_system_command` is never used
+  --> codex-mobile-client/src/mobile_exec_command.rs:13:15
+   |
+13 | pub(crate) fn mobile_system_command(argv: &[String]) -> String {
+   |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_mobile_exec_argv` is never used
+  --> codex-mobile-client/src/shell_preflight.rs:33:15
+   |
+33 | pub(crate) fn prepare_mobile_exec_argv(argv: &mut Vec<String>) {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_mobile_exec_argv_inner` is never used
+  --> codex-mobile-client/src/shell_preflight.rs:37:4
+   |
+37 | fn prepare_mobile_exec_argv_inner(argv: &mut Vec<String>, android: bool) {
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `normalize_shell_invocation` is never used
+  --> codex-mobile-client/src/shell_preflight.rs:47:4
+   |
+47 | fn normalize_shell_invocation(argv: &mut Vec<String>) {
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `rewrite_tmp_paths` is never used
+  --> codex-mobile-client/src/shell_preflight.rs:59:15
+   |
+59 | pub(crate) fn rewrite_tmp_paths(argv: &mut [String]) {
+   |               ^^^^^^^^^^^^^^^^^
+
+warning: function `rewrite_tmp_boundaries` is never used
+  --> codex-mobile-client/src/shell_preflight.rs:87:4
+   |
+87 | fn rewrite_tmp_boundaries(value: &str, real_tmp: &str) -> Option<String> {
+   |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `is_path_component_continuation` is never used
+   --> codex-mobile-client/src/shell_preflight.rs:118:4
+    |
+118 | fn is_path_component_continuation(byte: u8) -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `params` is never read
+   --> codex-mobile-client/src/mobile_client/mod.rs:138:5
+    |
+137 | struct AlleycatRestartTarget {
+    |        --------------------- field in this struct
+138 |     params: crate::alleycat::ParsedPairPayload,
+    |     ^^^^^^
+    |
+    = note: `AlleycatRestartTarget` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: constant `ALLEYCAT_AGENT_INVENTORY_REFRESH_DELAYS_MS` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:185:7
+    |
+185 | const ALLEYCAT_AGENT_INVENTORY_REFRESH_DELAYS_MS: [u64; 3] = [500, 1_000, 1_500];
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `ALLEYCAT_AGENT_DIAL_RETRY_DELAYS_MS` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:186:7
+    |
+186 | const ALLEYCAT_AGENT_DIAL_RETRY_DELAYS_MS: [u64; 2] = [500, 1_000];
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `ALLEYCAT_CONTROLLER_AGENT_DIAL_RETRY_DELAYS_MS` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:187:7
+    |
+187 | const ALLEYCAT_CONTROLLER_AGENT_DIAL_RETRY_DELAYS_MS: [u64; 6] =
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_runtime_agent_names` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:692:4
+    |
+692 | fn alleycat_runtime_agent_names(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `missing_runtime_kinds` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:702:4
+    |
+702 | fn missing_runtime_kinds(
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_requested_runtime_kinds` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:739:4
+    |
+739 | fn alleycat_requested_runtime_kinds(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `is_local_studio_controller` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:748:4
+    |
+748 | fn is_local_studio_controller(server_id: &str) -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_agent_is_requested` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:752:4
+    |
+752 | fn alleycat_agent_is_requested(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `merge_alleycat_agent_inventory` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:763:4
+    |
+763 | fn merge_alleycat_agent_inventory(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_controller_inventory_ready` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:779:4
+    |
+779 | fn alleycat_controller_inventory_ready(inventory: &[AlleycatAgentInfo]) -> bool {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_inventory_refresh_delays` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:785:4
+    |
+785 | fn alleycat_inventory_refresh_delays(wait_for_registration: bool) -> &'static [u64] {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `alleycat_dial_retry_delays` is never used
+   --> codex-mobile-client/src/mobile_client/mod.rs:793:4
+    |
+793 | fn alleycat_dial_retry_delays(use_all_controller_agents: bool) -> &'static [u64] {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `rollback_depth_for_turn` is never used
+   --> codex-mobile-client/src/mobile_client/thread_projection.rs:442:15
+    |
+442 | pub(super) fn rollback_depth_for_turn(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `user_boundary_text_for_turn` is never used
+   --> codex-mobile-client/src/mobile_client/thread_projection.rs:466:15
+    |
+466 | pub(super) fn user_boundary_text_for_turn(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `push` is never used
+   --> codex-mobile-client/src/pair/mod.rs:155:14
+    |
+154 | impl EventQueue {
+    | --------------- method in this implementation
+155 |     async fn push(&self, event: PairEvent) {
+    |              ^^^^
+
+warning: function `send_wire` is never used
+   --> codex-mobile-client/src/pair/mod.rs:168:10
+    |
+168 | async fn send_wire<S>(ws: &mut S, msg: &PairWireMessage) -> Result<(), PairError>
+    |          ^^^^^^^^^
+
+warning: function `parse_wire` is never used
+   --> codex-mobile-client/src/pair/mod.rs:179:4
+    |
+179 | fn parse_wire(text: &str) -> Result<PairWireMessage, PairError> {
+    |    ^^^^^^^^^^
+
+warning: function `handle_incoming` is never used
+   --> codex-mobile-client/src/pair/mod.rs:362:10
+    |
+362 | async fn handle_incoming(
+    |          ^^^^^^^^^^^^^^^
+
+warning: constant `APP_SERVER_PROXY_WEBSOCKET_URL` is never used
+  --> codex-mobile-client/src/session/connection.rs:38:7
+   |
+38 | const APP_SERVER_PROXY_WEBSOCKET_URL: &str = "ws://codex-app-server-proxy.localhost/rpc";
+   |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `codex-mobile-client` (lib) generated 31 warnings (run `cargo fix --lib -p codex-mobile-client` to apply 3 suggestions)
+    Finished `ios-dev` profile [optimized + debuginfo] target(s) in 10.15s

@@ -2554,6 +2554,7 @@ mod mobile_client_tests {
             client.app_store.apply_ui_event(&UiEvent::TurnCompleted {
                 key: key.clone(),
                 turn_id: "turn-1".to_string(),
+                status: upstream::TurnStatus::Interrupted,
                 error: None,
             });
         }
@@ -2582,6 +2583,7 @@ mod mobile_client_tests {
         client.app_store.apply_ui_event(&UiEvent::TurnCompleted {
             key: key.clone(),
             turn_id: "turn-1".to_string(),
+            status: upstream::TurnStatus::Interrupted,
             error: None,
         });
         assert_eq!(

@@ -1,0 +1,17 @@
+{
+  "codexRevision": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "symbol": "_alma_official_code_mode_probe_run",
+  "symbolVerified": true,
+  "releaseLinkPassed": true,
+  "debugLinkPassed": false,
+  "debugError": [
+    "v8::WasmModuleCompilation::WasmModuleCompilation()",
+    "v8::WasmModuleCompilation::~WasmModuleCompilation()"
+  ],
+  "scope": "Release dead stripping removes unused WebAssembly bindings; no missing-symbol stubs, no dynamic lookup, no native archive/source modification. Debug rdynamic lane unqualified.",
+  "binaryBytes": 85884176,
+  "extendedVirtualAddressing": true,
+  "increasedMemoryLimit": false,
+  "memorySandbox": false,
+  "jit": false
+}

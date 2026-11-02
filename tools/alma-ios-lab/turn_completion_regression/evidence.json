@@ -1,0 +1,58 @@
+{
+  "source_sha256": {
+    "shared/rust-bridge/codex-mobile-client/src/session/events.rs": "8d6b3cf40a21dac81084d276a65c2effb94b02c9c7ad8cf109ff622514e4b6c4",
+    "shared/rust-bridge/codex-mobile-client/src/ffi/client.rs": "0208c794798d3390a109540d40726c7ca0257617959182de8af89b3ef0059ad2",
+    "shared/rust-bridge/codex-mobile-client/src/types/models.rs": "e2200e32cf522eed0f41a4c1f6804fcdd39cc059974f422c26259eb9d901ce69",
+    "shared/third_party/codex/codex-rs/app-server-protocol/src/protocol/v2/turn.rs": "fbf1d95b1ee6a24d06e86955a17e45957448622b9128b3a11fe5fa36bc1fa8f8",
+    "shared/third_party/codex/codex-rs/app-server-protocol/src/protocol/v2/thread_data.rs": "dfb06fcc2722c6742f5989b93be0662079a3c059b18d5c82dc261e65c1fa7cb0",
+    "shared/third_party/codex/codex-rs/app-server-protocol/src/protocol/v2/item.rs": "92d9c734b0244db046e7a47c91c3933635775a990d35db8d6eab18efa32b55f1",
+    "shared/third_party/codex/codex-rs/app-server-protocol/src/protocol/v2/shared.rs": "949a38b6ba90e2d4e08cf6723e585ceb46e9d018e0a49bbe184ebf41f5bd7f4e",
+    "shared/third_party/codex/codex-rs/protocol/src/models.rs": "753498bc730ba21ded710d9aa2b2f9163e6bbe4eaa18f1c25d998c36138a54f7",
+    "shared/third_party/codex/codex-rs/protocol/src/items.rs": "a63399c52e84f2d8aa9933132cf1be1df7eed2b5585003447328e0a5a4a0f544"
+  },
+  "source_guards_passed": true,
+  "checks": {
+    "host": {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "--crate-name=turn_completion_regression",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/turn_completion_regression/.build/host.rs",
+        "-L",
+        "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/backend_regression/.cache/target/debug/deps",
+        "--extern",
+        "tokio=/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/backend_regression/.cache/target/debug/deps/libtokio-47e107c9d2973946.rlib",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/turn_completion_regression/.build/tests"
+      ],
+      "exit_code": 0,
+      "tests_executed": true
+    },
+    "ios-real-protocol": {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+        "--edition=2024",
+        "--test",
+        "--crate-name=turn_completion_regression",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/turn_completion_regression/.build/ios-real-protocol.rs",
+        "--target=aarch64-apple-ios",
+        "--emit=metadata",
+        "-L",
+        "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps",
+        "-L",
+        "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/turn_completion_regression/.build/tests.rmeta",
+        "--extern",
+        "codex_app_server_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_app_server_protocol-6d6131a716b623c7.rmeta",
+        "--extern",
+        "codex_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_protocol-7811c33f32130ee4.rmeta",
+        "--extern",
+        "tokio=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libtokio-9f0c113cc61bdf3b.rmeta"
+      ],
+      "exit_code": 0,
+      "tests_executed": false
+    }
+  }
+}

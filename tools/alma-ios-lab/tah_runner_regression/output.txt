@@ -1,0 +1,1 @@
+PASS: actual iOS protocol metadata; tests compiled, not executed.

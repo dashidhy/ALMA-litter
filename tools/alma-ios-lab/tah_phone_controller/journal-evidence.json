@@ -1,0 +1,75 @@
+{
+  "recorded_at_utc": "2026-11-01T03:37:46.824697+00:00",
+  "api": "createFileJournal(root: string): JournalPort & { close(): void }",
+  "status": "Implemented local qualification storage. Caller still supplies trusted PhonePort; no automatic controller wiring or phone admission.",
+  "implementation_lines": 155,
+  "properties": [
+    "Original journalWriteSchema and JournalPort/JournalRecord/JournalWrite imported, no replacement publisher or acceptance booleans.",
+    "Lifetime exclusive writer lock; stale locks never auto-stolen.",
+    "Immutable version files with hashed stream filenames, exact-byte payload hash/length, canonical record checksum and per-stream previous hash.",
+    "expectedVersion and stable stream owner enforced; global operationID idempotency only for identical metadata and bytes.",
+    "Exclusive temporary write + file fsync + atomic non-overwriting hard-link publication + directory fsync.",
+    "Corruption/unknown files/gaps/conflicting writes fail using original AppBridgeError(integrity_locked).",
+    "Caller closes journal explicitly; no credential/network/model/device operations."
+  ],
+  "test_command": "node /Users/dashidhy/Public/projects/agent/ALMA/app/TAH/node_modules/vitest/vitest.mjs run --config /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_phone_controller/vitest.config.ts file-journal.test.ts",
+  "tests": {
+    "passed": 8,
+    "failed": 0,
+    "duration_ms": 878,
+    "cases": [
+      "Immutable exact UTF-8 records, hashed paths, independent read values",
+      "Reopen + exact operation idempotency + conflicting payload/stream rejection",
+      "Expected version and owner conflicts preserve existing records",
+      "Exclusive lifetime/reopen lock and stale-lock refusal",
+      "Corrupt bytes/metadata, missing middle record, orphaned pending data rejected",
+      "Foreign-directory/schema/hash/UTF-8 input rejection, cancellation and committed-operation reconciliation",
+      "Original DurableTahPersistence publication replay and receipt idempotency across disk reopen",
+      "Original durable validators reject changed inference and checksum-consistent forged transition receipt"
+    ],
+    "actual_scope": "Owned temporary filesystem fixtures under tah_phone_controller/.test-cache/journal-fixtures only; original model-free persistenceFixture called directly. No successful phone/model attempt or accepted boolean simulated.",
+    "not_run": [
+      "TypeScript compiler check",
+      "production build",
+      "power-cut/filesystem-fault injection",
+      "phone/model/network tests"
+    ]
+  },
+  "limits": [
+    "Qualified for this local POSIX/macOS test lane, not a production storage promise.",
+    "fsync issued; no F_FULLFSYNC/device power-loss guarantee or power-cut testing.",
+    "Crash-stale lock or pending file requires deliberate manual recovery; no silent replay/cleanup of uncertain commits.",
+    "Unkeyed checksums are not authentication and cannot detect complete trailing rollback/deletion without an external trusted head.",
+    "Trusted root and parent topology; no claim of descriptor-relative protection against malicious concurrent host filesystem changes.",
+    "Synchronous storage methods block the event loop and use scan-on-operation; not a large-scale store."
+  ],
+  "source_evidence": [
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/journal.ts",
+      "sha256": "3eaaa185647338fb13956faae157f4424762dc9c39ae046079dbabc0d09af3f0"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/bridge.ts",
+      "sha256": "fdb0bc76720505e7bf50e5a60cc1d99ea0e39b351c8ec406a253aa0d375c2c49"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/durable-persistence.ts",
+      "sha256": "db56e8ba8542e01ef7db7bda358d1c6db5b80193b81d79d6294010cfdd070933"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/qualification/persistence-fixture.ts",
+      "sha256": "7681831f2f0c0121c0c9c831ea89f3e9ce0f1bc85fa626291a5d376bb028e829"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/tests/app-runtime/durable-persistence.test.ts",
+      "sha256": "453b889879f7009d976ea63aba74b49f5e1911c6eeccdb72ddb272f0b301543a"
+    }
+  ],
+  "written_paths": [
+    "file-journal.ts",
+    "file-journal.test.ts",
+    "vitest.config.ts",
+    "README.md",
+    "journal-evidence.json"
+  ]
+}

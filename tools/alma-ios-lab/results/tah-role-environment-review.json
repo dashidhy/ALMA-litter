@@ -1,0 +1,323 @@
+{
+  "status": "BOUNDED_SOURCE_REVIEW_ONLY_HANDOFF",
+  "scope": "Only this JSON written; no builds/device/model/network calls, no mount or intrusion probes.",
+  "latest_route": "Original Mac TAH remains trusted workflow/controller. Exactly ONE real attempt per phone App process. Import its frozen manifest and bytes, run the existing local Codex stack, observe process exit, then collect/validate sealed output and start a new process for the next attempt. This is qualification transport, not a shipping scheduler.",
+  "decision": {
+    "restart_route": "Recommended for the first fixture. Process restart removes the immediate need for per-role mutable registry replacement, named-environment registration, or multiple simultaneous AppServer instances. One process registers one immutable role execution environment before connect_local.",
+    "instance_lifetime": "An IshInstance cannot survive its owning App process. Reuse the fixed rootfs/native backing directories and mount configuration, then boot a NEW sealed instance each process. Within a future multi-role process, one sealed instance could supply independent grants, but current singleton wiring and cleanup gaps make that a separate task.",
+    "layout": "Use /workspace/attempts/<attemptID>/view as guest cwd and /workspace/attempts/<attemptID>/scratch as a sibling. Native /workspace is the one host-selected fixed mount; all model access comes from this attempt grants. Keep trusted imported manifest, controller state, codex_home and auth outside /workspace/model view.",
+    "root_paths": "Mac native-profile accepts guestWorkspaceRoot as a parameter. Its canonical file contract is relative: raw-transcript.md for Raw Guardian; inbox/*.md and outbox/revision_vN/... for Actor/Extra Guardian. A per-attempt cwd preserves these without rewriting their contents or flattening revisions. Any separate supplied prompt with literal absolute /workspace paths must be checked by the original controller; do not silently rewrite it.",
+    "smallest_guest_grants": "Guardian: whole view RO + sibling scratch RW. Actor: disjoint RO inbox + each previous accepted outbox/revision_vK directory, RW current outbox/revision_vN + sibling scratch. Add fixed readonly runtime directories. This uses current iSH enforcement without a kernel overlap change.",
+    "not_full_parent_read_equivalence": "Disjoint Actor roots preserve canonical material-file access, but parent view/outbox directory listing is not generally permitted by current guest code; it grants traversal to ancestors, not READ for directory open. Native cwd metadata also lacks a mapping when using only disjoint mounts. Thus do not claim full Mac parent-read semantics or unchanged ls/find-at-root behavior until explicitly resolved/qualified."
+  },
+  "role_layout": [
+    {
+      "role": "raw_guardian",
+      "cwd": "A/view",
+      "files": [
+        "raw-transcript.md"
+      ],
+      "guest_ro": [
+        "runtime roots",
+        "A/view"
+      ],
+      "guest_rw": [
+        "A/scratch"
+      ],
+      "native_ro": [
+        "A/view"
+      ],
+      "native_rw": [
+        "A/scratch"
+      ],
+      "canonical_writableRoots": [],
+      "provider_web": false,
+      "result": "strict JSON safety_guardian/raw-v2, maximum 4096 UTF-8 bytes; original controller interprets it"
+    },
+    {
+      "role": "extra_guardian",
+      "cwd": "A/view",
+      "files": [
+        "inbox/action-instructions.md",
+        "inbox/critic-instructions.md",
+        "inbox/extra-instructions.md",
+        "inbox/raw-transcript.md",
+        "outbox/revision_vK/... accepted history"
+      ],
+      "guest_ro": [
+        "runtime roots",
+        "A/view"
+      ],
+      "guest_rw": [
+        "A/scratch"
+      ],
+      "native_ro": [
+        "A/view"
+      ],
+      "native_rw": [
+        "A/scratch"
+      ],
+      "canonical_writableRoots": [],
+      "provider_web": false,
+      "result": "strict JSON safety_guardian/extra-v2; original controller retains decision authority"
+    },
+    {
+      "role": "actor V0/V1/V2",
+      "cwd": "A/view",
+      "files": [
+        "inbox/action-instructions.md",
+        "inbox/critic-instructions.md",
+        "inbox/extra-instructions.md",
+        "inbox/raw-transcript.md",
+        "outbox/revision_vK/... for K<N",
+        "outbox/revision_vN/... candidate seed/output"
+      ],
+      "guest_ro": [
+        "runtime roots",
+        "A/view/inbox",
+        "A/view/outbox/revision_vK for each K<N"
+      ],
+      "guest_rw": [
+        "A/view/outbox/revision_vN",
+        "A/scratch"
+      ],
+      "native_disjoint_option": "Same material directory roots and scratch; does not presently map cwd metadata.",
+      "canonical_writableRoots": [
+        "outbox/revision_vN"
+      ],
+      "provider_web": "Only the original frozen attempt webEnabled grant; guest network remains DenyDirect."
+    }
+  ],
+  "layout_rules": [
+    "A means /workspace/attempts/<unique trusted attemptID>; precreate all roots before preparing grants and before starting model execution.",
+    "Accepted outputs must be independent ordinary-file copies, never symlinks/hardlinks or writable aliases. Seed the current candidate with the exact prior accepted bytes/digest according to the original Mac builder; do not grant write access to the accepted tree.",
+    "Guardian scratch is outside view. This avoids a RO-parent/RW-child overlap for Guardian and does not become a declared TAH writable outcome root.",
+    "Actor disjoint directory grants fit the existing 16-root limit for V0/V1/V2 plus the five current runtime roots and scratch. Reject future manifests that cannot be represented exactly; never coalesce to a broader writable root.",
+    "Host/native owner must freeze root topology and descriptor identities while an attempt runs. Sealed mount topology does not make arbitrary host-side rename/replacement safe.",
+    "Do not use links or remount tricks to repair canonical paths. Native and guest roots must refer to the same actual directory/file identities."
+  ],
+  "native_nested_constructor_assessment": {
+    "current": "ScopedExecutorFileSystem::new rejects every ancestor/descendant pair and resolve uses first matching root. Merely deleting the overlap check is incorrect.",
+    "narrow_supported_proposal": "A separate explicit constructor limited to one RO attempt-view ancestor and RW candidate child (scratch disjoint). Reject duplicate normalized roots, RW ancestors, RO-under-RW exceptions, ambiguous aliases, and unknown topology. Resolve the deepest component-prefix match for every operation; authorize supplied Core policy before I/O as today.",
+    "physical_identity_requirement": "Prove the candidate descriptor root is the same directory as the no-follow relative path opened beneath the RO parent descriptor, using dev/inode metadata and the existing no-link traversal. Path prefixes alone do not prove this. No ability to replace roots or alter ACLs after construction.",
+    "mutations": "Preserve mutation_preflight, regular-file restrictions, mount-root immutability, no link traversal and authorization of all actually created parents. Ensure write/stream/create/remove and any future rename route through the selected child capability; no parent descriptor write fallback. The currently unsupported native directory listing/walk/copy need not be broadened for this constructor.",
+    "guest_caveat": "This constructor ONLY repairs native FS layout. iSH still rejects overlapping roots in ish_workspace_register; it ORs rights and does not implement nested overrides. Use disjoint guest material roots for the minimal file-level fixture. If exact whole-parent READ including ls/find is a requirement, a separate narrow guest RO-ancestor/RW-child extension is necessary and is not present.",
+    "alternative": "Keep the existing disjoint native constructor too, adding only a read-only metadata/canonicalize capability for known view/outbox ancestors if Core needs them. Do not implement this as a general readable/writable ancestor fallback. Whether current Core startup/tools need that support is unverified in this read-only review.",
+    "recommendation": "For main layout decision: preserve A/view canonical hierarchy and scratch sibling now. Choose disjoint grants for current guest kernel. Use explicit native RO-parent/RW-child only if whole-view native reads/cwd metadata are needed; otherwise retain disjoint native roots. Label root-directory enumeration as a known gap rather than calling disjoint grants completely equivalent to Mac."
+  },
+  "actual_api_path": {
+    "host_prepare": "Current alma_workspace::bootstrap creates the fixed input/output/tmp fixture, boots IshInstance::boot_workspace_policy_with_workspace, constructs WorkspacePolicy/IshExecBackend/ScopedExecutorFileSystem, then embedded_runtime::register. Main needs an attempt-manifest variant here; it can register ONCE per restarted process with existing registry API.",
+    "backend": "IshExecBackend::new(Arc<IshInstance>, Arc<dyn ExecutionPolicy>, cleanup_timeout). Policy.prepare must validate this role exact Core filesystem/network/env intent, then create a fresh immutable single-use WorkspaceGrant and return PreparedExecution { options, grant, lease }. Reuse the sealed instance within the one attempt; do not reuse a consumed grant between commands.",
+    "native": "ScopedFiles::open(native_directory, Access::{ReadOnly,ReadWrite}) provides retained no-follow capabilities. ScopedExecutorFileSystem::new currently supports disjoint PathUri roots only and exposes mutation_preflight.",
+    "environment": "EnvironmentManager::from_embedded(backend, filesystem, EnvironmentInfo, config.http_client_factory()) is supported and registers only embedded, with no local-host fallback. Existing EmbeddedRuntime::manager calls it after config validation.",
+    "server": "ServerSession::connect_local(ServerConfig, InProcessConfig {codex_home, working_directory, channel_capacity}) loads strict role config, activates one EmbeddedNetworkPolicy, constructs the manager, and supplies it to InProcessStartArgs. Native Code Mode provider is injected through start_with_code_mode_provider behind the current iOS feature.",
+    "AppClient": "AppClient::new uses shared_mobile_client/shared_runtime. AppClient::connect_local_server forwards DEFAULT InProcessConfig; MobileClient::connect_local reuses same-id active sessions. There is no per-call role environment factory argument on these inspected methods. In the restart route, import/register the immutable role before this existing connect path; main need not introduce a general dynamic factory.",
+    "wrong_factory": "AppClient::attach_or_spawn_local_server is the native CLI/WebSocket attachment path, not this in-process iOS route.",
+    "direct_fixture_alternative": "A Rust qualification runner can call ServerSession::connect_local directly after one manifest-scoped registration to supply explicit home/host cwd. The existing registration structs/functions are crate-local, so an external crate cannot independently construct them without a narrow main-owned bridge entrypoint."
+  },
+  "config_and_identity": [
+    "Replace hardcoded alma_workspace CWD/INPUT/SCRATCH, READ_ROOTS/WRITE_ROOTS, access_map, guest_env and validate_config with an immutable manifest-derived profile for the single attempt; current validate_config is a fn pointer, so capturing arbitrary manifest state may require a small main-owned representation change or validation through the immutable runtime object.",
+    "Guardian provider_web must be false, Actor only if frozen manifest permits. Current fixed bootstrap registers provider_web=true. Guest direct sockets remain denied independently; native official Web must continue through its existing trusted network policy, not guest network grants.",
+    "Use a stable trusted codex_home outside the model view and keep existing Keychain/auth refresh callbacks. Do not copy auth into the imported workspace. Role/attempt boundaries are new processes/threads and immutable grants, not switching originator or clearing subscription data.",
+    "Keep process-wide originator @alma/tah-codex-guest unchanged. prepare_alma_client_identity rejects a previously initialized different originator and owns catalog identity stamping; role names are not client identities.",
+    "connect_local mutates process CODEX_HOME and std::env::set_current_dir. Its working_directory is a NATIVE path, not /workspace guest cwd. Use a trusted native directory or current default; put guest cwd in EnvironmentInfo and the role overrides. Current iOS path later overrides ConfigBuilder fallback_cwd with execution.guest_cwd.",
+    "Do not use AppClient::new as a freshness boundary within one process. For this qualification, start a new App process, new role session/thread, and never resume another role thread. Preserve original Mac prompts, model metadata and workflow decisions."
+  ],
+  "completion_and_collection": {
+    "existing_shutdown_limit": "ServerSession.disconnect is not cleanup confirmation: try_send Shutdown, 100ms sleep, abort; worker ignores upstream shutdown error. Upstream AppServerClient.shutdown itself has bounded abort fallback. Neither proves all iSH leases were released.",
+    "owned_signal": "IshSession.terminate_owned(timeout) and acknowledged Closed are actual owned-process completion mechanisms; backend complete/quarantine tracks them. Active process IDs are private and no aggregate attempt-drain API was found in this bounded review.",
+    "restart_qualification": "Do not inspect/publish files while the phone process remains live. Original controller must observe that exact App process exit, then collect a trusted result envelope and candidate files from that attempt. Process death ends this in-process iSH/native runtime; it is not proof the task succeeded.",
+    "success_gate": "Require normal completed model/tool result, role/attempt identity match, no cleanup failure/quarantine, and independently validate canonical output bytes/schema/digests with the original Mac workflow. A crash/timeout/forced exit is a failed or indeterminate attempt even if files exist. Never accept a model-authored success marker as the trusted result envelope.",
+    "publication": "Only the original Mac controller validates/publishes accepted V0/V1/V2, makes independent RO copies and prepares the next frozen manifest. Phone performs one attempt. No new phone scheduler or replacement TAH semantics is proposed."
+  },
+  "remaining_blockers": [
+    "Main must provide manifest-scoped bootstrap/role validation using the existing one-shot registration; current fixed input/output/tmp policy cannot enforce canonical TAH roles as-is.",
+    "Exact whole-parent Actor RO plus nested candidate RW is unsupported by both current native constructor and guest grant registration. Native-only constructor does not resolve guest root listing. File-level disjoint alternative preserves canonical paths but needs qualification of Core cwd/parent metadata and prompt/tool behavior.",
+    "Strict trusted import and result-envelope/observed-exit collection are not implemented by this review; retain original controller authority and artifact validation.",
+    "No aggregate asynchronous lease drain confirmation is available through the inspected bridge session disconnect. Per-process test transport avoids in-process reuse; a future production scheduler still needs explicit drain/quarantine handling.",
+    "Physical inode consistency and freeze of native topology must be maintained across both native and guest access. No enforcement or security parity is inferred merely from config text.",
+    "Source may be changing in parallel; anchors include hashes for this bounded snapshot. No fixture/build/device/model tests were performed."
+  ],
+  "source_anchors": [
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/embedded_runtime.rs",
+      "line": 22,
+      "sha256": "4d48a11802a1705914b5b35cf9ecd9ed055f0a61b937f39a9e7c498b406e0beb",
+      "supports": "Process-wide OnceLock registration; manager creates fresh EnvironmentManager over the registered immutable backend/FS."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 637,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "connect_local config preparation and global registered execution selection."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 671,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "CODEX_HOME and host cwd mutation; ConfigBuilder receives explicit home and later guest cwd override."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 765,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "Activated embedded network controller, execution.manager, InProcessStartArgs and native Code Mode provider start."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 39,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "One shared ALMA originator; reject different initialized identity; per-home catalog identity stamp."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 1252,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "Disconnect is best effort try_send, 100ms delay, worker abort, no cleanup acknowledgment."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "line": 1835,
+      "sha256": "1de515b2598ac80df015183c7226a04dcbc0872fa898a1944aa4132976cbb526",
+      "supports": "Worker discards client.shutdown result."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/ffi/client.rs",
+      "line": 317,
+      "sha256": "4c6aa4ac66bccc1398ed39d047d477f9e28957ec4466e6574d9738a368ad61ab",
+      "supports": "AppClient::new shares MobileClient and runtime; constructing another wrapper is not isolation."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/ffi/server.rs",
+      "line": 91,
+      "sha256": "f098bc4e3961399a6a5e3b3978f6c0079ed5ab534b909b302e6fb5fa99b3a94e",
+      "supports": "AppClient::connect_local_server constructs ServerConfig and uses default InProcessConfig."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs",
+      "line": 1550,
+      "sha256": "80570e5f4fd9cfb24ef86ec818190a89e2578a7dec29c635f12b8bf97d94b4cb",
+      "supports": "connect_local reuses an active session with same server_id."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/ffi/client.rs",
+      "line": 1587,
+      "sha256": "4c6aa4ac66bccc1398ed39d047d477f9e28957ec4466e6574d9738a368ad61ab",
+      "supports": "attach_or_spawn_local_server is native CLI/WebSocket path, not the iOS embedded factory."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/alma_workspace.rs",
+      "line": 15,
+      "sha256": "597c8abe9e0577f54a3b311ea828b05df91a6aa7988d45d6afcb7ec9ce38b314",
+      "supports": "Current bootstrap/policy hardcodes input/output/tmp and registers once; must derive role-specific immutable profile."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/alma_workspace.rs",
+      "line": 148,
+      "sha256": "597c8abe9e0577f54a3b311ea828b05df91a6aa7988d45d6afcb7ec9ce38b314",
+      "supports": "Per-exec gate, immutable granted options, lease quarantine; no public aggregate role-drain API."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+      "line": 46,
+      "sha256": "0091a1e351344e52214b7ddc6424548f1cd4487410af26f22d0f2c453d2896e6",
+      "supports": "Constructor rejects nested roots; resolver currently selects first matching mount, not deepest."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+      "line": 103,
+      "sha256": "0091a1e351344e52214b7ddc6424548f1cd4487410af26f22d0f2c453d2896e6",
+      "supports": "Mutation preflight and parent checks must retain authority before I/O."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+      "line": 266,
+      "sha256": "0091a1e351344e52214b7ddc6424548f1cd4487410af26f22d0f2c453d2896e6",
+      "supports": "Root/leaf protection, no recursive deletion, no directory listing/walk/copy support."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_files.rs",
+      "line": 46,
+      "sha256": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1",
+      "supports": "Immutable Access, retained descriptor, no-follow relative operations, root_metadata available."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/ish_exec_backend.rs",
+      "line": 53,
+      "sha256": "e53cc7fb18ba0be326b8632127fd9421d49dd68132d9e3f317ee841e385ac8f0",
+      "supports": "Lease completion/quarantine contract and private active-ID set."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/ish_exec_backend.rs",
+      "line": 300,
+      "sha256": "e53cc7fb18ba0be326b8632127fd9421d49dd68132d9e3f317ee841e385ac8f0",
+      "supports": "Actual terminate_owned/status.closed acknowledgment gates cleanup; process drop alone insufficient."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build/vendor/litter-ish-owned/kernel/workspace_policy.c",
+      "line": 169,
+      "sha256": "ae957f399f9d1424680bc4c78d97f93995dd8959fa1e6fae15c0bc41d772b16a",
+      "supports": "Guest rejects overlapping logical and physical roots within a grant; conflicting live grants rejected."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build/vendor/litter-ish-owned/kernel/workspace_policy.c",
+      "line": 235,
+      "sha256": "ae957f399f9d1424680bc4c78d97f93995dd8959fa1e6fae15c0bc41d772b16a",
+      "supports": "Guest rights use OR plus ancestor traversal, not longest-prefix overrides; ancestor directory open requires READ."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build/vendor/litter-ish-owned/embed/host/src/session.rs",
+      "line": 381,
+      "sha256": "1852dd143abd0742a5fbb2f0b3737615997121997805a172dbd464d2360e212d",
+      "supports": "terminate_owned waits for owned cleanup acknowledgment."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/exec-server/src/environment/embedded.rs",
+      "line": 70,
+      "sha256": "0b936f33400b30adca6ae8c0189c22cb47b9069ba0e903fbccb83f5be1d210ce",
+      "supports": "EnvironmentManager::from_embedded public API; no native-local fallback."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/app-server-client/src/lib.rs",
+      "line": 590,
+      "sha256": "1dadc18f61860172658f7dab20a7a349fa7ceb34a40c1998609e1c2cf147d3be",
+      "supports": "Upstream shutdown waits with timeout/abort fallback; Ok is not an owned-filesystem lease proof."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "line": 82,
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+      "supports": "Raw Guardian reads raw-transcript.md at attempt root; no writableRoots; Web disabled."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "line": 105,
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+      "supports": "Extra Guardian has inbox materials and accepted history; no writableRoots; Web disabled."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "line": 166,
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+      "supports": "Actor currentRoot=outbox/revision_vN, seed provenance checked, only currentRoot writable."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "line": 246,
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+      "supports": "Accepted history materialized from independent file bytes into outbox/revision_vN."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/native-profile.ts",
+      "line": 103,
+      "sha256": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c",
+      "supports": "guestWorkspaceRoot is a parameter; canonical relative paths remain unchanged under a per-attempt cwd; parent read/current root write policy."
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/role-requirements.ts",
+      "line": 19,
+      "sha256": "e0faf6691263709b9b5ebeeebf503a6f2ea29d7e646fe9e069730e2f105f9b4d",
+      "supports": "Guardian cannot enable Web; frozen role abilities must match role and writable roots."
+    }
+  ]
+}

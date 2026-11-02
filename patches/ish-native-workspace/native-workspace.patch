@@ -1,0 +1,246 @@
+--- a/embed/ffi.c
++++ b/embed/ffi.c
+@@ -118,6 +118,7 @@
+ int ish_ffi_enable_session_jobs(void) { return ish_job_enable_controller(); }
+ 
+ #include "kernel/workspace_policy.h"
+-int ish_ffi_workspace_policy_enable(void) {return ish_workspace_enable();}
++int ish_ffi_workspace_policy_enable(void) { return ish_workspace_enable(); }
++int ish_ffi_workspace_mount_native(const char *source) { return ish_workspace_mount_native(source); }
+ int ish_ffi_workspace_grant_create(const char *const *ro,size_t nro,const char *const *rw,size_t nrw,unsigned net) {return ish_workspace_register(ro,nro,rw,nrw,net);}
+ int ish_ffi_workspace_grant_release(unsigned token) {return ish_workspace_release(token);}
+--- a/embed/ffi.h
++++ b/embed/ffi.h
+@@ -25,6 +25,7 @@
+ // Opt-in host authority for PID-1 session jobs. Call after become_init, before exec/start.
+ int ish_ffi_enable_session_jobs(void);
+ int ish_ffi_workspace_policy_enable(void);
++int ish_ffi_workspace_mount_native(const char *source);
+ int ish_ffi_workspace_grant_create(const char *const *ro, size_t nro, const char *const *rw, size_t nrw, unsigned network);
+ int ish_ffi_workspace_grant_release(unsigned token);
+ 
+--- a/embed/host/src/instance.rs
++++ b/embed/host/src/instance.rs
+@@ -123,24 +123,30 @@
+     /// init, and read the readiness handshake. Sync because the kernel
+     /// boot sequence ends in `task_start` which spawns its own pthread.
+     pub fn boot(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
+-        Self::boot_impl(rootfs_path, workdir, false, false)
++        Self::boot_impl(rootfs_path, workdir, false, false, None)
+     }
+ 
+     /// Opt in to kernel-owned descendant cleanup and acknowledged termination.
+     pub fn boot_owned(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
+-        Self::boot_impl(rootfs_path, workdir, true, false)
++        Self::boot_impl(rootfs_path, workdir, true, false, None)
+     }
+ 
+     /// Seal a private fakefs before running the supervisor. Every spawn requires a grant.
+     pub fn boot_workspace_policy(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
+-        Self::boot_impl(rootfs_path, workdir, true, true)
++        Self::boot_impl(rootfs_path, workdir, true, true, None)
++    }
++
++    /// Register one trusted ordinary native directory at /workspace, then seal.
++    /// No dynamic mount changes are permitted after this call.
++    pub fn boot_workspace_policy_with_workspace(rootfs_path: &Path, workdir: Option<&Path>, workspace: &Path) -> Result<Self,IshError> {
++        Self::boot_impl(rootfs_path,workdir,true,true,Some(workspace))
+     }
+ 
+     pub fn workspace_policy_enabled(&self) -> bool {
+         self.inner.workspace_policy && !self.inner.poisoned.load(Ordering::Acquire)
+     }
+ 
+-    fn boot_impl(rootfs_path: &Path, workdir: Option<&Path>, owned_jobs: bool, workspace_policy: bool) -> Result<Self, IshError> {
++    fn boot_impl(rootfs_path: &Path, workdir: Option<&Path>, owned_jobs: bool, workspace_policy: bool, workspace: Option<&Path>) -> Result<Self, IshError> {
+         try_claim_singleton()?;
+ 
+         // 1. Mount the fakefs.
+@@ -227,6 +233,12 @@
+                 call: "install_stdio",
+                 rc,
+             });
++        }
++
++        if let Some(workspace)=workspace {
++            let path=CString::new(workspace.as_os_str().as_bytes()).map_err(|_|IshError::InvalidRootfs)?;
++            let rc=unsafe {ffi::ish_ffi_workspace_mount_native(path.as_ptr())};
++            if rc<0 {return Err(IshError::KernelCall {call:"workspace_mount_native",rc});}
+         }
+ 
+         // 7. chdir.
+--- a/fs/generic.c
++++ b/fs/generic.c
+@@ -111,7 +111,7 @@
+     if(policy_err)return ERR_PTR(policy_err);
+     char policy_path[MAX_PATH];strcpy(policy_path,path);
+     struct mount *mount = find_mount_and_trim_path(path);
+-    if(ish_workspace_current() && mount->fs!=&fakefs && mount->fs!=&procfs) {
++    if(ish_workspace_current() && !ish_workspace_mount_allowed(mount) && mount->fs!=&procfs) {
+         mount_release(mount);return ERR_PTR(_ENOTSUP);
+     }
+     struct fd *fd = mount->fs->open(mount, path, flags, mode);
+--- a/fs/mount.c
++++ b/fs/mount.c
+@@ -108,6 +108,7 @@
+     new_mount->fs = fs;
+     new_mount->data = NULL;
+     new_mount->refcount = 0;
++    new_mount->workspace_native_authorized = false;
+     if (fs->mount) {
+         int err = fs->mount(new_mount);
+         if (err < 0) {
+--- a/fs/real.c
++++ b/fs/real.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <string.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+@@ -465,6 +466,11 @@
+ }
+ 
+ int realfs_rename(struct mount *mount, const char *src, const char *dst) {
++    if(ish_workspace_current() && mount->workspace_native_authorized) {
++        struct stat source_stat,destination_stat;
++        if(fstatat(mount->root_fd,fix_path(src),&source_stat,AT_SYMLINK_NOFOLLOW)<0 || !S_ISREG(source_stat.st_mode))return _ENOTSUP;
++        if(fstatat(mount->root_fd,fix_path(dst),&destination_stat,AT_SYMLINK_NOFOLLOW)==0 && !S_ISREG(destination_stat.st_mode))return _ENOTSUP;
++    }
+     int err = renameat(mount->root_fd, fix_path(src), mount->root_fd, fix_path(dst));
+     if (err < 0)
+         return errno_map();
+--- a/kernel/fs.h
++++ b/kernel/fs.h
+@@ -77,6 +77,7 @@
+     int flags;
+     const struct fs_ops *fs;
+     unsigned refcount;
++    bool workspace_native_authorized; // set only by native pre-boot registration
+     struct list mounts;
+ 
+     int root_fd;
+--- a/kernel/workspace_policy.c
++++ b/kernel/workspace_policy.c
+@@ -9,6 +9,7 @@
+ #include "kernel/workspace_policy.h"
+ #include "kernel/session_job.h"
+ #include "fs/real.h"
++#include "fs/path.h"
+ #include "fs/fake-db.h"
+ #include "fs/sock.h"
+ 
+@@ -73,6 +74,41 @@
+     }
+     closedir(dir); return result;
+ }
++bool ish_workspace_mount_allowed(const struct mount *mount) {
++    return mount==g_fakefs_mount || (mount->fs==&realfs && mount->workspace_native_authorized);
++}
++// Native-only bootstrap: exactly one fixed workspace, before any child runs.
++// The source is a trusted private controller-owned directory, never a tool arg.
++int ish_workspace_mount_native(const char *source) {
++    if(!source || !ish_job_controller_current() || ish_workspace_enabled())return _EPERM;
++    lock(&pids_lock);
++    bool children=!list_empty(&current->children);unlock(&pids_lock);
++    if(children)return _EBUSY;
++    int fd=open(source,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
++    if(fd<0)return _ENOTSUP;
++    unsigned entries=0;int result=audit_tree(fd,0,&entries);close(fd);
++    if(result)return result;
++    result=generic_mkdirat(AT_PWD,"/workspace",0700);
++    if(result && result!=_EEXIST)return result;
++    lock(&mounts_lock);
++    struct mount *mount;
++    list_for_each_entry(&mounts,mount,mounts) {
++        if(!strcmp(mount->point,"/workspace")){unlock(&mounts_lock);return _EBUSY;}
++    }
++    result=do_mount(&realfs,source,"/workspace","",0);
++    if(!result)list_for_each_entry(&mounts,mount,mounts) {
++        if(!strcmp(mount->point,"/workspace")){mount->workspace_native_authorized=true;break;}
++    }
++    unlock(&mounts_lock);return result;
++}
++// Use the selected filesystem's metadata, while retaining the logical path for
++// authorization. Unknown mounts remain unsupported.
++static int mounted_stat(const char *path,struct statbuf *st) {
++    char relative[MAX_PATH];strcpy(relative,path);
++    struct mount *mount=find_mount_and_trim_path(relative);
++    int result=ish_workspace_mount_allowed(mount)?mount->fs->stat(mount,relative,st):_ENOTSUP;
++    mount_release(mount);return result;
++}
+ int ish_workspace_enable(void) {
+     if (!ish_job_controller_current() || ish_workspace_enabled()) return _EPERM;
+     lock(&pids_lock);
+@@ -80,7 +116,10 @@
+     lock(&mounts_lock);
+     int result=0; struct mount *mount;
+     list_for_each_entry(&mounts,mount,mounts) {
+-        if (mount!=g_fakefs_mount && mount->fs!=&procfs && mount->fs!=&devptsfs) result=_ENOTSUP;
++        if (!ish_workspace_mount_allowed(mount) && mount->fs!=&procfs && mount->fs!=&devptsfs) result=_ENOTSUP;
++        if(mount->workspace_native_authorized && !result) {
++            unsigned entries=0;result=audit_tree(mount->root_fd,0,&entries);
++        }
+     }
+     if (!g_fakefs_mount || fakefs_has_bind_mounts()) result=_ENOTSUP;
+     if (!result) {
+@@ -99,14 +138,18 @@
+     unlock(&mounts_lock); unlock(&pids_lock); return result;
+ }
+ static int verify_root(struct wp_root *root) {
+-    // Require exact fakefs metadata and walk actual directories without links.
+-    struct statbuf fake;
+-    if (fakefs.stat(g_fakefs_mount,root->path,&fake)<0 || !S_ISDIR(fake.mode))return _ENOTSUP;
+-    int fd=dup(g_fakefs_mount->root_fd); if(fd<0)return _EIO;
++    // Validate the selected fixed mount and retain actual directory ancestry.
++    char relative[MAX_PATH];strcpy(relative,root->path);
++    struct mount *mount=find_mount_and_trim_path(relative);
++    struct statbuf stat;
++    if(!ish_workspace_mount_allowed(mount) || mount->fs->stat(mount,relative,&stat)<0 || !S_ISDIR(stat.mode)) {
++        mount_release(mount);return _ENOTSUP;
++    }
++    int fd=dup(mount->root_fd);mount_release(mount);if(fd<0)return _EIO;
+     struct stat st;
+     if(fstat(fd,&st)<0){close(fd);return _EIO;}
+     root->ancestry[root->depth++]=(struct wp_identity){st.st_dev,st.st_ino};
+-    char copy[MAX_PATH];strcpy(copy,root->path+1);char *save=NULL;
++    char copy[MAX_PATH];strcpy(copy,relative[0]=='/'?relative+1:relative);char *save=NULL;
+     for(char *c=strtok_r(copy,"/",&save);c;c=strtok_r(NULL,"/",&save)) {
+         int next=openat(fd,c,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);close(fd);fd=next;
+         if(fd<0)return _ENOTSUP;
+@@ -220,8 +263,8 @@
+     bool same=false;for(unsigned i=0;i<g->count;i++) if((g->roots[i].rights&WP_WRITE)&&under(src,g->roots[i].path)&&under(dst,g->roots[i].path))same=true;
+     if(!same)return _EXDEV;
+     struct statbuf st;
+-    if (fakefs.stat(g_fakefs_mount,src,&st)<0 || !S_ISREG(st.mode))return _ENOTSUP;
+-    if (fakefs.stat(g_fakefs_mount,dst,&st)>=0 && !S_ISREG(st.mode))return _ENOTSUP;
++    if (mounted_stat(src,&st)<0 || !S_ISREG(st.mode))return _ENOTSUP;
++    if (mounted_stat(dst,&st)>=0 && !S_ISREG(st.mode))return _ENOTSUP;
+     return 0;
+ }
+ int ish_workspace_before_open(const char *p,int flags) {
+@@ -229,12 +272,12 @@
+     bool write=flags&(O_WRONLY_|O_RDWR_|O_CREAT_|O_TRUNC_|O_APPEND_);
+     int e=ish_workspace_path(p,write?WP_WRITE:WP_READ);if(e)return e;
+     struct statbuf st;
+-    if(fakefs.stat(g_fakefs_mount,p,&st)>=0 && !S_ISREG(st.mode)&&!S_ISDIR(st.mode)&&!safe_device(p))return _ENOTSUP;
++    if(mounted_stat(p,&st)>=0 && !S_ISREG(st.mode)&&!S_ISDIR(st.mode)&&!safe_device(p))return _ENOTSUP;
+     return 0;
+ }
+ int ish_workspace_tag_open(struct fd *fd,const char *p) {
+     struct ish_workspace_grant *g=ish_workspace_current();if(!g)return 0;
+-    if(fd->mount->fs!=&fakefs && !(fd->mount->fs==&procfs && safe_proc(p)))return _ENOTSUP;
++    if(!ish_workspace_mount_allowed(fd->mount) && !(fd->mount->fs==&procfs && safe_proc(p)))return _ENOTSUP;
+     fd->workspace_job=current->session_job;fd->workspace_rights=rights(g,p)&(WP_READ|WP_WRITE);
+     for(unsigned i=0;i<g->count;i++)if(!strcmp(p,g->roots[i].path))fd->workspace_rights&=~WP_WRITE;
+     return 0;
+--- a/kernel/workspace_policy.h
++++ b/kernel/workspace_policy.h
+@@ -12,6 +12,8 @@
+ bool ish_workspace_frozen(void);
+ struct ish_workspace_grant *ish_workspace_current(void);
+ int ish_workspace_enable(void);
++int ish_workspace_mount_native(const char *source);
++bool ish_workspace_mount_allowed(const struct mount *mount);
+ int ish_workspace_register(const char *const *ro, size_t nro, const char *const *rw, size_t nrw, unsigned network);
+ int ish_workspace_release(unsigned token);
+ // These three are called only under pids_lock by the job controller.

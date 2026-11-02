@@ -1,0 +1,258 @@
+{
+  "scope": "Actual packaged Node22 in Mac iSH; primitives only, no provider/protocol/phone/auth/model/network qualification",
+  "inputs": {
+    "native_ish_sha256": "76a8e1b6e0823b6e2ef84d03488b828b025fc29e9272f2d7f2c0410b61d4bd06",
+    "source_rootfs_tree_sha256": "10edd4903a4572ce3c5ce215e172d6f0db2f0170655e803a4dce0a3332e40b76",
+    "official_settled_sha256": "6b0d0b56aecf2101ca0d7f50b71d733430f703deb7bf3b71b54364c60cce4f65",
+    "official_settled_tests_sha256": "093fc672b92fede2fe917db9377bf727ce4878a17298763aeb827ed67e22d739"
+  },
+  "node_package": "354d49ec25295e6c",
+  "read_roots": [
+    "/bin",
+    "/sbin",
+    "/usr",
+    "/lib",
+    "/etc",
+    "/workspace/input"
+  ],
+  "write_roots": [
+    "/workspace/tmp"
+  ],
+  "direct_network_policy": "DenyDirect (host registration network=0); no network tests",
+  "workspace_gate": "none; /workspace is only this private test fixture, not model workspace",
+  "host_cpu_limits_seconds": {
+    "soft": 20,
+    "hard": 24
+  },
+  "host_core_dump_limit_bytes": 0,
+  "bootstrap": {
+    "host_seconds": 0.02,
+    "host_watchdog_seconds": 10,
+    "watchdog_fired": false,
+    "host_exit": 0,
+    "host_process_group_gone": true,
+    "stdout": "",
+    "stderr": ""
+  },
+  "runs": [
+    {
+      "host_seconds": 5.2567,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"modules\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 0, \"stdout\": \"{\\\"node\\\":\\\"v22.23.4\\\",\\\"flags\\\":[\\\"--max-old-space-size=512\\\",\\\"--no-lazy\\\",\\\"--jitless\\\",\\\"--experimental-vm-modules\\\"],\\\"group\\\":\\\"modules\\\",\\\"cases\\\":[{\\\"name\\\":\\\"SourceTextModule_top_level_await\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"fresh_module_and_context\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"static_import_rejected_by_link_hook\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"dynamic_import_rejected_by_callback\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"ordinary_private_scratch_roundtrip\\\",\\\"passed\\\":true}],\\\"passed\\\":true}\\n\", \"stderr\": \"Warning: disabling flag --expose_wasm due to conflicting flags\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\n",
+      "group": "modules",
+      "controller": {
+        "group": "modules",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 0,
+        "stdout": "{\"node\":\"v22.23.4\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"--experimental-vm-modules\"],\"group\":\"modules\",\"cases\":[{\"name\":\"SourceTextModule_top_level_await\",\"passed\":true},{\"name\":\"fresh_module_and_context\",\"passed\":true},{\"name\":\"static_import_rejected_by_link_hook\",\"passed\":true},{\"name\":\"dynamic_import_rejected_by_callback\",\"passed\":true},{\"name\":\"ordinary_private_scratch_roundtrip\",\"passed\":true}],\"passed\":true}\n",
+        "stderr": "Warning: disabling flag --expose_wasm due to conflicting flags\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+        "live_after_cleanup": 0
+      },
+      "primitives": {
+        "node": "v22.23.4",
+        "flags": [
+          "--max-old-space-size=512",
+          "--no-lazy",
+          "--jitless",
+          "--experimental-vm-modules"
+        ],
+        "group": "modules",
+        "cases": [
+          {
+            "name": "SourceTextModule_top_level_await",
+            "passed": true
+          },
+          {
+            "name": "fresh_module_and_context",
+            "passed": true
+          },
+          {
+            "name": "static_import_rejected_by_link_hook",
+            "passed": true
+          },
+          {
+            "name": "dynamic_import_rejected_by_callback",
+            "passed": true
+          },
+          {
+            "name": "ordinary_private_scratch_roundtrip",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "host_seconds": 5.397,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"settled\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 0, \"stdout\": \"{\\\"node\\\":\\\"v22.23.4\\\",\\\"flags\\\":[\\\"--max-old-space-size=512\\\",\\\"--no-lazy\\\",\\\"--jitless\\\",\\\"--experimental-vm-modules\\\"],\\\"group\\\":\\\"settled\\\",\\\"cases\\\":[{\\\"name\\\":\\\"preserves_settlement_order_before_and_during_iteration\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"accepts_iterables_values_thenables_and_duplicate_promises\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"preserves_map_keys_and_completes_empty_inputs\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"awaits_each_callback_including_rejected_inputs\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"propagates_callback_errors_and_closes_early_iterations\\\",\\\"passed\\\":true},{\\\"name\\\":\\\"preserves_identity_of_keys_values_and_rejections\\\",\\\"passed\\\":true}],\\\"passed\\\":true}\\n\", \"stderr\": \"Warning: disabling flag --expose_wasm due to conflicting flags\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\n",
+      "group": "settled",
+      "controller": {
+        "group": "settled",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 0,
+        "stdout": "{\"node\":\"v22.23.4\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"--experimental-vm-modules\"],\"group\":\"settled\",\"cases\":[{\"name\":\"preserves_settlement_order_before_and_during_iteration\",\"passed\":true},{\"name\":\"accepts_iterables_values_thenables_and_duplicate_promises\",\"passed\":true},{\"name\":\"preserves_map_keys_and_completes_empty_inputs\",\"passed\":true},{\"name\":\"awaits_each_callback_including_rejected_inputs\",\"passed\":true},{\"name\":\"propagates_callback_errors_and_closes_early_iterations\",\"passed\":true},{\"name\":\"preserves_identity_of_keys_values_and_rejections\",\"passed\":true}],\"passed\":true}\n",
+        "stderr": "Warning: disabling flag --expose_wasm due to conflicting flags\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+        "live_after_cleanup": 0
+      },
+      "primitives": {
+        "node": "v22.23.4",
+        "flags": [
+          "--max-old-space-size=512",
+          "--no-lazy",
+          "--jitless",
+          "--experimental-vm-modules"
+        ],
+        "group": "settled",
+        "cases": [
+          {
+            "name": "preserves_settlement_order_before_and_during_iteration",
+            "passed": true
+          },
+          {
+            "name": "accepts_iterables_values_thenables_and_duplicate_promises",
+            "passed": true
+          },
+          {
+            "name": "preserves_map_keys_and_completes_empty_inputs",
+            "passed": true
+          },
+          {
+            "name": "awaits_each_callback_including_rejected_inputs",
+            "passed": true
+          },
+          {
+            "name": "propagates_callback_errors_and_closes_early_iterations",
+            "passed": true
+          },
+          {
+            "name": "preserves_identity_of_keys_values_and_rejections",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "host_seconds": 7.5219,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"exit-sync\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 0, \"stdout\": \"{\\\"node\\\":\\\"v22.23.4\\\",\\\"flags\\\":[\\\"--max-old-space-size=512\\\",\\\"--no-lazy\\\",\\\"--jitless\\\",\\\"--experimental-vm-modules\\\"],\\\"group\\\":\\\"exit-sync\\\",\\\"cases\\\":[{\\\"name\\\":\\\"catch_finally_queued_microtask\\\",\\\"passed\\\":true,\\\"worker_exit\\\":0,\\\"messages_received_before_final_assertion\\\":3},{\\\"name\\\":\\\"exit_stops_following_cpu_loop\\\",\\\"passed\\\":true,\\\"worker_exit\\\":0,\\\"messages_received_before_final_assertion\\\":3}],\\\"passed\\\":true}\\n\", \"stderr\": \"Warning: disabling flag --expose_wasm due to conflicting flags\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\n",
+      "group": "exit-sync",
+      "controller": {
+        "group": "exit-sync",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 0,
+        "stdout": "{\"node\":\"v22.23.4\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"--experimental-vm-modules\"],\"group\":\"exit-sync\",\"cases\":[{\"name\":\"catch_finally_queued_microtask\",\"passed\":true,\"worker_exit\":0,\"messages_received_before_final_assertion\":3},{\"name\":\"exit_stops_following_cpu_loop\",\"passed\":true,\"worker_exit\":0,\"messages_received_before_final_assertion\":3}],\"passed\":true}\n",
+        "stderr": "Warning: disabling flag --expose_wasm due to conflicting flags\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+        "live_after_cleanup": 0
+      },
+      "primitives": {
+        "node": "v22.23.4",
+        "flags": [
+          "--max-old-space-size=512",
+          "--no-lazy",
+          "--jitless",
+          "--experimental-vm-modules"
+        ],
+        "group": "exit-sync",
+        "cases": [
+          {
+            "name": "catch_finally_queued_microtask",
+            "passed": true,
+            "worker_exit": 0,
+            "messages_received_before_final_assertion": 3
+          },
+          {
+            "name": "exit_stops_following_cpu_loop",
+            "passed": true,
+            "worker_exit": 0,
+            "messages_received_before_final_assertion": 3
+          }
+        ],
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "host_seconds": 7.5908,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"exit-async\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 0, \"stdout\": \"{\\\"node\\\":\\\"v22.23.4\\\",\\\"flags\\\":[\\\"--max-old-space-size=512\\\",\\\"--no-lazy\\\",\\\"--jitless\\\",\\\"--experimental-vm-modules\\\"],\\\"group\\\":\\\"exit-async\\\",\\\"cases\\\":[{\\\"name\\\":\\\"exit_after_top_level_await\\\",\\\"passed\\\":true,\\\"worker_exit\\\":0,\\\"messages_received_before_final_assertion\\\":3},{\\\"name\\\":\\\"exit_in_timer_while_awaiting\\\",\\\"passed\\\":true,\\\"worker_exit\\\":0,\\\"messages_received_before_final_assertion\\\":3}],\\\"passed\\\":true}\\n\", \"stderr\": \"Warning: disabling flag --expose_wasm due to conflicting flags\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\\n(Use `node --trace-warnings ...` to show where the warning was created)\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\n",
+      "group": "exit-async",
+      "controller": {
+        "group": "exit-async",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 0,
+        "stdout": "{\"node\":\"v22.23.4\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"--experimental-vm-modules\"],\"group\":\"exit-async\",\"cases\":[{\"name\":\"exit_after_top_level_await\",\"passed\":true,\"worker_exit\":0,\"messages_received_before_final_assertion\":3},{\"name\":\"exit_in_timer_while_awaiting\",\"passed\":true,\"worker_exit\":0,\"messages_received_before_final_assertion\":3}],\"passed\":true}\n",
+        "stderr": "Warning: disabling flag --expose_wasm due to conflicting flags\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n(node:2) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+        "live_after_cleanup": 0
+      },
+      "primitives": {
+        "node": "v22.23.4",
+        "flags": [
+          "--max-old-space-size=512",
+          "--no-lazy",
+          "--jitless",
+          "--experimental-vm-modules"
+        ],
+        "group": "exit-async",
+        "cases": [
+          {
+            "name": "exit_after_top_level_await",
+            "passed": true,
+            "worker_exit": 0,
+            "messages_received_before_final_assertion": 3
+          },
+          {
+            "name": "exit_in_timer_while_awaiting",
+            "passed": true,
+            "worker_exit": 0,
+            "messages_received_before_final_assertion": 3
+          }
+        ],
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "host_seconds": 20.1168,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": -24,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\n",
+      "group": "cpu",
+      "passed": false
+    }
+  ],
+  "read_only_inputs_unchanged": true,
+  "all_requested_groups_passed": false,
+  "passed_case_count": 15,
+  "test_source_sha256": {
+    "run.py": "92620d323fae2c43184d7ec54fc7423767aaf0895b6521c495d43dd3fba474cd",
+    "controller.py": "e1bf69a67a36d447dfc7e31016ee3600dc4c702e9a602fbf47a675500beb94e0",
+    "primitives.cjs": "35ee15b3c9f42aa7faf6d8e704b452da565f8408397ebe86984cc649327927e1"
+  }
+}

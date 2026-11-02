@@ -1,0 +1,85 @@
+{
+  "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "project_lock_sha256": "802191a0069229737037312e465f74aa48d0b7a6008e165f6ccb25a98884fb29",
+  "prepare_checks": [
+    "archive/patch/file checksums",
+    "idempotent",
+    "dirty destination refused",
+    "corrupt archive refused",
+    "post-patch lock provenance",
+    "enumeration sources unchanged"
+  ],
+  "date": "2026-11-01",
+  "status": "PASS",
+  "local_evidence": ".cache/validation-4t4pelpk/results.json",
+  "verified_archive_count": 74,
+  "inactive_metadata_only_count": 61,
+  "results": [
+    {
+      "version": "0.45.0",
+      "target": "aarch64-apple-ios",
+      "patched": false,
+      "action": "build",
+      "exit_code": 101,
+      "expected_error": "in6_ifreq",
+      "seconds": 5.91,
+      "log": ".cache/validation-4t4pelpk/0-0.45.0-aarch64-apple-ios-build/build.log",
+      "outcome": "expected failure"
+    },
+    {
+      "version": "0.45.1",
+      "target": "aarch64-apple-ios",
+      "patched": false,
+      "action": "build",
+      "exit_code": 101,
+      "expected_error": "in6_ifreq",
+      "seconds": 0.62,
+      "log": ".cache/validation-4t4pelpk/1-0.45.1-aarch64-apple-ios-build/build.log",
+      "outcome": "expected failure"
+    },
+    {
+      "version": "0.45.0",
+      "target": "aarch64-apple-darwin",
+      "patched": false,
+      "action": "test",
+      "exit_code": 0,
+      "expected_error": null,
+      "seconds": 9.81,
+      "log": ".cache/validation-4t4pelpk/2-0.45.0-aarch64-apple-darwin-test/build.log",
+      "outcome": "PASS"
+    },
+    {
+      "version": "0.45.0",
+      "target": "aarch64-apple-ios",
+      "patched": true,
+      "action": "build",
+      "exit_code": 0,
+      "expected_error": null,
+      "seconds": 1.05,
+      "log": ".cache/validation-4t4pelpk/3-0.45.0-aarch64-apple-ios-build/build.log",
+      "outcome": "PASS"
+    },
+    {
+      "version": "0.45.0",
+      "target": "aarch64-apple-ios",
+      "patched": true,
+      "action": "check",
+      "exit_code": 0,
+      "expected_error": null,
+      "seconds": 2.87,
+      "log": ".cache/validation-4t4pelpk/4-0.45.0-aarch64-apple-ios-check/build.log",
+      "outcome": "PASS"
+    },
+    {
+      "version": "0.45.0",
+      "target": "aarch64-apple-darwin",
+      "patched": true,
+      "action": "test",
+      "exit_code": 0,
+      "expected_error": null,
+      "seconds": 1.31,
+      "log": ".cache/validation-4t4pelpk/5-0.45.0-aarch64-apple-darwin-test/build.log",
+      "outcome": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "pid": 35272,
+  "accountVerified": true,
+  "model": "gpt-6.1-sol",
+  "seconds": 94.54579183331225,
+  "commandCount": 2,
+  "commandExits": [
+    -1,
+    -1
+  ],
+  "webCount": 2,
+  "fileChangeCount": 0,
+  "artifactMatches": false,
+  "sampledPeakFootprintBytes": 40159264,
+  "scope": "real model invoked CodeMode and Web; both commands rejected before execution, no successful patch/proof files; not end-to-end pass",
+  "knownSourceFindings": [
+    "Core adds Some(Reconcile) windows_proxy_mode unconditionally; fixed workspace validator rejected any Some",
+    "apply_patch prepare_verified_patch routes only is_remote to executor-managed; embedded is not remote but uses exec backend, so iOS gets unavailable native platform route",
+    "Core exec_env_policy_from_shell_policy always appends4 reserved-key exclusions; old validator rejectedanyexclusion even inheritNone"
+  ],
+  "status": "fixes in progress; attribution to be verified by same real task",
+  "fixes": {
+    "windows": "accept only known inert default Reconcile whenWindows sandboxDisabled; preserveotherrejections",
+    "environment": "accept and apply onlyCore4reserved-key exclusions; stillinheritNone/noincludeOnly/noignoreDefaultExcludes",
+    "patchRouting": "uses_exec_backend selects ExecutorManaged forregisteredembeddedbackend; no authorization/preflight bypass",
+    "diagnostics": "static labels only forpolicyrejections; fixedsyntheticprobe nowcapturesboundedcommandoutput/cwd andWebactionmetadata"
+  },
+  "validation": {
+    "fulliOSCheck": "passed",
+    "backendLifecycleContractTests": "15 passed; actualadapter/Coreproducer with explicit iSH/DTO doubles",
+    "realPhoneRetest": "pending incrementalbuild"
+  }
+}

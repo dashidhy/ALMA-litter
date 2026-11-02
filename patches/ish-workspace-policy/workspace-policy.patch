@@ -1,0 +1,1554 @@
+diff --git a/embed/ffi.c b/embed/ffi.c
+--- a/embed/ffi.c
++++ b/embed/ffi.c
+@@ -116,3 +116,8 @@
+ 
+ #include "kernel/session_job.h"
+ int ish_ffi_enable_session_jobs(void) { return ish_job_enable_controller(); }
++
++#include "kernel/workspace_policy.h"
++int ish_ffi_workspace_policy_enable(void) {return ish_workspace_enable();}
++int ish_ffi_workspace_grant_create(const char *const *ro,size_t nro,const char *const *rw,size_t nrw,unsigned net) {return ish_workspace_register(ro,nro,rw,nrw,net);}
++int ish_ffi_workspace_grant_release(unsigned token) {return ish_workspace_release(token);}
+diff --git a/embed/ffi.h b/embed/ffi.h
+--- a/embed/ffi.h
++++ b/embed/ffi.h
+@@ -24,6 +24,9 @@
+ 
+ // Opt-in host authority for PID-1 session jobs. Call after become_init, before exec/start.
+ int ish_ffi_enable_session_jobs(void);
++int ish_ffi_workspace_policy_enable(void);
++int ish_ffi_workspace_grant_create(const char *const *ro, size_t nro, const char *const *rw, size_t nrw, unsigned network);
++int ish_ffi_workspace_grant_release(unsigned token);
+ 
+ // Mount synthetic kernel filesystems inside the guest rootfs. Must be called
+ // after ish_ffi_become_init() so path lookups have a current task.
+diff --git a/embed/host/src/instance.rs b/embed/host/src/instance.rs
+--- a/embed/host/src/instance.rs
++++ b/embed/host/src/instance.rs
+@@ -83,6 +83,7 @@
+ 
+ pub(crate) struct InstanceInner {
+     pub(crate) owned_jobs: bool,
++    pub(crate) workspace_policy: bool,
+     next_reqid: AtomicU32,
+     sessions: Mutex<HashMap<SessionId, Weak<SessionInner>>>,
+     writer_tx: std::sync::mpsc::Sender<HostToSupervisor>,
+@@ -122,15 +123,24 @@
+     /// init, and read the readiness handshake. Sync because the kernel
+     /// boot sequence ends in `task_start` which spawns its own pthread.
+     pub fn boot(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
+-        Self::boot_impl(rootfs_path, workdir, false)
++        Self::boot_impl(rootfs_path, workdir, false, false)
+     }
+ 
+     /// Opt in to kernel-owned descendant cleanup and acknowledged termination.
+     pub fn boot_owned(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
+-        Self::boot_impl(rootfs_path, workdir, true)
+-    }
+-
+-    fn boot_impl(rootfs_path: &Path, workdir: Option<&Path>, owned_jobs: bool) -> Result<Self, IshError> {
++        Self::boot_impl(rootfs_path, workdir, true, false)
++    }
++
++    /// Seal a private fakefs before running the supervisor. Every spawn requires a grant.
++    pub fn boot_workspace_policy(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
++        Self::boot_impl(rootfs_path, workdir, true, true)
++    }
++
++    pub fn workspace_policy_enabled(&self) -> bool {
++        self.inner.workspace_policy && !self.inner.poisoned.load(Ordering::Acquire)
++    }
++
++    fn boot_impl(rootfs_path: &Path, workdir: Option<&Path>, owned_jobs: bool, workspace_policy: bool) -> Result<Self, IshError> {
+         try_claim_singleton()?;
+ 
+         // 1. Mount the fakefs.
+@@ -238,6 +248,11 @@
+             cv: parking_lot::Condvar::new(),
+         });
+         register_exit_hook(kernel_exit.clone());
++
++        if workspace_policy {
++            let rc=unsafe { ffi::ish_ffi_workspace_policy_enable() };
++            if rc<0 { return Err(IshError::KernelCall {call:"workspace_policy_enable",rc}); }
++        }
+ 
+         // 8. execve the supervisor.
+         // do_execve / args_size expect both argv and envp to be NUL-separated
+@@ -296,6 +311,7 @@
+ 
+         let inner = Arc::new(InstanceInner {
+             owned_jobs,
++            workspace_policy,
+             next_reqid: AtomicU32::new(1),
+             sessions: Mutex::new(HashMap::new()),
+             writer_tx,
+@@ -314,7 +330,7 @@
+         // the host_stdout_r off to the reader thread.
+         let mut reader_pipe = OwnedFdReader::new(host_stdout_r);
+         let ready: Option<SupervisorToHost> = read_frame(&mut reader_pipe)?;
+-        let expected_protocol = if owned_jobs { ish_embed_protocol::OWNED_JOBS_PROTOCOL_VERSION } else { PROTOCOL_VERSION };
++        let expected_protocol = if workspace_policy { ish_embed_protocol::WORKSPACE_POLICY_PROTOCOL_VERSION } else if owned_jobs { ish_embed_protocol::OWNED_JOBS_PROTOCOL_VERSION } else { PROTOCOL_VERSION };
+         match ready {
+             Some(SupervisorToHost::Ready { protocol_version })
+                 if protocol_version == expected_protocol => {}
+@@ -346,15 +362,28 @@
+     }
+ 
+     pub fn spawn(&self, opts: SpawnOpts) -> Result<Arc<IshSession>, IshError> {
++        if self.inner.workspace_policy { return Err(IshError::Supervisor("workspace grant required".into())); }
++        self.spawn_inner(opts,None)
++    }
++
++    pub fn spawn_with_grant(&self, opts: SpawnOpts, grant: &WorkspaceGrant) -> Result<Arc<IshSession>, IshError> {
++        if !self.workspace_policy_enabled() || opts.tty || opts.envp.is_none() || opts.cwd.is_none() || !Weak::ptr_eq(&grant.instance,&Arc::downgrade(&self.inner)) {
++            return Err(IshError::Supervisor("unsupported workspace grant or instance".into()));
++        }
++        self.spawn_inner(opts,Some(grant.token))
++    }
++
++    fn spawn_inner(&self, opts: SpawnOpts, grant: Option<u32>) -> Result<Arc<IshSession>, IshError> {
+         let id = self.inner.next_reqid.fetch_add(1, Ordering::Relaxed);
+         let session_inner = Arc::new(SessionInner::new(id, Arc::downgrade(&self.inner)));
+         {
+             let mut t = self.inner.sessions.lock();
+             t.insert(id, Arc::downgrade(&session_inner));
+         }
+-        self.inner.send_frame(HostToSupervisor::Open {
+-            reqid: id,
+-            opts: opts.into_wire(),
++        let opts=opts.into_wire();
++        self.inner.send_frame(match grant {
++            Some(grant)=>HostToSupervisor::OpenGranted {reqid:id,opts,grant},
++            None=>HostToSupervisor::Open {reqid:id,opts},
+         })?;
+         Ok(Arc::new(IshSession::from_inner_arc(session_inner)))
+     }
+@@ -749,3 +778,31 @@
+ 
+ // IntoRawFd is needed for transferring fds into the kernel's ownership.
+ use std::os::fd::IntoRawFd;
++
++
++/// Only deny-direct-network is supported by this initial kernel policy.
++#[derive(Debug,Clone,Copy)]
++pub enum WorkspaceNetworkPolicy { DenyDirect }
++
++/// Single-use, native-host-issued grant. Drop never forces reuse of a bound view:
++/// the kernel defers removal until the owned job has completed and been released.
++pub struct WorkspaceGrant { token: u32, instance: Weak<InstanceInner> }
++impl Drop for WorkspaceGrant {
++    fn drop(&mut self) { unsafe { ffi::ish_ffi_workspace_grant_release(self.token); } }
++}
++impl IshInstance {
++    pub fn prepare_workspace_grant(&self, read_roots: &[PathBuf], write_roots: &[PathBuf],
++        network: WorkspaceNetworkPolicy) -> Result<WorkspaceGrant,IshError> {
++        if !self.workspace_policy_enabled() { return Err(IshError::Supervisor("workspace policy is not ready".into())); }
++        let read=read_roots.iter().map(|p|CString::new(p.as_os_str().as_bytes())).collect::<Result<Vec<_>,_>>()
++            .map_err(|_|IshError::Supervisor("invalid read root".into()))?;
++        let write=write_roots.iter().map(|p|CString::new(p.as_os_str().as_bytes())).collect::<Result<Vec<_>,_>>()
++            .map_err(|_|IshError::Supervisor("invalid write root".into()))?;
++        let ro:Vec<_>=read.iter().map(|p|p.as_ptr()).collect();
++        let rw:Vec<_>=write.iter().map(|p|p.as_ptr()).collect();
++        let network=match network {WorkspaceNetworkPolicy::DenyDirect=>0};
++        let rc=unsafe {ffi::ish_ffi_workspace_grant_create(ro.as_ptr(),ro.len(),rw.as_ptr(),rw.len(),network)};
++        if rc<0 { return Err(IshError::KernelCall{call:"workspace_grant_create",rc}); }
++        Ok(WorkspaceGrant {token:rc as u32,instance:Arc::downgrade(&self.inner)})
++    }
++}
+diff --git a/embed/host/src/lib.rs b/embed/host/src/lib.rs
+--- a/embed/host/src/lib.rs
++++ b/embed/host/src/lib.rs
+@@ -21,7 +21,7 @@
+ mod session;
+ 
+ pub use error::IshError;
+-pub use instance::{IshInstance, SpawnOpts};
++pub use instance::{IshInstance, SpawnOpts, WorkspaceGrant, WorkspaceNetworkPolicy};
+ pub use ish_embed_protocol::PtySize;
+ pub use session::{
+     IshSession, OutputChunk, ReadOutput, SessionEvent, SessionId, SessionStatus, Stream, WriteStatus,
+diff --git a/embed/protocol/src/lib.rs b/embed/protocol/src/lib.rs
+--- a/embed/protocol/src/lib.rs
++++ b/embed/protocol/src/lib.rs
+@@ -20,6 +20,7 @@
+ pub const PROTOCOL_VERSION: u32 = 2;
+ /// Same frame layout; stronger Closed contract only after host opt-in.
+ pub const OWNED_JOBS_PROTOCOL_VERSION: u32 = 3;
++pub const WORKSPACE_POLICY_PROTOCOL_VERSION: u32 = 4;
+ 
+ /// Maximum bytes of postcard payload we'll accept in one frame. Output
+ /// chunks are capped well below this in the supervisor; this is just a
+@@ -81,6 +82,8 @@
+     },
+     /// Tear down all sessions, then `_exit(0)` so iSH's halt_system fires.
+     Shutdown,
++    /// Host-minted single-use grant, atomically bound by the supervisor before fork.
++    OpenGranted { reqid: u32, opts: SpawnOpts, grant: u32 },
+ }
+ 
+ #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+diff --git a/embed/supervisor/src/jobs.rs b/embed/supervisor/src/jobs.rs
+--- a/embed/supervisor/src/jobs.rs
++++ b/embed/supervisor/src/jobs.rs
+@@ -7,13 +7,15 @@
+ }
+ pub fn enabled() -> io::Result<bool> {
+     match call(0, 0) {
+-        Ok(1) => Ok(true),
++        Ok(1 | 2) => Ok(true),
+         Err(e) if matches!(e.raw_os_error(), Some(libc::ENOSYS | libc::EINVAL)) => Ok(false),
+         Err(e) => Err(e),
+         _ => Err(io::Error::other("unexpected job ABI capability")),
+     }
+ }
+-pub fn begin() -> io::Result<Option<u32>> {
++pub fn policy_enabled() -> io::Result<bool> { if !enabled()? { return Ok(false); } Ok(call(0,0)?==2) }
++pub fn begin(grant: Option<u32>) -> io::Result<Option<u32>> {
++    if let Some(grant)=grant { return call(7,grant).map(Some); }
+     if enabled()? { call(1, 0).map(Some) } else { Ok(None) }
+ }
+ pub fn disarm(id: u32) -> io::Result<()> { call(2, id).map(|_| ()) }
+diff --git a/embed/supervisor/src/main.rs b/embed/supervisor/src/main.rs
+--- a/embed/supervisor/src/main.rs
++++ b/embed/supervisor/src/main.rs
+@@ -68,7 +68,9 @@
+     // Send the readiness handshake before doing anything else; the host's
+     // reader thread is already blocked on it.
+     write_frame(&SupervisorToHost::Ready {
+-        protocol_version: if jobs::enabled()? {
++        protocol_version: if jobs::policy_enabled()? {
++            ish_embed_protocol::WORKSPACE_POLICY_PROTOCOL_VERSION
++        } else if jobs::enabled()? {
+             ish_embed_protocol::OWNED_JOBS_PROTOCOL_VERSION
+         } else { PROTOCOL_VERSION },
+     })?;
+@@ -271,7 +273,12 @@
+     shutdown_requested: &mut bool,
+ ) -> io::Result<()> {
+     match frame {
+-        HostToSupervisor::Open { reqid, opts } => {
++        frame @ (HostToSupervisor::Open { .. } | HostToSupervisor::OpenGranted { .. }) => {
++            let (reqid,opts,grant)=match frame {
++                HostToSupervisor::Open { reqid,opts } => (reqid,opts,None),
++                HostToSupervisor::OpenGranted { reqid,opts,grant } => (reqid,opts,Some(grant)),
++                _=>unreachable!(),
++            };
+             // Disallow duplicate reqid; the host should use a fresh one.
+             if sessions.contains_key(&reqid) {
+                 write_frame(&SupervisorToHost::Err {
+@@ -281,7 +288,7 @@
+                 })?;
+                 return Ok(());
+             }
+-            match spawn::spawn(reqid, opts) {
++            match spawn::spawn(reqid, opts, grant) {
+                 Ok(spawn::OpenedSession {
+                     mut session,
+                     spawn_error,
+diff --git a/embed/supervisor/src/spawn.rs b/embed/supervisor/src/spawn.rs
+--- a/embed/supervisor/src/spawn.rs
++++ b/embed/supervisor/src/spawn.rs
+@@ -34,7 +34,10 @@
+     }
+ }
+ 
+-pub fn spawn(reqid: u32, opts: SpawnOpts) -> Result<OpenedSession, SpawnError> {
++pub fn spawn(reqid: u32, opts: SpawnOpts, grant: Option<u32>) -> Result<OpenedSession, SpawnError> {
++    if crate::jobs::policy_enabled().map_err(SpawnError::Fork)? && (grant.is_none() || opts.tty || opts.envp.is_none() || opts.cwd.is_none()) {
++        return Err(SpawnError::Fork(std::io::Error::from_raw_os_error(libc::ENOTSUP)));
++    }
+     if opts.argv.is_empty() {
+         return Err(SpawnError::BadArgv);
+     }
+@@ -101,7 +104,7 @@
+     // SAFETY: fork() returns 0 in the child, child pid in the parent, -1
+     // on error. After fork in the child we only call async-signal-safe
+     // functions until execve.
+-    let job = crate::jobs::begin().map_err(SpawnError::Fork)?;
++    let job = crate::jobs::begin(grant).map_err(SpawnError::Fork)?;
+     let pid = unsafe { libc::fork() };
+     if pid < 0 {
+         let error = std::io::Error::last_os_error();
+diff --git a/fs/fake.c b/fs/fake.c
+--- a/fs/fake.c
++++ b/fs/fake.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <limits.h>
+@@ -100,6 +101,10 @@
+ 
+ static struct fakefs_bind_mount g_bind_mounts[FAKEFS_MAX_BIND_MOUNTS];
+ struct mount *g_fakefs_mount = NULL;
++bool fakefs_has_bind_mounts(void) {
++    for(int i=0;i<FAKEFS_MAX_BIND_MOUNTS;i++)if(g_bind_mounts[i].active)return true;
++    return false;
++}
+ 
+ /* Translate a resolved host path back to a Linux path for bind mounts.
+  * e.g. "/Users/.../MinisChat/minis/<sid>/attachments/file.mp4"
+@@ -394,6 +399,21 @@
+     if (is_under_readonly_bind_mount(src) || is_under_readonly_bind_mount(dst))
+         return _EROFS;
+     db_begin_write(fs);
++    if (ish_workspace_current()) {
++        // Keep the unsupported directory/link-rename decision in the same
++        // metadata transaction as the rename, not just in the VFS precheck.
++        struct stat from_host, to_host;
++        if (fstatat(mount->root_fd,fix_path(src),&from_host,AT_SYMLINK_NOFOLLOW)<0 || !S_ISREG(from_host.st_mode) ||
++                (fstatat(mount->root_fd,fix_path(dst),&to_host,AT_SYMLINK_NOFOLLOW)==0 && !S_ISREG(to_host.st_mode))) {
++            db_rollback(fs);return _ENOTSUP;
++        }
++        struct ish_stat from, to;
++        if (!path_read_stat(fs, src, &from, NULL) || !S_ISREG(from.mode) ||
++                (path_read_stat(fs, dst, &to, NULL) && !S_ISREG(to.mode))) {
++            db_rollback(fs);
++            return _ENOTSUP;
++        }
++    }
+     path_rename(fs, src, dst);
+     int err = realfs.rename(mount, src, dst);
+     if (err < 0) {
+@@ -657,7 +677,7 @@
+ }
+ 
+ static int fakefs_readdir(struct fd *fd, struct dir_entry *entry) {
+-    assert(fd->ops == &fakefs_fdops);
++    assert(fd_original_ops(fd) == &fakefs_fdops);
+     int res;
+ retry:
+     res = realfs_fdops.readdir(fd, entry);
+@@ -776,6 +796,7 @@
+ }
+ 
+ int fakefs_bind_mount(const char *linux_path, const char *host_path, bool read_only) {
++    if(ish_workspace_frozen())return _EPERM;
+     fprintf(stderr, "fakefs_bind_mount: ENTER linux_path=\"%s\" (len=%zu) host_path=\"%s\" (len=%zu) read_only=%d\n",
+             linux_path, strlen(linux_path), host_path, strlen(host_path), read_only ? 1 : 0);
+ 
+@@ -962,6 +983,7 @@
+ }
+ 
+ int fakefs_bind_unmount(const char *linux_path) {
++    if(ish_workspace_frozen())return _EPERM;
+     if (g_fakefs_mount == NULL)
+         return _ENODEV;
+ 
+diff --git a/fs/fd.c b/fs/fd.c
+--- a/fs/fd.c
++++ b/fs/fd.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <stdlib.h>
+ #include <string.h>
+ #include "debug.h"
+@@ -14,6 +15,7 @@
+         return NULL;
+     *fd = (struct fd) {};
+     fd->ops = ops;
++    fd->workspace_job=current?current->session_job:0;
+     fd->refcount = 1;
+     fd->flags = 0;
+     fd->mount = NULL;
+@@ -47,6 +49,7 @@
+             inode_release(fd->inode);
+         if (fd->mount)
+             mount_release(fd->mount);
++        free(fd->workspace_ops);
+         free(fd);
+     }
+     return err;
+@@ -182,6 +185,8 @@
+ }
+ 
+ fd_t f_install(struct fd *fd, int flags) {
++    int policy_err=ish_workspace_wrap(fd);
++    if(policy_err){fd_close(fd);return policy_err;}
+     lock(&current->files->lock);
+     fd_t f = f_install_start(fd, 0);
+     if (f >= 0) {
+diff --git a/fs/fd.h b/fs/fd.h
+--- a/fs/fd.h
++++ b/fs/fd.h
+@@ -119,7 +119,14 @@
+     // these are used for a variety of things related to the fd
+     lock_t lock;
+     cond_t cond;
+-};
++    unsigned workspace_job, workspace_rights;
++    const struct fd_ops *workspace_original_ops;
++    struct fd_ops *workspace_ops;
++};
++
++static inline const struct fd_ops *fd_original_ops(struct fd *fd) {
++    return fd->workspace_original_ops ? fd->workspace_original_ops : fd->ops;
++}
+ 
+ typedef sdword_t fd_t;
+ #define AT_FDCWD_ -100
+diff --git a/fs/generic.c b/fs/generic.c
+--- a/fs/generic.c
++++ b/fs/generic.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/stat.h>
+@@ -37,6 +38,7 @@
+ // reopen also gives the caller the right access mode and makes paths
+ // (e.g. as exposed to Files-app fd-handing) reasonable.
+ static struct fd *procfd_openat(struct fd *at, const char *path_raw) {
++    if(ish_workspace_current())return NULL;
+     char path[MAX_PATH];
+     int err = path_normalize(at, path_raw, path, N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+@@ -105,7 +107,13 @@
+             (flags & O_CREAT_ ? N_PARENT_DIR_WRITE : 0));
+     if (err < 0)
+         return ERR_PTR(err);
+-    struct mount *mount = find_mount_and_trim_path(path);
++    int policy_err=ish_workspace_before_open(path,flags);
++    if(policy_err)return ERR_PTR(policy_err);
++    char policy_path[MAX_PATH];strcpy(policy_path,path);
++    struct mount *mount = find_mount_and_trim_path(path);
++    if(ish_workspace_current() && mount->fs!=&fakefs && mount->fs!=&procfs) {
++        mount_release(mount);return ERR_PTR(_ENOTSUP);
++    }
+     struct fd *fd = mount->fs->open(mount, path, flags, mode);
+     if (IS_ERR(fd)) {
+         // if an error happens after this point, fd_close will release the
+@@ -165,6 +173,10 @@
+     err = _ENOTDIR;
+     if (!S_ISDIR(fd->type) && flags & O_DIRECTORY_)
+         goto error;
++    err=ish_workspace_tag_open(fd,policy_path);
++    if(err)goto error;
++    err=ish_workspace_wrap(fd);
++    if(err)goto error;
+     return fd;
+ 
+ error:
+@@ -195,6 +207,7 @@
+     if (err < 0)
+         return err;
+ 
++    err=ish_workspace_path(path,(mode&AC_W)?WP_WRITE:WP_TRAVERSE);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     struct statbuf stat = {};
+     err = mount->fs->stat(mount, path, &stat);
+@@ -205,6 +218,7 @@
+ }
+ 
+ int generic_linkat(struct fd *src_at, const char *src_raw, struct fd *dst_at, const char *dst_raw) {
++    if(ish_workspace_enabled())return _ENOTSUP;
+     char src[MAX_PATH];
+     int err = path_normalize(src_at, src_raw, src, N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+@@ -235,6 +249,7 @@
+     int err = path_normalize(at, path_raw, path, N_SYMLINK_NOFOLLOW | N_PARENT_DIR_WRITE);
+     if (err < 0)
+         return err;
++    err=ish_workspace_mutation(path);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EPERM;
+     if (mount->fs->unlink)
+@@ -254,6 +269,7 @@
+     err = path_normalize(dst_at, dst_raw, dst, N_SYMLINK_NOFOLLOW | N_PARENT_DIR_WRITE);
+     if (err < 0)
+         return err;
++    err=ish_workspace_rename(src,dst);if(err)return err;
+     if (contains_mount_point(src))
+         return _EBUSY;
+     struct mount *mount = find_mount_and_trim_path(src);
+@@ -270,6 +286,7 @@
+ }
+ 
+ int generic_symlinkat(const char *target, struct fd *at, const char *link_raw) {
++    if(ish_workspace_enabled())return _ENOTSUP;
+     char link[MAX_PATH];
+     int err = path_normalize(at, link_raw, link, N_SYMLINK_NOFOLLOW | N_PARENT_DIR_WRITE);
+     if (err < 0)
+@@ -283,6 +300,7 @@
+ }
+ 
+ int generic_mknodat(struct fd *at, const char *path_raw, mode_t_ mode, dev_t_ dev) {
++    if(ish_workspace_enabled())return _ENOTSUP;
+     if (S_ISDIR(mode) || S_ISLNK(mode))
+         return _EINVAL;
+     if (!superuser() && (S_ISBLK(mode) || S_ISCHR(mode)))
+@@ -305,6 +323,7 @@
+     int err = path_normalize(at, path_raw, path, follow_links ? N_SYMLINK_FOLLOW : N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+         return err;
++    err=ish_workspace_mutation(path);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EPERM;
+     if (mount->fs->setattr)
+@@ -318,6 +337,7 @@
+     int err = path_normalize(at, path_raw, path, follow_links ? N_SYMLINK_FOLLOW : N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+         return err;
++    err=ish_workspace_mutation(path);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EPERM;
+     if (mount->fs->utime)
+@@ -331,6 +351,7 @@
+     int err = path_normalize(at, path_raw, path, N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+         return err;
++    err=ish_workspace_path(path,WP_READ);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EINVAL;
+     if (mount->fs->readlink)
+@@ -344,6 +365,7 @@
+     int err = path_normalize(at, path_raw, path, N_SYMLINK_FOLLOW | N_PARENT_DIR_WRITE);
+     if (err < 0)
+         return err;
++    err=ish_workspace_mutation(path);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EPERM;
+     if (mount->fs->mkdir)
+@@ -359,6 +381,7 @@
+         return err;
+     if (contains_mount_point(path))
+         return _EBUSY;
++    err=ish_workspace_mutation(path);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     err = _EPERM;
+     if (mount->fs->rmdir)
+diff --git a/fs/mount.c b/fs/mount.c
+--- a/fs/mount.c
++++ b/fs/mount.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <string.h>
+ #include <sys/stat.h>
+ #include "kernel/calls.h"
+@@ -96,6 +97,7 @@
+ }
+ 
+ int do_mount(const struct fs_ops *fs, const char *source, const char *point, const char *info, int flags) {
++    if(ish_workspace_frozen())return _EPERM;
+     struct mount *new_mount = malloc(sizeof(struct mount));
+     if (new_mount == NULL)
+         return _ENOMEM;
+@@ -131,6 +133,7 @@
+ }
+ 
+ int mount_remove(struct mount *mount) {
++    if(ish_workspace_frozen())return _EPERM;
+     if (mount->refcount != 0)
+         return _EBUSY;
+ 
+@@ -149,6 +152,7 @@
+ }
+ 
+ int do_umount(const char *point) {
++    if(ish_workspace_frozen())return _EPERM;
+     struct mount *mount;
+     bool found = false;
+     list_for_each_entry(&mounts, mount, mounts) {
+diff --git a/fs/path.c b/fs/path.c
+--- a/fs/path.c
++++ b/fs/path.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <string.h>
+ #include <sys/stat.h>
+ #include <stdbool.h>
+@@ -75,6 +76,8 @@
+             char possible_symlink[MAX_PATH];
+             *o = '\0';
+             strcpy(possible_symlink, out);
++            int policy_err=ish_workspace_path(out,WP_TRAVERSE);
++            if(policy_err)return policy_err;
+             struct mount *mount = find_mount_and_trim_path(possible_symlink);
+             assert(path_is_normalized(possible_symlink));
+             int res = _EINVAL;
+diff --git a/fs/sock.c b/fs/sock.c
+--- a/fs/sock.c
++++ b/fs/sock.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <fcntl.h>
+ #include <netinet/tcp.h>
+ #include <poll.h>
+@@ -36,6 +37,7 @@
+ }
+ 
+ int_t sys_socket(dword_t domain, dword_t type, dword_t protocol) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("socket(%d, %d, %d)", domain, type, protocol);
+     int real_domain = sock_family_to_real(domain);
+     if (real_domain < 0)
+@@ -74,8 +76,9 @@
+ 
+ static struct fd *sock_getfd(fd_t sock_fd) {
+     struct fd *sock = f_get(sock_fd);
+-    if (sock == NULL || sock->ops != &socket_fdops)
++    if (sock == NULL || fd_original_ops(sock) != &socket_fdops)
+         return NULL;
++    if(ish_workspace_current() && (sock->workspace_job!=current->session_job || sock->socket.domain!=AF_LOCAL_))return NULL;
+     return sock;
+ }
+ 
+@@ -335,6 +338,7 @@
+ }
+ 
+ int_t sys_bind(fd_t sock_fd, addr_t sockaddr_addr, uint_t sockaddr_len) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("bind(%d, 0x%x, %d)", sock_fd, sockaddr_addr, sockaddr_len);
+     struct fd *sock = sock_getfd(sock_fd);
+     if (sock == NULL)
+@@ -364,6 +368,7 @@
+ }
+ 
+ int_t sys_connect(fd_t sock_fd, addr_t sockaddr_addr, uint_t sockaddr_len) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("connect(%d, 0x%x, %d)", sock_fd, sockaddr_addr, sockaddr_len);
+     struct fd *sock = sock_getfd(sock_fd);
+     if (sock == NULL)
+@@ -404,6 +409,7 @@
+ }
+ 
+ int_t sys_listen(fd_t sock_fd, int_t backlog) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("listen(%d, %d)", sock_fd, backlog);
+     struct fd *sock = sock_getfd(sock_fd);
+     if (sock == NULL)
+@@ -416,6 +422,7 @@
+ }
+ 
+ int_t sys_accept(fd_t sock_fd, addr_t sockaddr_addr, addr_t sockaddr_len_addr) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("accept(%d, 0x%x, 0x%x)", sock_fd, sockaddr_addr, sockaddr_len_addr);
+     struct fd *sock = sock_getfd(sock_fd);
+     if (sock == NULL)
+@@ -480,6 +487,7 @@
+ }
+ 
+ int_t sys_accept4(fd_t sock_fd, addr_t sockaddr_addr, addr_t sockaddr_len_addr, int_t flags) {
++    if(ish_workspace_current())return _EACCES;
+     STRACE("accept4(%d, 0x%x, 0x%x, 0x%x)", sock_fd, sockaddr_addr, sockaddr_len_addr, flags);
+     if (flags & ~(SOCK_NONBLOCK_ | SOCK_CLOEXEC_))
+         return _EINVAL;
+@@ -588,6 +596,7 @@
+ }
+ 
+ int_t sys_socketpair(dword_t domain, dword_t type, dword_t protocol, addr_t sockets_addr) {
++    if(ish_workspace_current() && domain!=AF_LOCAL_)return _EACCES;
+     STRACE("socketpair(%d, %d, %d, 0x%x)", domain, type, protocol, sockets_addr);
+     int real_domain = sock_family_to_real(domain);
+     if (real_domain < 0)
+@@ -637,6 +646,7 @@
+ }
+ 
+ int_t sys_sendto(fd_t sock_fd, addr_t buffer_addr, dword_t len, dword_t flags, addr_t sockaddr_addr, dword_t sockaddr_len) {
++    if(ish_workspace_current() && sockaddr_addr)return _EACCES;
+     struct fd *sock = sock_getfd(sock_fd);
+     if (sock == NULL)
+         return _EBADF;
+@@ -1125,6 +1135,8 @@
+     if (msg_fake.msg_iovlen != 0 && msg_fake.msg_iov == 0)
+         return _EFAULT;
+ 
++    // Policy socketpairs are anonymous IPC only, never named destinations.
++    if (ish_workspace_current() && msg_fake.msg_name != 0) return _EACCES;
+     // msg_name
+     struct sockaddr_max_ msg_name;
+     if (msg_fake.msg_name != 0) {
+diff --git a/fs/sockrestart.c b/fs/sockrestart.c
+--- a/fs/sockrestart.c
++++ b/fs/sockrestart.c
+@@ -12,7 +12,7 @@
+ static struct list listen_fds = LIST_INITIALIZER(listen_fds);
+ 
+ void sockrestart_begin_listen(struct fd *sock) {
+-    if (sock->ops != &socket_fdops)
++    if (fd_original_ops(sock) != &socket_fdops)
+         return;
+     lock(&sockrestart_lock);
+     list_add(&listen_fds, &sock->sockrestart.listen);
+@@ -20,7 +20,7 @@
+ }
+ 
+ void sockrestart_end_listen(struct fd *sock) {
+-    if (sock->ops != &socket_fdops)
++    if (fd_original_ops(sock) != &socket_fdops)
+         return;
+     lock(&sockrestart_lock);
+     list_remove_safe(&sock->sockrestart.listen);
+@@ -30,7 +30,7 @@
+ static struct list listen_tasks = LIST_INITIALIZER(listen_tasks);
+ 
+ void sockrestart_begin_listen_wait(struct fd *sock) {
+-    if (sock->ops != &socket_fdops)
++    if (fd_original_ops(sock) != &socket_fdops)
+         return;
+     lock(&sockrestart_lock);
+     if (current->sockrestart.count == 0)
+@@ -40,7 +40,7 @@
+ }
+ 
+ void sockrestart_end_listen_wait(struct fd *sock) {
+-    if (sock->ops != &socket_fdops)
++    if (fd_original_ops(sock) != &socket_fdops)
+         return;
+     lock(&sockrestart_lock);
+     current->sockrestart.count--;
+diff --git a/fs/stat.c b/fs/stat.c
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <string.h>
+ #include <sys/stat.h>
+ #include <limits.h>
+@@ -61,6 +62,7 @@
+     int err = path_normalize(at, path_raw, path, follow_links ? N_SYMLINK_FOLLOW : N_SYMLINK_NOFOLLOW);
+     if (err < 0)
+         return err;
++    err=ish_workspace_path(path,WP_TRAVERSE);if(err)return err;
+     struct mount *mount = find_mount_and_trim_path(path);
+     memset(stat, 0, sizeof(*stat));
+     err = mount->fs->stat(mount, path, stat);
+@@ -117,7 +119,8 @@
+     if (fd == NULL)
+         return _EBADF;
+     struct statbuf stat = {};
+-    int err = fd->mount->fs->fstat(fd, &stat);
++    int err = ish_workspace_fd(fd,WP_READ);
++    if(!err)err = fd->mount->fs->fstat(fd, &stat);
+     if (err < 0)
+         return err;
+ #ifdef GUEST_ARM64
+@@ -146,7 +149,8 @@
+ 
+     if ((flags & AT_EMPTY_PATH_) && strcmp(path, "") == 0) {
+         struct fd *fd = at;
+-        int err = fd->mount->fs->fstat(fd, &stat);
++        int err = ish_workspace_fd(fd,WP_READ);
++    if(!err)err = fd->mount->fs->fstat(fd, &stat);
+         if (err < 0)
+             return err;
+     } else {
+diff --git a/kernel/calls.c b/kernel/calls.c
+--- a/kernel/calls.c
++++ b/kernel/calls.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <string.h>
+ #include <errno.h>
+ #include <unistd.h>
+@@ -683,6 +684,7 @@
+ // Fast path for fstat64 (syscall 80)
+ // Bypasses generic_statat path normalization when fd is already validated realfs
+ static inline int fast_fstat64(struct cpu_state *cpu) {
++    if(ish_workspace_current())return -1; // use guarded descriptor path
+     fd_t fd_no = (fd_t)cpu->regs[0];
+     addr_t statbuf_addr = (addr_t)cpu->regs[1];
+ 
+@@ -764,6 +766,7 @@
+ 
+ // Fast path for read (syscall 63) - small buffers only
+ static inline int fast_read(struct cpu_state *cpu) {
++    if(ish_workspace_current())return -1; // use guarded descriptor path
+     fd_t fd_no = (fd_t)cpu->regs[0];
+     addr_t buf_addr = (addr_t)cpu->regs[1];
+     dword_t size = (dword_t)cpu->regs[2];
+@@ -799,6 +802,7 @@
+ 
+ // Fast path for write (syscall 64) - small buffers only
+ static inline int fast_write(struct cpu_state *cpu) {
++    if(ish_workspace_current())return -1; // use guarded descriptor path
+     fd_t fd_no = (fd_t)cpu->regs[0];
+     addr_t buf_addr = (addr_t)cpu->regs[1];
+     dword_t size = (dword_t)cpu->regs[2];
+diff --git a/kernel/epoll.c b/kernel/epoll.c
+--- a/kernel/epoll.c
++++ b/kernel/epoll.c
+@@ -44,7 +44,7 @@
+     struct fd *epoll = f_get(epoll_f);
+     if (epoll == NULL)
+         return _EBADF;
+-    if (epoll->ops != &epoll_ops)
++    if (fd_original_ops(epoll) != &epoll_ops)
+         return _EINVAL;
+     struct fd *fd = f_get(f);
+     if (fd == NULL)
+@@ -86,7 +86,7 @@
+     struct fd *epoll = f_get(epoll_f);
+     if (epoll == NULL)
+         return _EBADF;
+-    if (epoll->ops != &epoll_ops)
++    if (fd_original_ops(epoll) != &epoll_ops)
+         return _EINVAL;
+ 
+     struct timespec timeout_ts;
+diff --git a/kernel/fs.c b/kernel/fs.c
+--- a/kernel/fs.c
++++ b/kernel/fs.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include "debug.h"
+ #include <string.h>
+ #include <sys/stat.h>
+@@ -895,6 +896,7 @@
+ }
+ 
+ dword_t sys_chroot(addr_t path_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     char path[MAX_PATH];
+     if (user_read_string(path_addr, path, sizeof(path)))
+         return _EFAULT;
+@@ -1143,6 +1145,8 @@
+ }
+ 
+ static int generic_fsetattr(struct fd *fd, struct attr attr) {
++    int e=ish_workspace_fd(fd,WP_WRITE);if(e)return e;
++    if(ish_workspace_current() && (S_ISCHR(fd->type)||S_ISBLK(fd->type)))return _EPERM;
+     if (fd->mount->fs->fsetattr == NULL)
+         return _EPERM;
+     return fd->mount->fs->fsetattr(fd, attr);
+diff --git a/kernel/inotify.c b/kernel/inotify.c
+--- a/kernel/inotify.c
++++ b/kernel/inotify.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include "kernel/calls.h"
+ #include "kernel/fs.h"
+ 
+@@ -7,6 +8,7 @@
+ #define IN_NONBLOCK_ O_NONBLOCK_
+ 
+ fd_t sys_inotify_init1(int_t flags) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("inotify_init1(%#x)", flags);
+     if (flags & ~(IN_CLOEXEC_|IN_NONBLOCK_))
+         return _EINVAL;
+@@ -18,26 +20,29 @@
+ }
+ 
+ fd_t sys_inotify_init(void) {
++    if(ish_workspace_current())return _ENOTSUP;
+     return sys_inotify_init1(0);
+ }
+ 
+ int_t sys_inotify_add_watch(fd_t inotify_f, addr_t path_addr, uint_t mask) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("inotify_add_watch(%d, 0x%x, %#x)", inotify_f, path_addr, mask);
+     struct fd *fd = f_get(inotify_f);
+     if (fd == NULL)
+         return _EBADF;
+-    if (fd->ops != &inotify_ops)
++    if (fd_original_ops(fd) != &inotify_ops)
+         return _EINVAL;
+     // Return a dummy watch descriptor. We don't actually monitor anything.
+     return 1;
+ }
+ 
+ int_t sys_inotify_rm_watch(fd_t inotify_f, int_t wd) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("inotify_rm_watch(%d, %d)", inotify_f, wd);
+     struct fd *fd = f_get(inotify_f);
+     if (fd == NULL)
+         return _EBADF;
+-    if (fd->ops != &inotify_ops)
++    if (fd_original_ops(fd) != &inotify_ops)
+         return _EINVAL;
+     return 0;
+ }
+diff --git a/kernel/ipc.c b/kernel/ipc.c
+--- a/kernel/ipc.c
++++ b/kernel/ipc.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include <fcntl.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+@@ -346,6 +347,7 @@
+ }
+ 
+ int_t sys_mq_open(addr_t name_addr, int_t oflag, mode_t_ mode, addr_t attr_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     char name[256];
+     if (user_read_string(name_addr, name, sizeof(name)))
+         return _EFAULT;
+@@ -402,6 +404,7 @@
+ }
+ 
+ int_t sys_mq_unlink(addr_t name_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     char name[256];
+     if (user_read_string(name_addr, name, sizeof(name)))
+         return _EFAULT;
+@@ -419,10 +422,11 @@
+ }
+ 
+ int_t sys_mq_timedsend(fd_t mqdes, addr_t msg_ptr, size_t msg_len, uint_t msg_prio, addr_t abs_timeout_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     (void)abs_timeout_addr;
+     STRACE("mq_timedsend(%d, %#llx, %#zx, %u, %#llx)", mqdes, (unsigned long long)msg_ptr, msg_len, msg_prio, (unsigned long long)abs_timeout_addr);
+     struct fd *fd = f_get(mqdes);
+-    if (fd == NULL || fd->ops != &mqfd_ops)
++    if (fd == NULL || fd_original_ops(fd) != &mqfd_ops)
+         return _EBADF;
+     char *buf = malloc(msg_len ? msg_len : 1);
+     if (buf == NULL)
+@@ -474,10 +478,11 @@
+ }
+ 
+ ssize_t sys_mq_timedreceive(fd_t mqdes, addr_t msg_ptr, size_t msg_len, addr_t msg_prio_addr, addr_t abs_timeout_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     (void)abs_timeout_addr;
+     STRACE("mq_timedreceive(%d, %#llx, %#zx, %#llx, %#llx)", mqdes, (unsigned long long)msg_ptr, msg_len, (unsigned long long)msg_prio_addr, (unsigned long long)abs_timeout_addr);
+     struct fd *fd = f_get(mqdes);
+-    if (fd == NULL || fd->ops != &mqfd_ops)
++    if (fd == NULL || fd_original_ops(fd) != &mqfd_ops)
+         return _EBADF;
+     struct mq_queue *queue = fd->data;
+     lock(&shm_lock);
+@@ -515,16 +520,18 @@
+ }
+ 
+ int_t sys_mq_notify(fd_t mqdes, addr_t notification_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     (void)notification_addr;
+     struct fd *fd = f_get(mqdes);
+-    if (fd == NULL || fd->ops != &mqfd_ops)
++    if (fd == NULL || fd_original_ops(fd) != &mqfd_ops)
+         return _EBADF;
+     return 0;
+ }
+ 
+ int_t sys_mq_getsetattr(fd_t mqdes, addr_t newattr_addr, addr_t oldattr_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     struct fd *fd = f_get(mqdes);
+-    if (fd == NULL || fd->ops != &mqfd_ops)
++    if (fd == NULL || fd_original_ops(fd) != &mqfd_ops)
+         return _EBADF;
+     lock(&shm_lock);
+     struct mq_queue *queue = fd->data;
+@@ -546,6 +553,7 @@
+ }
+ 
+ int_t sys_msgget(int_t key, int_t msgflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("msgget(%#x, %#x)", key, msgflg);
+     lock(&shm_lock);
+     struct msg_queue *queue = key == IPC_PRIVATE_ ? NULL : msg_find_key(key);
+@@ -579,6 +587,7 @@
+ }
+ 
+ int_t sys_msgctl(int_t msqid, int_t cmd, addr_t buf_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("msgctl(%d, %d, %#llx)", msqid, cmd, (unsigned long long) buf_addr);
+     lock(&shm_lock);
+     struct msg_queue **queuep = &msg_queues;
+@@ -610,6 +619,7 @@
+ }
+ 
+ int_t sys_msgsnd(int_t msqid, addr_t msgp, size_t msgsz, int_t msgflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("msgsnd(%d, %#llx, %#zx, %#x)", msqid, (unsigned long long) msgp, msgsz, msgflg);
+     (void) msgflg;
+     int64_t type;
+@@ -662,6 +672,7 @@
+ }
+ 
+ ssize_t sys_msgrcv(int_t msqid, addr_t msgp, size_t msgsz, int64_t msgtyp, int_t msgflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("msgrcv(%d, %#llx, %#zx, %lld, %#x)", msqid, (unsigned long long) msgp, msgsz, (long long) msgtyp, msgflg);
+     lock(&shm_lock);
+     for (;;) {
+@@ -724,6 +735,7 @@
+ }
+ 
+ int_t sys_semget(int_t key, int_t nsems, int_t semflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("semget(%#x, %d, %#x)", key, nsems, semflg);
+     lock(&shm_lock);
+     struct sem_set *set = key == IPC_PRIVATE_ ? NULL : sem_find_key(key);
+@@ -775,6 +787,7 @@
+ }
+ 
+ int_t sys_semctl(int_t semid, int_t semnum, int_t cmd, addr_t arg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("semctl(%d, %d, %d, %#llx)", semid, semnum, cmd, (unsigned long long)arg);
+     lock(&shm_lock);
+     struct sem_set **setp = &sem_sets;
+@@ -889,6 +902,7 @@
+ }
+ 
+ int_t sys_semtimedop(int_t semid, addr_t sops_addr, size_t nsops, addr_t timeout_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("semtimedop(%d, %#llx, %#zx, %#llx)", semid, (unsigned long long)sops_addr, nsops, (unsigned long long)timeout_addr);
+     if (nsops == 0 || nsops > 1024)
+         return _EINVAL;
+@@ -948,10 +962,12 @@
+ }
+ 
+ int_t sys_semop(int_t semid, addr_t sops_addr, size_t nsops) {
++    if(ish_workspace_current())return _ENOTSUP;
+     return sys_semtimedop(semid, sops_addr, nsops, 0);
+ }
+ 
+ int_t sys_shmget(int_t key, size_t size, int_t shmflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("shmget(%#x, %#zx, %#x)", key, size, shmflg);
+     lock(&shm_lock);
+ 
+@@ -1011,6 +1027,7 @@
+ }
+ 
+ int_t sys_shmctl(int_t shmid, int_t cmd, addr_t buf_addr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("shmctl(%d, %d, %#llx)", shmid, cmd, (unsigned long long) buf_addr);
+     lock(&shm_lock);
+     struct shm_segment **segp = &shm_segments;
+@@ -1063,6 +1080,7 @@
+ }
+ 
+ addr_t sys_shmat(int_t shmid, addr_t shmaddr, int_t shmflg) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("shmat(%d, %#llx, %#x)", shmid, (unsigned long long) shmaddr, shmflg);
+     lock(&shm_lock);
+     struct shm_segment *seg = shm_find_id(shmid);
+@@ -1144,6 +1162,7 @@
+ }
+ 
+ int_t sys_shmdt(addr_t shmaddr) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("shmdt(%#llx)", (unsigned long long) shmaddr);
+     if (PGOFFSET(shmaddr) != 0)
+         return _EINVAL;
+@@ -1169,6 +1188,7 @@
+ }
+ 
+ int_t sys_ipc(uint_t call, int_t first, int_t second, int_t third, addr_t ptr, int_t fifth) {
++    if(ish_workspace_current())return _ENOTSUP;
+     STRACE("ipc(%u, %d, %d, %d, %#x, %d)", call, first, second, third, ptr, fifth);
+     return _ENOSYS;
+ }
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include "ptrace.h"
+ #include "kernel/calls.h"
+ #include "kernel/errno.h"
+@@ -80,6 +81,7 @@
+ #endif
+ 
+ dword_t sys_ptrace(dword_t request, dword_t pid, addr_t addr, addr_t data) {
++    if(ish_workspace_current())return _EPERM;
+     switch (request) {
+         case PTRACE_TRACEME_:
+             STRACE("ptrace(PTRACE_TRACEME, %d, %#x, %#x)", pid, addr, data);
+diff --git a/kernel/session_job.c b/kernel/session_job.c
+--- a/kernel/session_job.c
++++ b/kernel/session_job.c
+@@ -1,9 +1,10 @@
++#include "kernel/workspace_policy.h"
+ #include <stdint.h>
+ #include "kernel/calls.h"
+ #include "kernel/session_job.h"
+ 
+ #define JOB_LIMIT 64
+-struct session_job { dword_t id, live; bool cancelled; };
++struct session_job { dword_t id, live; bool cancelled; struct ish_workspace_grant *grant; };
+ static struct session_job jobs[JOB_LIMIT];
+ static struct task *controller;
+ static dword_t armed_job, last_job;
+@@ -23,6 +24,8 @@
+     }
+ }
+ 
++bool ish_job_controller_current(void) { return current && current==controller; }
++
+ int ish_job_enable_controller(void) {
+     lock(&pids_lock);
+     // Host boot only, before any guest task is started. Authority is task
+@@ -40,14 +43,21 @@
+     int_t result = _EINVAL;
+     if (!controller) { result = _ENOSYS; goto out; }
+     if (current != controller) { result = _EPERM; goto out; }
+-    if (op == ISH_JOB_CAP) { result = 1; goto out; }
+-    if (op == ISH_JOB_NEW) {
++    if (op == ISH_JOB_CAP) { result = ish_workspace_enabled()?2:1; goto out; }
++    if (op == ISH_JOB_NEW || op == ISH_JOB_NEW_GRANTED) {
++        if (ish_workspace_enabled() && op!=ISH_JOB_NEW_GRANTED) { result=_EPERM;goto out; }
++        if (!ish_workspace_enabled() && op==ISH_JOB_NEW_GRANTED) { result=_ENOTSUP;goto out; }
+         if (armed_job) { result = _EBUSY; goto out; }
+         // IDs are never reused, including after RELEASE. Avoid pid/slot ABA.
+         if (last_job == INT32_MAX) { result = _ENOSPC; goto out; }
+         result = _ENOSPC;
+         for (unsigned i = 0; i < JOB_LIMIT; i++) if (!jobs[i].id) {
+-            jobs[i] = (struct session_job) {.id = ++last_job};
++            struct ish_workspace_grant *grant=NULL;
++            if (op==ISH_JOB_NEW_GRANTED) {
++                grant=ish_workspace_claim_locked(id);
++                if (!grant) { result=_EPERM;break; }
++            }
++            jobs[i] = (struct session_job) {.id = ++last_job, .grant=grant};
+             armed_job = jobs[i].id;
+             result = armed_job;
+             break;
+@@ -76,7 +86,7 @@
+         break;
+     case ISH_JOB_RELEASE:
+         if (job->live || armed_job == id) result = _EBUSY;
+-        else { *job = (struct session_job) {}; result = 0; }
++        else { ish_workspace_job_done_locked(job->grant); *job = (struct session_job) {}; result = 0; }
+         break;
+     }
+ out:
+@@ -89,9 +99,11 @@
+     if (parent == controller) { id = armed_job; armed_job = 0; }
+     task->session_job = id;
+     task->session_job_started = false;
+-    if (!id) return true;
++    task->workspace_grant=NULL;
++    if (!id) return !ish_workspace_enabled();
+     struct session_job *job = find_job(id);
+-    if (!job || job->cancelled) return false;
++    if (!job || job->cancelled || (ish_workspace_enabled() && !job->grant)) return false;
++    task->workspace_grant=job->grant;
+     job->live++; // includes a fork reservation until failure or pthread cleanup
+     return true;
+ }
+diff --git a/kernel/session_job.h b/kernel/session_job.h
+--- a/kernel/session_job.h
++++ b/kernel/session_job.h
+@@ -11,6 +11,8 @@
+ #define ISH_JOB_RELEASE 5
+ #define ISH_JOB_INTERRUPT 6
+ int ish_job_enable_controller(void);
++bool ish_job_controller_current(void);
++#define ISH_JOB_NEW_GRANTED 7
+ int_t ish_job_control(dword_t op, dword_t id);
+ // All _locked helpers require pids_lock.
+ bool ish_job_inherit_locked(struct task *task, struct task *parent);
+diff --git a/kernel/signal.c b/kernel/signal.c
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1,3 +1,4 @@
++#include "kernel/workspace_policy.h"
+ #include "debug.h"
+ #include <string.h>
+ #include <signal.h>
+@@ -1001,7 +1002,7 @@
+         struct fd *fd = f_get(fd_no);
+         if (fd == NULL)
+             return _EBADF;
+-        if (fd->ops != &signalfd_ops)
++        if (fd_original_ops(fd) != &signalfd_ops)
+             return _EINVAL;
+         fd->data = (void *)(uintptr_t)mask;
+         fd_setflags(fd, flags & O_NONBLOCK_);
+@@ -1150,6 +1151,7 @@
+ }
+ 
+ static int kill_task(struct task *task, dword_t sig, int code) {
++    if(ish_workspace_current() && task->session_job!=current->session_job)return _EPERM;
+     if (!superuser() &&
+             current->uid != task->uid &&
+             current->uid != task->suid &&
+diff --git a/kernel/task.h b/kernel/task.h
+--- a/kernel/task.h
++++ b/kernel/task.h
+@@ -117,6 +117,7 @@
+ 
+     dword_t session_job; // immutable inherited ownership; pids_lock
+     bool session_job_started; // reservation transferred to pthread cleanup
++    struct ish_workspace_grant *workspace_grant; // immutable while job owns this task
+ };
+ 
+ // current will always give the process that is currently executing
+diff --git a/kernel/time.c b/kernel/time.c
+--- a/kernel/time.c
++++ b/kernel/time.c
+@@ -493,7 +493,7 @@
+     struct fd *fd = f_get(f);
+     if (fd == NULL)
+         return _EBADF;
+-    if (fd->ops != &timerfd_ops)
++    if (fd_original_ops(fd) != &timerfd_ops)
+         return _EINVAL;
+     struct itimerspec_ value;
+     if (user_get(new_value_addr, value))
+@@ -525,7 +525,7 @@
+     struct fd *fd = f_get(f);
+     if (fd == NULL)
+         return _EBADF;
+-    if (fd->ops != &timerfd_ops)
++    if (fd_original_ops(fd) != &timerfd_ops)
+         return _EINVAL;
+ 
+     struct timer_spec spec;
+diff --git a/kernel/workspace_fd.c b/kernel/workspace_fd.c
+new file mode 100644
+--- /dev/null
++++ b/kernel/workspace_fd.c
+@@ -0,0 +1,34 @@
++#include <stdlib.h>
++#include "kernel/calls.h"
++#include "kernel/workspace_policy.h"
++#define CHECK(fd, right) do { int e=ish_workspace_fd(fd,right); if(e)return e; } while(0)
++static ssize_t wp_read(struct fd *f,void *b,size_t n) { CHECK(f,WP_READ); return f->workspace_original_ops->read(f,b,n); }
++static ssize_t wp_write(struct fd *f,const void *b,size_t n) { CHECK(f,WP_WRITE); return f->workspace_original_ops->write(f,b,n); }
++static ssize_t wp_pread(struct fd *f,void *b,size_t n,off_t o) { CHECK(f,WP_READ); return f->workspace_original_ops->pread(f,b,n,o); }
++static ssize_t wp_pwrite(struct fd *f,const void *b,size_t n,off_t o) { CHECK(f,WP_WRITE); return f->workspace_original_ops->pwrite(f,b,n,o); }
++static int wp_readdir(struct fd *f,struct dir_entry *e) { CHECK(f,WP_READ); return f->workspace_original_ops->readdir(f,e); }
++static int wp_mmap(struct fd *f,struct mem *m,page_t s,pages_t n,off_t o,int p,int flags) {
++    CHECK(f,WP_READ);
++    // Reject file-backed shared maps, including read-only maps later made writable.
++    if(ish_workspace_current() && (flags&MMAP_SHARED) && !is_adhoc_fd(f))return _ENOTSUP;
++    return f->workspace_original_ops->mmap(f,m,s,n,o,p,flags);
++}
++static int wp_ioctl(struct fd *f,int cmd,void *arg) {
++    CHECK(f,WP_READ);
++    if(ish_workspace_current() && cmd!=FIONREAD_)return _ENOTSUP;
++    return f->workspace_original_ops->ioctl(f,cmd,arg);
++}
++int ish_workspace_wrap(struct fd *f) {
++    if(!ish_workspace_enabled() || f->workspace_ops)return 0;
++    struct fd_ops *ops=malloc(sizeof(*ops));if(!ops)return _ENOMEM;
++    const struct fd_ops *original=f->ops;*ops=*original;
++    if(ops->read)ops->read=wp_read;
++    if(ops->write)ops->write=wp_write;
++    if(ops->pread)ops->pread=wp_pread;
++    if(ops->pwrite)ops->pwrite=wp_pwrite;
++    if(ops->readdir)ops->readdir=wp_readdir;
++    if(ops->mmap)ops->mmap=wp_mmap;
++    if(ops->ioctl)ops->ioctl=wp_ioctl;
++    // Close stays unchanged, including identity comparison with fs->close.
++    f->workspace_original_ops=original;f->workspace_ops=ops;f->ops=ops;return 0;
++}
+diff --git a/kernel/workspace_policy.c b/kernel/workspace_policy.c
+new file mode 100644
+--- /dev/null
++++ b/kernel/workspace_policy.c
+@@ -0,0 +1,251 @@
++#include <stdatomic.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++#include <stdlib.h>
++#include <dirent.h>
++#include <sys/stat.h>
++#include "kernel/calls.h"
++#include "kernel/workspace_policy.h"
++#include "kernel/session_job.h"
++#include "fs/real.h"
++#include "fs/fake-db.h"
++#include "fs/sock.h"
++
++#define WP_GRANTS 64
++struct wp_identity { dev_t dev; ino_t ino; };
++struct wp_root {
++    char path[MAX_PATH]; unsigned rights, depth;
++    struct wp_identity ancestry[64];
++};
++struct ish_workspace_grant {
++    unsigned token, count;
++    bool bound, retired, release_requested;
++    struct wp_root roots[WP_ROOTS];
++};
++static struct ish_workspace_grant *grants[WP_GRANTS];
++static unsigned last_token;
++static atomic_bool enabled;
++extern struct mount *g_fakefs_mount;
++extern bool fakefs_has_bind_mounts(void);
++
++bool ish_workspace_enabled(void) { return atomic_load_explicit(&enabled, memory_order_acquire); }
++bool ish_workspace_frozen(void) {
++    return ish_workspace_enabled() && !(ish_job_controller_current() && current->exiting);
++}
++struct ish_workspace_grant *ish_workspace_current(void) {
++    return current ? current->workspace_grant : NULL;
++}
++static bool under(const char *path, const char *root) {
++    size_t n = strlen(root);
++    return !strncmp(path, root, n) && (path[n] == '/' || !path[n]);
++}
++static bool reserved(const char *p) {
++    return under(p,"/proc") || under(p,"/dev") || under(p,"/sys");
++}
++static bool canonical_root(const char *p) {
++    if (!p || p[0]!='/' || !p[1] || strlen(p)>=MAX_PATH || p[strlen(p)-1]=='/' || reserved(p)) return false;
++    for (const char *c=p; *c;) {
++        if (*c++!='/') return false;
++        size_t n=strcspn(c,"/");
++        if (!n || (n==1 && c[0]=='.') || (n==2 && c[0]=='.' && c[1]=='.')) return false;
++        c+=n;
++    }
++    return true;
++}
++// Audit only the private backing tree, descriptor-relative and never following
++// host symlinks. Guest symbolic links are fakefs metadata + ordinary data files.
++static int audit_tree(int dirfd, unsigned depth, unsigned *entries) {
++    if (depth>64) return _ENOTSUP;
++    DIR *dir=fdopendir(dup(dirfd)); if (!dir) return _EIO;
++    int result=0; struct dirent *entry;
++    while ((entry=readdir(dir))) {
++        if (!strcmp(entry->d_name,".") || !strcmp(entry->d_name,"..")) continue;
++        if (++*entries>100000) { result=_ENOTSUP; break; }
++        struct stat st;
++        if (fstatat(dirfd,entry->d_name,&st,AT_SYMLINK_NOFOLLOW)<0) { result=_EIO; break; }
++        if (S_ISDIR(st.st_mode)) {
++            int child=openat(dirfd,entry->d_name,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
++            if (child<0) { result=_ENOTSUP; break; }
++            result=audit_tree(child,depth+1,entries); close(child);
++            if (result) break;
++        } else if (!S_ISREG(st.st_mode) || st.st_nlink!=1) { result=_ENOTSUP; break; }
++    }
++    closedir(dir); return result;
++}
++int ish_workspace_enable(void) {
++    if (!ish_job_controller_current() || ish_workspace_enabled()) return _EPERM;
++    lock(&pids_lock);
++    if (!list_empty(&current->children)) { unlock(&pids_lock); return _EBUSY; }
++    lock(&mounts_lock);
++    int result=0; struct mount *mount;
++    list_for_each_entry(&mounts,mount,mounts) {
++        if (mount!=g_fakefs_mount && mount->fs!=&procfs && mount->fs!=&devptsfs) result=_ENOTSUP;
++    }
++    if (!g_fakefs_mount || fakefs_has_bind_mounts()) result=_ENOTSUP;
++    if (!result) {
++        unsigned entries=0;
++        result=audit_tree(g_fakefs_mount->root_fd,0,&entries);
++        if (!result) {
++            struct fakefs_db *db=&g_fakefs_mount->fakefs;
++            db_begin_read(db);
++            sqlite3_stmt *stmt=NULL;
++            int rc=sqlite3_prepare_v2(db->db,"SELECT 1 FROM paths GROUP BY inode HAVING count(*)>1 LIMIT 1",-1,&stmt,NULL);
++            if (rc!=SQLITE_OK || sqlite3_step(stmt)!=SQLITE_DONE) result=_ENOTSUP;
++            sqlite3_finalize(stmt); db_commit(db);
++        }
++    }
++    if (!result) atomic_store_explicit(&enabled,true,memory_order_release);
++    unlock(&mounts_lock); unlock(&pids_lock); return result;
++}
++static int verify_root(struct wp_root *root) {
++    // Require exact fakefs metadata and walk actual directories without links.
++    struct statbuf fake;
++    if (fakefs.stat(g_fakefs_mount,root->path,&fake)<0 || !S_ISDIR(fake.mode))return _ENOTSUP;
++    int fd=dup(g_fakefs_mount->root_fd); if(fd<0)return _EIO;
++    struct stat st;
++    if(fstat(fd,&st)<0){close(fd);return _EIO;}
++    root->ancestry[root->depth++]=(struct wp_identity){st.st_dev,st.st_ino};
++    char copy[MAX_PATH];strcpy(copy,root->path+1);char *save=NULL;
++    for(char *c=strtok_r(copy,"/",&save);c;c=strtok_r(NULL,"/",&save)) {
++        int next=openat(fd,c,O_RDONLY|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);close(fd);fd=next;
++        if(fd<0)return _ENOTSUP;
++        if(root->depth==64 || fstat(fd,&st)<0){close(fd);return _ENOTSUP;}
++        root->ancestry[root->depth++]=(struct wp_identity){st.st_dev,st.st_ino};
++    }
++    close(fd);return 0;
++}
++static bool same_identity(struct wp_identity a,struct wp_identity b) {return a.dev==b.dev && a.ino==b.ino;}
++static bool roots_overlap(const struct wp_root *a,const struct wp_root *b) {
++    for(unsigned i=0;i<b->depth;i++)if(same_identity(a->ancestry[a->depth-1],b->ancestry[i]))return true;
++    for(unsigned i=0;i<a->depth;i++)if(same_identity(b->ancestry[b->depth-1],a->ancestry[i]))return true;
++    return false;
++}
++static void free_grant(struct ish_workspace_grant *g) {
++    for (unsigned i=0;i<WP_GRANTS;i++) if (grants[i]==g) { grants[i]=NULL; free(g); return; }
++}
++int ish_workspace_register(const char *const *ro,size_t nro,const char *const *rw,size_t nrw,unsigned network) {
++    if (!ish_workspace_enabled()) return _EPERM;
++    if (network!=0 || !nro || nro>WP_ROOTS || nrw>WP_ROOTS-nro) return _ENOTSUP;
++    if (!ro || (nrw && !rw)) return _EINVAL;
++    struct ish_workspace_grant *g=calloc(1,sizeof(*g)); if (!g) return _ENOMEM;
++    g->count=nro+nrw;
++    for (unsigned i=0;i<g->count;i++) {
++        const char *p=i<nro?ro[i]:rw[i-nro];
++        if (!canonical_root(p)) { free(g); return _EINVAL; }
++        strcpy(g->roots[i].path,p); g->roots[i].rights=i<nro?WP_READ:WP_READ|WP_WRITE;
++        for (unsigned j=0;j<i;j++) if (under(p,g->roots[j].path)||under(g->roots[j].path,p)) { free(g);return _ENOTSUP; }
++    }
++    lock(&pids_lock); int slot=-1,result=0;
++    for(unsigned i=0;i<g->count && !result;i++)result=verify_root(&g->roots[i]);
++    for(unsigned i=0;i<g->count && !result;i++)for(unsigned j=0;j<i;j++)
++        if(roots_overlap(&g->roots[i],&g->roots[j]))result=_ENOTSUP;
++    if(result){free(g);unlock(&pids_lock);return result;}
++    for (unsigned k=0;k<WP_GRANTS;k++) {
++        if (!grants[k]) { slot=k; continue; }
++        struct ish_workspace_grant *other=grants[k];
++        for (unsigned i=0;i<g->count;i++) for (unsigned j=0;j<other->count;j++) {
++            if (((g->roots[i].rights|other->roots[j].rights)&WP_WRITE) &&
++                (roots_overlap(&g->roots[i],&other->roots[j]) ||
++                 under(g->roots[i].path,other->roots[j].path)||under(other->roots[j].path,g->roots[i].path))) result=_EBUSY;
++        }
++    }
++    if (slot<0 || last_token==INT32_MAX) result=_ENOSPC;
++    if (!result) { g->token=++last_token; grants[slot]=g; result=g->token; }
++    else free(g);
++    unlock(&pids_lock); return result;
++}
++struct ish_workspace_grant *ish_workspace_claim_locked(unsigned token) {
++    for (unsigned i=0;i<WP_GRANTS;i++) if (grants[i] && grants[i]->token==token) {
++        struct ish_workspace_grant *g=grants[i];
++        if (g->bound||g->retired||g->release_requested) return NULL;
++        g->bound=true; return g;
++    }
++    return NULL;
++}
++void ish_workspace_job_done_locked(struct ish_workspace_grant *g) {
++    if (!g) return;
++    g->bound=false;g->retired=true;
++    if (g->release_requested) free_grant(g);
++}
++int ish_workspace_release(unsigned token) {
++    lock(&pids_lock); int result=_ESRCH;
++    for (unsigned i=0;i<WP_GRANTS;i++) if (grants[i] && grants[i]->token==token) {
++        struct ish_workspace_grant *g=grants[i];g->release_requested=true;
++        if (g->bound) result=_EBUSY;
++        else { free_grant(g);result=0; }
++        break;
++    }
++    unlock(&pids_lock); return result;
++}
++static bool safe_device(const char *p) {
++    return !strcmp(p,"/dev/null")||!strcmp(p,"/dev/zero")||!strcmp(p,"/dev/full")||!strcmp(p,"/dev/random")||!strcmp(p,"/dev/urandom");
++}
++static bool safe_proc(const char *p) {
++    if (!strcmp(p,"/proc/meminfo")||!strcmp(p,"/proc/cpuinfo")||!strcmp(p,"/proc/version")) return true;
++    char own[40]; snprintf(own,sizeof(own),"/proc/%u",current->tgid);
++    const char *rest=NULL;
++    if (under(p,"/proc/self")) rest=p+10;
++    else if (under(p,own)) rest=p+strlen(own);
++    return rest && (!strcmp(rest,"/exe")||!strcmp(rest,"/maps")||!strcmp(rest,"/stat")||!strcmp(rest,"/status"));
++}
++static int rights(struct ish_workspace_grant *g,const char *p) {
++    if (safe_device(p)) return WP_READ|WP_WRITE;
++    if (safe_proc(p)) return WP_READ;
++    if (reserved(p)) return 0;
++    int r=0;
++    for (unsigned i=0;i<g->count;i++) {
++        if (under(p,g->roots[i].path)) r|=g->roots[i].rights;
++        if (!strcmp(p,"/")||!p[0]||under(g->roots[i].path,p)) r|=WP_TRAVERSE;
++    }
++    return r;
++}
++int ish_workspace_path(const char *path,int access) {
++    struct ish_workspace_grant *g=ish_workspace_current(); if (!g)return 0;
++    if (access==WP_TRAVERSE && (!strcmp(path,"/proc")||!strcmp(path,"/proc/self")||!strcmp(path,"/dev")))return 0;
++    char own[40];snprintf(own,sizeof(own),"/proc/%u",current->tgid);
++    if (access==WP_TRAVERSE && !strcmp(path,own))return 0;
++    int r=rights(g,path);
++    return (access==WP_TRAVERSE ? (r&(WP_READ|WP_TRAVERSE)) : ((r&access)==access)) ? 0 : _EACCES;
++}
++int ish_workspace_mutation(const char *p) {
++    struct ish_workspace_grant *g=ish_workspace_current();if(!g)return 0;
++    if (reserved(p))return _EPERM;
++    for(unsigned i=0;i<g->count;i++) if(!strcmp(p,g->roots[i].path))return _EPERM;
++    return ish_workspace_path(p,WP_WRITE);
++}
++int ish_workspace_rename(const char *src,const char *dst) {
++    struct ish_workspace_grant *g=ish_workspace_current();if(!g)return 0;
++    int e=ish_workspace_mutation(src);if(e)return e;e=ish_workspace_mutation(dst);if(e)return e;
++    bool same=false;for(unsigned i=0;i<g->count;i++) if((g->roots[i].rights&WP_WRITE)&&under(src,g->roots[i].path)&&under(dst,g->roots[i].path))same=true;
++    if(!same)return _EXDEV;
++    struct statbuf st;
++    if (fakefs.stat(g_fakefs_mount,src,&st)<0 || !S_ISREG(st.mode))return _ENOTSUP;
++    if (fakefs.stat(g_fakefs_mount,dst,&st)>=0 && !S_ISREG(st.mode))return _ENOTSUP;
++    return 0;
++}
++int ish_workspace_before_open(const char *p,int flags) {
++    if(!ish_workspace_current())return 0;
++    bool write=flags&(O_WRONLY_|O_RDWR_|O_CREAT_|O_TRUNC_|O_APPEND_);
++    int e=ish_workspace_path(p,write?WP_WRITE:WP_READ);if(e)return e;
++    struct statbuf st;
++    if(fakefs.stat(g_fakefs_mount,p,&st)>=0 && !S_ISREG(st.mode)&&!S_ISDIR(st.mode)&&!safe_device(p))return _ENOTSUP;
++    return 0;
++}
++int ish_workspace_tag_open(struct fd *fd,const char *p) {
++    struct ish_workspace_grant *g=ish_workspace_current();if(!g)return 0;
++    if(fd->mount->fs!=&fakefs && !(fd->mount->fs==&procfs && safe_proc(p)))return _ENOTSUP;
++    fd->workspace_job=current->session_job;fd->workspace_rights=rights(g,p)&(WP_READ|WP_WRITE);
++    for(unsigned i=0;i<g->count;i++)if(!strcmp(p,g->roots[i].path))fd->workspace_rights&=~WP_WRITE;
++    return 0;
++}
++int ish_workspace_fd(struct fd *fd,int access) {
++    if(!ish_workspace_current())return 0;
++    if(fd->mount && !is_adhoc_fd(fd)) {
++        return fd->workspace_job==current->session_job && (fd->workspace_rights&(unsigned)access)==(unsigned)access ? 0 : _EACCES;
++    }
++    // Anonymous objects created in the job, plus controller-provided pipe stdio.
++    if(fd->workspace_job==current->session_job)return 0;
++    struct stat st;
++    return fd->workspace_job==0 && fd->real_fd>=0 && fstat(fd->real_fd,&st)==0 && S_ISFIFO(st.st_mode) ? 0 : _EACCES;
++}
+diff --git a/kernel/workspace_policy.h b/kernel/workspace_policy.h
+new file mode 100644
+--- /dev/null
++++ b/kernel/workspace_policy.h
+@@ -0,0 +1,27 @@
++#ifndef ISH_WORKSPACE_POLICY_H
++#define ISH_WORKSPACE_POLICY_H
++#include "kernel/task.h"
++#include "kernel/fs.h"
++#include "fs/fd.h"
++#define WP_READ 1
++#define WP_WRITE 2
++#define WP_TRAVERSE 4
++#define WP_ROOTS 16
++struct ish_workspace_grant;
++bool ish_workspace_enabled(void);
++bool ish_workspace_frozen(void);
++struct ish_workspace_grant *ish_workspace_current(void);
++int ish_workspace_enable(void);
++int ish_workspace_register(const char *const *ro, size_t nro, const char *const *rw, size_t nrw, unsigned network);
++int ish_workspace_release(unsigned token);
++// These three are called only under pids_lock by the job controller.
++struct ish_workspace_grant *ish_workspace_claim_locked(unsigned token);
++void ish_workspace_job_done_locked(struct ish_workspace_grant *grant);
++int ish_workspace_path(const char *path, int access);
++int ish_workspace_mutation(const char *path);
++int ish_workspace_rename(const char *src, const char *dst);
++int ish_workspace_before_open(const char *path, int flags);
++int ish_workspace_tag_open(struct fd *fd, const char *path);
++int ish_workspace_fd(struct fd *fd, int access);
++int ish_workspace_wrap(struct fd *fd);
++#endif
+diff --git a/main.c b/main.c
+--- a/main.c
++++ b/main.c
+@@ -307,5 +307,19 @@
+         extern int ish_job_enable_controller(void);
+         if (ish_job_enable_controller() < 0) return 1;
+     }
++    if (getenv("ISH_ENABLE_WORKSPACE_POLICY") && !strcmp(getenv("ISH_ENABLE_WORKSPACE_POLICY"),"1")) {
++        extern int ish_workspace_enable(void);
++        extern int ish_workspace_register(const char *const *,size_t,const char *const *,size_t,unsigned);
++        int e=ish_workspace_enable();
++        if(e<0){fprintf(stderr,"workspace seal failed: %d\n",e);return 1;}
++        const char *raw_ro=getenv("ISH_POLICY_READ_ROOTS"), *raw_rw=getenv("ISH_POLICY_WRITE_ROOTS");
++        if(!raw_ro || !raw_rw)return 1;
++        char *ro=strdup(raw_ro),*rw=strdup(raw_rw),*save=NULL;const char *rs[16],*ws[16];size_t nr=0,nw=0;
++        for(char *p=strtok_r(ro,":",&save);p;p=strtok_r(NULL,":",&save)){if(nr==16)return 1;rs[nr++]=p;}
++        save=NULL;for(char *p=strtok_r(rw,":",&save);p;p=strtok_r(NULL,":",&save)){if(nw==16)return 1;ws[nw++]=p;}
++        e=ish_workspace_register(rs,nr,ws,nw,0);free(ro);free(rw);
++        if(e<0){fprintf(stderr,"workspace grant failed: %d\n",e);return 1;}
++        fprintf(stderr,"workspace fixture grant: %d\n",e);
++    }
+     task_run_current();
+ }
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -97,6 +97,8 @@
+         'kernel/vdso.c', vdso,
+         'kernel/task.c',
+         'kernel/session_job.c',
++        'kernel/workspace_policy.c',
++        'kernel/workspace_fd.c',
+         'kernel/group.c',
+         'kernel/log.c',
+ 

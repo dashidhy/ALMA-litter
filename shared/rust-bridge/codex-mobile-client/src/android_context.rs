@@ -124,22 +124,28 @@ pub extern "system" fn Java_com_litter_android_core_bridge_UniffiInit_nativeMobi
         let _ = context.vm();
         let _ = context.context();
 
-        let _resolver = iroh::dns::DnsResolver::new();
+        #[cfg(feature = "remote-alleycat")]
+        {
+            let _resolver = iroh::dns::DnsResolver::new();
 
-        let runtime = tokio::runtime::Builder::new_current_thread()
-            .enable_all()
-            .build()
-            .map_err(|error| format!("building tokio runtime: {error}"))?;
-        runtime
-            .block_on(async {
-                let endpoint = iroh::Endpoint::builder(iroh::endpoint::presets::N0)
-                    .bind()
-                    .await
-                    .map_err(|error| format!("binding iroh endpoint: {error}"))?;
-                endpoint.close().await;
-                Ok::<(), String>(())
-            })
-            .map_err(|error| format!("probing iroh endpoint: {error}"))?;
+            let runtime = tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+                .map_err(|error| format!("building tokio runtime: {error}"))?;
+            runtime
+                .block_on(async {
+                    let endpoint = iroh::Endpoint::builder(iroh::endpoint::presets::N0)
+                        .bind()
+                        .await
+                        .map_err(|error| format!("binding iroh endpoint: {error}"))?;
+                    endpoint.close().await;
+                    Ok::<(), String>(())
+                })
+                .map_err(|error| format!("probing iroh endpoint: {error}"))?;
+
+        }
+        #[cfg(not(feature = "remote-alleycat"))]
+        return Err::<String, String>(crate::network_scope::ALLEYCAT_UNSUPPORTED.into());
 
         Ok::<String, String>("ok".to_string())
     }) {

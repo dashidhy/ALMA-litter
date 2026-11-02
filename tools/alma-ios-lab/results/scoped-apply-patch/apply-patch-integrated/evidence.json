@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+    "test",
+    "--offline",
+    "-j",
+    "2",
+    "--manifest-path",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-integrated/Cargo.toml",
+    "--test",
+    "actual_apply_patch",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 18.01,
+  "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "upstream_base_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "upstream_source": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs",
+  "adapter_source": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+  "build_jobs": 2,
+  "scope": "actual full codex_apply_patch::apply_patch and exec-server consumer; no source-derived substitutes",
+  "input_sha256": {
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs": "67839d0e1d852ebb14074076b41196db8a531a07a277eaae045a1acbadb1c92d",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_files.rs": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/apply-patch/src/lib.rs": "2b26d4f886fe4742d9c0c494be78a5e420afaaafa776ae28791c079d404b4067",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/apply-patch/src/parser.rs": "6b8086467d0500f4fc9aa9a35cd33a0bce53c01bcb74b915b9efc6fcf187f7ce",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/file-system/src/lib.rs": "a044ddd0336405a5e12c61b2df449b15cc29fe6f96063a59abde96cfa078133e",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_executor_regression/apply_patch_tests.rs": "6613a659822434d04e8b74edbca51d4581b309879eb45c3aa9ca5d3993fd603f"
+  }
+}

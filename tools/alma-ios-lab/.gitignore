@@ -1,0 +1,8 @@
+.cache/
+target/
+# Private per-device account/usage observations and raw process receipts.
+# Sanitized dated summary JSON lives directly in results/ and is retained.
+results/tah-phone-*/
+results/iphone/
+results/background/
+results/phone-*/

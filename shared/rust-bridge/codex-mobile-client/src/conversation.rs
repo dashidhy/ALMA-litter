@@ -18,7 +18,7 @@ use codex_app_server_protocol::{
     CollabAgentStatus, CollabAgentTool, CollabAgentToolCallStatus, CommandAction,
     CommandExecutionStatus, DynamicToolCallOutputContentItem, DynamicToolCallStatus,
     FileUpdateChange, McpToolCallResult, McpToolCallStatus, PatchApplyStatus, PatchChangeKind,
-    ThreadItem, Turn, UserInput,
+    ThreadItem, ThreadItemPayload, Turn, UserInput,
 };
 use codex_shell_command::parse_command::extract_shell_command;
 use serde::Serialize;
@@ -80,14 +80,25 @@ pub fn hydrate_thread_item(
     source_turn_index: Option<usize>,
     opts: &HydrationOptions,
 ) -> Option<HydratedConversationItem> {
-    convert_thread_item(item, item.id(), source_turn_id, source_turn_index, opts)
+    let mut hydrated =
+        convert_thread_item(item, item.id(), source_turn_id, source_turn_index, opts)?;
+    // The mobile timestamp is epoch seconds. Prefer the start so completion
+    // does not move an existing item; older histories may only record the end.
+    hydrated.timestamp = item
+        .started_at_ms
+        .or(item.completed_at_ms)
+        .map(|timestamp| timestamp as f64 / 1000.0);
+    Some(hydrated)
 }
 
 fn hydrate_message_phase(
     phase: Option<codex_protocol::models::MessagePhase>,
 ) -> Option<AppMessagePhase> {
     phase.map(|phase| match phase {
-        codex_protocol::models::MessagePhase::Commentary => AppMessagePhase::Commentary,
+        // The mobile boundary currently has two phases. Partial answers are
+        // nonterminal and must not acquire final-answer/control semantics.
+        codex_protocol::models::MessagePhase::Commentary
+        | codex_protocol::models::MessagePhase::PartialAnswer => AppMessagePhase::Commentary,
         codex_protocol::models::MessagePhase::FinalAnswer => AppMessagePhase::FinalAnswer,
     })
 }
@@ -236,8 +247,8 @@ fn convert_thread_item(
     source_turn_index: Option<usize>,
     opts: &HydrationOptions,
 ) -> Option<HydratedConversationItem> {
-    let (content, is_boundary) = match item {
-        ThreadItem::UserMessage { content, .. } => {
+    let (content, is_boundary) = match &item.payload {
+        ThreadItemPayload::UserMessage { content, .. } => {
             let (text, images) = render_user_input(content);
             if text.is_empty() && images.is_empty() {
                 return None;
@@ -250,7 +261,7 @@ fn convert_thread_item(
                 true,
             )
         }
-        ThreadItem::AgentMessage { text, phase, .. } => {
+        ThreadItemPayload::AgentMessage { text, phase, .. } => {
             let trimmed = text.trim();
             if trimmed.is_empty() {
                 return None;
@@ -267,7 +278,7 @@ fn convert_thread_item(
             };
             (content, false)
         }
-        ThreadItem::Plan { text, .. } => {
+        ThreadItemPayload::Plan { text, .. } => {
             let trimmed = text.trim();
             if trimmed.is_empty() {
                 return None;
@@ -279,7 +290,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::Reasoning {
+        ThreadItemPayload::Reasoning {
             summary, content, ..
         } => (
             HydratedConversationItemContent::Reasoning(HydratedReasoningData {
@@ -288,7 +299,7 @@ fn convert_thread_item(
             }),
             false,
         ),
-        ThreadItem::CommandExecution {
+        ThreadItemPayload::CommandExecution {
             command,
             cwd,
             status,
@@ -320,7 +331,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::FileChange {
+        ThreadItemPayload::FileChange {
             changes, status, ..
         } => (
             HydratedConversationItemContent::FileChange(HydratedFileChangeData {
@@ -329,7 +340,7 @@ fn convert_thread_item(
             }),
             false,
         ),
-        ThreadItem::McpToolCall {
+        ThreadItemPayload::McpToolCall {
             server,
             tool,
             status,
@@ -388,7 +399,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::DynamicToolCall {
+        ThreadItemPayload::DynamicToolCall {
             namespace,
             tool,
             arguments,
@@ -449,7 +460,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::CollabAgentToolCall {
+        ThreadItemPayload::CollabAgentToolCall {
             tool,
             status,
             receiver_thread_ids,
@@ -479,7 +490,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::WebSearch(search) => {
+        ThreadItemPayload::WebSearch(search) => {
             let query = &search.query;
             let action = &search.action;
             let action_json = action
@@ -494,24 +505,31 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::ImageView { path, .. } => (
+        ThreadItemPayload::ImageView { path, .. } => (
             HydratedConversationItemContent::ImageView(HydratedImageViewData {
                 path: path.to_string(),
             }),
             false,
         ),
-        ThreadItem::ImageGeneration(image) => {
+        ThreadItemPayload::ImageGeneration(image) => {
             let status = &image.status;
             let revised_prompt = &image.revised_prompt;
-            let result = &image.result;
             let saved_path = &image.saved_path;
-            let image_png = decode_image_generation_result(result);
+            let (image_png, has_file_ref) = match &image.image {
+                codex_app_server_protocol::GeneratedImageRef::Inline { result } => {
+                    (decode_image_generation_result(result), false)
+                }
+                // A durable attachment is a completed result, but its ID is
+                // not a local path or base64 image. Fetching it needs separate
+                // attachment support at the mobile boundary.
+                codex_app_server_protocol::GeneratedImageRef::File { .. } => (None, true),
+            };
             let saved_path_string = saved_path
                 .as_ref()
                 .map(|p| p.to_string_lossy().into_owned());
             let normalized_status = convert_image_generation_status(
                 status,
-                image_png.is_some(),
+                image_png.is_some() || has_file_ref,
                 saved_path_string.as_deref(),
             );
             (
@@ -524,25 +542,25 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::EnteredReviewMode { review, .. } => (
+        ThreadItemPayload::EnteredReviewMode { review, .. } => (
             HydratedConversationItemContent::Divider(HydratedDividerData::ReviewEntered {
                 review: review.clone(),
             }),
             false,
         ),
-        ThreadItem::ExitedReviewMode { review, .. } => (
+        ThreadItemPayload::ExitedReviewMode { review, .. } => (
             HydratedConversationItemContent::Divider(HydratedDividerData::ReviewExited {
                 review: review.clone(),
             }),
             false,
         ),
-        ThreadItem::ContextCompaction { .. } => (
+        ThreadItemPayload::ContextCompaction { .. } => (
             HydratedConversationItemContent::Divider(HydratedDividerData::ContextCompaction {
                 is_complete: true,
             }),
             false,
         ),
-        ThreadItem::FunctionCallOutput {
+        ThreadItemPayload::FunctionCallOutput {
             name,
             namespace,
             output,
@@ -578,7 +596,7 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::SubAgentActivity {
+        ThreadItemPayload::SubAgentActivity {
             kind,
             agent_thread_id,
             agent_path,
@@ -613,14 +631,14 @@ fn convert_thread_item(
                 false,
             )
         }
-        ThreadItem::Sleep(sleep) => (
+        ThreadItemPayload::Sleep(sleep) => (
             HydratedConversationItemContent::Note(HydratedNoteData {
                 title: "Waiting".to_string(),
                 body: format!("{} ms", sleep.duration_ms),
             }),
             false,
         ),
-        ThreadItem::HookPrompt { .. } => return None,
+        ThreadItemPayload::HookPrompt { .. } => return None,
     };
 
     Some(HydratedConversationItem {
@@ -735,13 +753,13 @@ fn convert_dynamic_status(status: &DynamicToolCallStatus) -> AppOperationStatus 
 ///
 /// The upstream `status` on the end event is unreliable — Codex Desktop has
 /// been observed to persist `"generating"` even after the final image has
-/// been saved to disk. The presence of decoded image bytes or a non-empty
+/// been saved to disk. The presence of decoded image bytes, a durable file reference, or a non-empty
 /// `saved_path` is a stronger completion signal, so we treat those as the
 /// authoritative "done" indicator and only fall back to the status string
 /// for distinguishing failure from still-in-flight items.
 fn convert_image_generation_status(
     status: &str,
-    has_image_bytes: bool,
+    has_image_result: bool,
     saved_path: Option<&str>,
 ) -> AppOperationStatus {
     let normalized = status.trim().to_ascii_lowercase();
@@ -754,7 +772,7 @@ fn convert_image_generation_status(
         }
         _ => {}
     }
-    if has_image_bytes || saved_path.is_some_and(|p| !p.trim().is_empty()) {
+    if has_image_result || saved_path.is_some_and(|p| !p.trim().is_empty()) {
         AppOperationStatus::Completed
     } else {
         AppOperationStatus::InProgress
@@ -1284,9 +1302,16 @@ pub(crate) fn render_user_input(inputs: &[UserInput]) -> (String, Vec<String>) {
                     text_parts.push(trimmed);
                 }
             }
-            UserInput::Image { url, .. } => {
-                images.push(url.clone());
-            }
+            UserInput::Image { image, .. } => match image {
+                codex_app_server_protocol::ImageReference::Inline { url } => {
+                    images.push(url.clone());
+                }
+                codex_app_server_protocol::ImageReference::File { .. } => {
+                    // Keep image-only messages visible until the mobile
+                    // attachment boundary can resolve durable file IDs.
+                    text_parts.push("[Image attachment]".to_string());
+                }
+            },
             UserInput::LocalImage { path, .. } => {
                 images.push(format!("file://{}", path.display()));
             }
@@ -1943,6 +1968,7 @@ mod tests {
 
     fn make_turn(id: &str, items: Vec<ThreadItem>) -> Turn {
         Turn {
+            root_turn_id: None,
             id: id.to_string(),
             items,
             items_view: codex_app_server_protocol::TurnItemsView::Full,
@@ -1955,17 +1981,207 @@ mod tests {
     }
 
     #[test]
+    fn test_0166_timestamps_and_optional_agent_data_survive_hydration() {
+        let item: ThreadItem = serde_json::from_value(serde_json::json!({
+            "type": "agentMessage", "id": "answer", "text": "Done", "phase": "final_answer",
+            "delivery": "async", "questions": [{"title": "Next?", "options": ["Yes", "No"]}],
+            "memoryCitation": {"entries": [], "threadIds": ["memory-thread"]},
+            "startedAtMs": 1234567, "completedAtMs": 1234999
+        }))
+        .unwrap();
+        let before = serde_json::to_value(&item).unwrap();
+        let hydrated =
+            hydrate_thread_item(&item, Some("turn"), Some(2), &HydrationOptions::default())
+                .unwrap();
+        assert_eq!(hydrated.id, "answer");
+        assert_eq!(hydrated.source_turn_id.as_deref(), Some("turn"));
+        assert_eq!(hydrated.source_turn_index, Some(2));
+        assert_eq!(hydrated.timestamp, Some(1234.567));
+        assert!(!hydrated.is_from_user_turn_boundary);
+        assert!(
+            matches!(hydrated.content, HydratedConversationItemContent::Assistant(ref data)
+            if data.phase == Some(AppMessagePhase::FinalAnswer))
+        );
+        assert_eq!(serde_json::to_value(&item).unwrap(), before);
+        let round_trip: ThreadItem = serde_json::from_value(before).unwrap();
+        assert_eq!(round_trip, item);
+
+        let mut completion_only = item.clone();
+        completion_only.started_at_ms = None;
+        assert_eq!(
+            hydrate_thread_item(&completion_only, None, None, &HydrationOptions::default())
+                .unwrap()
+                .timestamp,
+            Some(1234.999)
+        );
+        completion_only.completed_at_ms = None;
+        assert_eq!(
+            hydrate_thread_item(&completion_only, None, None, &HydrationOptions::default())
+                .unwrap()
+                .timestamp,
+            None
+        );
+    }
+
+    #[test]
+    fn test_0166_partial_answer_is_nonterminal() {
+        for (phase, expected) in [
+            (Some("commentary"), Some(AppMessagePhase::Commentary)),
+            (Some("partial_answer"), Some(AppMessagePhase::Commentary)),
+            (Some("final_answer"), Some(AppMessagePhase::FinalAnswer)),
+            (None, None),
+        ] {
+            let item: ThreadItem = serde_json::from_value(serde_json::json!({
+                "type": "agentMessage", "id": "answer", "text": "Still here", "phase": phase
+            }))
+            .unwrap();
+            let hydrated =
+                hydrate_thread_item(&item, None, None, &HydrationOptions::default()).unwrap();
+            assert!(
+                matches!(hydrated.content, HydratedConversationItemContent::Assistant(ref data)
+                if data.phase == expected)
+            );
+        }
+    }
+
+    #[test]
+    fn test_0166_web_actions_and_results_remain_intact() {
+        for action in [
+            serde_json::json!({"type": "search", "query": "rust", "queries": ["rust", "ios"]}),
+            serde_json::json!({"type": "openPage", "url": "https://example.com"}),
+            serde_json::json!({"type": "findInPage", "url": "https://example.com", "pattern": "rust"}),
+        ] {
+            let item: ThreadItem = serde_json::from_value(serde_json::json!({
+                "type": "webSearch", "id": "web", "query": "rust", "action": action,
+                "results": [{"title": "Result", "url": "https://example.com", "extra": [1, 2]}],
+                "startedAtMs": 1001, "completedAtMs": 2002
+            }))
+            .unwrap();
+            let before = serde_json::to_value(&item).unwrap();
+            let hydrated =
+                hydrate_thread_item(&item, None, None, &HydrationOptions::default()).unwrap();
+            assert_eq!(hydrated.id, "web");
+            assert_eq!(hydrated.timestamp, Some(1.001));
+            let HydratedConversationItemContent::WebSearch(web) = hydrated.content else {
+                panic!("web item");
+            };
+            assert_eq!(web.query, "rust");
+            assert!(!web.is_in_progress);
+            assert_eq!(
+                serde_json::from_str::<serde_json::Value>(&web.action_json.unwrap()).unwrap(),
+                action
+            );
+            assert_eq!(serde_json::to_value(&item).unwrap(), before);
+            assert_eq!(serde_json::from_value::<ThreadItem>(before).unwrap(), item);
+        }
+    }
+
+    #[test]
+    fn test_0166_widget_timestamp_and_control_items() {
+        let widget: ThreadItem = serde_json::from_value(serde_json::json!({
+            "type": "dynamicToolCall", "id": "widget", "tool": "show_widget",
+            "arguments": {"title": "Widget", "widget_code": "<svg></svg>"},
+            "status": "completed", "success": true, "completedAtMs": 1234
+        }))
+        .unwrap();
+        let hydrated =
+            hydrate_thread_item(&widget, None, None, &HydrationOptions::default()).unwrap();
+        assert!(matches!(
+            hydrated.content,
+            HydratedConversationItemContent::Widget(_)
+        ));
+        assert_eq!(hydrated.timestamp, Some(1.234));
+        for (kind, extra) in [
+            ("plan", serde_json::json!({"text": "Authoritative plan"})),
+            ("contextCompaction", serde_json::json!({})),
+            ("enteredReviewMode", serde_json::json!({"review": "Review"})),
+            ("exitedReviewMode", serde_json::json!({"review": "Review"})),
+            ("hookPrompt", serde_json::json!({"fragments": []})),
+        ] {
+            let mut wire = serde_json::json!({"id": kind, "type": kind});
+            wire.as_object_mut()
+                .unwrap()
+                .extend(extra.as_object().unwrap().clone());
+            let item: ThreadItem = serde_json::from_value(wire).unwrap();
+            let hydrated = hydrate_thread_item(&item, None, None, &HydrationOptions::default());
+            if kind == "hookPrompt" {
+                assert!(hydrated.is_none());
+                continue;
+            }
+            let hydrated = hydrated.unwrap();
+            assert_eq!(hydrated.id, kind);
+            assert!(!hydrated.is_from_user_turn_boundary);
+            match (kind, hydrated.content) {
+                ("plan", HydratedConversationItemContent::ProposedPlan(data)) => {
+                    assert_eq!(data.content, "Authoritative plan")
+                }
+                (
+                    "contextCompaction",
+                    HydratedConversationItemContent::Divider(
+                        HydratedDividerData::ContextCompaction { is_complete: true },
+                    ),
+                ) => {}
+                (
+                    "enteredReviewMode",
+                    HydratedConversationItemContent::Divider(HydratedDividerData::ReviewEntered {
+                        ..
+                    }),
+                ) => {}
+                (
+                    "exitedReviewMode",
+                    HydratedConversationItemContent::Divider(HydratedDividerData::ReviewExited {
+                        ..
+                    }),
+                ) => {}
+                _ => panic!("control item changed semantics"),
+            }
+        }
+    }
+
+    #[test]
+    fn test_0166_durable_image_refs_are_not_decoded_as_base64_or_paths() {
+        let item: ThreadItem = serde_json::from_value(serde_json::json!({
+            "type": "imageGeneration", "id": "image", "status": "generating",
+            "fileId": "file-123", "result": "", "inputImages": [], "completedAtMs": 2345
+        }))
+        .unwrap();
+        let hydrated =
+            hydrate_thread_item(&item, None, None, &HydrationOptions::default()).unwrap();
+        let HydratedConversationItemContent::ImageGeneration(data) = hydrated.content else {
+            panic!("image");
+        };
+        assert_eq!(data.status, AppOperationStatus::Completed);
+        assert!(data.image_png.is_none());
+        assert!(data.saved_path.is_none());
+        assert!(
+            matches!(item.payload, ThreadItemPayload::ImageGeneration(ref image)
+            if matches!(&image.image, codex_app_server_protocol::GeneratedImageRef::File { file_id } if file_id == "file-123"))
+        );
+        let user: ThreadItem = serde_json::from_value(serde_json::json!({
+            "type": "userMessage", "id": "user", "content": [{"type": "image", "fileId": "file-123"}]
+        })).unwrap();
+        let hydrated =
+            hydrate_thread_item(&user, None, None, &HydrationOptions::default()).unwrap();
+        assert!(hydrated.is_from_user_turn_boundary);
+        let HydratedConversationItemContent::User(data) = hydrated.content else {
+            panic!("user");
+        };
+        assert_eq!(data.text, "[Image attachment]");
+        assert!(data.image_data_uris.is_empty());
+    }
+
+    #[test]
     fn test_user_message_text() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::UserMessage {
+            vec![ThreadItem::untimed(ThreadItemPayload::UserMessage {
                 client_id: None,
                 id: "u1".into(),
                 content: vec![UserInput::Text {
                     text: "  Hello world  ".into(),
                     text_elements: vec![],
                 }],
-            }],
+            })],
         )];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
         assert_eq!(items.len(), 1);
@@ -2006,14 +2222,14 @@ mod tests {
     fn test_empty_user_message_skipped() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::UserMessage {
+            vec![ThreadItem::untimed(ThreadItemPayload::UserMessage {
                 client_id: None,
                 id: "u1".into(),
                 content: vec![UserInput::Text {
                     text: "   ".into(),
                     text_elements: vec![],
                 }],
-            }],
+            })],
         )];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
         assert!(items.is_empty());
@@ -2023,14 +2239,14 @@ mod tests {
     fn test_agent_message() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::AgentMessage {
+            vec![ThreadItem::untimed(ThreadItemPayload::AgentMessage {
                 delivery: None,
                 questions: None,
                 id: "a1".into(),
                 text: " Response text ".into(),
                 phase: None,
                 memory_citation: None,
-            }],
+            })],
         )];
         let opts = HydrationOptions {
             default_agent_nickname: Some("bob".into()),
@@ -2054,7 +2270,7 @@ mod tests {
     fn test_agent_message_code_review_hydrates_as_code_review() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::AgentMessage {
+            vec![ThreadItem::untimed(ThreadItemPayload::AgentMessage {
                 delivery: None,
                 questions: None,
                 id: "a1".into(),
@@ -2078,7 +2294,7 @@ mod tests {
                 .to_string(),
                 phase: Some(codex_protocol::models::MessagePhase::FinalAnswer),
                 memory_citation: None,
-            }],
+            })],
         )];
 
         let items = hydrate_turns(&turns, &HydrationOptions::default());
@@ -2116,14 +2332,14 @@ diff --git a/parser.rs b/parser.rs\n\
     fn test_agent_message_markdown_stays_assistant() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::AgentMessage {
+            vec![ThreadItem::untimed(ThreadItemPayload::AgentMessage {
                 delivery: None,
                 questions: None,
                 id: "a1".into(),
                 text: "Here is a regular markdown answer.".into(),
                 phase: Some(codex_protocol::models::MessagePhase::FinalAnswer),
                 memory_citation: None,
-            }],
+            })],
         )];
 
         let items = hydrate_turns(&turns, &HydrationOptions::default());
@@ -2139,7 +2355,9 @@ diff --git a/parser.rs b/parser.rs\n\
     fn test_command_execution() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::CommandExecution {
+            vec![ThreadItem::untimed(ThreadItemPayload::CommandExecution {
+                sandbox_type: None,
+                model_context: None,
                 plugin_id: None,
                 script_path: None,
                 id: "c1".into(),
@@ -2156,7 +2374,7 @@ diff --git a/parser.rs b/parser.rs\n\
                 aggregated_output: Some("file contents".into()),
                 exit_code: Some(0),
                 duration_ms: Some(123),
-            }],
+            })],
         )];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
         assert_eq!(items.len(), 1);
@@ -2197,7 +2415,9 @@ diff --git a/parser.rs b/parser.rs\n\
     fn test_command_execution_strips_shell_wrapper_for_display() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::CommandExecution {
+            vec![ThreadItem::untimed(ThreadItemPayload::CommandExecution {
+                sandbox_type: None,
+                model_context: None,
                 plugin_id: None,
                 script_path: None,
                 id: "c1".into(),
@@ -2210,7 +2430,7 @@ diff --git a/parser.rs b/parser.rs\n\
                 aggregated_output: None,
                 exit_code: None,
                 duration_ms: None,
-            }],
+            })],
         )];
 
         let items = hydrate_turns(&turns, &HydrationOptions::default());
@@ -2227,7 +2447,9 @@ diff --git a/parser.rs b/parser.rs\n\
     fn test_context_compaction() {
         let turns = vec![make_turn(
             "t1",
-            vec![ThreadItem::ContextCompaction { id: "cc1".into() }],
+            vec![ThreadItem::untimed(ThreadItemPayload::ContextCompaction {
+                id: "cc1".into(),
+            })],
         )];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
         assert_eq!(items.len(), 1);
@@ -2246,14 +2468,14 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![make_turn(
             "t1",
             vec![
-                ThreadItem::EnteredReviewMode {
+                ThreadItem::untimed(ThreadItemPayload::EnteredReviewMode {
                     id: "er1".into(),
                     review: "safety".into(),
-                },
-                ThreadItem::ExitedReviewMode {
+                }),
+                ThreadItem::untimed(ThreadItemPayload::ExitedReviewMode {
                     id: "xr1".into(),
                     review: "safety".into(),
-                },
+                }),
             ],
         )];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
@@ -2275,25 +2497,25 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![
             make_turn(
                 "t1",
-                vec![ThreadItem::UserMessage {
+                vec![ThreadItem::untimed(ThreadItemPayload::UserMessage {
                     client_id: None,
                     id: "u1".into(),
                     content: vec![UserInput::Text {
                         text: "Hello".into(),
                         text_elements: vec![],
                     }],
-                }],
+                })],
             ),
             make_turn(
                 "t2",
-                vec![ThreadItem::AgentMessage {
+                vec![ThreadItem::untimed(ThreadItemPayload::AgentMessage {
                     delivery: None,
                     questions: None,
                     id: "a1".into(),
                     text: "World".into(),
                     phase: None,
                     memory_citation: None,
-                }],
+                })],
             ),
         ];
         let items = hydrate_turns(&turns, &HydrationOptions::default());
@@ -2318,7 +2540,8 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![make_turn(
             "t-tools",
             vec![
-                ThreadItem::McpToolCall {
+                ThreadItem::untimed(ThreadItemPayload::McpToolCall {
+                    mcp_app_ui: None,
                     app_context: None,
                     plugin_id: None,
                     read_only_hint: None,
@@ -2335,8 +2558,8 @@ diff --git a/parser.rs b/parser.rs\n\
                     })),
                     error: None,
                     duration_ms: Some(250),
-                },
-                ThreadItem::DynamicToolCall {
+                }),
+                ThreadItem::untimed(ThreadItemPayload::DynamicToolCall {
                     id: "dyn-1".into(),
                     tool: "show_widget".into(),
                     namespace: None,
@@ -2352,8 +2575,8 @@ diff --git a/parser.rs b/parser.rs\n\
                     }]),
                     success: Some(true),
                     duration_ms: Some(120),
-                },
-                ThreadItem::CollabAgentToolCall {
+                }),
+                ThreadItem::untimed(ThreadItemPayload::CollabAgentToolCall {
                     id: "collab-1".into(),
                     tool: CollabAgentTool::SpawnAgent,
                     status: CollabAgentToolCallStatus::Completed,
@@ -2363,17 +2586,19 @@ diff --git a/parser.rs b/parser.rs\n\
                     model: None,
                     reasoning_effort: None,
                     agents_states: agent_states,
-                },
-                ThreadItem::WebSearch(codex_app_server_protocol::WebSearchItem {
-                    results: None,
-                    id: "web-1".into(),
-                    query: "swiftui subagent cards".into(),
-                    action: None,
                 }),
-                ThreadItem::ImageView {
+                ThreadItem::untimed(ThreadItemPayload::WebSearch(
+                    codex_app_server_protocol::WebSearchItem {
+                        results: None,
+                        id: "web-1".into(),
+                        query: "swiftui subagent cards".into(),
+                        action: None,
+                    },
+                )),
+                ThreadItem::untimed(ThreadItemPayload::ImageView {
                     id: "img-1".into(),
                     path: test_abs_path("/tmp/screenshot.png").into(),
-                },
+                }),
             ],
         )];
 
@@ -2407,7 +2632,7 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![make_turn(
             "t-claude-dynamic",
             vec![
-                ThreadItem::DynamicToolCall {
+                ThreadItem::untimed(ThreadItemPayload::DynamicToolCall {
                     id: "tool-search".into(),
                     namespace: Some("claude".into()),
                     tool: "ToolSearch".into(),
@@ -2421,8 +2646,8 @@ diff --git a/parser.rs b/parser.rs\n\
                     }]),
                     success: Some(true),
                     duration_ms: Some(42),
-                },
-                ThreadItem::DynamicToolCall {
+                }),
+                ThreadItem::untimed(ThreadItemPayload::DynamicToolCall {
                     id: "send-message".into(),
                     namespace: Some("claude".into()),
                     tool: "SendMessage".into(),
@@ -2439,7 +2664,7 @@ diff --git a/parser.rs b/parser.rs\n\
                     }]),
                     success: Some(true),
                     duration_ms: None,
-                },
+                }),
             ],
         )];
 
@@ -2481,7 +2706,8 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![make_turn(
             "t-computer-use",
             vec![
-                ThreadItem::McpToolCall {
+                ThreadItem::untimed(ThreadItemPayload::McpToolCall {
+                    mcp_app_ui: None,
                     app_context: None,
                     plugin_id: None,
                     read_only_hint: None,
@@ -2511,9 +2737,10 @@ diff --git a/parser.rs b/parser.rs\n\
                     })),
                     error: None,
                     duration_ms: Some(1700),
-                },
+                }),
                 // Non-computer-use MCP should not populate the typed view.
-                ThreadItem::McpToolCall {
+                ThreadItem::untimed(ThreadItemPayload::McpToolCall {
+                    mcp_app_ui: None,
                     app_context: None,
                     plugin_id: None,
                     read_only_hint: None,
@@ -2526,7 +2753,7 @@ diff --git a/parser.rs b/parser.rs\n\
                     result: None,
                     error: None,
                     duration_ms: None,
-                },
+                }),
             ],
         )];
 
@@ -2599,43 +2826,58 @@ diff --git a/parser.rs b/parser.rs\n\
         let turns = vec![make_turn(
             "t-imagegen",
             vec![
-                ThreadItem::ImageGeneration(codex_app_server_protocol::ImageGenerationItem {
-                    transparent_background: None,
-                    failure: None,
-                    imagegen_request_id: None,
-                    generation_id: None,
-                    id: "ig-1".into(),
-                    status: "completed".into(),
-                    revised_prompt: Some("a grumpy pirate kitty".into()),
-                    result: png_base64.into(),
-                    saved_path: Some(test_abs_path("/tmp/ig-1.png")),
-                }),
+                ThreadItem::untimed(ThreadItemPayload::ImageGeneration(
+                    codex_app_server_protocol::ImageGenerationItem {
+                        transparent_background: None,
+                        failure: None,
+                        imagegen_request_id: None,
+                        generation_id: None,
+                        id: "ig-1".into(),
+                        status: "completed".into(),
+                        revised_prompt: Some("a grumpy pirate kitty".into()),
+                        image: codex_app_server_protocol::GeneratedImageRef::Inline {
+                            result: png_base64.into(),
+                        },
+                        input_images: Vec::new(),
+                        saved_path: Some(test_abs_path("/tmp/ig-1.png")),
+                    },
+                )),
                 // A still-streaming item should stay InProgress with no bytes.
-                ThreadItem::ImageGeneration(codex_app_server_protocol::ImageGenerationItem {
-                    transparent_background: None,
-                    failure: None,
-                    imagegen_request_id: None,
-                    generation_id: None,
-                    id: "ig-2".into(),
-                    status: String::new(),
-                    revised_prompt: None,
-                    result: String::new(),
-                    saved_path: None,
-                }),
+                ThreadItem::untimed(ThreadItemPayload::ImageGeneration(
+                    codex_app_server_protocol::ImageGenerationItem {
+                        transparent_background: None,
+                        failure: None,
+                        imagegen_request_id: None,
+                        generation_id: None,
+                        id: "ig-2".into(),
+                        status: String::new(),
+                        revised_prompt: None,
+                        image: codex_app_server_protocol::GeneratedImageRef::Inline {
+                            result: String::new(),
+                        },
+                        input_images: Vec::new(),
+                        saved_path: None,
+                    },
+                )),
                 // Codex Desktop has been observed to emit status="generating"
                 // even on the final end event. Presence of bytes or a saved
                 // path should mark the item as Completed regardless.
-                ThreadItem::ImageGeneration(codex_app_server_protocol::ImageGenerationItem {
-                    transparent_background: None,
-                    failure: None,
-                    imagegen_request_id: None,
-                    generation_id: None,
-                    id: "ig-3".into(),
-                    status: "generating".into(),
-                    revised_prompt: None,
-                    result: png_base64.into(),
-                    saved_path: Some(test_abs_path("/tmp/ig-3.png")),
-                }),
+                ThreadItem::untimed(ThreadItemPayload::ImageGeneration(
+                    codex_app_server_protocol::ImageGenerationItem {
+                        transparent_background: None,
+                        failure: None,
+                        imagegen_request_id: None,
+                        generation_id: None,
+                        id: "ig-3".into(),
+                        status: "generating".into(),
+                        revised_prompt: None,
+                        image: codex_app_server_protocol::GeneratedImageRef::Inline {
+                            result: png_base64.into(),
+                        },
+                        input_images: Vec::new(),
+                        saved_path: Some(test_abs_path("/tmp/ig-3.png")),
+                    },
+                )),
             ],
         )];
 
@@ -2675,7 +2917,9 @@ diff --git a/parser.rs b/parser.rs\n\
         let long_query = "needle".repeat(300);
         let turns = vec![make_turn(
             "t-command-truncate",
-            vec![ThreadItem::CommandExecution {
+            vec![ThreadItem::untimed(ThreadItemPayload::CommandExecution {
+                sandbox_type: None,
+                model_context: None,
                 plugin_id: None,
                 script_path: None,
                 id: "cmd-1".into(),
@@ -2692,7 +2936,7 @@ diff --git a/parser.rs b/parser.rs\n\
                 exit_code: Some(0),
                 duration_ms: Some(10),
                 process_id: Some("123".into()),
-            }],
+            })],
         )];
 
         let items = hydrate_turns(&turns, &HydrationOptions::default());

@@ -1,0 +1,102 @@
+{
+  "scope": "Actual packaged Node22 in Mac iSH; primitives only, no provider/protocol/phone/auth/model/network qualification",
+  "inputs": {
+    "native_ish_sha256": "76a8e1b6e0823b6e2ef84d03488b828b025fc29e9272f2d7f2c0410b61d4bd06",
+    "source_rootfs_tree_sha256": "10edd4903a4572ce3c5ce215e172d6f0db2f0170655e803a4dce0a3332e40b76",
+    "official_settled_sha256": "6b0d0b56aecf2101ca0d7f50b71d733430f703deb7bf3b71b54364c60cce4f65",
+    "official_settled_tests_sha256": "093fc672b92fede2fe917db9377bf727ce4878a17298763aeb827ed67e22d739"
+  },
+  "node_package": "354d49ec25295e6c",
+  "read_roots": [
+    "/bin",
+    "/sbin",
+    "/usr",
+    "/lib",
+    "/etc",
+    "/workspace/input"
+  ],
+  "write_roots": [
+    "/workspace/tmp"
+  ],
+  "direct_network_policy": "DenyDirect (host registration network=0); no network tests",
+  "workspace_gate": "none; /workspace is only this private test fixture, not model workspace",
+  "host_cpu_limits_seconds": {
+    "soft": 20,
+    "hard": 24
+  },
+  "host_core_dump_limit_bytes": 0,
+  "bootstrap": {
+    "host_seconds": 0.0411,
+    "host_watchdog_seconds": 10,
+    "watchdog_fired": false,
+    "host_exit": 0,
+    "host_process_group_gone": true,
+    "stdout": "",
+    "stderr": ""
+  },
+  "runs": [
+    {
+      "host_seconds": 3.4339,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\nTraceback (most recent call last):\n  File \"/controller/main.py\", line 47, in <module>\n    ctl(2)\n  File \"/controller/main.py\", line 14, in ctl\n    raise OSError(ctypes.get_errno(), os.strerror(ctypes.get_errno()))\nProcessLookupError: [Errno 3] No such process\n",
+      "group": "modules",
+      "passed": false
+    },
+    {
+      "host_seconds": 3.4655,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\nTraceback (most recent call last):\n  File \"/controller/main.py\", line 47, in <module>\n    ctl(2)\n  File \"/controller/main.py\", line 14, in ctl\n    raise OSError(ctypes.get_errno(), os.strerror(ctypes.get_errno()))\nProcessLookupError: [Errno 3] No such process\n",
+      "group": "settled",
+      "passed": false
+    },
+    {
+      "host_seconds": 3.511,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\nTraceback (most recent call last):\n  File \"/controller/main.py\", line 47, in <module>\n    ctl(2)\n  File \"/controller/main.py\", line 14, in ctl\n    raise OSError(ctypes.get_errno(), os.strerror(ctypes.get_errno()))\nProcessLookupError: [Errno 3] No such process\n",
+      "group": "exit-sync",
+      "passed": false
+    },
+    {
+      "host_seconds": 3.5791,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\nTraceback (most recent call last):\n  File \"/controller/main.py\", line 47, in <module>\n    ctl(2)\n  File \"/controller/main.py\", line 14, in ctl\n    raise OSError(ctypes.get_errno(), os.strerror(ctypes.get_errno()))\nProcessLookupError: [Errno 3] No such process\n",
+      "group": "exit-async",
+      "passed": false
+    },
+    {
+      "host_seconds": 3.5792,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "",
+      "stderr": "workspace fixture grant: 1\nTraceback (most recent call last):\n  File \"/controller/main.py\", line 47, in <module>\n    ctl(2)\n  File \"/controller/main.py\", line 14, in ctl\n    raise OSError(ctypes.get_errno(), os.strerror(ctypes.get_errno()))\nProcessLookupError: [Errno 3] No such process\n",
+      "group": "cpu",
+      "passed": false
+    }
+  ],
+  "read_only_inputs_unchanged": true,
+  "all_requested_groups_passed": false,
+  "passed_case_count": 0,
+  "test_source_sha256": {
+    "run.py": "2a4d3ad681b37159e55b32f83bc85cf6d1ac36e019ca4d59915fef236a278d4f",
+    "controller.py": "46cd14970e363765af6c5bd9e5c4cfe855dfbc5059b867b64491516dc03a4023",
+    "primitives.cjs": "35ee15b3c9f42aa7faf6d8e704b452da565f8408397ebe86984cc649327927e1"
+  }
+}

@@ -3,6 +3,8 @@ members = [
     "codex-slingshot",
     "codex-mobile-client",
     "uniffi-bindgen",
+    "alma-backend-probe",
+    "../../apps/ios/tah-ui/src-tauri",
 ]
 resolver = "3"
 
@@ -12,7 +14,11 @@ codex-app-server-client = { path = "../third_party/codex/codex-rs/app-server-cli
 codex-app-server-protocol = { path = "../third_party/codex/codex-rs/app-server-protocol" }
 codex-protocol = { path = "../third_party/codex/codex-rs/protocol" }
 codex-core = { path = "../third_party/codex/codex-rs/core" }
+codex-code-mode-protocol = { path = "../third_party/codex/codex-rs/code-mode-protocol" }
+codex-code-mode-runtime = { path = "../third_party/codex/codex-rs/code-mode-runtime", default-features = false }
 codex-exec-server = { path = "../third_party/codex/codex-rs/exec-server" }
+codex-file-system = { path = "../third_party/codex/codex-rs/file-system" }
+codex-utils-path-uri = { path = "../third_party/codex/codex-rs/utils/path-uri" }
 codex-login = { path = "../third_party/codex/codex-rs/login" }
 codex-shell-command = { path = "../third_party/codex/codex-rs/shell-command" }
 codex-apply-patch = { path = "../third_party/codex/codex-rs/apply-patch" }
@@ -31,6 +37,9 @@ alleycat-pi-bridge = { git = "https://github.com/0xSero/alleycat.git", rev = "dc
 alleycat-claude-bridge = { git = "https://github.com/0xSero/alleycat.git", rev = "dcda34d17d5d13d9e3c9949fdf9cb4d570652539" }
 alleycat-opencode-bridge = { git = "https://github.com/0xSero/alleycat.git", rev = "dcda34d17d5d13d9e3c9949fdf9cb4d570652539" }
 serde = { version = "1", features = ["derive"] }
+bytes = "1"
+libc = "0.2.191"
+ish-embed-host = { git = "https://github.com/dnakov/litter-ish.git", rev = "4f783cd957b83de3019d6a843408d5bb3ff902c7" }
 serde_json = "1"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "net", "io-util"] }
 tokio-tungstenite = { version = "0.26", features = ["rustls-tls-native-roots"] }
@@ -94,6 +103,12 @@ debug = 0
 codegen-units = 16
 
 [patch.crates-io]
+# Exact Codex V8 fork; prepared and hash-checked by prepare_native_v8.py.
+# The opt-in iOS qualification lane supplies verified plain iOS native assets.
+v8 = { path = "../../.build/vendor/codex-v8" }
+# Upstream age crypto migration: ML-KEM 0.3 / KEM 0.3, compatible with Russh/Clatter.
+age = { git = "https://github.com/str4d/rage", rev = "b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f" }
+
 # Upstream fix for Starlark's exact blake3 pin, which conflicts with iroh.
 starlark = { git = "https://github.com/facebook/starlark-rust", rev = "3bed1c40f93da22b8e251dd520dfb8d35bfe1fb7" }
 
@@ -102,3 +117,7 @@ tungstenite = { git = "https://github.com/openai-oss-forks/tungstenite-rs", rev 
 
 [patch."ssh://git@github.com/openai-oss-forks/tungstenite-rs.git"]
 tungstenite = { git = "https://github.com/openai-oss-forks/tungstenite-rs", rev = "4fffad30fe373adbdcffab9545e9e9bf4f2fc19f" }
+
+# Exact upstream source plus reviewed owned-session lifecycle patch.
+[patch."https://github.com/dnakov/litter-ish.git"]
+ish-embed-host = { path = "../../.build/vendor/litter-ish-owned/embed/host" }

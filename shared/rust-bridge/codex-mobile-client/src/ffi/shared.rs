@@ -3,17 +3,10 @@ use std::sync::Arc;
 use std::sync::OnceLock;
 static SHARED_RUNTIME: OnceLock<Arc<tokio::runtime::Runtime>> = OnceLock::new();
 static SHARED_MOBILE_CLIENT: OnceLock<Arc<MobileClient>> = OnceLock::new();
-static PLATFORM_INIT: OnceLock<()> = OnceLock::new();
-
-fn ensure_platform_init() {
-    PLATFORM_INIT.get_or_init(|| {
-        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
-        crate::ish_exec::install();
-    });
-}
+// iOS0.166 execution is registered through an explicit environment during
+// connection setup, not a process-global synchronous exec hook.
 
 pub(crate) fn shared_runtime() -> Arc<tokio::runtime::Runtime> {
-    ensure_platform_init();
     SHARED_RUNTIME
         .get_or_init(|| {
             crate::logging::install_tracing_subscriber();
@@ -31,7 +24,6 @@ pub(crate) fn shared_runtime() -> Arc<tokio::runtime::Runtime> {
 }
 
 pub(crate) fn shared_mobile_client() -> Arc<MobileClient> {
-    ensure_platform_init();
     SHARED_MOBILE_CLIENT
         .get_or_init(|| Arc::new(MobileClient::new()))
         .clone()

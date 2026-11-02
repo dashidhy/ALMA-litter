@@ -1,5 +1,12 @@
 # litter
 
+ALMA iOS 集成入口：[手机版前端集成备忘](docs/ios/frontend-integration-notes.md) · [手机 TAH 构建与验证](tools/mobile-tah/README.md)。整合完整手机版时，先复用其中已验证的交互、组件和原生配套。
+
+`dev/ios` 的 [2026-11-02 原型里程碑](docs/ios/2026-11-02-milestone.md) 已完成手机独立的
+Codex 0.166.0 + TAH 正常前台文本工作流。使用上方 **mobile-tah 构建入口**，不要把下方
+保留的上游通用 `make` 指令当成本分支已验证的 Android、远程模式或完整 CLI 构建承诺。
+后台/锁屏、异常恢复和发布级安全加固仍有明确待办。
+
 <p align="center">
   <img src="apps/ios/Sources/Litter/Resources/brand_logo.png" alt="litter logo" width="180" />
 </p>

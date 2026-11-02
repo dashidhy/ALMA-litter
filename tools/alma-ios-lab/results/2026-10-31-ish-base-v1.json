@@ -1,0 +1,81 @@
+{
+  "phase": "base",
+  "results": [
+    {
+      "id": "base-sed-read",
+      "passed": true,
+      "checks": {
+        "exactReadback": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.1611629999242723,
+      "stopReason": null,
+      "peakSampledRSSBytes": 1867776,
+      "note": null
+    },
+    {
+      "id": "base-shell-heredoc",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16060745785944164,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2277376,
+      "note": null
+    },
+    {
+      "id": "base-pipeline",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16465949988923967,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2195456,
+      "note": null
+    },
+    {
+      "id": "base-exit-status",
+      "passed": false,
+      "checks": {},
+      "expectedExit": 7,
+      "exit": 0,
+      "seconds": 0.16499099996872246,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2293760,
+      "note": null
+    },
+    {
+      "id": "base-missing-python",
+      "passed": false,
+      "checks": {},
+      "expectedExit": 127,
+      "exit": 0,
+      "seconds": 0.1645506671629846,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": "Expected unavailable/unsupported behavior"
+    },
+    {
+      "id": "base-missing-node",
+      "passed": false,
+      "checks": {},
+      "expectedExit": 127,
+      "exit": 0,
+      "seconds": 0.16449308302253485,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": "Expected unavailable/unsupported behavior"
+    }
+  ],
+  "corpusStats": {
+    "turns": 254,
+    "bytes": 117155,
+    "characters": 44661,
+    "sha256": "4a6a25fc2470c69a228caf02c5b692cca6b357b279eac29bb12a2adff6894801"
+  },
+  "scope": "Host iSH tool replay only; no Codex inference, no iPhone measurements",
+  "diagnosticsLocation": "/Users/dashidhy/Public/projects/agent/ALMA/frontier/mobile/codex_litter/.cache/tool-suite-v1"
+}

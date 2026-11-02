@@ -1,0 +1,98 @@
+diff --git a/codex-rs/app-server-protocol/src/protocol/v2/thread.rs b/codex-rs/app-server-protocol/src/protocol/v2/thread.rs
+--- a/codex-rs/app-server-protocol/src/protocol/v2/thread.rs
++++ b/codex-rs/app-server-protocol/src/protocol/v2/thread.rs
+@@ -1735,6 +1735,13 @@
+ #[ts(export_to = "v2/")]
+ pub struct ThreadReadResponse {
+     pub thread: Thread,
++    /// Live approval policy; absent when the thread is not loaded.
++    #[serde(default)]
++    pub approval_policy: Option<AskForApproval>,
++    /// Legacy sandbox projection of the live permission profile, not a full
++    /// description of filesystem or network enforcement. Absent when not loaded.
++    #[serde(default)]
++    pub sandbox: Option<SandboxPolicy>,
+     /// Local receipt. Null means this thread's durable read state is unavailable.
+     #[experimental("thread/read.readState")]
+     pub read_state: Option<ThreadReadState>,
+diff --git a/codex-rs/app-server/src/request_processors/thread_processor.rs b/codex-rs/app-server/src/request_processors/thread_processor.rs
+--- a/codex-rs/app-server/src/request_processors/thread_processor.rs
++++ b/codex-rs/app-server/src/request_processors/thread_processor.rs
+@@ -3088,7 +3088,22 @@
+         )
+         .await
+         .and_then(|mut states| states.remove(&thread.id));
+-        Ok(ThreadReadResponse { thread, read_state })
++        let live_config_snapshot =
++            if let Ok(thread) = self.thread_manager.get_thread(thread_uuid).await {
++                Some(thread.config_snapshot().await)
++            } else {
++                None
++            };
++        Ok(ThreadReadResponse {
++            thread,
++            read_state,
++            approval_policy: live_config_snapshot
++                .as_ref()
++                .map(|config| config.approval_policy.into()),
++            sandbox: live_config_snapshot
++                .as_ref()
++                .map(|config| config.sandbox_policy().into()),
++        })
+     }
+ 
+     /// Builds the API view for `thread/read` from persisted metadata plus optional live state.
+diff --git a/codex-rs/app-server/tests/suite/v2/thread_read.rs b/codex-rs/app-server/tests/suite/v2/thread_read.rs
+--- a/codex-rs/app-server/tests/suite/v2/thread_read.rs
++++ b/codex-rs/app-server/tests/suite/v2/thread_read.rs
+@@ -149,6 +149,16 @@
+         response["thread"].get("reasoningEffort"),
+         Some(&Value::Null)
+     );
++    assert_eq!(response.get("approvalPolicy"), Some(&Value::Null));
++    assert_eq!(response.get("sandbox"), Some(&Value::Null));
++    // A peer without the optional permission projection still deserializes.
++    let mut without_permissions = response.clone();
++    let object = without_permissions.as_object_mut().expect("response object");
++    object.remove("approvalPolicy");
++    object.remove("sandbox");
++    let legacy: ThreadReadResponse = serde_json::from_value(without_permissions)?;
++    assert_eq!(legacy.approval_policy, None);
++    assert_eq!(legacy.sandbox, None);
+     let ThreadReadResponse { thread, .. } = serde_json::from_value(response)?;
+ 
+     assert_eq!(thread.id, conversation_id);
+@@ -1432,8 +1442,12 @@
+             ..Default::default()
+         })
+         .await?;
+-    let ThreadStartResponse { thread, .. } =
+-        timeout(DEFAULT_READ_TIMEOUT, mcp.read_response(start_id)).await??;
++    let ThreadStartResponse {
++        thread,
++        approval_policy: started_approval_policy,
++        sandbox: started_sandbox,
++        ..
++    } = timeout(DEFAULT_READ_TIMEOUT, mcp.read_response(start_id)).await??;
+     let thread_path = thread.path.clone().expect("thread path");
+     assert!(
+         !thread_path.exists(),
+@@ -1446,9 +1460,15 @@
+             include_turns: false,
+         })
+         .await?;
+-    let ThreadReadResponse { thread: read, .. } =
+-        timeout(DEFAULT_READ_TIMEOUT, mcp.read_response(read_id)).await??;
+-
++    let ThreadReadResponse {
++        thread: read,
++        approval_policy,
++        sandbox,
++        ..
++    } = timeout(DEFAULT_READ_TIMEOUT, mcp.read_response(read_id)).await??;
++
++    assert_eq!(approval_policy, Some(started_approval_policy));
++    assert_eq!(sandbox, Some(started_sandbox));
+     assert_eq!(read.id, thread.id);
+     assert_eq!(read.path, Some(thread_path));
+     assert!(read.preview.is_empty());

@@ -1,0 +1,338 @@
+{
+  "recorded_at_utc": "2026-11-01T00:15:51.928251+00:00",
+  "exact_dependency": {
+    "codex_version": "0.166.0",
+    "crate": "v8",
+    "version": "152.2.0",
+    "fork": "https://github.com/seanh-oai/rusty_v8",
+    "revision": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+    "lock_entry": {
+      "name": "v8",
+      "version": "152.2.0",
+      "source": "git+https://github.com/seanh-oai/rusty_v8.git?rev=350c5a859a9b3c84ab8701b3ad51e3b7699b30c0#350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+      "dependencies": [
+        "bindgen",
+        "bitflags 2.13.1",
+        "fslock",
+        "gzip-header",
+        "home",
+        "miniz_oxide",
+        "paste",
+        "temporal_capi",
+        "which 6.0.3"
+      ]
+    }
+  },
+  "decision": {
+    "native_in_process_runtime_export_exists": true,
+    "exact_fork_documents_ios_jitless_device_builds": true,
+    "plain_ios_device_prebuilt_published": true,
+    "codex_required_sandbox_ptrcomp_ios_variant_listed": false,
+    "compatible_exact_binary_locally_verified": false,
+    "local_quick_check_candidate_count": 0,
+    "assessment": "Unchanged native InProcessCodeModeSession is a real source-supported candidate, but the required sandbox/pointer-compression iOS binary has not been established. The published plain iOS asset is not the filename/configuration selected by Codex. This is not a claim that native iOS is impossible."
+  },
+  "native_runtime": {
+    "exports": [
+      "InProcessCodeModeSession",
+      "initialize_v8",
+      "V8JitMode"
+    ],
+    "initialization": "Call initialize_v8(V8JitMode::Disabled) before cell execution. This is process-wide OnceLock initialization; a later different mode errors. Without explicit initialization the lazy path selects Enabled.",
+    "feature_requirement": "The actual 0.166 runtime Cargo.toml requests v8_enable_sandbox. Its runtime/mod.rs test asserts the linked V8 has sandbox enabled.",
+    "source_evidence": {
+      "Cargo.toml": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/Cargo.toml",
+        "sha256": "4f9c16fb73cc8487e40dcbfca545f69e7595e6806e1a59b81ea8045b15364e49",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/Cargo.toml"
+      },
+      "Cargo.lock": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/Cargo.lock",
+        "sha256": "22bd51f50864ce40f6686f3350c0547fdd50a8213240f54435ed394f68bf08e6",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/Cargo.lock"
+      },
+      "code-mode-runtime/Cargo.toml": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+        "sha256": "075eb58a5975625461eaef95731a83b39bb1a38b2f9bffb2916f6af769e41b4b",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml"
+      },
+      "code-mode-runtime/src/lib.rs": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/lib.rs",
+        "sha256": "fc3771ce78308735df18117a02f0862b7edef31ae4efda0df86149594769e265",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/src/lib.rs"
+      },
+      "code-mode-runtime/src/v8_init.rs": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+        "sha256": "d923e9be4ac679c0f3b09e3c0f84bf381eb2a0de81a8a88838aea64ac6d34ff7",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs"
+      },
+      "code-mode-runtime/src/runtime/mod.rs": {
+        "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+        "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/runtime/mod.rs",
+        "sha256": "7bf71cd9dfa9653975841181fab096b83b0bf067a614a75fd34e879ec24dd2e3",
+        "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/src/runtime/mod.rs"
+      }
+    },
+    "reference_lines": {
+      "code-mode-runtime/src/lib.rs": [
+        10,
+        14
+      ],
+      "code-mode-runtime/src/v8_init.rs": [
+        18,
+        56
+      ],
+      "code-mode-runtime/src/runtime/mod.rs": [
+        370,
+        381
+      ]
+    },
+    "wrapper_integration": "Main-owned; not implemented or evaluated here."
+  },
+  "pinned_fork_metadata": {
+    "README": {
+      "url": "https://raw.githubusercontent.com/seanh-oai/rusty_v8/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0/README.md",
+      "retrieved_via": "public web fetch of exact revision",
+      "ios_lines": [
+        243,
+        251
+      ],
+      "sandbox_lines": [
+        351,
+        355
+      ],
+      "facts": [
+        "Documents arm64 macOS cross-compilation for iOS device/simulator; device mode is jitless.",
+        "Documents sandbox as experimental, with about 1 TB virtual address reservation; that is not resident RAM. iOS feasibility of this reservation was not tested."
+      ]
+    },
+    "Cargo": {
+      "url": "https://raw.githubusercontent.com/seanh-oai/rusty_v8/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0/Cargo.toml",
+      "retrieved_via": "public web fetch of exact revision",
+      "lines": [
+        101,
+        109
+      ],
+      "package_version": "152.2.0",
+      "default_features": [
+        "use_custom_libcxx"
+      ],
+      "v8_enable_sandbox_implies": [
+        "v8_enable_pointer_compression"
+      ]
+    },
+    "build_script": {
+      "url": "https://raw.githubusercontent.com/seanh-oai/rusty_v8/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0/build.rs",
+      "retrieved_via": "public web fetch of exact revision",
+      "ios_lines": [
+        601,
+        626
+      ],
+      "ios_defaults": {
+        "target_os": "ios",
+        "device_jitless": true,
+        "device_sparkplug": false,
+        "device_maglev": false,
+        "device_turbofan": false,
+        "webassembly": false,
+        "ios_deployment_target": "14.0",
+        "ios_enable_code_signing": false
+      },
+      "note": "Automatic source-build defaults; explicit GN target_os arguments can override them. No source build was run.",
+      "artifact_lines": [
+        720,
+        848,
+        1428,
+        1485
+      ],
+      "default_release_repository": "denoland/rusty_v8",
+      "default_tag": "v152.2.0",
+      "feature_suffix": "_ptrcomp_sandbox",
+      "expected_required_device_archive": "librusty_v8_ptrcomp_sandbox_release_aarch64-apple-ios.a.gz",
+      "expected_required_device_url": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/librusty_v8_ptrcomp_sandbox_release_aarch64-apple-ios.a.gz",
+      "expected_required_asset_size": null,
+      "expected_required_asset_checksum": null,
+      "checksum_lines": [
+        1124,
+        1155
+      ],
+      "checksum_variable": "RUSTY_V8_ARCHIVE_SHA256",
+      "checksum_meaning": "SHA-256 of archive bytes before decompression.",
+      "overrides": "Archive/binding path or URL and mirror/tag overrides exist; they do not prove compatibility or availability of a custom artifact."
+    }
+  },
+  "official_release_metadata": {
+    "url": "https://api.github.com/repos/denoland/rusty_v8/releases/tags/v152.2.0",
+    "http_status": 200,
+    "metadata_bytes": 90929,
+    "tag": "v152.2.0",
+    "published_at": "2026-08-20T18:33:32Z",
+    "total_asset_count": 44,
+    "all_ios_assets": [
+      {
+        "name": "librusty_v8_release_aarch64-apple-ios.a.gz",
+        "size_bytes": 20105761,
+        "sha256_published_by_github": "9d2e64a2409a4b812e3d1d29da3e0a06b020c8ab1e0fed6fd9342523ba8b757c",
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/librusty_v8_release_aarch64-apple-ios.a.gz",
+        "downloaded": false
+      },
+      {
+        "name": "librusty_v8_release_aarch64-apple-ios-sim.a.gz",
+        "size_bytes": 20236181,
+        "sha256_published_by_github": "62f4e352b7e97baa9b59378b2eed656b9fcb1300cb6c9d79507ce85de9f5cd23",
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/librusty_v8_release_aarch64-apple-ios-sim.a.gz",
+        "downloaded": false
+      },
+      {
+        "name": "src_binding_release_aarch64-apple-ios.rs",
+        "size_bytes": 40056,
+        "sha256_published_by_github": "b9d5652ebca515eb2bf4c2ee4a6551b2567117b5aa720f430d2032616dd7e3b5",
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/src_binding_release_aarch64-apple-ios.rs",
+        "downloaded": false
+      },
+      {
+        "name": "src_binding_release_aarch64-apple-ios-sim.rs",
+        "size_bytes": 40056,
+        "sha256_published_by_github": "b9d5652ebca515eb2bf4c2ee4a6551b2567117b5aa720f430d2032616dd7e3b5",
+        "url": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/src_binding_release_aarch64-apple-ios-sim.rs",
+        "downloaded": false
+      }
+    ],
+    "required_variant_listed": false,
+    "evidence": "The complete release JSON was parsed and every asset containing ios was selected. Only the four entries above were returned. No expected _ptrcomp_sandbox iOS archive was listed."
+  },
+  "fork_release_metadata": {
+    "url": "https://api.github.com/repos/seanh-oai/rusty_v8/releases/tags/v152.2.0",
+    "http_status": 404,
+    "metadata_bytes": 147,
+    "limit": "Only this exact tag endpoint was checked; no claim about differently tagged or privately hosted custom artifacts."
+  },
+  "local_quick_check": {
+    "patterns": [
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/.rusty_v8",
+        "pattern": "*apple*ios*"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build/cargo-home/.rusty_v8",
+        "pattern": "*apple*ios*"
+      },
+      {
+        "root": "/Users/dashidhy/.cargo/.rusty_v8",
+        "pattern": "*apple*ios*"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target",
+        "pattern": "aarch64-apple-ios/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target",
+        "pattern": "aarch64-apple-ios-sim/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build",
+        "pattern": "aarch64-apple-ios/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/.build",
+        "pattern": "aarch64-apple-ios-sim/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/target",
+        "pattern": "aarch64-apple-ios/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/target",
+        "pattern": "aarch64-apple-ios-sim/*/build/v8-*/out/**/librusty_v8*.a"
+      },
+      {
+        "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache",
+        "pattern": "*v8*ios*.a*"
+      }
+    ],
+    "candidates": [],
+    "limit": "Filename/size scan only in the known Cargo artifact caches and iOS target output paths; not a whole-disk search, binary validation or link test."
+  },
+  "unknowns": [
+    "Compatibility of the ordinary upstream prebuilt bytes with all changes at the exact pinned fork revision.",
+    "Availability/integrity of a compatible custom sandbox+pointer-compression iOS artifact beyond the checked tag release.",
+    "Whether sandbox virtual-address reservation, memory usage, SDK/deployment constraints, ICU and runtime initialization work on the actual device.",
+    "End-to-end linkage and execution of unchanged codex-code-mode-runtime on iOS; no build or execution was performed."
+  ],
+  "handoff": [
+    "Do not silently substitute the plain archive or disable sandbox/pointer-compression assumptions to report a successful qualification.",
+    "Keep V8JitMode::Disabled initialization explicit and before cells. A source-documented target is not end-to-end qualification.",
+    "Main owns native provider wrapper/integration. Dewey Node primitives remain fallback and were not duplicated."
+  ],
+  "scope": {
+    "only_new_result": "tools/alma-ios-lab/results/code-mode-v8-ios-feasibility.json",
+    "small_primary_metadata_only": true,
+    "release_requests": "Public tag-specific JSON; no Authorization header or credential use; at most 2 MiB per response and 20-second timeout.",
+    "retrieval_note": "Python default-CA release fetch failed; verified-TLS system curl retrieved release JSON. Pinned raw source was fetched successfully through web tooling; a later curl raw-source attempt failed TLS. No certificate-verification bypass was used.",
+    "binary_download_bytes": 0,
+    "v8_source_clone": false,
+    "builds_or_dependency_installs": false,
+    "device_model_auth_calls": false
+  },
+  "small_abi_review": {
+    "recorded_at_utc": "2026-11-01T00:31:24.661942+00:00",
+    "scope": "One bounded source/ABI review of exact fork against upstream tag, using public GitHub comparison metadata only. No binaries, builds, installs, device/model/auth calls, or changes to the production memory boundary.",
+    "upstream_tag": {
+      "name": "v152.2.0",
+      "commit": "2768994f664e8a6e3aba27503606c58339136e2a",
+      "ref_object_type": "commit",
+      "source_url": "https://api.github.com/repos/denoland/rusty_v8/git/ref/tags/v152.2.0",
+      "http_status": 200
+    },
+    "fork_revision": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+    "comparison": {
+      "source_url": "https://api.github.com/repos/seanh-oai/rusty_v8/compare/2768994f664e8a6e3aba27503606c58339136e2a...350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+      "human_url": "https://github.com/seanh-oai/rusty_v8/compare/2768994f664e8a6e3aba27503606c58339136e2a...350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+      "http_status": 200,
+      "status": "ahead",
+      "ahead_by": 2,
+      "behind_by": 0,
+      "total_commits": 2,
+      "base_commit": "2768994f664e8a6e3aba27503606c58339136e2a",
+      "merge_base_commit": "2768994f664e8a6e3aba27503606c58339136e2a",
+      "changed_files": [
+        {
+          "path": "src/cppgc.rs",
+          "status": "modified",
+          "additions": 46,
+          "deletions": 1
+        }
+      ],
+      "commits": [
+        {
+          "sha": "981143aff4bfc1c9c8c6785d6c1a8d27321d38fc",
+          "subject": "fix: align cppgc Member and WeakMember storage to their C++ representation"
+        },
+        {
+          "sha": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+          "subject": "refactor: simplify opaque cppgc member storage and layout regression"
+        }
+      ],
+      "completeness_note": "Upstream tag commit equals the merge base, so this is a direct ancestor-to-head comparison rather than a divergent merge-base diff. The response lists one changed file, below GitHub comparison file limits."
+    },
+    "verified_delta": [
+      "Only src/cppgc.rs changes. The old transparent MemberInner/WeakMemberInner wrapper used a byte array sized by generated cppgc__Member_SIZE/cppgc__WeakMember_SIZE constants.",
+      "The fork selects opaque aligned storage by that same generated size: 4 bytes uses MaybeUninit<u32>, 8 bytes uses MaybeUninit<u64>. It preserves the selected storage size while correcting its alignment from a byte array to the native word alignment.",
+      "A new layout test checks size and alignment for the inner wrappers and public Member<Node>/WeakMember<Node> against the generated native size constants. This test was read, not run.",
+      "The comparison shows no change to src/binding.cc, src/binding.hpp, BUILD.gn, build.rs, Cargo.toml, .gitmodules, or the V8 submodule gitlink. No native function signature/symbol or native V8 revision change is present in this two-commit delta."
+    ],
+    "qualified_inference": {
+      "assessment": "The source delta is consistent with using the upstream native C++ representation and correcting the Rust wrapper to match it. It exposes no native-side divergence that by itself requires a fork-specific native archive for the plain probe.",
+      "not_an_abi_identity_claim": "Rust object alignment intentionally differs from upstream Rust code; this is an ABI/layout correctness fix, not proof that all artifacts bearing version 152.2.0 are interchangeable.",
+      "plain_probe_conditions": "Use matching aarch64-apple-ios plain archive and generated binding, matching target/profile/features and relevant C++ build options. The generated size constants must correspond to that native archive.",
+      "remaining_uncertainty": "Release metadata and a clean native-source delta do not verify how published binary bytes were built, symbol availability, all build flags/ICU/libc++ interactions, iOS initialization, or actual execution. Main's real link/execute probe supplies that empirical evidence."
+    },
+    "unchanged_boundary": "This review supports only the planned independent plain-V8 probe. It does not resolve the missing sandbox+pointer-compression iOS artifact for unchanged codex-code-mode-runtime, and does not authorize disabling the ALMA production memory boundary.",
+    "performed": "Read tag ref and exact comparison metadata, inspect the single-file patch, update this JSON only."
+  }
+}

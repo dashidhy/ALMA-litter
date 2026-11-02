@@ -1,0 +1,45 @@
+name: AlmaISHProbe
+options:
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: C6635V7W82
+    CODE_SIGN_STYLE: Automatic
+    CLANG_ENABLE_OBJC_ARC: YES
+targets:
+  AlmaISHProbe:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: .cache/payload
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alma.frontier.ish-tools
+        TARGETED_DEVICE_FAMILY: "1"
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "$(SRCROOT)/.cache/cargo/aarch64-apple-ios/release/libalma_ish_phone_probe.a"
+          - "-lsqlite3"
+          - "-lc++"
+    info:
+      path: .cache/Info.plist
+      properties:
+        CFBundleDisplayName: Alma iSH Probe
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: Scene
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: Foundation.framework
+      - sdk: CoreFoundation.framework

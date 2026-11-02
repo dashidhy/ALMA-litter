@@ -1,0 +1,13 @@
+--- a/embed/host/build.rs
++++ b/embed/host/build.rs
+@@ -30,6 +30,10 @@
+         .to_path_buf();
+     let embed_dir = ish_root.join("embed");
+     let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
++
++    // Native kernel/filesystem changes must cause Cargo to run Ninja again.
++    // OUT_DIR and supervisor build outputs are outside this immutable source tree.
++    emit_rerun_if_changed_recursive(&ish_root);
+ 
+     // -- 1. iSH static libs via Meson ---------------------------------------
+     let meson_build_dir = out_dir.join("meson-build");

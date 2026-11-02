@@ -1,0 +1,62 @@
+{
+  "generation_commands": [
+    [
+      "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+      "build",
+      "--offline",
+      "--manifest-path",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/rust/Cargo.toml",
+      "--lib",
+      "-j",
+      "2"
+    ],
+    [
+      "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+      "run",
+      "--offline",
+      "--manifest-path",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/bindgen/Cargo.toml",
+      "-j",
+      "2",
+      "--",
+      "generate",
+      "--library",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/rust/target/debug/libalma_auth_refresh_regression.dylib",
+      "--language",
+      "swift",
+      "--out-dir",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated"
+    ]
+  ],
+  "generator": "uniffi-bindgen 0.31.0",
+  "source_module_sha256": "34a30a1df4fb83cabaaa5966601f6599f47f4aebcb7dada629202017e4c6765f",
+  "generated_swift_path": "tools/alma-ios-lab/auth_refresh_regression/.build/generated/alma_auth_refresh_regression.swift",
+  "generated_swift_sha256": "52d0672e1cf774a330c5c6f33c5be5f20f4d4d461d6f6810dda7d15067d77e17",
+  "error_enum_cases": [
+    "Unavailable",
+    "TimedOut",
+    "AccountChanged",
+    "RefreshFailed",
+    "UnsupportedServer"
+  ],
+  "cases_have_associated_message": false,
+  "native_provider_typecheck_command": [
+    "/usr/bin/swiftc",
+    "-typecheck",
+    "-swift-version",
+    "5",
+    "-strict-concurrency=targeted",
+    "-warnings-as-errors",
+    "-I",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated",
+    "-Xcc",
+    "-fmodule-map-file=/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated/alma_auth_refresh_regressionFFI.modulemap",
+    "-module-cache-path",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/module-cache",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated/alma_auth_refresh_regression.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/Litter/Models/ChatGPTAuthRefreshProvider.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated/AuthOwnerStub.swift"
+  ],
+  "native_provider_typecheck_exit_code": 0,
+  "scope": "isolated production callback metadata; not full app binding generation"
+}

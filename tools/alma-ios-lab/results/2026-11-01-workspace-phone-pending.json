@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-01",
+  "bundle": "com.alma.litter.backend-probe",
+  "runID": "c593ea4a-0cea-4869-b5e4-9c026f26eb9f",
+  "stage": "launch",
+  "result": "blocked",
+  "reason": "iOS Locked, FBSOpenApplicationErrorDomain 7",
+  "testsExecuted": false,
+  "scope": "sealed native-workspace mode4 + native apply_patch extended phone probe",
+  "previousPassedScope": "owned-only mode3 ExecBackend 7/7; do not transfer acceptance"
+}

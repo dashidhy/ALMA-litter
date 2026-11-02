@@ -1,0 +1,362 @@
+{
+  "scope": "Actual Mac iSH kernel; ordinary private workspace only. No phone, auth, model, external mount or escape probes.",
+  "limits": {
+    "cache_bytes": 2147483648,
+    "jobs": 2,
+    "max_seconds_per_run": 180
+  },
+  "steps": [
+    {
+      "command": [
+        "git",
+        "apply",
+        "--reverse",
+        "--check",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1324,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/reverse-check-existing.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--reverse",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1356,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/reverse-existing.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1337,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/strict-apply-check.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--whitespace=error-all",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1385,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/apply.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--reverse",
+        "--check",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1376,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/reverse-check.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--reverse",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1347,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/reverse.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "git",
+        "apply",
+        "--whitespace=error-all",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/readonly-parent-candidate.patch"
+      ],
+      "host_seconds": 0.1474,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/reapply.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-I/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/tests/identity_checks.c",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/identity-checks"
+      ],
+      "host_seconds": 0.1381,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/identity-build.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/identity-checks"
+      ],
+      "host_seconds": 0.2685,
+      "exit": 0,
+      "deadline_seconds": 10,
+      "stopped": null,
+      "log": ".cache/identity-run.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "ninja",
+        "-C",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/build",
+        "-j",
+        "2",
+        "ish"
+      ],
+      "host_seconds": 0.2754,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/kernel-build.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "cc",
+        "-Iish.p",
+        "-I.",
+        "-I../source",
+        "-Ivdso/arm64",
+        "-I../source/vdso/arm64",
+        "-fdiagnostics-color=always",
+        "-Wall",
+        "-Winvalid-pch",
+        "-Wextra",
+        "-std=gnu11",
+        "-O3",
+        "-Wimplicit-fallthrough",
+        "-Wtautological-constant-in-range-compare",
+        "-DLOG_HANDLER_DPRINTF=1",
+        "-DENGINE_ASBESTOS=1",
+        "-DGUEST_ARM64=1",
+        "-DNO_CRLF",
+        "-Wno-switch",
+        "-MD",
+        "-MQ",
+        "ish.p/main.c.o",
+        "-MF",
+        "ish.p/main.c.o.d",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-main.o",
+        "-c",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native_main.c"
+      ],
+      "host_seconds": 0.1403,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/native-main-build.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "cc",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-ish",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-main.o",
+        "-Wl,-dead_strip_dylibs",
+        "-Wl,-headerpad_max_install_names",
+        "libish.a",
+        "libish_emu.a",
+        "libfakefs.a",
+        "-lm",
+        "-ldl",
+        "-lsqlite3",
+        "-lsqlite3"
+      ],
+      "host_seconds": 0.1335,
+      "exit": 0,
+      "deadline_seconds": 180,
+      "stopped": null,
+      "log": ".cache/native-link.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-ish",
+        "-f",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/rootfs",
+        "/bin/sh",
+        "-c",
+        "mkdir -p /controller; cat > /controller/main.py"
+      ],
+      "host_seconds": 0.1309,
+      "exit": 0,
+      "deadline_seconds": 15,
+      "stopped": null,
+      "log": ".cache/install-controller.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-ish",
+        "-f",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/rootfs",
+        "/bin/true"
+      ],
+      "host_seconds": 0.1342,
+      "exit": 0,
+      "deadline_seconds": 20,
+      "stopped": null,
+      "log": ".cache/grant-validation.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-ish",
+        "-f",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/rootfs",
+        "/usr/bin/python3",
+        "-B",
+        "/controller/main.py"
+      ],
+      "host_seconds": 8.1489,
+      "exit": 0,
+      "deadline_seconds": 45,
+      "stopped": null,
+      "log": ".cache/guardian.log",
+      "host_process_group_gone": true
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/native-ish",
+        "-f",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ish-ro-parent-candidate/.cache/rootfs",
+        "/usr/bin/python3",
+        "-B",
+        "/controller/main.py"
+      ],
+      "host_seconds": 8.0892,
+      "exit": 0,
+      "deadline_seconds": 45,
+      "stopped": null,
+      "log": ".cache/actor.log",
+      "host_process_group_gone": true
+    }
+  ],
+  "passed": true,
+  "strict_patch_verified": true,
+  "changed_paths": [
+    "kernel/workspace_policy.c"
+  ],
+  "roles": [
+    {
+      "role": "guardian",
+      "host_seconds": 8.1489,
+      "controller": {
+        "role": "guardian",
+        "mode4_capability": true,
+        "cleanup_confirmed": true,
+        "premature_release_rejected": true,
+        "exit": 0,
+        "stdout": "{\"role\": \"guardian\", \"passed\": true, \"cases\": [\"read_whole_attempt_view\", \"bash_ls_find_from_view_root\", \"write_inbox_denied\", \"write_prior_revision_denied\", \"unlink_inbox_denied\", \"create_in_readonly_parent_denied\", \"scratch_write_read\", \"write_candidate_denied\", \"create_candidate_denied\"]}\n",
+        "stderr": "",
+        "live_after_cleanup": 0,
+        "retired_grant_reuse_rejected": true
+      },
+      "worker": {
+        "role": "guardian",
+        "passed": true,
+        "cases": [
+          "read_whole_attempt_view",
+          "bash_ls_find_from_view_root",
+          "write_inbox_denied",
+          "write_prior_revision_denied",
+          "unlink_inbox_denied",
+          "create_in_readonly_parent_denied",
+          "scratch_write_read",
+          "write_candidate_denied",
+          "create_candidate_denied"
+        ]
+      }
+    },
+    {
+      "role": "actor",
+      "host_seconds": 8.0892,
+      "controller": {
+        "role": "actor",
+        "mode4_capability": true,
+        "cleanup_confirmed": true,
+        "premature_release_rejected": true,
+        "exit": 0,
+        "stdout": "{\"role\": \"actor\", \"passed\": true, \"cases\": [\"read_whole_attempt_view\", \"bash_ls_find_from_view_root\", \"write_inbox_denied\", \"write_prior_revision_denied\", \"unlink_inbox_denied\", \"create_in_readonly_parent_denied\", \"scratch_write_read\", \"candidate_mkdir_write_fsync_regular_rename_read\", \"rename_candidate_into_inbox_denied\", \"rename_candidate_into_prior_denied\", \"rename_candidate_root_denied\", \"directory_rename_still_unsupported\", \"symlink_creation_still_denied\", \"hardlink_creation_still_denied\"]}\n",
+        "stderr": "",
+        "live_after_cleanup": 0,
+        "retired_grant_reuse_rejected": true
+      },
+      "worker": {
+        "role": "actor",
+        "passed": true,
+        "cases": [
+          "read_whole_attempt_view",
+          "bash_ls_find_from_view_root",
+          "write_inbox_denied",
+          "write_prior_revision_denied",
+          "unlink_inbox_denied",
+          "create_in_readonly_parent_denied",
+          "scratch_write_read",
+          "candidate_mkdir_write_fsync_regular_rename_read",
+          "rename_candidate_into_inbox_denied",
+          "rename_candidate_into_prior_denied",
+          "rename_candidate_root_denied",
+          "directory_rename_still_unsupported",
+          "symlink_creation_still_denied",
+          "hardlink_creation_still_denied"
+        ]
+      }
+    }
+  ],
+  "native_readback_matches": true,
+  "shared_rootfs_unchanged": true,
+  "shared_vendor_unchanged": true,
+  "cache_bytes": 131338183,
+  "patch_sha256": "b8677685e4be66ad0fade96962dcafbba3297e1b4062351fc0c0062fe92c87be",
+  "test_sha256": {
+    "run.py": "18d94a1a4aa288cd8f4a58567b049f72500dbd5cc922b6b30231360d6a9e062f",
+    "tests/worker.py": "890f89a53bcd3f8aee11e58283355e03d3a16ba7c7112634ac43240f89ee968a",
+    "tests/controller.py": "7afe2f795cf9e6e8ea69de023695f7a8037d9a1d0c3e24e4767af4a8af53e175",
+    "tests/grant_checks.c": "c4d7896708135452be24874b5b0dfb07ea8c0ba64f9134db3afe75721d5b2e59",
+    "tests/identity_checks.c": "d2d4aa81a663429f3c3cbfe3139d941ad77ccf000a52a2b4c45f165955a8b3ca"
+  },
+  "binary_sha256": "145f95564caefa97001d1f5a5cd34d6062458c16128ccef4badf654f50c7b3a3"
+}

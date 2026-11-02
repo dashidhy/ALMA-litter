@@ -1,0 +1,98 @@
+--- a/codex-rs/file-system/src/lib.rs
++++ b/codex-rs/file-system/src/lib.rs
+@@ -639,9 +639,37 @@
+     }
+ }
+ 
++/// A potential file mutation, described before any operation is performed.
++/// Paths belong to the selected executor, not necessarily the host filesystem.
++#[derive(Clone, Debug, Eq, PartialEq)]
++pub enum FileSystemMutation {
++    WriteFile { path: PathUri, create_parents: bool },
++    RemoveFile { path: PathUri },
++}
++
++/// Optional whole-batch authorization supplied by a filesystem implementation.
++/// This check must not mutate files. It does not reserve paths or replace the
++/// per-operation sandbox checks, and does not promise rollback for I/O/content
++/// failures after authorization. Implementations must inspect the entire batch
++/// against their own authority and the supplied sandbox context.
++pub trait FileSystemMutationPreflight: Send + Sync {
++    fn preflight_mutations(
++        &self,
++        mutations: &[FileSystemMutation],
++        sandbox: Option<&FileSystemSandboxContext>,
++    ) -> FileSystemResult<()>;
++}
++
+ /// Abstract filesystem access used by components that may operate locally or via
+ /// a remote environment.
+ pub trait ExecutorFileSystem: Send + Sync {
++    /// Optional batch authorization. None explicitly means that no additional
++    /// batch check is available; existing per-operation behavior is unchanged.
++    /// Callers must not interpret None as successful batch authorization.
++    fn mutation_preflight(&self) -> Option<&dyn FileSystemMutationPreflight> {
++        None
++    }
++
+     /// Watches an unsandboxed observation: every `missing` path is absent and `present`
+     /// (if supplied) exists. Change, disconnection or supersession completes the receiver.
+     /// Unsupported filesystems and observations that cannot be verified return `None`.
+--- a/codex-rs/exec-server/src/lib.rs
++++ b/codex-rs/exec-server/src/lib.rs
+@@ -95,6 +95,8 @@
+ pub use codex_file_system::FILE_READ_CHUNK_SIZE;
+ pub use codex_file_system::FILE_WRITE_CHUNK_SIZE;
+ pub use codex_file_system::FileMetadata;
++pub use codex_file_system::FileSystemMutation;
++pub use codex_file_system::FileSystemMutationPreflight;
+ pub use codex_file_system::FileSystemEnvironmentAccessor;
+ pub use codex_file_system::FileSystemReadStream;
+ pub use codex_file_system::FileSystemResult;
+--- a/codex-rs/apply-patch/src/lib.rs
++++ b/codex-rs/apply-patch/src/lib.rs
+@@ -14,6 +14,7 @@
+ use anyhow::Result;
+ use codex_exec_server::CreateDirectoryOptions;
+ use codex_exec_server::ExecutorFileSystem;
++use codex_exec_server::FileSystemMutation;
+ use codex_exec_server::FileSystemSandboxContext;
+ use codex_exec_server::GetMetadataOptions;
+ use codex_exec_server::ReadFileOptions;
+@@ -446,6 +447,36 @@
+     let ApplyPatchOptions { follow_symlinks } = options;
+     if hunks.is_empty() {
+         anyhow::bail!("No files were modified.");
++    }
++
++    // Hunks come from the official parser (or the typed apply_hunks API).
++    // Resolve the entire plan before metadata reads, writes, parent creation,
++    // or deletions. In particular, Hunk::path() names a move destination, so
++    // use resolve_path() to retain the source authorization check as well.
++    if let Some(preflight) = fs.mutation_preflight() {
++        let mut mutations = Vec::new();
++        for hunk in hunks {
++            let path = hunk.resolve_path(cwd)?;
++            match hunk {
++                Hunk::AddFile { .. } => mutations.push(FileSystemMutation::WriteFile {
++                    path,
++                    create_parents: true,
++                }),
++                Hunk::DeleteFile { .. } => mutations.push(FileSystemMutation::RemoveFile { path }),
++                Hunk::UpdateFile { move_path: Some(destination), .. } => {
++                    mutations.push(FileSystemMutation::RemoveFile { path });
++                    mutations.push(FileSystemMutation::WriteFile {
++                        path: cwd.join(&destination.to_string_lossy())?,
++                        create_parents: true,
++                    });
++                }
++                Hunk::UpdateFile { move_path: None, .. } => mutations.push(FileSystemMutation::WriteFile {
++                    path,
++                    create_parents: false,
++                }),
++            }
++        }
++        preflight.preflight_mutations(&mutations, sandbox)?;
+     }
+ 
+     let mut added: Vec<PathBuf> = Vec::new();

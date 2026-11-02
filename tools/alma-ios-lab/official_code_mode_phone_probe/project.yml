@@ -1,0 +1,55 @@
+name: AlmaCodeModeProbe
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: C6635V7W82
+    CODE_SIGN_STYLE: Automatic
+    CLANG_ENABLE_OBJC_ARC: YES
+    DEBUG_INFORMATION_FORMAT: dwarf
+targets:
+  AlmaCodeModeProbe:
+    type: application
+    platform: iOS
+    entitlements:
+      path: .cache/AlmaCodeModeProbe.entitlements
+      properties:
+        com.apple.developer.kernel.extended-virtual-addressing: true
+    sources:
+      - path: Sources
+      - path: .cache/payload
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alma.litter.code-mode-probe
+        TARGETED_DEVICE_FAMILY: "1"
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "$(SRCROOT)/../official_code_mode_probe/.cache/target/aarch64-apple-ios/debug/libalma_official_code_mode_probe.a"
+          - "-lc++"
+          - "-lsqlite3"
+          - "-lz"
+          - "-lresolv"
+    info:
+      path: .cache/Info.plist
+      properties:
+        CFBundleDisplayName: Alma Code Mode Probe
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default
+                UISceneDelegateClassName: Scene
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: Foundation.framework
+      - sdk: CoreFoundation.framework
+      - sdk: Security.framework
+      - sdk: SystemConfiguration.framework
+      - sdk: Network.framework

@@ -1,0 +1,43 @@
+--- Mac/event-normalizer.ts
++++ Mobile/event-normalizer.ts
+@@ -1,14 +1,14 @@
+ import type {
+   AttemptTerminalV1,
+   NormalizedToolOperationV1,
+-} from "../../../../src/contract/index.js";
+-import type { GuestNormalizedEventInputV1 } from "../../../../src/guest/runtime/adapter.js";
+-import { codexAuthenticationFailure, codexFailure } from "./failure.js";
+-import type { CodexNativeProfileV1 } from "./native-profile.js";
+-import type { CodexAppServerInboundV1 } from "./process-facade.js";
+-import type { CodexNativeToolLifecycleObserverV1 } from "./sandbox-qualification.js";
+-import { CodexWarningEmitterV1 } from "./warnings.js";
+-import { nativeEventDiagnostic } from "./notification-diagnostics.js";
++} from "../../upstream/src/contract/index.js";
++import type { GuestNormalizedEventInputV1 } from "../../upstream/src/guest/runtime/adapter.js";
++import { codexAuthenticationFailure, codexFailure } from "../../upstream/providers/codex/adapter/src/failure.js";
++import type { CodexNativeProfileV1 } from "../../upstream/providers/codex/adapter/src/native-profile.js";
++import type { CodexAppServerInboundV1 } from "../../upstream/providers/codex/adapter/src/process-facade.js";
++import type { CodexNativeToolLifecycleObserverV1 } from "../../upstream/providers/codex/adapter/src/sandbox-qualification.js";
++import { CodexWarningEmitterV1 } from "../../upstream/providers/codex/adapter/src/warnings.js";
++import { nativeEventDiagnostic } from "../../upstream/providers/codex/adapter/src/notification-diagnostics.js";
+ 
+ const MAX_DELTA_BYTES = 64 * 1024;
+ const MAX_DETAIL_BYTES = 4_096;
+@@ -707,7 +707,7 @@
+   }
+ 
+   #acceptAccountUpdated(params: Record<string, unknown>): void {
+-    if (params.authMode !== "chatgpt" && params.authMode !== "apikey") {
++    if (params.authMode !== "chatgpt" && params.authMode !== "apikey" && params.authMode !== "chatgptAuthTokens") {
+       throw codexAuthenticationFailure();
+     }
+   }
+@@ -897,7 +897,7 @@
+   let relative: string;
+   if (value.startsWith(`${workspaceRoot}/`)) relative = value.slice(workspaceRoot.length + 1);
+   else if (value.startsWith("/")) throw forbiddenToolFailure();
+-  else relative = value.startsWith("./") ? value.slice(2) : value;
++  else relative = value.startsWith("../../upstream/providers/codex/adapter/src/") ? value.slice(2) : value;
+   if (
+     relative.length === 0
+     || relative.includes("\\")

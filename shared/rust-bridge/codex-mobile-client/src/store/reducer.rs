@@ -1941,8 +1941,8 @@ impl AppStoreReducer {
                 // finalized (or failed) and further partial-parse work
                 // is wasted.
                 if matches!(
-                    notification.item,
-                    codex_app_server_protocol::ThreadItem::DynamicToolCall { .. }
+                    &notification.item.payload,
+                    codex_app_server_protocol::ThreadItemPayload::DynamicToolCall { .. }
                 ) {
                     let item_id = notification.item.id().to_string();
                     self.clear_dynamic_tool_arg_buffers_for_item(key, &item_id);
@@ -1954,8 +1954,8 @@ impl AppStoreReducer {
                     self.apply_item_update(key, item);
                 }
                 if matches!(
-                    notification.item,
-                    codex_app_server_protocol::ThreadItem::Plan { .. }
+                    &notification.item.payload,
+                    codex_app_server_protocol::ThreadItemPayload::Plan { .. }
                 ) && self
                     .mutate_thread_with_result(key, |thread| {
                         if thread.collaboration_mode != AppModeKind::Plan {
@@ -2178,11 +2178,12 @@ impl AppStoreReducer {
                 // path keeps fingerprint dedupe + `emit_thread_item_changed`
                 // behaviour identical to a real ItemStarted, so home-row
                 // diff stats + Edit log entries climb in real time.
-                let upstream_item = upstream::ThreadItem::FileChange {
-                    id: notification.item_id.clone(),
-                    changes: notification.changes.clone(),
-                    status: upstream::PatchApplyStatus::InProgress,
-                };
+                let upstream_item =
+                    upstream::ThreadItem::untimed(upstream::ThreadItemPayload::FileChange {
+                        id: notification.item_id.clone(),
+                        changes: notification.changes.clone(),
+                        status: upstream::PatchApplyStatus::InProgress,
+                    });
                 if let Some(item) = conversation_item_from_upstream_with_turn(
                     upstream_item,
                     Some(&notification.turn_id),
@@ -2790,7 +2791,7 @@ impl AppStoreReducer {
     fn apply_item_update(&self, key: &ThreadKey, item: HydratedConversationItem) {
         let result = self.mutate_thread_with_result(key, |thread| {
             let existing = thread.items.get_by_id(&item.id).cloned();
-            let item = merge_reasoning_item_with_existing(existing.as_ref(), item);
+            let item = merge_item_with_existing(existing.as_ref(), item);
             let active_turn_id = thread.active_turn_id.as_deref();
             let mut removed_overlay_ids = Vec::new();
             for existing in thread.local_overlay_items.iter() {
@@ -3163,13 +3164,16 @@ fn upsert_item(
     }
 }
 
-fn merge_reasoning_item_with_existing(
+fn merge_item_with_existing(
     existing: Option<&HydratedConversationItem>,
     mut item: HydratedConversationItem,
 ) -> HydratedConversationItem {
     let Some(existing) = existing else {
         return item;
     };
+    // Progressive patch items and older peers can omit lifecycle times.
+    // Keep the recorded timestamp until an authoritative item supplies one.
+    item.timestamp = item.timestamp.or(existing.timestamp);
     let (
         HydratedConversationItemContent::Reasoning(existing_reasoning),
         HydratedConversationItemContent::Reasoning(incoming_reasoning),
@@ -4899,6 +4903,23 @@ mod tests {
     }
 
     #[test]
+    fn untimed_item_updates_preserve_recorded_timestamp() {
+        let mut existing = crate::conversation::make_error_item("item".into(), "old".into(), None);
+        existing.timestamp = Some(1.234);
+        let mut incoming = crate::conversation::make_error_item("item".into(), "new".into(), None);
+        let merged = merge_item_with_existing(Some(&existing), incoming.clone());
+        assert_eq!(merged.timestamp, Some(1.234));
+        assert_eq!(merged.content, incoming.content);
+        incoming.timestamp = Some(2.345);
+        assert_eq!(
+            merge_item_with_existing(Some(&existing), incoming).timestamp,
+            Some(2.345)
+        );
+        let untimed = crate::conversation::make_error_item("new".into(), "new".into(), None);
+        assert_eq!(merge_item_with_existing(None, untimed).timestamp, None);
+    }
+
+    #[test]
     fn completed_empty_reasoning_item_preserves_streamed_placeholder_content() {
         let reducer = AppStoreReducer::new();
         let key = ThreadKey {
@@ -4921,11 +4942,11 @@ mod tests {
         reducer.apply_ui_event(&UiEvent::ItemCompleted {
             key: key.clone(),
             notification: upstream::ItemCompletedNotification {
-                item: upstream::ThreadItem::Reasoning {
+                item: upstream::ThreadItem::untimed(upstream::ThreadItemPayload::Reasoning {
                     id: "reasoning-1".to_string(),
                     summary: Vec::new(),
                     content: Vec::new(),
-                },
+                }),
                 thread_id: key.thread_id.clone(),
                 turn_id: "turn-1".to_string(),
                 completed_at_ms: 0,
@@ -5681,11 +5702,12 @@ mod tests {
         // Drain any prior emits so we observe only the upcoming ones.
         let _ = drain_updates(&mut update_receiver);
 
-        let upstream_item = upstream::ThreadItem::UserMessage {
-            client_id: None,
-            id: "server-user-item".to_string(),
-            content: inputs.clone(),
-        };
+        let upstream_item =
+            upstream::ThreadItem::untimed(upstream::ThreadItemPayload::UserMessage {
+                client_id: None,
+                id: "server-user-item".to_string(),
+                content: inputs.clone(),
+            });
         let server_user_item = crate::store::actions::conversation_item_from_upstream_with_turn(
             upstream_item.clone(),
             None,
@@ -5760,13 +5782,16 @@ mod tests {
             git_info: None,
             name: Some("Thread".to_string()),
             turns: vec![upstream::Turn {
+                root_turn_id: None,
                 id: "turn-1".to_string(),
                 status: upstream::TurnStatus::Completed,
-                items: vec![upstream::ThreadItem::UserMessage {
-                    client_id: None,
-                    id: "server-user-item".to_string(),
-                    content: inputs.clone(),
-                }],
+                items: vec![upstream::ThreadItem::untimed(
+                    upstream::ThreadItemPayload::UserMessage {
+                        client_id: None,
+                        id: "server-user-item".to_string(),
+                        content: inputs.clone(),
+                    },
+                )],
                 items_view: upstream::TurnItemsView::Full,
                 error: None,
                 started_at: None,
@@ -6116,6 +6141,7 @@ mod tests {
         reducer.apply_ui_event(&UiEvent::TurnCompleted {
             key: key.clone(),
             turn_id: "turn-1".into(),
+            status: upstream::TurnStatus::Completed,
             error: None,
         });
         let current = reducer.thread_snapshot(&key).unwrap();
@@ -6127,6 +6153,7 @@ mod tests {
         reducer.apply_ui_event(&UiEvent::TurnCompleted {
             key: key.clone(),
             turn_id: "turn-2".into(),
+            status: upstream::TurnStatus::Completed,
             error: None,
         });
         let current = reducer.thread_snapshot(&key).unwrap();
@@ -6164,6 +6191,7 @@ mod tests {
                         reducer.apply_ui_event(&UiEvent::TurnCompleted {
                             key: key.clone(),
                             turn_id: "turn-2".into(),
+                            status: upstream::TurnStatus::Completed,
                             error: None,
                         });
                     }
@@ -6693,7 +6721,7 @@ mod tests {
     #[test]
     fn dynamic_tool_arg_delta_buffer_clears_on_item_completed() {
         use codex_app_server_protocol::{
-            DynamicToolCallStatus, ItemCompletedNotification, ThreadItem,
+            DynamicToolCallStatus, ItemCompletedNotification, ThreadItem, ThreadItemPayload,
         };
         let reducer = AppStoreReducer::new();
         let key = key_thread("thread-2");
@@ -6718,7 +6746,7 @@ mod tests {
                 thread_id: key.thread_id.clone(),
                 turn_id: "turn-1".to_string(),
                 completed_at_ms: 0,
-                item: ThreadItem::DynamicToolCall {
+                item: ThreadItem::untimed(ThreadItemPayload::DynamicToolCall {
                     id: "item-99".to_string(),
                     tool: "show_widget".to_string(),
                     namespace: None,
@@ -6727,7 +6755,7 @@ mod tests {
                     content_items: None,
                     success: Some(true),
                     duration_ms: None,
-                },
+                }),
             },
         });
 

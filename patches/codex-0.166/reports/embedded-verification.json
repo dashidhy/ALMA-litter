@@ -1,0 +1,113 @@
+{
+  "target_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "baseline": {
+    "archive_sha256": "718c86dcd7104919f2820aa79db0fa0083b5f240aa16da704f43e4acf7b544e5",
+    "verified_entries": 9732
+  },
+  "patch_sha256": "ffde8f1f32ac7edb0f63d7a4faa84a0179e1c92db43d6180e043de045a6d8e00",
+  "scope": "experimental upstream integration, not an iSH adapter or full build",
+  "expected_source_paths": [
+    "codex-rs/core/src/environment_selection.rs",
+    "codex-rs/core/src/exec.rs",
+    "codex-rs/core/src/exec/embedded.rs",
+    "codex-rs/core/src/exec/embedded_tests.rs",
+    "codex-rs/core/src/session/turn_context.rs",
+    "codex-rs/core/src/shell_snapshot.rs",
+    "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs",
+    "codex-rs/core/src/tools/orchestrator.rs",
+    "codex-rs/core/src/tools/runtimes/apply_patch.rs",
+    "codex-rs/core/src/tools/runtimes/unified_exec.rs",
+    "codex-rs/core/src/unified_exec/process_manager.rs",
+    "codex-rs/core/src/unified_exec/process_manager_tests.rs",
+    "codex-rs/core/src/unified_exec/shell_snapshot.rs",
+    "codex-rs/exec-server/src/environment.rs",
+    "codex-rs/exec-server/src/environment/embedded.rs",
+    "codex-rs/exec-server/src/lib.rs",
+    "codex-rs/exec-server/src/process.rs"
+  ],
+  "checks": [
+    {
+      "stacked_on_prerequisites_and_optional": false,
+      "strict_apply_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "actual_apply": true,
+      "duplicate_rejected": true,
+      "reverse_check": true,
+      "protected_files_identical": [
+        "codex-rs/core/src/unified_exec/oneshot.rs",
+        "codex-rs/core/src/unified_exec/process.rs",
+        "codex-rs/core/src/unified_exec/async_watcher.rs",
+        "codex-rs/core/src/unified_exec/output.rs",
+        "codex-rs/core/src/tools/sandboxing.rs",
+        "codex-rs/app-server/src/in_process.rs",
+        "codex-rs/app-server/src/external_auth.rs",
+        "codex-rs/exec-server-protocol/src/protocol.rs"
+      ],
+      "after_sha256": {
+        "codex-rs/core/src/environment_selection.rs": "41257a93f5536a89215810c2a17ccb167c7ab7e48ae96b67d0c57bbf030a11c2",
+        "codex-rs/core/src/exec.rs": "958236cca26b5ea668d8ca4fd1da65f28f3f84ff414d6a275ea783043d35f18b",
+        "codex-rs/core/src/exec/embedded.rs": "3b61e9bb2f2fb6c8b521b92c61323e8b77c52492e020912fee26b737cb62b384",
+        "codex-rs/core/src/exec/embedded_tests.rs": "381d804e455787783075c0b016438c061489983976bc505bc860836a083b734b",
+        "codex-rs/core/src/session/turn_context.rs": "508b60843b048c1ec221259686d9e95ded75c60cd3a304b78eddb3c9f8de7bf7",
+        "codex-rs/core/src/shell_snapshot.rs": "14424b9d80664bb00bda7db60195dca026447c79ae75c826bfafa8392db0d9f4",
+        "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs": "669a9e99573894df995f80d49f40e2d84013395f5a3a81c8c07f3e4ae51d9f7c",
+        "codex-rs/core/src/tools/orchestrator.rs": "ea7c9d0e23b3f0dc78c65d809b6cbb90c20901dc8763a9781e916004fe0429e8",
+        "codex-rs/core/src/tools/runtimes/apply_patch.rs": "8897414cce3e2437d611ba928e7f4824d11da53ecca3f01a4a915a2d0c24ab0d",
+        "codex-rs/core/src/tools/runtimes/unified_exec.rs": "97a23ece0e0c0aeeba9025af49e337813a9d2bd994278c963455ca5dbf5c3d1c",
+        "codex-rs/core/src/unified_exec/process_manager.rs": "dedf4cd2c4caaa833b9a73806ab7dede4253c82816bf6327807ed1b3f355236b",
+        "codex-rs/core/src/unified_exec/process_manager_tests.rs": "dc5b0564868308fd2ead44c06e32cfa8c6da559825b87e35788befc4e8a7c639",
+        "codex-rs/core/src/unified_exec/shell_snapshot.rs": "e3eab48787a06d86da2dfbe31c14420c402fe97738d7d4f3a48b88f5f2eb25e7",
+        "codex-rs/exec-server/src/environment.rs": "d6e62a1a03a12ca9ad9250fbbe51c38a8772719b56438d57154e51ed2da5881c",
+        "codex-rs/exec-server/src/environment/embedded.rs": "0cc30516248dcd11fb399b6e73cb2accc7bde3cc21f67375512d4ecee1666d63",
+        "codex-rs/exec-server/src/lib.rs": "7f06203d657315390efb83b12f81cc936da6282e5b9dcfca90ea5d5ffb907728",
+        "codex-rs/exec-server/src/process.rs": "1554b5da9641c62a136017c808893c5ee41bee528584e9c1165f820f7038c323"
+      }
+    },
+    {
+      "stacked_on_prerequisites_and_optional": true,
+      "strict_apply_check": {
+        "ok": true,
+        "returncode": 0,
+        "detail": ""
+      },
+      "actual_apply": true,
+      "duplicate_rejected": true,
+      "reverse_check": true,
+      "protected_files_identical": [
+        "codex-rs/core/src/unified_exec/oneshot.rs",
+        "codex-rs/core/src/unified_exec/process.rs",
+        "codex-rs/core/src/unified_exec/async_watcher.rs",
+        "codex-rs/core/src/unified_exec/output.rs",
+        "codex-rs/core/src/tools/sandboxing.rs",
+        "codex-rs/app-server/src/in_process.rs",
+        "codex-rs/app-server/src/external_auth.rs",
+        "codex-rs/exec-server-protocol/src/protocol.rs"
+      ],
+      "after_sha256": {
+        "codex-rs/core/src/environment_selection.rs": "41257a93f5536a89215810c2a17ccb167c7ab7e48ae96b67d0c57bbf030a11c2",
+        "codex-rs/core/src/exec.rs": "958236cca26b5ea668d8ca4fd1da65f28f3f84ff414d6a275ea783043d35f18b",
+        "codex-rs/core/src/exec/embedded.rs": "3b61e9bb2f2fb6c8b521b92c61323e8b77c52492e020912fee26b737cb62b384",
+        "codex-rs/core/src/exec/embedded_tests.rs": "381d804e455787783075c0b016438c061489983976bc505bc860836a083b734b",
+        "codex-rs/core/src/session/turn_context.rs": "508b60843b048c1ec221259686d9e95ded75c60cd3a304b78eddb3c9f8de7bf7",
+        "codex-rs/core/src/shell_snapshot.rs": "7a74009e5b28ce3a0dbef373ffcdb4c3ff3a20759a4f2a7302266ee6138afe79",
+        "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs": "669a9e99573894df995f80d49f40e2d84013395f5a3a81c8c07f3e4ae51d9f7c",
+        "codex-rs/core/src/tools/orchestrator.rs": "ea7c9d0e23b3f0dc78c65d809b6cbb90c20901dc8763a9781e916004fe0429e8",
+        "codex-rs/core/src/tools/runtimes/apply_patch.rs": "8897414cce3e2437d611ba928e7f4824d11da53ecca3f01a4a915a2d0c24ab0d",
+        "codex-rs/core/src/tools/runtimes/unified_exec.rs": "97a23ece0e0c0aeeba9025af49e337813a9d2bd994278c963455ca5dbf5c3d1c",
+        "codex-rs/core/src/unified_exec/process_manager.rs": "dedf4cd2c4caaa833b9a73806ab7dede4253c82816bf6327807ed1b3f355236b",
+        "codex-rs/core/src/unified_exec/process_manager_tests.rs": "dc5b0564868308fd2ead44c06e32cfa8c6da559825b87e35788befc4e8a7c639",
+        "codex-rs/core/src/unified_exec/shell_snapshot.rs": "e3eab48787a06d86da2dfbe31c14420c402fe97738d7d4f3a48b88f5f2eb25e7",
+        "codex-rs/exec-server/src/environment.rs": "d6e62a1a03a12ca9ad9250fbbe51c38a8772719b56438d57154e51ed2da5881c",
+        "codex-rs/exec-server/src/environment/embedded.rs": "0cc30516248dcd11fb399b6e73cb2accc7bde3cc21f67375512d4ecee1666d63",
+        "codex-rs/exec-server/src/lib.rs": "7f06203d657315390efb83b12f81cc936da6282e5b9dcfca90ea5d5ffb907728",
+        "codex-rs/exec-server/src/process.rs": "1554b5da9641c62a136017c808893c5ee41bee528584e9c1165f820f7038c323"
+      }
+    }
+  ],
+  "inputs_unchanged": true,
+  "full_codex_build_verified": false,
+  "device_or_ish_adapter_verified": false
+}

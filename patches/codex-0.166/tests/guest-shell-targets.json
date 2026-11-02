@@ -1,0 +1,6 @@
+[
+  "codex-rs/core/src/shell.rs",
+  "codex-rs/core/src/shell_tests.rs",
+  "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs",
+  "codex-rs/exec-server/src/environment/embedded.rs"
+]

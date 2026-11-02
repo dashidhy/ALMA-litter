@@ -1,0 +1,15 @@
+{
+  "exit_code": 101,
+  "observation": "follow-up cargo test process received SIGKILL; shared target directory disappeared; old runner then failed during du reporting",
+  "scope": "interrupted follow-up; does not supersede the completed 12-test pass in results.json",
+  "full_output": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/profile_regression/.build/output.txt",
+  "output_sha256": "0a1d975fb1406ecd40860b81033eed7f80f0ca0c0328f6bfc3fba3cdb3f39fd3",
+  "runner_hardened_after_attempt": true,
+  "runner_sha256_after_hardening": "49d16c7a5d12ad16e2b1cbfc5bac21045183db3031f7993f6888f9847ad710d5",
+  "new_runner_checks": [
+    "existing/missing cache measurement",
+    "du error returns unavailable",
+    "missing cache refuses build"
+  ],
+  "cold_rebuild_attempted": false
+}

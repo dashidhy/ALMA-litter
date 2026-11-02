@@ -1,0 +1,183 @@
+{
+  "date": "2026-11-01 Asia/Shanghai",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "scope": "iSH + native HTTPS probe, not Codex/TAH or ASR",
+  "lockVerification": "HID lock event accepted, but lock state and screenshot did not confirm an actually locked device. Only background execution is established.",
+  "runs": {
+    "mixed_quiet": {
+      "runID": "6ffc680e-dbaf-4eab-b2a9-00f275ad1c5a",
+      "phase": "stopped",
+      "reason": "system expiration or user cancellation",
+      "elapsedSeconds": 69.31305850006174,
+      "completedCycles": 3,
+      "peakFootprintBytes": 41273208,
+      "thermalState": 0,
+      "build": null,
+      "mode": "quiet",
+      "workload": null,
+      "networkSuccesses": 1,
+      "networkAttempts": 1,
+      "foreground": {
+        "cycles": 3,
+        "meanWallSeconds": 5.065204583333333,
+        "meanAppCpuSeconds": null
+      },
+      "background": {
+        "cycles": 0,
+        "meanWallSeconds": null,
+        "meanAppCpuSeconds": null
+      },
+      "secondsSinceLastCycle": 32.67089283338282
+    },
+    "mixed_background": {
+      "runID": "91b481f6-ed51-4145-be47-2692ab7ff5f2",
+      "phase": "waiting",
+      "reason": "",
+      "elapsedSeconds": 158.06784308329225,
+      "completedCycles": 5,
+      "peakFootprintBytes": 41240440,
+      "thermalState": 0,
+      "build": null,
+      "mode": "continuous",
+      "workload": null,
+      "networkSuccesses": 1,
+      "networkAttempts": 1,
+      "foreground": {
+        "cycles": 3,
+        "meanWallSeconds": 5.0456381666666665,
+        "meanAppCpuSeconds": null
+      },
+      "background": {
+        "cycles": 2,
+        "meanWallSeconds": 40.751547521,
+        "meanAppCpuSeconds": null
+      },
+      "secondsSinceLastCycle": 25.655745124910027
+    },
+    "mixed_cpu": {
+      "runID": "8301f912-ac58-4989-b4e2-c1bcd9d67a0f",
+      "phase": "stopped",
+      "reason": "system expiration or user cancellation",
+      "elapsedSeconds": 166.71188354166225,
+      "completedCycles": 7,
+      "peakFootprintBytes": 43157440,
+      "thermalState": 0,
+      "build": null,
+      "mode": "continuous",
+      "workload": null,
+      "networkSuccesses": 2,
+      "networkAttempts": 2,
+      "foreground": {
+        "cycles": 5,
+        "meanWallSeconds": 5.0616472,
+        "meanAppCpuSeconds": 4.9299492
+      },
+      "background": {
+        "cycles": 1,
+        "meanWallSeconds": 40.906453708,
+        "meanAppCpuSeconds": 40.41085100000001
+      },
+      "secondsSinceLastCycle": 45.280017125071026
+    },
+    "node_quiet": {
+      "runID": "48cc2b80-0123-4abb-b45e-bb6bc61ce73d",
+      "phase": "stopped",
+      "reason": "system expiration or user cancellation",
+      "elapsedSeconds": 196.41546941665,
+      "completedCycles": 9,
+      "peakFootprintBytes": 45320056,
+      "thermalState": 0,
+      "build": "5",
+      "mode": "quiet",
+      "workload": 1,
+      "networkSuccesses": 2,
+      "networkAttempts": 2,
+      "foreground": {
+        "cycles": 6,
+        "meanWallSeconds": 1.3207355975,
+        "meanAppCpuSeconds": 1.2281203333333333
+      },
+      "background": {
+        "cycles": 3,
+        "meanWallSeconds": 10.354788625333333,
+        "meanAppCpuSeconds": 10.097025666666664
+      },
+      "secondsSinceLastCycle": 31.131652374984697
+    },
+    "network_control_failure": {
+      "runID": "6c4757c1-69f2-4def-9615-b23fdf054abc",
+      "phase": "stopped",
+      "reason": "HTTPS failure",
+      "elapsedSeconds": 20.995094250072725,
+      "completedCycles": 1,
+      "peakFootprintBytes": 44582824,
+      "thermalState": 0,
+      "build": "5",
+      "mode": "continuous",
+      "workload": 1,
+      "networkSuccesses": 0,
+      "networkAttempts": 1,
+      "foreground": {
+        "cycles": 1,
+        "meanWallSeconds": 1.285189416,
+        "meanAppCpuSeconds": 1.1848110000000016
+      },
+      "background": {
+        "cycles": 0,
+        "meanWallSeconds": null,
+        "meanAppCpuSeconds": null
+      },
+      "secondsSinceLastCycle": 10.048674333374947
+    },
+    "indeterminate": {
+      "runID": "e8800e64-12c0-4057-b061-d3492b68b2c8",
+      "phase": "stopped",
+      "reason": "system expiration or user cancellation",
+      "elapsedSeconds": 122.55787399993278,
+      "completedCycles": 9,
+      "peakFootprintBytes": 44828536,
+      "thermalState": 0,
+      "build": "6",
+      "mode": "quiet-indeterminate",
+      "workload": 1,
+      "networkSuccesses": 2,
+      "networkAttempts": 2,
+      "foreground": {
+        "cycles": 9,
+        "meanWallSeconds": 1.3193271573333334,
+        "meanAppCpuSeconds": 1.2277286666666674
+      },
+      "background": {
+        "cycles": 0,
+        "meanWallSeconds": null,
+        "meanAppCpuSeconds": null
+      },
+      "secondsSinceLastCycle": 6.177464541629888
+    },
+    "node_continuous": {
+      "runID": "ae55c506-93c9-4b81-8fb9-faed9451e720",
+      "phase": "completed",
+      "reason": "guest work ended",
+      "elapsedSeconds": 1726.294707916677,
+      "completedCycles": 90,
+      "peakFootprintBytes": 46139304,
+      "thermalState": 0,
+      "build": "6",
+      "mode": "continuous",
+      "workload": 1,
+      "networkSuccesses": 18,
+      "networkAttempts": 18,
+      "foreground": {
+        "cycles": 2,
+        "meanWallSeconds": 1.3042086875,
+        "meanAppCpuSeconds": 1.2029180000000004
+      },
+      "background": {
+        "cycles": 88,
+        "meanWallSeconds": 10.830544159136364,
+        "meanAppCpuSeconds": 10.604647761363635
+      },
+      "secondsSinceLastCycle": 8.19233962497674
+    }
+  }
+}

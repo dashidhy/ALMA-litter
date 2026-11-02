@@ -1,0 +1,12 @@
+{
+  "patch_sha256": "c2613975af1ea379b3a998b2dda63c5db364817cd69762bd778707aeb02a8736",
+  "scope": "exact shell methods/lexical detector with type fixtures; not full Codex integration",
+  "command": "python3 patches/codex-0.166/tests/run_guest_shell_tests.py",
+  "returncode": 0,
+  "output": "\nrunning 4 tests\ntest tests::embedded_default_does_not_rewrite_explicit_wrappers_inside_script ... ok\ntest tests::embedded_explicit_shell_paths_are_preserved_without_host_resolution ... ok\ntest tests::embedded_missing_or_unknown_shell_never_falls_back_to_host ... ok\ntest tests::embedded_default_uses_reported_guest_bash_without_probing ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Locking 1 package to highest Rust 1.99.0 compatible version\n   Compiling anyhow v1.0.104\n   Compiling guest-shell-check v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/.cache/guest-shell-harness)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.72s\n     Running unittests src/lib.rs (target/debug/deps/guest_shell_check-1adf94284418b4f4)\n",
+  "source_hashes": {
+    "core/src/shell.rs": "5a2b39101a5d22e9647ed7ea5e3f9ec043c5388bfcae9ca4dc6550cb3630b497",
+    "core/src/shell_tests.rs": "b537ad9dea948e9ba3b158643d774d606785b60e92ed058ffaeecd6a10085741",
+    "core/src/tools/handlers/unified_exec/preparation.rs": "033de049f5a17b0f00bcb8fdf3f9e2c822edcfe3a92779803fea75813f71068d"
+  }
+}

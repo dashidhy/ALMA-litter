@@ -1,0 +1,57 @@
+{
+  "pid": 35340,
+  "model": "gpt-6.1-sol",
+  "seconds": 32.515542958281,
+  "commandResults": [
+    {
+      "exitCode": -1,
+      "durationMs": 0,
+      "output": "Failed to create unified exec process: exec-server protocol error: shell-environment-policy"
+    },
+    {
+      "exitCode": -1,
+      "durationMs": 0,
+      "output": "Failed to create unified exec process: exec-server protocol error: shell-environment-policy"
+    },
+    {
+      "exitCode": -1,
+      "durationMs": 0,
+      "output": "Failed to create unified exec process: exec-server protocol error: shell-environment-policy"
+    }
+  ],
+  "patchCount": 1,
+  "webActions": [
+    {
+      "action": "{\n  \"queries\": null,\n  \"query\": \"site.developers.openai.com codex app-server protocol\",\n  \"type\": \"search\"\n}",
+      "inProgress": false,
+      "query": "site.developers.openai.com codex app-server protocol"
+    },
+    {
+      "action": "{\n  \"type\": \"openPage\",\n  \"url\": \"https://developers.openai.com/codex/app-server/\"\n}",
+      "inProgress": false,
+      "query": "https://developers.openai.com/codex/app-server/"
+    },
+    {
+      "action": "{\n  \"pattern\": \"JSON-RPC\",\n  \"type\": \"findInPage\",\n  \"url\": null\n}",
+      "inProgress": false,
+      "query": "'JSON-RPC'"
+    }
+  ],
+  "terminalIdle": true,
+  "fullTaskPassed": false,
+  "actualWebProof": {
+    "nonce": "c65caf27-0a24-4317-b3fa-a7d70c5f6ca9",
+    "source_url": "https://learn.chatgpt.com/docs/app-server",
+    "protocol": "JSON-RPC 2.0 (jsonrpc header omitted on the wire)",
+    "quote": "supports bidirectional communication using JSON-RPC 2.0 messages"
+  },
+  "webValidationCorrection": {
+    "oldHostAllowlistRejected": true,
+    "officialSourceRequested": "https://developers.openai.com/codex/app-server/",
+    "verifiedRedirect": "https://learn.chatgpt.com/docs/app-server",
+    "quoteConfirmedAtOfficialPage": true,
+    "source": "OpenAI official page independently opened2026-11-01; protocolsection",
+    "notACompleteTaskPass": true
+  },
+  "nextFix": "Explicitignore_default_excludes=false in trustedconfig; validate actualresolvedenvbeforeinitialization. Upstreamdefaults true; executionpolicyrequires false."
+}

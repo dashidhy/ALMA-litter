@@ -24,6 +24,8 @@ bindings_inputs() {
     "$REPO_DIR/shared/third_party/codex/codex-rs/protocol/src/parse_command.rs" \
     "$REPO_DIR/shared/third_party/codex/codex-rs/protocol/src/protocol.rs"
     find "$RUST_BRIDGE_DIR/codex-mobile-client/src" -type f -name '*.rs'
+    find "$REPO_DIR/shared/third_party/codex/codex-rs/app-server-protocol/src" \
+         "$REPO_DIR/shared/third_party/codex/codex-rs/protocol/src" -type f -name '*.rs'
   } | sort -u
 }
 
@@ -37,7 +39,10 @@ if [ "${1:-}" = "--newer-than" ]; then
   exit 1
 fi
 
+{
+printf 'LITTER_ALMA_LOCAL=%s\n' "${LITTER_ALMA_LOCAL:-0}"
 bindings_inputs | while IFS= read -r file; do
   [ -f "$file" ] || continue
   shasum -a 256 "$file"
-done | shasum -a 256 | awk '{print $1}'
+done
+} | shasum -a 256 | awk '{print $1}'

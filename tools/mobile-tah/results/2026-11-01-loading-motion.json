@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-01",
+  "scope": "Shared CSS loading animation only; no model calls or workflow changes",
+  "rootCause": "prefers-reduced-motion media rule set every shared spinner animation to none",
+  "deviceSetting": {
+    "REDUCE_MOTION": true,
+    "readOnly": true,
+    "modified": false
+  },
+  "fix": {
+    "normal": "spin 1s linear infinite",
+    "reducedMotion": "loading-pulse 1.8s ease-in-out infinite, opacity 0.45–1, no rotation/translation"
+  },
+  "coverage": [
+    "Raw/Extra Guardian phase",
+    "startup preparation",
+    "material loading",
+    "working-log loading",
+    "Progressing"
+  ],
+  "browserEvidence": {
+    "normalTransformSamples": [
+      "matrix(0.589137, -0.808033, 0.808033, 0.589137, 0, 0)",
+      "matrix(0.743366, -0.668885, 0.668885, 0.743366, 0, 0)"
+    ],
+    "reducedBranch": "Temporary local page used the actual shared stylesheet with only its media condition forced on; fixture removed after validation",
+    "reducedOpacitySamples": [
+      0.496637,
+      0.911719
+    ],
+    "reducedTransform": "none",
+    "indicatorsChecked": 5
+  },
+  "validation": {
+    "frontendTests": 124,
+    "frontendBuild": "passed",
+    "nativeBuild": "passed",
+    "installed": true,
+    "launch": "passed",
+    "phoneAuthorizationInspection": "completed; busy indicator appeared then disappeared",
+    "limitation": "Physical busy operation completed before two-frame opacity sampling; continuous motion verified in browser CSS branch, not five actual provider workflows"
+  },
+  "pollingReview": "No confirmed ordinary snapshot remount resetting the spinner; transport stall remains a general possibility, not demonstrated cause here",
+  "assets": [
+    "index-C6LCOfIA.js",
+    "index-tscioTXT.css"
+  ],
+  "stylesSHA256": "ea8c5395ece1fd45b8d25c917bc09fb22755aac65c8e6ef463e3a0571300fa2d",
+  "buildLogs": [
+    "tools/mobile-tah/.cache/loading-motion-rust.log",
+    "tools/mobile-tah/.cache/loading-motion-xcode.log",
+    "tools/mobile-tah/.cache/loading-motion-install.log"
+  ]
+}

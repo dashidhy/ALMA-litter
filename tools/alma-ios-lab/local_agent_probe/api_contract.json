@@ -1,0 +1,123 @@
+{
+  "note": "Rust exports and existing production Swift call sites; bound type-check requires actual production UniFFI output, never substitutes.",
+  "exports": [
+    {
+      "rust": "ffi/server.rs",
+      "name": "connect_local_server",
+      "swift": "connectLocalServer"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "set_chatgpt_auth_refresh_provider",
+      "swift": "setChatgptAuthRefreshProvider"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "login_account",
+      "swift": "loginAccount"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "refresh_account",
+      "swift": "refreshAccount"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "auth_status",
+      "swift": "authStatus"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "refresh_models",
+      "swift": "refreshModels"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "start_thread",
+      "swift": "startThread"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "read_thread",
+      "swift": "readThread"
+    },
+    {
+      "rust": "ffi/client.rs",
+      "name": "interrupt_turn",
+      "swift": "interruptTurn"
+    },
+    {
+      "rust": "ffi/app_store.rs",
+      "name": "start_turn",
+      "swift": "startTurn"
+    },
+    {
+      "rust": "ffi/app_store.rs",
+      "name": "snapshot",
+      "swift": "snapshot"
+    },
+    {
+      "rust": "ffi/app_store.rs",
+      "name": "thread_snapshot",
+      "swift": "threadSnapshot"
+    },
+    {
+      "rust": "lib.rs",
+      "name": "ish_bootstrap",
+      "swift": "ishBootstrap"
+    },
+    {
+      "rust": "tah_attempt.rs",
+      "name": "tah_qualification_info",
+      "swift": "tahQualificationInfo"
+    },
+    {
+      "rust": "lib.rs",
+      "name": "tah_qualification_inspect",
+      "swift": "tahQualificationInspect"
+    },
+    {
+      "rust": "lib.rs",
+      "name": "tah_qualification_execute",
+      "swift": "tahQualificationExecute"
+    }
+  ],
+  "types": [
+    "AppClient",
+    "AppStore",
+    "ServerBridge",
+    "AppServerSnapshot",
+    "ThreadKey",
+    "AppLoginAccountRequest",
+    "AppRefreshAccountRequest",
+    "AuthStatusRequest",
+    "AppRefreshModelsRequest",
+    "AppStartThreadRequest",
+    "AppStartTurnRequest",
+    "AppReadThreadRequest",
+    "AppInterruptTurnRequest",
+    "ChatgptAuthRefreshProvider",
+    "ChatgptAuthRefreshRequest",
+    "ChatgptAuthRefreshTokens",
+    "ChatgptAuthRefreshError",
+    "TahQualificationInfo"
+  ],
+  "qualification_workspace": {
+    "input": "/workspace/input",
+    "input_authority": "read-only",
+    "output": "/workspace/output",
+    "output_authority": "read-write",
+    "tmp": "/workspace/tmp",
+    "tmp_authority": "read-write",
+    "cwd": "/workspace/output",
+    "home": "/workspace/tmp/home"
+  },
+  "tah_qualification_workspace": {
+    "cwd": "/workspace/attempts/<attemptID>/view",
+    "snapshot": "read-only",
+    "actorWrite": "outbox/revision_vN only",
+    "guardianWrite": "none in view",
+    "scratch": "separate sibling scratch",
+    "mode": "one attempt per disposable App process; acceptance stays in original Mac TAH"
+  }
+}

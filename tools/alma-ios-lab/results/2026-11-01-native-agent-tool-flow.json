@@ -1,0 +1,68 @@
+{
+  "status": "fixed-real-model-tool-flow-passed",
+  "pid": 35371,
+  "model": "gpt-6.1-sol",
+  "task": "one small synthetic Bash/Python/Node read/hash/write +native apply_patch+officialWeb search/open/write task, not NIST/NVIDIA/TAH",
+  "seconds": 37.342628666665405,
+  "commandCount": 3,
+  "commands": [
+    {
+      "command": "items=(one two three)\nexport BASH_ARRAY_VALUE=\"${items[1]}\"\npython3 - <<'PY'\nimport hashlib,json,os\nfrom pathlib import Path\nb=Path('/workspace/input/source.txt').read_bytes()\np=Path('/workspace/output/tool-proof-1bc5b2ba-0216-4c31-b1c5-3767b9969fdb.json')\np.write_text(json.dumps(dict(nonce='1bc5b2ba-0216-4c31-b1c5-3767b9969fdb',sha256=hashlib.sha256(b).hexdigest(),byteCount=len(b),bashArrayValue=os.environ['BASH_ARRAY_VALUE'],nodeVerified=False,marker='before'),indent=2)+'\\n')\nPY\nnode - <<'JS'\nconst fs = require('fs');\nconst crypto = require('crypto');\nconst input = fs.readFileSync('/workspace/input/source.txt');\nconst path = '/workspace/output/tool-proof-1bc5b2ba-0216-4c31-b1c5-3767b9969fdb.json';\nconst proof = JSON.parse(fs.readFileSync(path,'utf8'));\nif (proof.byteCount !== input.length || proof.sha256 !== crypto.createHash('sha256').update(input).digest('hex')) throw Error('Verification failed');\nproof.nodeVerified = true;\nfs.writeFileSync(path, JSON.stringify(proof,null,2)+'\\n');\nconsole.log(fs.readFileSync(path,'utf8'));\nJS",
+      "exit": 0,
+      "durationMs": 5088,
+      "output": "Warning: disabling flag --expose_wasm due to conflicting flags\n{\n  \"nonce\": \"1bc5b2ba-0216-4c31-b1c5-3767b9969fdb\",\n  \"sha256\": \"e78a04242e2b5d2d0b0911c5f14d534558de56e15536489a68d5676e5cf5f0e5\",\n  \"byteCount\": 71,\n  \"bashArrayValue\": \"two\",\n  \"nodeVerified\": true,\n  \"marker\": \"before\"\n}\n\n"
+    },
+    {
+      "command": "cat /workspace/output/tool-proof-1bc5b2ba-0216-4c31-b1c5-3767b9969fdb.json",
+      "exit": 0,
+      "durationMs": 0,
+      "output": "{\n  \"nonce\": \"1bc5b2ba-0216-4c31-b1c5-3767b9969fdb\",\n  \"sha256\": \"e78a04242e2b5d2d0b0911c5f14d534558de56e15536489a68d5676e5cf5f0e5\",\n  \"byteCount\": 71,\n  \"bashArrayValue\": \"two\",\n  \"nodeVerified\": true,\n  \"marker\": \"after\"\n}\n"
+    },
+    {
+      "command": "python3 - <<'PY'\nimport json\nfrom pathlib import Path\nnonce='1bc5b2ba-0216-4c31-b1c5-3767b9969fdb'\np=Path('/workspace/output/web-proof-'+nonce+'.json')\np.write_text(json.dumps({'nonce':nonce,'source_url':'https://learn.chatgpt.com/docs/app-server','protocol':'JSON-RPC 2.0 (jsonrpc header omitted on the wire)','quote':'supports bidirectional communication using JSON-RPC 2.0 messages'},indent=2)+'\\n')\nfor name in ('tool-proof-','web-proof-'):\n f=Path('/workspace/output/'+name+nonce+'.json')\n assert f.stat().st_size<4096\n d=json.loads(f.read_text())\n assert d['nonce']==nonce\n print(f.read_text())\nPY",
+      "exit": 0,
+      "durationMs": 3425,
+      "output": "{\n  \"nonce\": \"1bc5b2ba-0216-4c31-b1c5-3767b9969fdb\",\n  \"sha256\": \"e78a04242e2b5d2d0b0911c5f14d534558de56e15536489a68d5676e5cf5f0e5\",\n  \"byteCount\": 71,\n  \"bashArrayValue\": \"two\",\n  \"nodeVerified\": true,\n  \"marker\": \"after\"\n}\n\n{\n  \"nonce\": \"1bc5b2ba-0216-4c31-b1c5-3767b9969fdb\",\n  \"source_url\": \"https://learn.chatgpt.com/docs/app-server\",\n  \"protocol\": \"JSON-RPC 2.0 (jsonrpc header omitted on the wire)\",\n  \"quote\": \"supports bidirectional communication using JSON-RPC 2.0 messages\"\n}\n\n"
+    }
+  ],
+  "nativePatchCount": 1,
+  "webActions": [
+    {
+      "action": "{\n  \"queries\": null,\n  \"query\": \"site:developers.openai.com codex app-server protocol\",\n  \"type\": \"search\"\n}",
+      "inProgress": false,
+      "query": "site:developers.openai.com codex app-server protocol"
+    },
+    {
+      "action": "{\n  \"type\": \"openPage\",\n  \"url\": \"https://developers.openai.com/codex/app-server\"\n}",
+      "inProgress": false,
+      "query": "https://developers.openai.com/codex/app-server"
+    },
+    {
+      "action": "{\n  \"pattern\": \"JSON-RPC\",\n  \"type\": \"findInPage\",\n  \"url\": null\n}",
+      "inProgress": false,
+      "query": "'JSON-RPC'"
+    }
+  ],
+  "proof": {
+    "nonce": "1bc5b2ba-0216-4c31-b1c5-3767b9969fdb",
+    "sha256": "e78a04242e2b5d2d0b0911c5f14d534558de56e15536489a68d5676e5cf5f0e5",
+    "byteCount": 71,
+    "bashArrayValue": "two",
+    "nodeVerified": true,
+    "marker": "after"
+  },
+  "webProof": {
+    "nonce": "1bc5b2ba-0216-4c31-b1c5-3767b9969fdb",
+    "source_url": "https://learn.chatgpt.com/docs/app-server",
+    "protocol": "JSON-RPC 2.0 (jsonrpc header omitted on the wire)",
+    "quote": "supports bidirectional communication using JSON-RPC 2.0 messages"
+  },
+  "sampledPeakAppFootprintBytes": 74909968,
+  "sampleIntervalMilliseconds": 200,
+  "lowestObservedFreeDiskBytes": 52838400000,
+  "resourceGuardFinished": true,
+  "terminalIdle": true,
+  "fullTAHVerified": false,
+  "backgroundVerified": false,
+  "nativeV8DesktopMemorySandboxEquivalent": false
+}

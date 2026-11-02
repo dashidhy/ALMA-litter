@@ -1,0 +1,218 @@
+{
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "device": "iPhone 12 Pro / A14 / iOS 27.0.1",
+  "runID": "8dd33d08-c5f0-4290-b3c9-f1fcf76a8e3e",
+  "scope": "Actual ish-embed-host library and guest supervisor from the Litter pin, thin C ABI/UIKit test host; no full Codex harness, Litter App, ASR or Gemma.",
+  "ishCommit": "4f783cd957b83de3019d6a843408d5bb3ff902c7",
+  "result": "all_covered_expectations_matched",
+  "positiveCases": 16,
+  "expectedNegativeControls": 2,
+  "cases": [
+    {
+      "id": "base-sed-read",
+      "passed": true,
+      "seconds": 0.021636875,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 1193,
+          "file": "sed-read.txt",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "base-shell-heredoc",
+      "passed": true,
+      "seconds": 0.013205084,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "base-pipeline",
+      "passed": true,
+      "seconds": 0.020167709,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "exit-seven",
+      "passed": true,
+      "seconds": 0.004455917,
+      "exitCode": 7,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "missing-python",
+      "passed": true,
+      "seconds": 0.003564875,
+      "exitCode": 127,
+      "expectedLimitation": true,
+      "checks": []
+    },
+    {
+      "id": "install",
+      "passed": true,
+      "seconds": 9.022729,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "versions",
+      "passed": true,
+      "seconds": 0.103035833,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "python-text",
+      "passed": true,
+      "seconds": 3.784722458,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 130,
+          "file": "python-stats.json",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "python-process",
+      "passed": true,
+      "seconds": 3.839148459,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "node-default-text",
+      "passed": true,
+      "seconds": 1.3800970000000001,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 123,
+          "file": "node-stats.json",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "reset-note",
+      "passed": true,
+      "seconds": 3.839609833,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "node-jitless-text",
+      "passed": true,
+      "seconds": 1.377210708,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 123,
+          "file": "node-stats.json",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "node-process",
+      "passed": true,
+      "seconds": 1.190133417,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "bash-script",
+      "passed": true,
+      "seconds": 0.017313542,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    },
+    {
+      "id": "sh-bash-array",
+      "passed": true,
+      "seconds": 0.00719775,
+      "exitCode": 2,
+      "expectedLimitation": true,
+      "checks": []
+    },
+    {
+      "id": "readback",
+      "passed": true,
+      "seconds": 0.019393542,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 117262,
+          "file": "中文 notes.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "same-kernel-repeat",
+      "passed": true,
+      "seconds": 15.892511416,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": [
+        {
+          "bytes": 117262,
+          "file": "中文 notes.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": "identities",
+      "passed": true,
+      "seconds": 3.755008291,
+      "exitCode": 0,
+      "expectedLimitation": false,
+      "checks": []
+    }
+  ],
+  "totalSecondsIncludingInstall": 44.96167129173409,
+  "peakSampledAppFootprintBytes": 48498576,
+  "finalThermalState": 0,
+  "freeDiskBytesAtCompletion": 53248000000,
+  "processEnded": true,
+  "temporaryAppUninstalled": true,
+  "dependencyVersionDriftFromLitter": [],
+  "probeCargoLockSHA256": "39b40a21f783fde93acc137b219dacd779759138cba44e58b18e3204a4d7e1b3",
+  "planSHA256": "18619856e540a5266671b055f0dbf2166d7eb07b46004a71a5b1c98bf0d0c1d8",
+  "identityOutput": "{\"platform\": \"linux\", \"executable\": \"/usr/bin/python3\", \"architecture\": \"aarch64\"}\nWarning: disabling flag --expose_wasm due to conflicting flags\n{\"platform\":\"linux\",\"arch\":\"arm64\",\"flags\":[\"--max-old-space-size=512\",\"--no-lazy\",\"--jitless\",\"-p\",\"JSON.stringify({platform:process.platform,arch:process.arch,flags:process.execArgv,wasm:typeof WebAssembly})\"],\"wasm\":\"undefined\"}\n",
+  "limits": {
+    "perCommandTimeoutSeconds": 60,
+    "installTimeoutSeconds": 180,
+    "globalDeadlineSeconds": 600,
+    "appFootprintLimitMiB": 900,
+    "minimumFreeDiskGiB": 8
+  },
+  "notProven": [
+    "Codex 0.166 generation and actual Structured Note V0/V1/V2",
+    "Litter exec-hook end-to-end or native apply_patch filesystem integration",
+    "Background/long-duration execution",
+    "Arbitrary Python extensions, npm or WebAssembly",
+    "Concurrent ASR/Gemma resource use",
+    "General performance distributions; one device run only"
+  ]
+}

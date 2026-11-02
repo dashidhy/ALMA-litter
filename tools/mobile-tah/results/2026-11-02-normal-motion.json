@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-02",
+  "decision": "User rejected reduced-motion fade/reposition as flickering; do not consume Reduce Motion state in App-owned frontend",
+  "changes": [
+    "Removed CSS reduced-motion branch and loading-pulse keyframes",
+    "Removed JS motion preference query and all sheet opacity/reposition frames",
+    "Normal spinner rotation; continuous sheet slide 180ms and return 220ms",
+    "Retained request/file-read status text and independent reduced-transparency preference"
+  ],
+  "scope": "Current Tauri phone test app; no iOS system setting changes, no Mac repo changes",
+  "runtimeMotionPreferenceReferences": [],
+  "frontendTests": 131,
+  "frontendBuild": "passed",
+  "iOSBuild": "passed",
+  "installed": true,
+  "physicalChecks": [
+    "App launch succeeded",
+    "Settings short pull restores without dismissal; contents remain visible",
+    "Settings long pull dismisses via shared close path",
+    "Paper appearance restored and record selection retained its busy text"
+  ],
+  "modelCalls": 0,
+  "assets": [
+    "index-BVWGhuj8.js",
+    "index-yC12V_HH.css"
+  ],
+  "codeSHA256": {
+    "apps/ios/tah-ui/src/useSheetDismiss.ts": "2864c5f6e8e71e4f1d27851515570bf0433d290273de4e47ca408d6a91068a0a",
+    "apps/ios/tah-ui/src/styles.css": "d71e71607dd389037e171eb5e05b2c8b949e796a95e1d226e2346482e37e4b8b"
+  },
+  "limitation": "Physical checks verify interaction results; subjective motion comfort remains for the user to assess. No model workflow run."
+}

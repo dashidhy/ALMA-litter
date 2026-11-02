@@ -1,0 +1,272 @@
+{
+  "date": "2026-11-02",
+  "status": "installed_live_workflow_and_animation_verified",
+  "scope": "P0 UI-thread starvation; Framework -> Adapter -> Backend unchanged",
+  "implementation": [
+    "Trusted JSCore VM and all callbacks/timers on one Dispatch-backed Swift actor executor",
+    "Journal JSON decode/encode on journal actor; Sendable response decode and presentation snapshot serialization off MainActor",
+    "Working-log SHA256 verification and JSON decoding off MainActor with identity revalidation",
+    "Raw expiry parsed once per immutable snapshot; current-time and provider checks retained",
+    "Native refresh bursts coalesced; one automatic web polling owner with lifecycle generation checks",
+    "Rust native callback copies bytes only; JSON parses on blocking pool; dropped-future guard releases pending capacity",
+    "Cancelled queued platform work checked at MainActor entry; stopped VM rejects late replies and timers"
+  ],
+  "tests": {
+    "frontend": {
+      "passed": true,
+      "checks": 148,
+      "files": 14,
+      "scope": "Unit/DOM tests, including polling and spinner identity; not phone frame rate"
+    },
+    "javascriptWorker": {
+      "checks": [
+        "immutable UTF-8 bridge and MainActor platform callback",
+        "timer resumes on worker",
+        "timer cancellation",
+        "JS rejection",
+        "long JS computation returns exact output",
+        "MainActor heartbeat survives 240ms JS job",
+        "cancelled calls release bounded capacity",
+        "shutdown resolves pending calls",
+        "shutdown rejects work"
+      ],
+      "heartbeatMaxGapMs": 12.571792,
+      "passed": true
+    },
+    "nativeController": {
+      "passed": true,
+      "checks": 19,
+      "record": "ui-perf-current-controller-smoke.log"
+    },
+    "controllerPressure": {
+      "passed": true,
+      "checks": 40,
+      "compilerConfigurations": 3,
+      "iOS18Typecheck": true,
+      "record": "ui-perf-current-pressure.log"
+    },
+    "workingLog": {
+      "passed": true,
+      "checks": 26,
+      "record": "ui-perf-current-working.log"
+    },
+    "coreReplay": {
+      "passed": true,
+      "publishedRevisions": 3,
+      "checkedOutputFiles": 6,
+      "verifiedMultiChunkWorkingLogs": 3,
+      "modelCalls": 0,
+      "record": "ui-perf-current-core-replay.log"
+    },
+    "build": {
+      "rust": true,
+      "releaseDeviceTarget": true,
+      "warningFree": false
+    }
+  },
+  "baseline": {
+    "record": "2026-11-02-nvidia-ui-stall.json",
+    "fps": {
+      "sampleCount": 33,
+      "min": 2,
+      "max": 7,
+      "median": 5,
+      "mean": 4.696969696969697,
+      "scope": "Core Animation display FPS while app showed continuous spinner; not per-element frame counter"
+    },
+    "caution": "Stack counts are not CPU percentages; process CPU/memory were individual snapshots, not peaks."
+  },
+  "device": {
+    "model": "iPhone 12 Pro",
+    "os": "iOS 27.0.1",
+    "bundleID": "com.alma.litter.agent-probe",
+    "imageUUID": "04D77D98-BBA8-3E92-B908-EBB5FA4DA979",
+    "pidAtLaunch": 36343,
+    "installation": "in-place; no uninstall",
+    "installSucceeded": true,
+    "startupObserved": true
+  },
+  "dataRetention": {
+    "integrity": "ok",
+    "tables": {
+      "events": {
+        "before": 61,
+        "after": 66,
+        "oldRowsChangedOrMissing": 0
+      },
+      "chunks": {
+        "before": 0,
+        "after": 0,
+        "oldRowsChangedOrMissing": 0
+      }
+    },
+    "publications": {
+      "before": 10,
+      "after": 11
+    },
+    "passed": true
+  },
+  "phoneAfterFPS": {
+    "start": {
+      "label": "nvidia-ui-optimized-start",
+      "scope": "Core Animation display FPS; interpret only with foreground App and workload/scroll context",
+      "sampleCount": 30,
+      "fps": {
+        "min": 58,
+        "max": 60,
+        "median": 59.0,
+        "mean": 59.333333333333336
+      },
+      "appRestarted": false
+    },
+    "mid": {
+      "label": "nvidia-ui-optimized-mid",
+      "scope": "Core Animation display FPS; interpret only with foreground App and workload/scroll context",
+      "sampleCount": 30,
+      "fps": {
+        "min": 58,
+        "max": 60,
+        "median": 59.0,
+        "mean": 59.43333333333333
+      },
+      "appRestarted": false
+    },
+    "late": {
+      "label": "nvidia-ui-optimized-late",
+      "scope": "Core Animation display FPS; interpret only with foreground App and workload/scroll context",
+      "sampleCount": 30,
+      "fps": {
+        "min": 58,
+        "max": 60,
+        "median": 59.0,
+        "mean": 59.4
+      },
+      "appRestarted": false
+    },
+    "combined": {
+      "count": 90,
+      "min": 58,
+      "max": 60,
+      "median": 59.0,
+      "mean": 59.388888888888886,
+      "scope": "Three separate 30-second foreground continuous-animation samples during one live NVIDIA task; not a continuous whole-task trace."
+    }
+  },
+  "liveModelCallsStarted": 1,
+  "pending": null,
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Runtime/AlmaTAHJavaScriptHost.swift": "5a4c6c20aa7f5f7f6d9ba406afd9553a53449516ee3f4d70fa541125e44d236a",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "c2019006d972d590121e19971fbba38120f2025d6b608935f452a32cb39c757a",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift": "140d38a104f93820ea1b5875fcbbe475897141c8c6c21d49c1c1d7ef7d79b757",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHJournalRPC.swift": "c92ae8f9d9d378e5da192076b13810db7c7343789c1f6d7053332c74f59b1b6a",
+    "apps/ios/tah-ui/src/controller.ts": "8b87c2531bc24b8fc09d100823590111cbc6140032588e69d62ebd7933e9da94",
+    "apps/ios/tah-ui/src-tauri/src/lib.rs": "5e7893c1762e8ae0f8c9417287f637101386d710bf4bcb9df44746abe3516454",
+    "tools/mobile-tah/Sources/TauriNativeHost.swift": "b8f46d800431e5e979880603e860fdb899a4276f04b5f37428b682afe686b7a0",
+    "tools/mobile-tah/jscore_worker_checks.swift": "8d629e6956a282d289340e8c1e9e9a1238268e9f222feae15e45948a17b1b3ed"
+  },
+  "research": [
+    "https://developer.apple.com/documentation/xcode/improving-app-responsiveness",
+    "https://developer.apple.com/documentation/javascriptcore/jsvirtualmachine",
+    "https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md"
+  ],
+  "deviceValidation": {
+    "actionID": "cf8239ff-0157-432f-8046-d2f0e9235bed",
+    "createdAt": "2026-11-01T19:00:38Z",
+    "model": "gpt-6-astra",
+    "reasoningEffort": "xhigh",
+    "actionLanguage": "zh-CN",
+    "interactionLanguage": "zh-CN",
+    "webEnabled": true,
+    "state": "completed",
+    "originalActionUntouched": true,
+    "displayedDuration": "13m3s",
+    "files": [
+      {
+        "file": "structured-notes.md",
+        "bytes": 59462,
+        "sha256": "109776e30108c2cc05bb440b8150311ec6692e472d5a0009293644ec080c326e",
+        "integrityPassed": true
+      },
+      {
+        "file": "suspicious-asr-terms.md",
+        "bytes": 5550,
+        "sha256": "f3b36bf5731ae4f8d73897ddd562835ba201cd5d4be948990197e00fa81433bb",
+        "integrityPassed": true
+      }
+    ],
+    "workingLogEvents": 40,
+    "workingLogLoadedOnPhone": true,
+    "historyBrowsingObserved": true,
+    "criticPassedOnPhone": true,
+    "phoneStillRunning": true
+  },
+  "afterProcessSnapshots": {
+    "start": [
+      {
+        "pid": 36343,
+        "name": "AlmaTAHTauri",
+        "cpuUsage": 21.518372120921306,
+        "physFootprint": 70208000,
+        "timestamp": "2026-11-01T19:05:21.694202+00:00"
+      },
+      {
+        "pid": 36344,
+        "name": "com.apple.WebKit.WebContent",
+        "cpuUsage": 4.992184887932636,
+        "physFootprint": 110053528,
+        "timestamp": "2026-11-01T19:05:22.360725+00:00"
+      },
+      {
+        "pid": 36345,
+        "name": "com.apple.WebKit.GPU",
+        "cpuUsage": 1.665047636369265,
+        "physFootprint": 23267096,
+        "timestamp": "2026-11-01T19:05:23.035954+00:00"
+      }
+    ],
+    "late": [
+      {
+        "pid": 36343,
+        "name": "AlmaTAHTauri",
+        "cpuUsage": 115.56290149844592,
+        "physFootprint": 70797800,
+        "timestamp": "2026-11-01T19:16:08.799362+00:00"
+      },
+      {
+        "pid": 36344,
+        "name": "com.apple.WebKit.WebContent",
+        "cpuUsage": 0.7388160164130126,
+        "physFootprint": 135547080,
+        "timestamp": "2026-11-01T19:16:09.636353+00:00"
+      },
+      {
+        "pid": 36345,
+        "name": "com.apple.WebKit.GPU",
+        "cpuUsage": 0.1229139237900189,
+        "physFootprint": 22972184,
+        "timestamp": "2026-11-01T19:16:10.353794+00:00"
+      }
+    ]
+  },
+  "toolLimitation": "Coordinate clicks recovered after the user foregrounded Device Hub. Full-log drag navigation subsequently worked; initial main-content drag/wheel attempts were inconsistent.",
+  "limitations": [
+    "FPS is Core Animation display sampling, not per-element frame timing.",
+    "The three 30-second samples do not cover every second of the task.",
+    "No model-inference speedup is claimed: cloud generation is nondeterministic and this change targets UI responsiveness.",
+    "Completed full-log navigation was observed; mirror gestures differ from finger scrolling. A mixed scroll/dismiss trace must not be labeled pure log-scroll FPS."
+  ],
+  "scrollDiagnostics": {
+    "unsynchronized20SecondCapture": "excluded; diagnostic ended before gestures started",
+    "synchronizedMixedGestureWindow": {
+      "startEpochMs": 1793561140840,
+      "endEpochMs": 1793561164527,
+      "sampleCount": 23,
+      "min": 9,
+      "max": 59,
+      "median": 56,
+      "mean": 50.08695652173913,
+      "scope": "Mixed completed-log scroll, sheet dismissal and main-page gestures; not pure log-scroll performance."
+    }
+  },
+  "diagnosticProcessesStopped": true
+}

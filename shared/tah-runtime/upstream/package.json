@@ -1,0 +1,31 @@
+{
+  "name": "@alma/app-tah-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "npm@11.9.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "scripts": {
+    "build": "node scripts/clean-dist.mjs && tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test providers/artifact-qualification.test.mjs providers/qoder/appliance/scripts/build-ca-bundle.test.mjs && node providers/verify-locks.mjs && node providers/verify-adapter-locks.mjs && tsc -p tsconfig.json && vitest run && npm run test:codex-adapter && npm run test:qoder-adapter",
+    "test:codex-adapter": "node node_modules/typescript/bin/tsc -p providers/codex/adapter/tsconfig.json && node node_modules/vitest/vitest.mjs run --config providers/codex/adapter/vitest.config.ts",
+    "test:qoder-adapter": "node node_modules/typescript/bin/tsc -p providers/qoder/adapter/tsconfig.json && node node_modules/vitest/vitest.mjs run --config providers/qoder/adapter/vitest.config.ts"
+  },
+  "dependencies": {
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "marked": "18.0.9",
+    "@types/node": "22.20.1",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10",
+    "es-module-lexer": "2.3.1"
+  },
+  "overrides": {
+    "rolldown": "1.2.3",
+    "zod": "4.4.3"
+  }
+}

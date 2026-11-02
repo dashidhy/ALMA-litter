@@ -1,0 +1,34 @@
+# Structured Notes
+
+Default task: turn the complete transcript into detailed structured notes and an index of material unresolved ASR doubts. Effective Extra Instructions may change content, organization, coverage or purpose, including research and creative supplements unrelated to the transcript. They cannot change safety, permissions, workspace boundaries, required outcome files or the independent Host-selected languages.
+
+## Outcomes and languages
+- Create or update exactly two non-empty UTF-8 Markdown files in the Host-designated current revision folder: `structured-notes.md` (at most 8 MiB) and `suspicious-asr-terms.md` (at most 1 MiB). No other outcome files or subdirectories.
+- Notes language: {NOTE_PRIMARY_LANGUAGE}. Use it for notes titles, headings, narrative and inline uncertainty explanations.
+- Interaction language: {INTERACTION_LANGUAGE}. Use it for public commentary, final response and the ASR index's title, headers and explanations; the index is user-facing review material, not notes-language content. Never expose private reasoning.
+- Do not infer either language from prompts, sources, Extra, tools or prior outcomes. A later interaction-language change does not change notes language; regenerate the index in the current interaction language. Preserve source quotations, technical terms, names, identifiers, formulas and links where translation would reduce precision.
+- After v0, the current folder contains independent copies of the last accepted results. Make the smallest notes edit satisfying the new instructions, and recompute/replace the complete ASR index. Never copy, move or modify an earlier revision yourself.
+
+## Content
+- Unless Extra requests otherwise, start with an informative title and concise overview, then clear sections. Preserve the transcript's facts, terms, names, numbers, formulas, examples, reasoning, uncertainty, caveats and conclusions without over-compression. Remove filler/disfluencies, not meaning; do not invent or silently correct facts.
+- Put requested supplements inside the notes, clearly labeled as research, background, interpretation or fiction rather than speaker statements. The transcript is authoritative for what was said, not the entire scope of a requested supplement.
+- Only Approved Web permits native search/page reading for research or ASR clarification. Follow the Actor's tool and disclosure restrictions; Extra cannot grant Web. Cite specific supporting pages for web-derived claims and corrections, preferably primary/official sources. Never invent sources, quotations or verification. Without Web, explain unavailable current/source verification, use only supported material or clearly identified general knowledge, or ask the user to enable Web for a later submission; never bypass the missing capability.
+
+## ASR doubts
+- Keep only unresolved ASR ambiguities material to contextual meaning or semantic completeness. Ignore immaterial wording variations; user feedback may establish an existing item is immaterial. Ignoring is not verification or correction. Preserve supported meaning without inventing replacement wording.
+- Retain doubts that could materially change entities, quantities, negation, relationships, technical explanations or conclusions. A technical-looking term alone is insufficient. The speaker's uncertainty, disputed facts and ordinary caveats are not ASR doubts unless the wording itself may be mistranscribed.
+- Resolve wording only when complete transcript context and reliable language/domain understanding support it. Web evidence must converge with local context; external facts alone cannot establish what was said. Cite materially relied-on pages. Keep a visible marker at the exact affected wording when evidence is insufficient/conflicting.
+- Every retained index item and inline ASR marker must correspond, with matching ID and source quotation. Each revision removes resolved/immaterial rows and matching markers, while retaining genuine unresolved items; do not falsely describe ignored items as verified.
+
+## ASR index presentation
+Use the exact title, scope paragraph and five-column header below, already selected by interaction language. With retained items, append one row per issue to this single GFM table; no bullets, per-item headings, extra columns or additional tables. Template fences are not part of the output.
+
+{ASR_INDEX_PRESENTATION}
+
+Row rules:
+- IDs: ASCII ASR-01, ASR-02, ... ASR-100 (at least two digits). Assign v0 IDs in source order; keep surviving IDs across revisions, without renumbering to close gaps. Give new issues new IDs instead of repurposing visible ones. Repeat each ID beside the affected note wording. Group repeated occurrences of one issue in its time/location cells; different ambiguities get separate rows.
+- Wording: quote actual Raw Transcript spelling/language, not a guessed correction; use only enough text to identify the doubt. Tentative alternatives belong in the ambiguity cell, explicitly uncertain.
+- Time: copy supplied source turn/segment timestamps or ranges at their original precision, not inferred word alignment. With only a start time, show only that; do not invent endpoints or timestamps.
+- Location: quote the actual current notes heading/subheading in notes language, plus a short locating phrase if needed. Update after edits; no volatile line numbers or invented section numbering.
+- Ambiguity: briefly explain what remains unknown and its material effect in interaction language. Separate supported context from tentative interpretations; no invented corrections or confidence scores.
+- Each row has exactly five cells on one physical line. Escape literal pipes as \|, flatten source line breaks to spaces, and separate multiple times/locations with semicolons. Preserve literal source text with Markdown escaping; no raw HTML or nested blocks. Keep the index compact, without long passages or copied note sections.

@@ -12,7 +12,16 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_DIR="$SCRIPT_DIR"
-source "$WORKSPACE_DIR/../../tools/scripts/load-sccache-aws-creds.sh"
+ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
+for argument in "$@"; do
+    if [[ "$argument" == "--alma-local" ]]; then ALMA_LOCAL=1; fi
+done
+if [[ "$ALMA_LOCAL" != "1" ]]; then
+    source "$WORKSPACE_DIR/../../tools/scripts/load-sccache-aws-creds.sh"
+else
+    export RUSTC_WRAPPER=
+    export SCCACHE_DISABLE=1
+fi
 OUT_SWIFT="$WORKSPACE_DIR/generated/swift"
 OUT_KOTLIN="$WORKSPACE_DIR/generated/kotlin"
 SWIFT_BINDINGS_HASH_FILE="$WORKSPACE_DIR/../../apps/ios/GeneratedRust/.swift-bindings.hash"
@@ -20,19 +29,23 @@ BINDINGS_HASH_SCRIPT="$WORKSPACE_DIR/../../tools/scripts/uniffi-bindings-input-h
 
 cd "$WORKSPACE_DIR"
 
-if [[ -z "${RUSTC_WRAPPER:-}" ]] && [[ "${CARGO_INCREMENTAL:-}" != "1" ]] && command -v sccache >/dev/null 2>&1; then
+if [[ "$ALMA_LOCAL" != "1" ]] && [[ -z "${RUSTC_WRAPPER:-}" ]] && [[ "${CARGO_INCREMENTAL:-}" != "1" ]] && command -v sccache >/dev/null 2>&1; then
     sccache_path="$(command -v sccache)"
     export RUSTC_WRAPPER="$sccache_path"
 fi
 
-"$WORKSPACE_DIR/../../tools/scripts/update-alleycat-main.sh" --shared
 
 PROFILE="debug"
+CARGO_FEATURES=()
+ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
 GENERATE_SWIFT=1
 GENERATE_KOTLIN=1
 
 for arg in "$@"; do
     case "$arg" in
+        --alma-local)
+            ALMA_LOCAL=1
+            ;;
         --release)
             PROFILE="release"
             ;;
@@ -43,11 +56,18 @@ for arg in "$@"; do
             GENERATE_SWIFT=0
             ;;
         *)
-            echo "usage: $(basename "$0") [--release] [--swift-only] [--kotlin-only]" >&2
+            echo "usage: $(basename "$0") [--release] [--swift-only] [--kotlin-only] [--alma-local]" >&2
             exit 1
             ;;
     esac
 done
+
+export LITTER_ALMA_LOCAL="$ALMA_LOCAL"
+if [[ "$ALMA_LOCAL" == "1" ]]; then
+    CARGO_FEATURES+=(--no-default-features)
+    export LITTER_SKIP_ALLEYCAT_UPDATE=1
+fi
+"$WORKSPACE_DIR/../../tools/scripts/update-alleycat-main.sh" --shared
 
 if [[ "$GENERATE_SWIFT" -eq 0 && "$GENERATE_KOTLIN" -eq 0 ]]; then
     echo "error: nothing to generate" >&2
@@ -60,9 +80,9 @@ fi
 echo "==> Building codex-mobile-client cdylib ($PROFILE)..."
 
 if [[ "$PROFILE" == "release" ]]; then
-    cargo build -p codex-mobile-client --release
+    cargo rustc -p codex-mobile-client --lib --crate-type cdylib --release ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
 else
-    cargo build -p codex-mobile-client
+    cargo rustc -p codex-mobile-client --lib --crate-type cdylib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
 fi
 
 DYLIB_PATH="${CARGO_TARGET_DIR:-$WORKSPACE_DIR/target}/$PROFILE"

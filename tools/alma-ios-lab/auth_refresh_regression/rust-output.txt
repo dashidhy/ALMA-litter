@@ -1,0 +1,97 @@
+   Compiling alma-auth-refresh-regression v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/rust)
+warning: unused import: `serde_json::Value as JsonValue`
+ --> lib.rs:3:41
+  |
+3 | use serde::{Serialize,Deserialize}; use serde_json::Value as JsonValue;
+  |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `CALLBACK_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:16:7
+   |
+16 | const CALLBACK_BUDGET: Duration = Duration::from_secs(7);
+   |       ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `RESPONSE_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:17:7
+   |
+17 | const RESPONSE_BUDGET: Duration = Duration::from_secs(9);
+   |       ^^^^^^^^^^^^^^^
+
+warning: constant `NATIVE_BUDGET_MS` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:18:7
+   |
+18 | const NATIVE_BUDGET_MS: u32 = 6_000;
+   |       ^^^^^^^^^^^^^^^^
+
+warning: struct `AuthRefreshDispatcher` is never constructed
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:70:19
+   |
+70 | pub(crate) struct AuthRefreshDispatcher {
+   |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `dispatcher` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:74:15
+   |
+74 | pub(crate) fn dispatcher() -> &'static AuthRefreshDispatcher {
+   |               ^^^^^^^^^^
+
+warning: methods `set_provider`, `refresh`, and `dispatch` are never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:80:19
+    |
+ 79 | impl AuthRefreshDispatcher {
+    | -------------------------- methods in this implementation
+ 80 |     pub(crate) fn set_provider(&self, provider: Option<Arc<dyn ChatgptAuthRefreshProvider>>) {
+    |                   ^^^^^^^^^^^^
+...
+ 87 |     async fn refresh(
+    |              ^^^^^^^
+...
+143 |     pub(crate) async fn dispatch<R, F>(
+    |                         ^^^^^^^^
+
+warning: function `rpc_error` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:165:15
+    |
+165 | pub(crate) fn rpc_error(error: ChatgptAuthRefreshError) -> JSONRPCErrorError {
+    |               ^^^^^^^^^
+
+warning: enum `AuthRefreshDeliveryError` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:174:17
+    |
+174 | pub(crate) enum AuthRefreshDeliveryError {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `dispatcher` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:74:15
+   |
+74 | pub(crate) fn dispatcher() -> &'static AuthRefreshDispatcher {
+   |               ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `alma-auth-refresh-regression` (lib) generated 9 warnings (1 duplicate)
+warning: `alma-auth-refresh-regression` (lib test) generated 2 warnings (run `cargo fix --lib -p alma-auth-refresh-regression --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.47s
+     Running unittests lib.rs (tools/alma-ios-lab/auth_refresh_regression/.build/rust/target/debug/deps/alma_auth_refresh_regression-e33b1466ee9f7527)
+
+running 7 tests
+test tests::delayed_dispatch_does_not_start_an_expired_native_refresh ... ok
+test tests::response_transport_cannot_hang_the_dispatcher ... ok
+test tests::stuck_native_callback_replies_before_core_ten_second_deadline ... ok
+test tests::remote_request_is_rejected_without_touching_local_provider ... ok
+test tests::successful_refresh_delivers_typed_wire_response_once ... ok
+test tests::absent_provider_and_provider_failures_are_explicit_and_redacted ... ok
+test tests::removing_provider_invalidates_its_inflight_result ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests alma_auth_refresh_regression
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

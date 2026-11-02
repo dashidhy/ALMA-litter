@@ -108,7 +108,7 @@ done
 
 echo "==> Building codex_mobile_client Android shared libs..."
 cd "$WORKSPACE_DIR"
-cargo ndk "${ABI_ARGS[@]}" -o "$OUT_DIR" build --profile "$RUST_PROFILE" -p codex-mobile-client
+cargo ndk "${ABI_ARGS[@]}" -o "$OUT_DIR" rustc --profile "$RUST_PROFILE" -p codex-mobile-client --lib --crate-type cdylib
 
 # Fail the build instead of shipping an app whose embedded iSH runtime has a
 # broken (empty-stub) ARM64 vdso; at runtime that SIGABRTs as soon as a guest

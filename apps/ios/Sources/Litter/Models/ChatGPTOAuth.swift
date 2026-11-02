@@ -5,7 +5,7 @@ import Network
 import Security
 import UIKit
 
-struct ChatGPTOAuthTokenBundle: Codable, Equatable {
+struct ChatGPTOAuthTokenBundle: Codable, Equatable, Sendable {
     let accessToken: String
     let idToken: String
     let refreshToken: String?
@@ -27,6 +27,8 @@ enum ChatGPTOAuthError: LocalizedError {
     case missingAccountID
     case tokenExchangeFailed(status: Int, message: String)
     case refreshAccountMismatch
+    case staleRefresh
+    case refreshTimedOut
     case keychain(OSStatus)
 
     var errorDescription: String? {
@@ -57,6 +59,10 @@ enum ChatGPTOAuthError: LocalizedError {
             return "ChatGPT token exchange failed (\(status)): \(message)"
         case .refreshAccountMismatch:
             return "ChatGPT refresh returned a different account than expected."
+        case .staleRefresh:
+            return "Stored ChatGPT credentials changed during refresh."
+        case .refreshTimedOut:
+            return "ChatGPT credential refresh timed out."
         case .keychain(let status):
             return "Keychain error (\(status))"
         }
@@ -68,12 +74,16 @@ enum ChatGPTOAuthError: LocalizedError {
     }
 }
 
-final class ChatGPTOAuthTokenStore {
+final class ChatGPTOAuthTokenStore: Sendable {
     static let shared = ChatGPTOAuthTokenStore()
 
     private let service = "com.sigkitten.litter.chatgpt.tokens"
     private let account = "default"
-    private let accessibility = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+    private var accessibility: CFString { kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly }
+
+    // Reads remain synchronous for the existing Slingshot credential reader.
+    // All mutations and refresh commits are serialized on the main actor.
+    @MainActor private(set) var generation: UInt64 = 0
 
     private init() {}
 
@@ -98,7 +108,9 @@ final class ChatGPTOAuthTokenStore {
         }
     }
 
+    @MainActor
     func save(_ tokens: ChatGPTOAuthTokenBundle) throws {
+        generation &+= 1
         let data = try JSONEncoder().encode(tokens)
         let attributes: [String: Any] = baseQuery().merging([
             kSecAttrAccessible as String: accessibility,
@@ -123,7 +135,10 @@ final class ChatGPTOAuthTokenStore {
         }
     }
 
+    @MainActor
     func clear() throws {
+        // Invalidate pending refreshes even if Keychain deletion fails.
+        generation &+= 1
         let status = SecItemDelete(baseQuery() as CFDictionary)
         guard status == errSecSuccess || status == errSecItemNotFound else {
             throw ChatGPTOAuthError.keychain(status)
@@ -214,40 +229,107 @@ enum ChatGPTOAuth {
 
     static func loadStoredOrRefreshedTokens() async throws -> ChatGPTOAuthTokenBundle {
         let stored = try ChatGPTOAuthTokenStore.shared.load()
+        let generation = ChatGPTOAuthTokenStore.shared.generation
         do {
             return try await refreshStoredTokens(
                 previousAccountID: stored?.accountID,
                 storedTokens: stored
             )
         } catch {
-            if let stored {
+            if let stored,
+               ChatGPTOAuthTokenStore.shared.generation == generation,
+               try ChatGPTOAuthTokenStore.shared.load() == stored {
                 return stored
             }
             throw error
         }
     }
 
+    private struct RefreshFlight {
+        let id: UUID
+        let generation: UInt64
+        let stored: ChatGPTOAuthTokenBundle
+        let task: Task<ChatGPTOAuthTokenBundle, Error>
+    }
+    private static var refreshFlight: RefreshFlight?
+
     static func refreshStoredTokens(
         previousAccountID: String?,
-        storedTokens: ChatGPTOAuthTokenBundle? = nil
+        storedTokens: ChatGPTOAuthTokenBundle? = nil,
+        deadline: Date? = nil
     ) async throws -> ChatGPTOAuthTokenBundle {
-        guard let stored = try (storedTokens ?? ChatGPTOAuthTokenStore.shared.load()) else {
+        try Task.checkCancellation()
+        let store = ChatGPTOAuthTokenStore.shared
+        guard let current = try store.load() else {
             throw ChatGPTOAuthError.missingStoredTokens
         }
+        let stored = storedTokens ?? current
+        guard stored == current else { throw ChatGPTOAuthError.staleRefresh }
+        let expected = previousAccountID.flatMap { $0.isEmpty ? nil : $0 } ?? stored.accountID
+        guard stored.accountID == expected else { throw ChatGPTOAuthError.refreshAccountMismatch }
         guard let refreshToken = stored.refreshToken, !refreshToken.isEmpty else {
             throw ChatGPTOAuthError.missingRefreshToken
         }
-
-        let refreshed = try await exchangeRefreshToken(
-            refreshToken,
-            fallbackRefreshToken: refreshToken
-        )
-        if let previousAccountID, !previousAccountID.isEmpty,
-           refreshed.accountID != previousAccountID,
-           stored.accountID != previousAccountID {
-            throw ChatGPTOAuthError.refreshAccountMismatch
+        if let deadline, Date() >= deadline { throw ChatGPTOAuthError.refreshTimedOut }
+        let generation = store.generation
+        let flight: RefreshFlight
+        if let existing = refreshFlight,
+           existing.generation == generation, existing.stored == stored {
+            // One refresh-token rotation for concurrent requests from this store
+            // generation. Every waiter still checks its own deadline/account.
+            flight = existing
+        } else {
+            let refreshDeadline = deadline ?? Date().addingTimeInterval(20)
+            let task = Task { @MainActor () throws -> ChatGPTOAuthTokenBundle in
+                guard Date() < refreshDeadline else { throw ChatGPTOAuthError.refreshTimedOut }
+                let refreshed = try await withThrowingTaskGroup(of: ChatGPTOAuthTokenBundle.self) { group in
+                    group.addTask {
+                        try await exchangeRefreshToken(
+                            refreshToken,
+                            fallbackRefreshToken: refreshToken,
+                            timeout: max(0.001, refreshDeadline.timeIntervalSinceNow)
+                        )
+                    }
+                    group.addTask {
+                        let remaining = max(0, refreshDeadline.timeIntervalSinceNow)
+                        try await Task.sleep(nanoseconds: UInt64(remaining * 1_000_000_000))
+                        throw ChatGPTOAuthError.refreshTimedOut
+                    }
+                    // URLSession's async request observes cancellation. A
+                    // deadline must stop a flight even if data keeps arriving.
+                    defer { group.cancelAll() }
+                    guard let result = try await group.next() else {
+                        throw ChatGPTOAuthError.refreshTimedOut
+                    }
+                    return result
+                }
+                try Task.checkCancellation()
+                guard Date() < refreshDeadline else { throw ChatGPTOAuthError.refreshTimedOut }
+                // Do not resurrect logged-out credentials, overwrite a new
+                // account, or overwrite a newer refresh/login—even if identical
+                // tokens were saved again while this request was suspended.
+                guard store.generation == generation, try store.load() == stored else {
+                    throw ChatGPTOAuthError.staleRefresh
+                }
+                guard refreshed.accountID == expected else {
+                    throw ChatGPTOAuthError.refreshAccountMismatch
+                }
+                try store.save(refreshed)
+                return refreshed
+            }
+            flight = RefreshFlight(id: UUID(), generation: generation, stored: stored, task: task)
+            refreshFlight = flight
         }
-        try ChatGPTOAuthTokenStore.shared.save(refreshed)
+        defer {
+            if refreshFlight?.id == flight.id { refreshFlight = nil }
+        }
+        let refreshed = try await flight.task.value
+        try Task.checkCancellation()
+        if let deadline, Date() >= deadline { throw ChatGPTOAuthError.refreshTimedOut }
+        guard store.generation == (flight.generation &+ 1), try store.load() == refreshed else {
+            throw ChatGPTOAuthError.staleRefresh
+        }
+        guard refreshed.accountID == expected else { throw ChatGPTOAuthError.refreshAccountMismatch }
         return refreshed
     }
 
@@ -407,7 +489,8 @@ enum ChatGPTOAuth {
 
     private static func exchangeRefreshToken(
         _ refreshToken: String,
-        fallbackRefreshToken: String? = nil
+        fallbackRefreshToken: String? = nil,
+        timeout: TimeInterval = 20
     ) async throws -> ChatGPTOAuthTokenBundle {
         let body = [
             "grant_type=refresh_token",
@@ -416,13 +499,15 @@ enum ChatGPTOAuth {
         ].joined(separator: "&")
         return try await exchangeToken(
             body: body,
-            fallbackRefreshToken: fallbackRefreshToken
+            fallbackRefreshToken: fallbackRefreshToken,
+            timeout: timeout
         )
     }
 
     private static func exchangeToken(
         body: String,
-        fallbackRefreshToken: String? = nil
+        fallbackRefreshToken: String? = nil,
+        timeout: TimeInterval = 20
     ) async throws -> ChatGPTOAuthTokenBundle {
         guard let url = URL(string: "\(authIssuer)/oauth/token") else {
             throw ChatGPTOAuthError.invalidAuthorizeURL
@@ -430,7 +515,7 @@ enum ChatGPTOAuth {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = body.data(using: .utf8)
-        request.timeoutInterval = 20
+        request.timeoutInterval = timeout
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
 
         LLog.info("auth", "ChatGPT token exchange request", fields: [
@@ -441,19 +526,17 @@ enum ChatGPTOAuth {
         guard let http = response as? HTTPURLResponse else {
             throw ChatGPTOAuthError.tokenExchangeFailed(status: -1, message: "missing HTTP response")
         }
-        let responseText = String(decoding: data, as: UTF8.self)
         LLog.info("auth", "ChatGPT token exchange response", fields: [
             "status": http.statusCode,
             "keys": jsonObjectKeys(data).joined(separator: ",")
         ])
         guard (200...299).contains(http.statusCode) else {
             LLog.warn("auth", "ChatGPT token exchange failed", fields: [
-                "status": http.statusCode,
-                "body": redactedOAuthResponsePreview(responseText)
+                "status": http.statusCode
             ])
             throw ChatGPTOAuthError.tokenExchangeFailed(
                 status: http.statusCode,
-                message: String(responseText.prefix(300))
+                message: "OAuth token endpoint rejected the request"
             )
         }
 
@@ -483,19 +566,17 @@ enum ChatGPTOAuth {
         guard let http = response as? HTTPURLResponse else {
             throw ChatGPTOAuthError.tokenExchangeFailed(status: -1, message: "missing HTTP response")
         }
-        let responseText = String(decoding: data, as: UTF8.self)
         LLog.info("auth", "ChatGPT access-token exchange response", fields: [
             "status": http.statusCode,
             "keys": jsonObjectKeys(data).joined(separator: ",")
         ])
         guard (200...299).contains(http.statusCode) else {
             LLog.warn("auth", "ChatGPT access-token exchange failed", fields: [
-                "status": http.statusCode,
-                "body": redactedOAuthResponsePreview(responseText)
+                "status": http.statusCode
             ])
             throw ChatGPTOAuthError.tokenExchangeFailed(
                 status: http.statusCode,
-                message: String(responseText.prefix(300))
+                message: "OAuth token endpoint rejected the request"
             )
         }
 
@@ -781,7 +862,7 @@ private final class ChatGPTOAuthSessionRunner: NSObject, ASWebAuthenticationPres
         if let error {
             LLog.warn("auth", "ChatGPT auth session failed", fields: [
                 "label": label,
-                "error": error.localizedDescription
+                "errorCode": (error as NSError).code
             ])
             finishFailure(error)
             return
@@ -926,7 +1007,7 @@ private final class ChatGPTOAuthLoopbackServer: @unchecked Sendable {
                     )
                 case .failed(let error):
                     LLog.warn("auth", "ChatGPT auth callback listener failed", fields: [
-                        "error": error.localizedDescription
+                        "errorCode": (error as NSError).code
                     ])
                     self.resumeStart(with: .failure(error))
                     self.resumeCallback(with: .failure(error))
@@ -1011,9 +1092,7 @@ private final class ChatGPTOAuthLoopbackServer: @unchecked Sendable {
     private func processRequestData(_ data: Data, on connection: NWConnection) {
         let requestText = String(decoding: data, as: UTF8.self)
         let requestLine = requestText.components(separatedBy: "\r\n").first ?? ""
-        LLog.info("auth", "ChatGPT auth callback request received", fields: [
-            "requestLine": requestLine
-        ])
+        LLog.info("auth", "ChatGPT auth callback request received")
         let pathWithQuery = requestLine
             .split(separator: " ", omittingEmptySubsequences: true)
             .dropFirst()
@@ -1024,10 +1103,7 @@ private final class ChatGPTOAuthLoopbackServer: @unchecked Sendable {
               let callbackURL = URL(string: "http://\(publicHost):\(port)\(pathWithQuery)"),
               let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false),
               components.path == path else {
-            LLog.warn("auth", "ChatGPT auth callback rejected", fields: [
-                "requestLine": requestLine,
-                "pathWithQuery": pathWithQuery
-            ])
+            LLog.warn("auth", "ChatGPT auth callback rejected")
             sendResponse(
                 statusLine: "HTTP/1.1 404 Not Found",
                 body: "<html><body><h3>Not found</h3></body></html>",

@@ -1,0 +1,34 @@
+diff --git a/codex-rs/mxc-sandbox/Cargo.toml b/codex-rs/mxc-sandbox/Cargo.toml
+index 2cd39d5..8e9b7f1 100644
+--- a/codex-rs/mxc-sandbox/Cargo.toml
++++ b/codex-rs/mxc-sandbox/Cargo.toml
+@@ -21,11 +21,15 @@ codex-protocol = { workspace = true }
+ codex-utils-absolute-path = { workspace = true }
+ codex-utils-path-uri = { workspace = true }
+ codex-windows-sandbox = { workspace = true }
+-mxc-sdk = { workspace = true }
+ serde = { workspace = true, features = ["derive"] }
+ serde_json = { workspace = true }
+ thiserror = { workspace = true }
+ 
++# The MXC runtime supports desktop OSes only. iOS/Android retain the existing
++# unavailable implementation and must not compile an unusable desktop SDK.
++[target.'cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))'.dependencies]
++mxc-sdk = { workspace = true }
++
+ [target.'cfg(windows)'.dependencies]
+ flatbuffers = { workspace = true }
+ # 1.2.4 imports OneCore_apiset, which the GNU Windows toolchain does not ship.
+diff --git a/codex-rs/mxc-sandbox/src/lib.rs b/codex-rs/mxc-sandbox/src/lib.rs
+index fde6ddf..3796b53 100644
+--- a/codex-rs/mxc-sandbox/src/lib.rs
++++ b/codex-rs/mxc-sandbox/src/lib.rs
+@@ -5,7 +5,7 @@
+ mod availability;
+ #[cfg(windows)]
+ mod native;
+-#[cfg(any(windows, test))]
++#[cfg(any(windows, all(test, any(target_os = "linux", target_os = "macos"))))]
+ mod policy;
+ mod transport;
+ #[cfg(windows)]

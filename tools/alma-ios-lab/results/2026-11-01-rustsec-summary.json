@@ -1,0 +1,238 @@
+{
+  "date": "2026-11-01",
+  "tool": "cargo-audit 0.22.2",
+  "toolArchiveSHA256": "ec7ca4263769593df4d909be85b94a6b79efa2897be5d2bb8ebd516e823175af",
+  "database": {
+    "advisory-count": 1395,
+    "last-commit": "2295466c4e9df26647fd67d8fa1c705ac2fc7f81",
+    "last-updated": "2026-10-30T12:12:39+01:00"
+  },
+  "lockfileSHA256": "b470baedc8ccee6f4cfa57f8e245bd4d9ce86b3e9f6df149ef12deb98a4557f8",
+  "fullLockFindings": 20,
+  "distinctAdvisories": 19,
+  "localIOSNormalGraphFindings": 12,
+  "findings": [
+    {
+      "id": "RUSTSEC-2026-0387",
+      "package": "crypto-bigint",
+      "version": "0.5.5",
+      "title": "Multiple timing variability issues in operations intended to be constant-time",
+      "patched": [
+        ">=0.7.6"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/RustCrypto/crypto-bigint/pull/1365"
+    },
+    {
+      "id": "RUSTSEC-2026-0387",
+      "package": "crypto-bigint",
+      "version": "0.7.5",
+      "title": "Multiple timing variability issues in operations intended to be constant-time",
+      "patched": [
+        ">=0.7.6"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/RustCrypto/crypto-bigint/pull/1365"
+    },
+    {
+      "id": "RUSTSEC-2026-0385",
+      "package": "ctutils",
+      "version": "0.4.2",
+      "title": "Non-constant-time mask generation and `u128` comparisons",
+      "patched": [
+        ">=0.4.4"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/RustCrypto/utils/pull/1569"
+    },
+    {
+      "id": "RUSTSEC-2026-0119",
+      "package": "hickory-proto",
+      "version": "0.25.2",
+      "title": "CPU exhaustion during message encoding due to O(n\u00b2) name compression",
+      "patched": [
+        ">=0.26.1"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/hickory-dns/hickory-dns/pull/3613"
+    },
+    {
+      "id": "RUSTSEC-2026-0118",
+      "package": "hickory-proto",
+      "version": "0.25.2",
+      "title": "NSEC3 closest-encloser proof validation enters unbounded loop on cross-zone responses",
+      "patched": [],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/hickory-dns/hickory-dns/pull/3597"
+    },
+    {
+      "id": "RUSTSEC-2026-0195",
+      "package": "quick-xml",
+      "version": "0.39.2",
+      "title": "Unbounded namespace-declaration allocation in `NsReader` enables memory-exhaustion denial of service",
+      "patched": [
+        ">=0.41.0"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/tafia/quick-xml/issues/970"
+    },
+    {
+      "id": "RUSTSEC-2026-0194",
+      "package": "quick-xml",
+      "version": "0.39.2",
+      "title": "Quadratic run time when checking a start tag for duplicate attribute names",
+      "patched": [
+        ">=0.41.0"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/tafia/quick-xml/issues/969"
+    },
+    {
+      "id": "RUSTSEC-2026-0342",
+      "package": "quinn-proto",
+      "version": "0.11.15",
+      "title": "Zero-length DATAGRAM frames bypass the receive buffer limit in quinn-proto",
+      "patched": [
+        ">=0.11.17"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/quinn-rs/quinn/pull/2790"
+    },
+    {
+      "id": "RUSTSEC-2026-0339",
+      "package": "quinn-proto",
+      "version": "0.11.15",
+      "title": "Unbounded growth of pending connection ID retirements in quinn-proto",
+      "patched": [
+        ">=0.11.17"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/quinn-rs/quinn/pull/2790"
+    },
+    {
+      "id": "RUSTSEC-2026-0338",
+      "package": "quinn-proto",
+      "version": "0.11.15",
+      "title": "Remote peer can panic quinn-proto with zero-length STREAM frames during unordered reads",
+      "patched": [
+        ">=0.11.18"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/quinn-rs/quinn/pull/2868"
+    },
+    {
+      "id": "RUSTSEC-2026-0340",
+      "package": "quinn-proto",
+      "version": "0.11.15",
+      "title": "Peer minimum ACK delay can panic quinn-proto when ACK_FREQUENCY transmission is enabled",
+      "patched": [
+        ">=0.11.18"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/quinn-rs/quinn/pull/2868"
+    },
+    {
+      "id": "RUSTSEC-2026-0341",
+      "package": "quinn-proto",
+      "version": "0.11.15",
+      "title": "Stream reassembly memory-exhaustion guard in quinn-proto can be bypassed",
+      "patched": [
+        ">=0.11.17"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/quinn-rs/quinn/pull/2790"
+    },
+    {
+      "id": "RUSTSEC-2023-0071",
+      "package": "rsa",
+      "version": "0.10.0-rc.18",
+      "title": "Marvin Attack: potential key recovery through timing sidechannels",
+      "patched": [],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/RustCrypto/RSA/issues/626"
+    },
+    {
+      "id": "RUSTSEC-2026-0382",
+      "package": "rustls-webpki",
+      "version": "0.103.15",
+      "title": "Certificate verification may accept distrusted intermediates",
+      "patched": [
+        ">=0.103.16, <0.104.0-alpha.1",
+        ">=0.104.0-alpha.8"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/rustls/webpki/pull/546"
+    },
+    {
+      "id": "RUSTSEC-2026-0383",
+      "package": "webpki-root-certs",
+      "version": "1.0.6",
+      "title": "Bundled root certificates allow trust in distrusted emSign intermediates",
+      "patched": [
+        ">=1.0.10"
+      ],
+      "inLocalIOSNormalGraph": false,
+      "url": "https://github.com/rustls/webpki-roots/pull/133"
+    },
+    {
+      "id": "RUSTSEC-2026-0381",
+      "package": "webpki-roots",
+      "version": "1.0.6",
+      "title": "Bundled root certificates allow trust in distrusted emSign intermediates",
+      "patched": [
+        ">=1.0.10"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/rustls/webpki-roots/pull/133"
+    },
+    {
+      "id": "RUSTSEC-2026-0391",
+      "package": "zstd",
+      "version": "0.13.3",
+      "title": "Data from an abandoned stream leaks into the next stream on a reused context",
+      "patched": [
+        ">=0.14.3"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/gyscos/zstd-rs/commit/74ace2dcdca62a2ce0f034895d6079458311e003"
+    },
+    {
+      "id": "RUSTSEC-2026-0403",
+      "package": "zstd-safe",
+      "version": "7.2.4",
+      "title": "Uninitialized memory exposed when streaming decompression of a legacy frame fails",
+      "patched": [
+        ">=8.2.0"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/gyscos/zstd-rs/commit/006e1d1ad1eeaf6b5d4c28329e70217adabcec43"
+    },
+    {
+      "id": "RUSTSEC-2026-0398",
+      "package": "zstd-safe",
+      "version": "7.2.4",
+      "title": "`Seekable::decompress` sets a `Vec` length beyond its capacity for offsets past the end",
+      "patched": [
+        ">=8.2.0"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/gyscos/zstd-rs/commit/80506be743fae2ed0c2fe8b21c374c6a2eab0be7"
+    },
+    {
+      "id": "RUSTSEC-2026-0410",
+      "package": "zstd-sys",
+      "version": "2.0.16+zstd.1.5.7",
+      "title": "WebAssembly allocator shim corrupts memory on allocation failure",
+      "patched": [
+        ">=2.1.2"
+      ],
+      "inLocalIOSNormalGraph": true,
+      "url": "https://github.com/gyscos/zstd-rs/commit/165d1625553c236b9700ca794b8a7c51f5d98314"
+    }
+  ],
+  "warnings": {
+    "unmaintained": 9,
+    "unsound": 17
+  },
+  "limits": "graph membership is not exploitability; unfiltered full-lock RustSec result, native platform applicability requires per-advisory analysis; no advisories suppressed"
+}

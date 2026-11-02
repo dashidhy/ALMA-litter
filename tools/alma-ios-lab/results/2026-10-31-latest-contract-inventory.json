@@ -1,0 +1,51 @@
+{
+  "target": "0.166.0",
+  "targetCommit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "sourceHashes": {
+    "codex-rs/app-server/src/in_process.rs": "8a64137ba4cb99112d51da630a7928da0460cf1ef982dc4a40b3b6811fb507af",
+    "codex-rs/app-server/src/in_process_bootstrap.rs": "ac55bf9996090f0d7ef425bbc4308f3791e257167ec141f8542e80d51483d4bb",
+    "codex-rs/app-server/src/external_auth.rs": "06c20470609d680b0dcc17cc054bbff035b8db76f1afe32b6149492888db9227",
+    "codex-rs/app-server-protocol/src/protocol/v2/item.rs": "92d9c734b0244db046e7a47c91c3933635775a990d35db8d6eab18efa32b55f1",
+    "codex-rs/app-server-protocol/src/protocol/v2/account.rs": "8768b6d379a1045522c72b678ac812e1e0aedfbf73f7948c31e479192ada76cc",
+    "codex-rs/core/src/unified_exec/mod.rs": "7aa5032057b46e55f328e5ef2a2f3b771a72ad09f05d5d1fcb8c1b66a1fd036d",
+    "codex-rs/core/src/unified_exec/process_manager.rs": "7ac519358b0a4725193fb7657f25ad24be0e3434f6c3f37c2c70baadf254e916",
+    "codex-rs/exec-server/src/process.rs": "63b2029f79a5bc7f07575c66afe4025f888173f2932041b30e6d94315c356dc4",
+    "codex-rs/features/src/lib.rs": "092fa6e9bd6b53d4a63aec2130fdfb90b74b28f222135ff34c499b58a53dc963",
+    "codex-rs/core/src/thread_manager.rs": "649c77f487598381a2d1a371b67a78b6d0c89582642aa9e4b2d122a7287a27fe",
+    "codex-rs/code-mode/src/remote_session/connection.rs": "dba3a7ceb5eea0aedfcf83641b0c1148923025525df6d78b78728b9813225496"
+  },
+  "oldThreadItemEnumReferences": [
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/mobile_client/store_listener.rs",
+      "count": 5
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/mobile_client/event_loop.rs",
+      "count": 8
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/ffi/client.rs",
+      "count": 1
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/ffi/app_store.rs",
+      "count": 4
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/store/reducer.rs",
+      "count": 6
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/store/reconcile.rs",
+      "count": 2
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/session/events.rs",
+      "count": 1
+    }
+  ],
+  "totalOldThreadItemEnumReferences": 27,
+  "almaNativeProfileSource": "app/TAH/providers/codex/adapter/src/native-profile.ts",
+  "almaNativeProfileSHA256": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c",
+  "scope": "source inventory, not compiler diagnostics or phone execution"
+}

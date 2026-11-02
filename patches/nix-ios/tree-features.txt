@@ -1,0 +1,71 @@
+TARGET aarch64-apple-ios
+/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo tree --manifest-path shared/rust-bridge/Cargo.toml --frozen --target aarch64-apple-ios -p codex-mobile-client -e normal,build --prefix none -f {p} features=[{f}]
+nix v0.28.0 features=[default,fs,ioctl,poll,process,signal,term]
+nix v0.29.0 features=[default,feature,fs,memoffset,mount,net,process,sched,signal,socket,term,uio,user]
+nix v0.31.2 features=[default,fs,mman,poll,process,signal]
+
+INVERSE nix@0.28.0
+nix v0.28.0
+├── portable-pty v0.9.0
+│   └── codex-utils-pty v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/utils/pty)
+└── rustyline v14.0.0
+    └── starlark v0.14.2 (https://github.com/facebook/starlark-rust?rev=3bed1c40f93da22b8e251dd520dfb8d35bfe1fb7#3bed1c40)
+
+
+INVERSE nix@0.29.0
+nix v0.29.0
+└── mxc-sdk v1.0.0 (https://github.com/microsoft/mxc?rev=b21120168d70befe12356411423266bfef168446#b2112016)
+    └── codex-mxc-sandbox v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/mxc-sandbox)
+
+
+INVERSE nix@0.30.1
+(absent)
+warning: nothing to print.
+
+To find dependencies that require specific target platforms, try to use option `--target all` first, and then narrow your search scope accordingly.
+
+INVERSE nix@0.31.2
+nix v0.31.2
+├── process-wrap v10.0.1
+│   └── rmcp v3.5.1 (https://github.com/modelcontextprotocol/rust-sdk?rev=98a54789b80110ad210495c4ad845c89e1980471#98a54789)
+└── russh-cryptovec v0.62.0
+    └── russh v0.62.6
+
+
+TARGET aarch64-apple-darwin
+/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo tree --manifest-path shared/rust-bridge/Cargo.toml --frozen --target aarch64-apple-darwin -p codex-mobile-client -e normal,build --prefix none -f {p} features=[{f}]
+nix v0.28.0 features=[default,fs,ioctl,poll,process,signal,term]
+nix v0.29.0 features=[default,feature,fs,memoffset,mount,net,process,sched,signal,socket,term,uio,user]
+nix v0.30.1 features=[default,feature]
+nix v0.31.2 features=[default,fs,mman,poll,process,signal]
+
+INVERSE nix@0.28.0
+nix v0.28.0
+├── portable-pty v0.9.0
+│   └── codex-utils-pty v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/utils/pty)
+└── rustyline v14.0.0
+    └── starlark v0.14.2 (https://github.com/facebook/starlark-rust?rev=3bed1c40f93da22b8e251dd520dfb8d35bfe1fb7#3bed1c40)
+
+
+INVERSE nix@0.29.0
+nix v0.29.0
+└── mxc-sdk v1.0.0 (https://github.com/microsoft/mxc?rev=b21120168d70befe12356411423266bfef168446#b2112016)
+    └── codex-mxc-sandbox v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/mxc-sandbox)
+
+
+INVERSE nix@0.30.1
+nix v0.30.1
+└── os_info v3.14.0
+    ├── codex-analytics v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/analytics)
+    ├── codex-login v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/login)
+    └── codex-otel v0.166.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/otel)
+
+
+INVERSE nix@0.31.2
+nix v0.31.2
+├── process-wrap v10.0.1
+│   └── rmcp v3.5.1 (https://github.com/modelcontextprotocol/rust-sdk?rev=98a54789b80110ad210495c4ad845c89e1980471#98a54789)
+└── russh-cryptovec v0.62.0
+    └── russh v0.62.6
+
+

@@ -1,0 +1,9 @@
+{
+  "commit": "4f783cd957b83de3019d6a843408d5bb3ff902c7",
+  "sourceFiles": 522,
+  "patches": {
+    "patches/ish-lifecycle/owned-session-jobs.patch": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+    "patches/ish-workspace-policy/workspace-policy.patch": "34289155642eacaad5f5ac3c04e6b4fc2fb7a16cea099826a38552367668a9d4",
+    "patches/ish-native-workspace/native-workspace.patch": "44da47a27f0cbe7226bbf8fbcf5fe4ee6420827bb1abbfd9490c4f7ec267c15a"
+  }
+}

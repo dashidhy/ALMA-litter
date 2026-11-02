@@ -1,0 +1,19 @@
+[
+  "codex-rs/core/src/environment_selection.rs",
+  "codex-rs/core/src/exec.rs",
+  "codex-rs/core/src/exec/embedded.rs",
+  "codex-rs/core/src/exec/embedded_tests.rs",
+  "codex-rs/core/src/session/turn_context.rs",
+  "codex-rs/core/src/shell_snapshot.rs",
+  "codex-rs/core/src/tools/handlers/unified_exec/preparation.rs",
+  "codex-rs/core/src/tools/orchestrator.rs",
+  "codex-rs/core/src/tools/runtimes/apply_patch.rs",
+  "codex-rs/core/src/tools/runtimes/unified_exec.rs",
+  "codex-rs/core/src/unified_exec/process_manager.rs",
+  "codex-rs/core/src/unified_exec/process_manager_tests.rs",
+  "codex-rs/core/src/unified_exec/shell_snapshot.rs",
+  "codex-rs/exec-server/src/environment.rs",
+  "codex-rs/exec-server/src/environment/embedded.rs",
+  "codex-rs/exec-server/src/lib.rs",
+  "codex-rs/exec-server/src/process.rs"
+]

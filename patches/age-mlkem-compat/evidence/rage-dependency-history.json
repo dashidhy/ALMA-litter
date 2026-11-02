@@ -1,0 +1,302 @@
+[
+  {
+    "sha": "c555f4dd302c7266668b23c4b1e8768a1d2de9f6",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:47:24Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:47:24Z"
+      },
+      "message": "Merge branch 'main' into release-0.12.1",
+      "tree": {
+        "sha": "098e373bc44ed79739d03303a84d12aae300ec98",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/098e373bc44ed79739d03303a84d12aae300ec98"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/c555f4dd302c7266668b23c4b1e8768a1d2de9f6",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/c555f4dd302c7266668b23c4b1e8768a1d2de9f6"
+  },
+  {
+    "sha": "7a854c9c8c02dab2ebea19e02e6693a5730a8b2a",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:45:11Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:45:11Z"
+      },
+      "message": "v0.12.1",
+      "tree": {
+        "sha": "65152dba93704aedfa4d04f047ab97a07e195b12",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/65152dba93704aedfa4d04f047ab97a07e195b12"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/7a854c9c8c02dab2ebea19e02e6693a5730a8b2a",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/7a854c9c8c02dab2ebea19e02e6693a5730a8b2a"
+  },
+  {
+    "sha": "c5aeafe9280a7ab16013777d92e518e260916cb0",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:41:32Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:41:32Z"
+      },
+      "message": "Merge branch 'rage-0.11.4' into release-0.12.1",
+      "tree": {
+        "sha": "eb84c6dfa6a96bf427abf11a25017b41253b1022",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/eb84c6dfa6a96bf427abf11a25017b41253b1022"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/c5aeafe9280a7ab16013777d92e518e260916cb0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/c5aeafe9280a7ab16013777d92e518e260916cb0"
+  },
+  {
+    "sha": "55ab2e95e0430e22cb0d8640820d68cdea8de5c7",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:36:00Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T02:36:00Z"
+      },
+      "message": "v0.11.4",
+      "tree": {
+        "sha": "19a41e6a0084cb27a386fe8f10e01344da5fd053",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/19a41e6a0084cb27a386fe8f10e01344da5fd053"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/55ab2e95e0430e22cb0d8640820d68cdea8de5c7",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/55ab2e95e0430e22cb0d8640820d68cdea8de5c7"
+  },
+  {
+    "sha": "95a5959c3cf6143fb54321c5d82f99887887b61e",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T00:45:29Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-14T01:54:36Z"
+      },
+      "message": "age: Update testkit test files\n\nSource: https://github.com/C2SP/CCTV/tree/10d8d6251b0ed6bfa9edf2af21bb0619e3555fdc/age/testdata",
+      "tree": {
+        "sha": "f418c795ec4e073637a67ed763fab598596cb13b",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/f418c795ec4e073637a67ed763fab598596cb13b"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/95a5959c3cf6143fb54321c5d82f99887887b61e",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/95a5959c3cf6143fb54321c5d82f99887887b61e"
+  },
+  {
+    "sha": "4bfce2d2dbe860f2e630047d281dcb0d92039fc8",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T20:19:03Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T20:31:19Z"
+      },
+      "message": "Migrate to 2024 edition",
+      "tree": {
+        "sha": "bac8604f63e4ae30d174217d7148ed41dd8b6702",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/bac8604f63e4ae30d174217d7148ed41dd8b6702"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/4bfce2d2dbe860f2e630047d281dcb0d92039fc8",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/4bfce2d2dbe860f2e630047d281dcb0d92039fc8"
+  },
+  {
+    "sha": "f7c95f4c067049085944e914ef4e7321fe03e7b9",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T19:27:00Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T20:22:33Z"
+      },
+      "message": "Migrate to latest Rust Crypto crate stack",
+      "tree": {
+        "sha": "961e1511cecc3943a246950cb2c10e7426658e06",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/961e1511cecc3943a246950cb2c10e7426658e06"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/f7c95f4c067049085944e914ef4e7321fe03e7b9",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/f7c95f4c067049085944e914ef4e7321fe03e7b9"
+  },
+  {
+    "sha": "057649ac7f045999081a1545417418de521c66d0",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T02:00:57Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T19:34:52Z"
+      },
+      "message": "Bump MSRV to 1.85",
+      "tree": {
+        "sha": "8a93c93a48e9dfdb4dd131036e685c3191a39045",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/8a93c93a48e9dfdb4dd131036e685c3191a39045"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/057649ac7f045999081a1545417418de521c66d0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/057649ac7f045999081a1545417418de521c66d0"
+  },
+  {
+    "sha": "f6383f367e9aa514a3b5fbce7feede08a425d647",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T01:41:31Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-07-13T01:41:56Z"
+      },
+      "message": "v0.12.0",
+      "tree": {
+        "sha": "2f606699db9cb5870cd46e2dc4f685d2ff5f1b64",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/2f606699db9cb5870cd46e2dc4f685d2ff5f1b64"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/f6383f367e9aa514a3b5fbce7feede08a425d647",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/f6383f367e9aa514a3b5fbce7feede08a425d647"
+  },
+  {
+    "sha": "8e074ff0e8f14a6a0a5a033086a7a53fc83325a0",
+    "commit": {
+      "author": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-01-04T04:22:08Z"
+      },
+      "committer": {
+        "name": "Jack Grigg",
+        "email": "thestr4d@gmail.com",
+        "date": "2026-04-07T22:41:10Z"
+      },
+      "message": "age: Add `tagpq::Recipient`",
+      "tree": {
+        "sha": "1eb5fefd28af56325716baf50e51ba3f40a61a77",
+        "url": "https://api.github.com/repos/str4d/rage/git/trees/1eb5fefd28af56325716baf50e51ba3f40a61a77"
+      },
+      "url": "https://api.github.com/repos/str4d/rage/git/commits/8e074ff0e8f14a6a0a5a033086a7a53fc83325a0",
+      "comment_count": 0,
+      "verification": {
+        "verified": false,
+        "reason": "unsigned",
+        "signature": null,
+        "payload": null,
+        "verified_at": null
+      }
+    },
+    "html_url": "https://github.com/str4d/rage/commit/8e074ff0e8f14a6a0a5a033086a7a53fc83325a0"
+  }
+]

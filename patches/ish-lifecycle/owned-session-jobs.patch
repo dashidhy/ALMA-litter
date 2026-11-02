@@ -1,0 +1,915 @@
+diff --git a/embed/ffi.c b/embed/ffi.c
+--- a/embed/ffi.c
++++ b/embed/ffi.c
+@@ -113,3 +113,6 @@
+     g_exit_cb = cb;
+     exit_hook = (cb != NULL) ? exit_hook_trampoline : NULL;
+ }
++
++#include "kernel/session_job.h"
++int ish_ffi_enable_session_jobs(void) { return ish_job_enable_controller(); }
+diff --git a/embed/ffi.h b/embed/ffi.h
+--- a/embed/ffi.h
++++ b/embed/ffi.h
+@@ -21,6 +21,9 @@
+ // Allocate the init task and set `current` to it. Returns 0 on success.
+ // Must be called once per process; iSH's kernel state is process-global.
+ int ish_ffi_become_init(void);
++
++// Opt-in host authority for PID-1 session jobs. Call after become_init, before exec/start.
++int ish_ffi_enable_session_jobs(void);
+ 
+ // Mount synthetic kernel filesystems inside the guest rootfs. Must be called
+ // after ish_ffi_become_init() so path lookups have a current task.
+diff --git a/embed/host/src/instance.rs b/embed/host/src/instance.rs
+--- a/embed/host/src/instance.rs
++++ b/embed/host/src/instance.rs
+@@ -82,6 +82,7 @@
+ }
+ 
+ pub(crate) struct InstanceInner {
++    pub(crate) owned_jobs: bool,
+     next_reqid: AtomicU32,
+     sessions: Mutex<HashMap<SessionId, Weak<SessionInner>>>,
+     writer_tx: std::sync::mpsc::Sender<HostToSupervisor>,
+@@ -111,11 +112,25 @@
+ }
+ 
+ impl IshInstance {
++    /// True only after opting into the owned supervisor contract; false when poisoned.
++    pub fn owned_jobs_enabled(&self) -> bool {
++        self.inner.owned_jobs && !self.inner.poisoned.load(Ordering::Acquire)
++    }
++
+     /// Boot the iSH kernel with `rootfs_path` mounted at `/`, drop the
+     /// embedded supervisor binary at `/sbin/ish-supervisor`, exec it as
+     /// init, and read the readiness handshake. Sync because the kernel
+     /// boot sequence ends in `task_start` which spawns its own pthread.
+     pub fn boot(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
++        Self::boot_impl(rootfs_path, workdir, false)
++    }
++
++    /// Opt in to kernel-owned descendant cleanup and acknowledged termination.
++    pub fn boot_owned(rootfs_path: &Path, workdir: Option<&Path>) -> Result<Self, IshError> {
++        Self::boot_impl(rootfs_path, workdir, true)
++    }
++
++    fn boot_impl(rootfs_path: &Path, workdir: Option<&Path>, owned_jobs: bool) -> Result<Self, IshError> {
+         try_claim_singleton()?;
+ 
+         // 1. Mount the fakefs.
+@@ -136,6 +151,11 @@
+                 call: "become_init",
+                 rc,
+             });
++        }
++
++        if owned_jobs {
++            let rc = unsafe { ffi::ish_ffi_enable_session_jobs() };
++            if rc < 0 { return Err(IshError::KernelCall { call: "enable_session_jobs", rc }); }
+         }
+ 
+         // 3. Mount guest pseudo-filesystems used by shells and language tools.
+@@ -275,6 +295,7 @@
+         let host_stdin_w_for_writer = host_stdin_w;
+ 
+         let inner = Arc::new(InstanceInner {
++            owned_jobs,
+             next_reqid: AtomicU32::new(1),
+             sessions: Mutex::new(HashMap::new()),
+             writer_tx,
+@@ -293,12 +314,13 @@
+         // the host_stdout_r off to the reader thread.
+         let mut reader_pipe = OwnedFdReader::new(host_stdout_r);
+         let ready: Option<SupervisorToHost> = read_frame(&mut reader_pipe)?;
++        let expected_protocol = if owned_jobs { ish_embed_protocol::OWNED_JOBS_PROTOCOL_VERSION } else { PROTOCOL_VERSION };
+         match ready {
+             Some(SupervisorToHost::Ready { protocol_version })
+-                if protocol_version == PROTOCOL_VERSION => {}
++                if protocol_version == expected_protocol => {}
+             Some(SupervisorToHost::Ready { protocol_version }) => {
+                 return Err(IshError::ProtocolMismatch {
+-                    host: PROTOCOL_VERSION,
++                    host: expected_protocol,
+                     supervisor: protocol_version,
+                 });
+             }
+diff --git a/embed/host/src/lib.rs b/embed/host/src/lib.rs
+--- a/embed/host/src/lib.rs
++++ b/embed/host/src/lib.rs
+@@ -24,7 +24,7 @@
+ pub use instance::{IshInstance, SpawnOpts};
+ pub use ish_embed_protocol::PtySize;
+ pub use session::{
+-    IshSession, OutputChunk, ReadOutput, SessionEvent, SessionId, Stream, WriteStatus,
++    IshSession, OutputChunk, ReadOutput, SessionEvent, SessionId, SessionStatus, Stream, WriteStatus,
+ };
+ 
+ /// The PID-1 supervisor binary, statically linked as AArch64 musl ELF and
+diff --git a/embed/host/src/session.rs b/embed/host/src/session.rs
+--- a/embed/host/src/session.rs
++++ b/embed/host/src/session.rs
+@@ -95,21 +95,21 @@
+     next: u64,  // next seq the supervisor will assign
+ }
+ 
+-#[derive(Default)]
+-struct SessionState {
+-    pid: Option<i32>,
+-    opened: bool,
+-    exited: bool,
+-    exit_code: Option<i32>,
+-    term_signal: Option<i32>,
+-    closed: bool,
+-    failure: Option<String>,
++#[derive(Debug, Clone, Default)]
++pub struct SessionStatus {
++    pub pid: Option<i32>,
++    pub opened: bool,
++    pub exited: bool,
++    pub exit_code: Option<i32>,
++    pub term_signal: Option<i32>,
++    pub closed: bool,
++    pub failure: Option<String>,
+ }
+ 
+ pub struct SessionInner {
+     pub(crate) id: SessionId,
+     pub(crate) instance: Weak<InstanceInner>,
+-    state: Mutex<SessionState>,
++    state: Mutex<SessionStatus>,
+     retained: Mutex<RetainedBuf>,
+     retained_capacity: usize,
+     notify: Notify,
+@@ -122,7 +122,7 @@
+         Self {
+             id,
+             instance,
+-            state: Mutex::new(SessionState::default()),
++            state: Mutex::new(SessionStatus::default()),
+             retained: Mutex::new(RetainedBuf {
+                 chunks: VecDeque::new(),
+                 bytes: 0,
+@@ -213,9 +213,9 @@
+         self.notify.notify_waiters();
+     }
+ 
+-    fn snapshot_state(&self) -> SessionState {
++    fn snapshot_state(&self) -> SessionStatus {
+         let s = self.state.lock();
+-        SessionState {
++        SessionStatus {
+             pid: s.pid,
+             opened: s.opened,
+             exited: s.exited,
+@@ -235,6 +235,9 @@
+     pub(crate) fn from_inner(inner: Arc<SessionInner>) -> Self {
+         Self { inner }
+     }
++
++    /// Authoritative lifecycle snapshot, including failures before subscription.
++    pub fn status(&self) -> SessionStatus { self.inner.snapshot_state() }
+ 
+     pub fn id(&self) -> SessionId {
+         self.inner.id
+@@ -369,8 +372,38 @@
+             .instance
+             .upgrade()
+             .ok_or(IshError::ShuttingDown)?;
+-        inst.send_frame(HostToSupervisor::Term {
+-            reqid: self.inner.id,
+-        })
+-    }
+-}
++        if inst.owned_jobs { return self.terminate_owned(Duration::from_secs(10)).await; }
++        inst.send_frame(HostToSupervisor::Term { reqid: self.inner.id })
++    }
++
++    /// Confirm owned completion, not just process-group signal delivery or leader exit.
++    /// A timeout/failure is an error: the caller must not reuse the workspace yet.
++    pub async fn terminate_owned(&self, timeout: Duration) -> Result<(), IshError> {
++        let inst = self.inner.instance.upgrade().ok_or(IshError::ShuttingDown)?;
++        if !inst.owned_jobs { return Err(IshError::Supervisor("owned jobs not enabled".into())); }
++        inst.send_frame(HostToSupervisor::Term { reqid: self.inner.id })?;
++        tokio::time::timeout(timeout, async {
++            loop {
++                let notified = self.inner.notify.notified();
++                tokio::pin!(notified);
++                notified.as_mut().enable();
++                let state = self.inner.snapshot_state();
++                if let Some(error) = state.failure { return Err(IshError::Supervisor(error)); }
++                if state.closed { return Ok(()); }
++                notified.await;
++            }
++        }).await.map_err(|_| IshError::Io(std::io::Error::new(
++            std::io::ErrorKind::TimedOut, "owned process cleanup not acknowledged"
++        )))?
++    }
++}
++
++impl Drop for IshSession {
++    fn drop(&mut self) {
++        if let Some(inst) = self.inner.instance.upgrade() {
++            if inst.owned_jobs && !self.inner.snapshot_state().closed {
++                let _ = inst.send_frame(HostToSupervisor::Term { reqid: self.inner.id });
++            }
++        }
++    }
++}
+diff --git a/embed/protocol/src/lib.rs b/embed/protocol/src/lib.rs
+--- a/embed/protocol/src/lib.rs
++++ b/embed/protocol/src/lib.rs
+@@ -18,6 +18,8 @@
+ 
+ /// Bumped on any breaking change to the wire enums below.
+ pub const PROTOCOL_VERSION: u32 = 2;
++/// Same frame layout; stronger Closed contract only after host opt-in.
++pub const OWNED_JOBS_PROTOCOL_VERSION: u32 = 3;
+ 
+ /// Maximum bytes of postcard payload we'll accept in one frame. Output
+ /// chunks are capped well below this in the supervisor; this is just a
+diff --git a/embed/supervisor/src/jobs.rs b/embed/supervisor/src/jobs.rs
+new file mode 100644
+--- /dev/null
++++ b/embed/supervisor/src/jobs.rs
+@@ -0,0 +1,24 @@
++//! Private kernel job ABI. Authority belongs only to the host-enabled init task.
++use std::io;
++const PRCTL: libc::c_int = 0x49534a42;
++fn call(op: u32, id: u32) -> io::Result<u32> {
++    let rc = unsafe { libc::prctl(PRCTL, op as libc::c_ulong, id as libc::c_ulong, 0usize, 0usize) };
++    if rc < 0 { Err(io::Error::last_os_error()) } else { Ok(rc as u32) }
++}
++pub fn enabled() -> io::Result<bool> {
++    match call(0, 0) {
++        Ok(1) => Ok(true),
++        Err(e) if matches!(e.raw_os_error(), Some(libc::ENOSYS | libc::EINVAL)) => Ok(false),
++        Err(e) => Err(e),
++        _ => Err(io::Error::other("unexpected job ABI capability")),
++    }
++}
++pub fn begin() -> io::Result<Option<u32>> {
++    if enabled()? { call(1, 0).map(Some) } else { Ok(None) }
++}
++pub fn disarm(id: u32) -> io::Result<()> { call(2, id).map(|_| ()) }
++pub fn cancel(id: u32) -> io::Result<()> { call(3, id).map(|_| ()) }
++pub fn live(id: u32) -> io::Result<u32> { call(4, id) }
++pub fn release(id: u32) -> io::Result<()> { call(5, id).map(|_| ()) }
++
++pub fn interrupt(id: u32) -> io::Result<()> { call(6, id).map(|_| ()) }
+diff --git a/embed/supervisor/src/main.rs b/embed/supervisor/src/main.rs
+--- a/embed/supervisor/src/main.rs
++++ b/embed/supervisor/src/main.rs
+@@ -18,6 +18,7 @@
+ };
+ 
+ mod session;
++mod jobs;
+ mod spawn;
+ 
+ use crate::session::Session;
+@@ -67,7 +68,9 @@
+     // Send the readiness handshake before doing anything else; the host's
+     // reader thread is already blocked on it.
+     write_frame(&SupervisorToHost::Ready {
+-        protocol_version: PROTOCOL_VERSION,
++        protocol_version: if jobs::enabled()? {
++            ish_embed_protocol::OWNED_JOBS_PROTOCOL_VERSION
++        } else { PROTOCOL_VERSION },
+     })?;
+ 
+     // SIGCHLD self-pipe (signalfd isn't implemented by iSH).
+@@ -155,7 +158,7 @@
+         if pollfds[0].revents & (libc::POLLHUP | libc::POLLERR) != 0 {
+             // Host closed the request stream; treat as shutdown.
+             shutdown_requested = true;
+-            kill_all(&sessions, libc::SIGTERM);
++            kill_all(&mut sessions, libc::SIGTERM)?;
+         }
+ 
+         // 2) Reap zombies.
+@@ -168,6 +171,7 @@
+         //    iSH pipe path, so live sessions use a short timeout and a
+         //    nonblocking drain pass even when revents is empty.
+         for &id in &session_ids {
++            flush_owned_stdin(&mut sessions, id)?;
+             drain_session_output(&mut sessions, id)?;
+         }
+ 
+@@ -179,7 +183,7 @@
+         //    pass. This is a coarse policy — the host can wait or hard-kill
+         //    iSH if it really wants out.
+         if shutdown_requested && !sessions.is_empty() {
+-            kill_all(&sessions, libc::SIGKILL);
++            kill_all(&mut sessions, libc::SIGKILL)?;
+         }
+     }
+ }
+@@ -279,7 +283,7 @@
+             }
+             match spawn::spawn(reqid, opts) {
+                 Ok(spawn::OpenedSession {
+-                    session,
++                    mut session,
+                     spawn_error,
+                 }) => {
+                     let pid = session.pid;
+@@ -292,7 +296,14 @@
+                             code: libc::EIO as u32,
+                             msg: err_msg,
+                         })?;
+-                        write_frame(&SupervisorToHost::Closed { reqid })?;
++                        if session.job.is_some() {
++                            session.exit_code = Some(127);
++                            session.exited_announced = true;
++                            write_frame(&SupervisorToHost::Exited { reqid, exit_code: 127, term_signal: 0 })?;
++                            sessions.insert(reqid, session);
++                        } else {
++                            write_frame(&SupervisorToHost::Closed { reqid })?;
++                        }
+                         return Ok(());
+                     }
+                     sessions.insert(reqid, session);
+@@ -309,6 +320,17 @@
+             }
+         }
+         HostToSupervisor::Write { reqid, bytes } => {
++            if let Some(s) = sessions.get_mut(&reqid) {
++                if s.job.is_some() {
++                    if s.pending_stdin.len().saturating_add(bytes.len()) > 1024 * 1024 {
++                        write_frame(&SupervisorToHost::Err { reqid: Some(reqid), code: libc::ENOBUFS as u32,
++                            msg: "owned stdin queue full".into() })?;
++                    } else if s.stdin_target().is_some() {
++                        s.pending_stdin.extend(bytes);
++                    }
++                    return Ok(());
++                }
++            }
+             let Some(s) = sessions.get(&reqid) else {
+                 return Ok(()); // unknown reqid; silently drop
+             };
+@@ -355,21 +377,27 @@
+         }
+         HostToSupervisor::Signal { reqid, signum } => {
+             if let Some(s) = sessions.get(&reqid) {
+-                unsafe {
+-                    libc::kill(-s.pid, signum);
+-                }
++                if let Some(job) = s.job {
++                    if signum == libc::SIGINT { jobs::interrupt(job)?; }
++                    else { write_frame(&SupervisorToHost::Err { reqid: Some(reqid), code: libc::ENOTSUP as u32,
++                        msg: "owned mode supports Interrupt; use Term for cancellation".into() })?; }
++                } else { unsafe { libc::kill(-s.pid, signum); } }
+             }
+         }
+         HostToSupervisor::Term { reqid } => {
+-            if let Some(s) = sessions.get(&reqid) {
+-                unsafe {
+-                    libc::kill(-s.pid, libc::SIGKILL);
+-                }
++            if let Some(s) = sessions.get_mut(&reqid) {
++                if let Some(job) = s.job {
++                    s.cancel_requested = true;
++                    s.pending_stdin.clear();
++                    s.stdin_w.take();
++                    jobs::cancel(job)?;
++                }
++                else { unsafe { libc::kill(-s.pid, libc::SIGKILL); } }
+             }
+         }
+         HostToSupervisor::Shutdown => {
+             *shutdown_requested = true;
+-            kill_all(sessions, libc::SIGTERM);
++            kill_all(sessions, libc::SIGTERM)?;
+         }
+     }
+     Ok(())
+@@ -411,19 +439,31 @@
+     let Some(s) = sessions.get_mut(&reqid) else {
+         return Ok(());
+     };
+-    let stream = s.stream;
++    drain_output_fd(s.output_fd(), s.stream, reqid, &mut s.next_seq, &mut s.eof, s.job.is_some())?;
++    if let Some(fd) = s.stderr_output.as_ref() {
++        drain_output_fd(fd.as_raw_fd(), ish_embed_protocol::Stream::Stderr, reqid, &mut s.next_seq,
++            &mut s.stderr_eof, true)?;
++    }
++    Ok(())
++}
++
++fn drain_output_fd(fd: RawFd, stream: ish_embed_protocol::Stream, reqid: u32,
++    next_seq: &mut u64, eof: &mut bool, bounded: bool) -> io::Result<()> {
+     let mut buf = [0u8; OUTPUT_CHUNK];
++    let mut chunks = 0;
+     loop {
++        if bounded && chunks >= 4 { return Ok(()); }
+         let n = unsafe {
+             libc::read(
+-                s.output_fd(),
++                fd,
+                 buf.as_mut_ptr() as *mut libc::c_void,
+                 buf.len(),
+             )
+         };
+         if n > 0 {
+-            let seq = s.next_seq;
+-            s.next_seq += 1;
++            let seq = *next_seq;
++            *next_seq += 1;
++            chunks += 1;
+             let frame = SupervisorToHost::Output {
+                 reqid,
+                 seq,
+@@ -434,7 +474,7 @@
+             continue;
+         }
+         if n == 0 {
+-            s.eof = true;
++            *eof = true;
+             return Ok(());
+         }
+         // n < 0
+@@ -446,7 +486,7 @@
+                 // For pty masters, EIO is the canonical "child closed all
+                 // slave references" signal.
+                 if err.raw_os_error() == Some(libc::EIO) {
+-                    s.eof = true;
++                    *eof = true;
+                     return Ok(());
+                 }
+                 return Err(err);
+@@ -456,24 +496,55 @@
+ }
+ 
+ fn finalize_done_sessions(sessions: &mut HashMap<u32, Session>) -> io::Result<()> {
+-    let done: Vec<u32> = sessions
+-        .iter()
+-        .filter(|(_, s)| s.eof && s.exited_announced)
+-        .map(|(id, _)| *id)
+-        .collect();
++    let mut done = Vec::new();
++    for (&id, s) in sessions.iter() {
++        if !s.exited_announced { continue; }
++        if let Some(job) = s.job {
++            // The leader ending also ends its session's background descendants.
++            jobs::cancel(job)?;
++            if jobs::live(job)? != 0 { continue; }
++        }
++        if s.eof && s.stderr_eof { done.push(id); }
++    }
+     for id in done {
++        if let Some(job) = sessions[&id].job { jobs::release(job)?; }
++        // Owned mode: leader reaped + output EOF + every owned task's cleanup.
+         write_frame(&SupervisorToHost::Closed { reqid: id })?;
+         sessions.remove(&id);
+     }
+     Ok(())
+ }
+ 
+-fn kill_all(sessions: &HashMap<u32, Session>, sig: libc::c_int) {
+-    for s in sessions.values() {
+-        unsafe {
+-            libc::kill(-s.pid, sig);
+-        }
+-    }
++fn kill_all(sessions: &mut HashMap<u32, Session>, sig: libc::c_int) -> io::Result<()> {
++    for s in sessions.values_mut() {
++        if let Some(job) = s.job {
++            s.cancel_requested = true;
++            s.pending_stdin.clear();
++            s.stdin_w.take();
++            jobs::cancel(job)?;
++        }
++        else { unsafe { libc::kill(-s.pid, sig); } }
++    }
++    Ok(())
++}
++
++fn flush_owned_stdin(sessions: &mut HashMap<u32, Session>, id: u32) -> io::Result<()> {
++    let Some(s) = sessions.get_mut(&id) else { return Ok(()); };
++    if s.cancel_requested || s.exited_announced { s.pending_stdin.clear(); return Ok(()); }
++    if s.job.is_none() || s.pending_stdin.is_empty() { return Ok(()); }
++    let Some(fd) = s.stdin_target() else { s.pending_stdin.clear(); return Ok(()); };
++    let bytes = s.pending_stdin.make_contiguous();
++    let n = unsafe { libc::write(fd, bytes.as_ptr().cast(), bytes.len().min(32 * 1024)) };
++    if n > 0 { s.pending_stdin.drain(..n as usize); }
++    else if n < 0 {
++        let error = io::Error::last_os_error();
++        if !matches!(error.kind(), io::ErrorKind::WouldBlock | io::ErrorKind::Interrupted) {
++            s.pending_stdin.clear();
++            write_frame(&SupervisorToHost::Err { reqid: Some(id), code: error.raw_os_error().unwrap_or(libc::EIO) as u32,
++                msg: format!("owned stdin: {error}") })?;
++        }
++    }
++    Ok(())
+ }
+ 
+ // ---------------------------------------------------------------------------
+diff --git a/embed/supervisor/src/session.rs b/embed/supervisor/src/session.rs
+--- a/embed/supervisor/src/session.rs
++++ b/embed/supervisor/src/session.rs
+@@ -12,11 +12,16 @@
+ #[derive(Debug)]
+ pub struct Session {
+     pub reqid: u32,
++    pub job: Option<u32>,
++    pub cancel_requested: bool,
++    pub pending_stdin: std::collections::VecDeque<u8>,
+     pub pid: libc::pid_t,
+     pub stream: ish_embed_protocol::Stream,
+     /// Parent end of the child's stdout (and stderr, merged). For tty
+     /// sessions this is the pty master and is also the stdin write end.
+     pub output: OwnedFd,
++    pub stderr_output: Option<OwnedFd>,
++    pub stderr_eof: bool,
+     /// Parent end of stdin for non-tty sessions when `pipe_stdin` was set.
+     /// For tty sessions stdin is the master fd (== output); we set this to
+     /// `None` and route writes through `output`.
+@@ -43,9 +48,14 @@
+     ) -> Self {
+         Self {
+             reqid,
++            job: None,
++            cancel_requested: false,
++            pending_stdin: Default::default(),
+             pid,
+             stream,
+             output,
++            stderr_output: None,
++            stderr_eof: true,
+             stdin_w,
+             next_seq: 1,
+             exit_code: None,
+diff --git a/embed/supervisor/src/spawn.rs b/embed/supervisor/src/spawn.rs
+--- a/embed/supervisor/src/spawn.rs
++++ b/embed/supervisor/src/spawn.rs
+@@ -89,6 +89,11 @@
+         }
+     };
+ 
++    let (parent_stderr, child_stderr) = if crate::jobs::enabled().map_err(SpawnError::Fork)? && !opts.tty {
++        let (r, w) = pipe2_cloexec()?;
++        (Some(r), Some(w))
++    } else { (None, None) };
++
+     // Self-pipe used to ferry an execve errno from child → parent if exec
+     // fails. Closed-on-exec, so a successful execve gives the parent EOF.
+     let (err_r, err_w) = pipe2_cloexec()?;
+@@ -96,9 +101,15 @@
+     // SAFETY: fork() returns 0 in the child, child pid in the parent, -1
+     // on error. After fork in the child we only call async-signal-safe
+     // functions until execve.
++    let job = crate::jobs::begin().map_err(SpawnError::Fork)?;
+     let pid = unsafe { libc::fork() };
+     if pid < 0 {
+-        return Err(SpawnError::Fork(std::io::Error::last_os_error()));
++        let error = std::io::Error::last_os_error();
++        if let Some(job) = job {
++            crate::jobs::disarm(job).map_err(SpawnError::Fork)?;
++            crate::jobs::release(job).map_err(SpawnError::Fork)?;
++        }
++        return Err(SpawnError::Fork(error));
+     }
+     if pid == 0 {
+         // ----- CHILD -----
+@@ -123,7 +134,7 @@
+                 libc::dup2(stdout_fd, 2);
+             } else {
+                 libc::dup2(stdout_fd, 1);
+-                libc::dup2(stdout_fd, 2);
++                libc::dup2(child_stderr.as_ref().map(|fd| fd.as_raw_fd()).unwrap_or(stdout_fd), 2);
+                 if stdin_fd >= 0 {
+                     libc::dup2(stdin_fd, 0);
+                 } else {
+@@ -139,8 +150,14 @@
+         // through to the closefrom-style sweep below.
+ 
+         if let Some(cwd) = &cwd_cstr {
+-            unsafe {
+-                libc::chdir(cwd.as_ptr());
++            let rc = unsafe { libc::chdir(cwd.as_ptr()) };
++            if job.is_some() && rc < 0 {
++                let errno = std::io::Error::last_os_error().raw_os_error().unwrap_or(libc::EIO);
++                let bytes = errno.to_le_bytes();
++                unsafe {
++                    libc::write(err_w_raw, bytes.as_ptr().cast(), bytes.len());
++                    libc::_exit(127);
++                }
+             }
+         }
+ 
+@@ -179,6 +196,7 @@
+     // ----- PARENT -----
+     // Close the child-side fds so EOF is observable when the child exits.
+     drop(child_stdout);
++    drop(child_stderr);
+     drop(child_stdin_r);
+     drop(err_w);
+ 
+@@ -205,7 +223,16 @@
+     };
+ 
+     set_nonblocking(parent_out.as_raw_fd());
+-    let session = Session::new(reqid, pid, stream, parent_out, parent_stdin_w);
++    let mut session = Session::new(reqid, pid, stream, parent_out, parent_stdin_w);
++    session.job = job;
++    if let Some(stderr) = parent_stderr {
++        set_nonblocking(stderr.as_raw_fd());
++        session.stderr_output = Some(stderr);
++        session.stderr_eof = false;
++    }
++    if job.is_some() {
++        if let Some(fd) = session.stdin_target() { set_nonblocking(fd); }
++    }
+     Ok(OpenedSession {
+         session,
+         spawn_error,
+diff --git a/kernel/exec.c b/kernel/exec.c
+--- a/kernel/exec.c
++++ b/kernel/exec.c
+@@ -979,7 +979,7 @@
+ #endif
+ 
+     // Native offload: check if this binary should run natively on the host
+-    const char *native_path = native_offload_lookup(filename);
++    const char *native_path = current->session_job ? NULL : native_offload_lookup(filename);
+     if (native_path) {
+         // native_offload_exec calls do_exit() on success, which unwinds via
+         // pthread_exit() and skips the err_free_{argv,envp} labels below.
+diff --git a/kernel/misc.c b/kernel/misc.c
+--- a/kernel/misc.c
++++ b/kernel/misc.c
+@@ -2,11 +2,13 @@
+ #include <stdatomic.h>
+ #include "kernel/calls.h"
+ #include "kernel/task.h"
++#include "kernel/session_job.h"
+ 
+ #define PRCTL_SET_KEEPCAPS_ 8
+ #define PRCTL_SET_NAME_ 15
+ 
+-int_t sys_prctl(dword_t option, addr_t arg2, addr_t UNUSED(arg3), addr_t UNUSED(arg4), addr_t UNUSED(arg5)) {
++int_t sys_prctl(dword_t option, addr_t arg2, addr_t arg3, addr_t UNUSED(arg4), addr_t UNUSED(arg5)) {
++    if (option == ISH_JOB_PRCTL) return ish_job_control(arg2, arg3);
+     switch (option) {
+         case PRCTL_SET_KEEPCAPS_:
+             // stub
+diff --git a/kernel/session_job.c b/kernel/session_job.c
+new file mode 100644
+--- /dev/null
++++ b/kernel/session_job.c
+@@ -0,0 +1,121 @@
++#include <stdint.h>
++#include "kernel/calls.h"
++#include "kernel/session_job.h"
++
++#define JOB_LIMIT 64
++struct session_job { dword_t id, live; bool cancelled; };
++static struct session_job jobs[JOB_LIMIT];
++static struct task *controller;
++static dword_t armed_job, last_job;
++
++static struct session_job *find_job(dword_t id) {
++    if (!id) return NULL;
++    for (unsigned i = 0; i < JOB_LIMIT; i++)
++        if (jobs[i].id == id) return &jobs[i];
++    return NULL;
++}
++
++static void signal_job_locked(dword_t id, int sig) {
++    for (dword_t pid = 1; pid <= MAX_PID; pid++) {
++        struct task *task = pid_get_task_zombie(pid);
++        if (task && task->session_job == id && task->session_job_started && !task->exiting)
++            send_signal(task, sig, SIGINFO_NIL);
++    }
++}
++
++int ish_job_enable_controller(void) {
++    lock(&pids_lock);
++    // Host boot only, before any guest task is started. Authority is task
++    // identity, not uid, a process name, an environment variable or a guest pid.
++    int result = 0;
++    if (!current || current->pid != 1 || controller || !list_empty(&current->children))
++        result = _EPERM;
++    else controller = current;
++    unlock(&pids_lock);
++    return result;
++}
++
++int_t ish_job_control(dword_t op, dword_t id) {
++    lock(&pids_lock);
++    int_t result = _EINVAL;
++    if (!controller) { result = _ENOSYS; goto out; }
++    if (current != controller) { result = _EPERM; goto out; }
++    if (op == ISH_JOB_CAP) { result = 1; goto out; }
++    if (op == ISH_JOB_NEW) {
++        if (armed_job) { result = _EBUSY; goto out; }
++        // IDs are never reused, including after RELEASE. Avoid pid/slot ABA.
++        if (last_job == INT32_MAX) { result = _ENOSPC; goto out; }
++        result = _ENOSPC;
++        for (unsigned i = 0; i < JOB_LIMIT; i++) if (!jobs[i].id) {
++            jobs[i] = (struct session_job) {.id = ++last_job};
++            armed_job = jobs[i].id;
++            result = armed_job;
++            break;
++        }
++        goto out;
++    }
++    struct session_job *job = find_job(id);
++    if (!job) { result = _ESRCH; goto out; }
++    switch (op) {
++    case ISH_JOB_DISARM:
++        if (armed_job == id) armed_job = 0;
++        result = 0;
++        break;
++    case ISH_JOB_CANCEL:
++        job->cancelled = true; // sticky; prevents any later successful fork
++        if (armed_job == id) armed_job = 0;
++        signal_job_locked(id, SIGKILL_);
++        result = 0; // request accepted, NOT completion
++        break;
++    case ISH_JOB_INTERRUPT:
++        signal_job_locked(id, SIGINT_);
++        result = 0;
++        break;
++    case ISH_JOB_LIVE:
++        result = job->live;
++        break;
++    case ISH_JOB_RELEASE:
++        if (job->live || armed_job == id) result = _EBUSY;
++        else { *job = (struct session_job) {}; result = 0; }
++        break;
++    }
++out:
++    unlock(&pids_lock);
++    return result;
++}
++
++bool ish_job_inherit_locked(struct task *task, struct task *parent) {
++    dword_t id = parent ? parent->session_job : 0;
++    if (parent == controller) { id = armed_job; armed_job = 0; }
++    task->session_job = id;
++    task->session_job_started = false;
++    if (!id) return true;
++    struct session_job *job = find_job(id);
++    if (!job || job->cancelled) return false;
++    job->live++; // includes a fork reservation until failure or pthread cleanup
++    return true;
++}
++
++bool ish_job_cancelled_locked(dword_t id) {
++    struct session_job *job = find_job(id);
++    return job && job->cancelled;
++}
++
++void ish_job_unstarted_destroy_locked(struct task *task) {
++    if (!task->session_job_started && task->session_job) {
++        struct session_job *job = find_job(task->session_job);
++        if (job && job->live) job->live--;
++        task->session_job = 0;
++    }
++}
++
++void ish_job_thread_cleanup(void *opaque) {
++    dword_t id = (dword_t)(uintptr_t)opaque;
++    if (!id) return;
++    // Called after task_run_current's TLB cleanup, even on pthread_exit.
++    // Do not read the task: it may have been reaped already.
++    lock(&pids_lock);
++    struct session_job *job = find_job(id);
++    if (job && job->live) job->live--;
++    unlock(&pids_lock);
++}
+diff --git a/kernel/session_job.h b/kernel/session_job.h
+new file mode 100644
+--- /dev/null
++++ b/kernel/session_job.h
+@@ -0,0 +1,20 @@
++#ifndef ISH_SESSION_JOB_H
++#define ISH_SESSION_JOB_H
++#include "kernel/task.h"
++// Private opt-in ABI. No guest operation can enable controller authority.
++#define ISH_JOB_PRCTL 0x49534a42
++#define ISH_JOB_CAP 0
++#define ISH_JOB_NEW 1
++#define ISH_JOB_DISARM 2
++#define ISH_JOB_CANCEL 3
++#define ISH_JOB_LIVE 4
++#define ISH_JOB_RELEASE 5
++#define ISH_JOB_INTERRUPT 6
++int ish_job_enable_controller(void);
++int_t ish_job_control(dword_t op, dword_t id);
++// All _locked helpers require pids_lock.
++bool ish_job_inherit_locked(struct task *task, struct task *parent);
++void ish_job_unstarted_destroy_locked(struct task *task);
++void ish_job_thread_cleanup(void *id);
++bool ish_job_cancelled_locked(dword_t id);
++#endif
+diff --git a/kernel/task.c b/kernel/task.c
+--- a/kernel/task.c
++++ b/kernel/task.c
+@@ -5,6 +5,7 @@
+ #include <time.h>
+ #include "kernel/calls.h"
+ #include "kernel/task.h"
++#include "kernel/session_job.h"
+ #include "kernel/memory.h"
+ #include "emu/tlb.h"
+ #include "platform/platform.h"
+@@ -55,11 +56,18 @@
+     list_init(&pid->pgroup);
+ 
+     struct task *task = malloc(sizeof(struct task));
+-    if (task == NULL)
+-        return NULL;
++    if (task == NULL) {
++        unlock(&pids_lock);
++        return NULL;
++    }
+     *task = (struct task) {};
+     if (parent != NULL)
+         *task = *parent;
++    if (!ish_job_inherit_locked(task, parent)) {
++        free(task);
++        unlock(&pids_lock);
++        return NULL;
++    }
+     task->pid = pid->id;
+     pid->task = task;
+ 
+@@ -132,6 +140,7 @@
+ }
+ 
+ void task_destroy(struct task *task) {
++    ish_job_unstarted_destroy_locked(task);
+     list_remove(&task->siblings);
+     pid_get(task->pid)->task = NULL;
+ 
+@@ -199,8 +208,15 @@
+ 
+ static void *task_thread(void *vtask) {
+     current = vtask;
++    dword_t job = current->session_job;
++    pthread_cleanup_push(ish_job_thread_cleanup, (void *)(uintptr_t)job);
++    lock(&pids_lock);
++    bool cancelled = ish_job_cancelled_locked(job);
++    unlock(&pids_lock);
++    if (cancelled) do_exit_group(SIGKILL_);
+     update_thread_name();
+     task_run_current();
++    pthread_cleanup_pop(1);
+     die("task_thread returned"); // above function call should never return
+ }
+ 
+@@ -211,8 +227,11 @@
+ }
+ 
+ void task_start(struct task *task) {
+-    if (pthread_create(&task->thread, &task_thread_attr, task_thread, task) < 0)
+-        die("could not create thread");
++    lock(&pids_lock);
++    task->session_job_started = true;
++    int error = pthread_create(&task->thread, &task_thread_attr, task_thread, task);
++    unlock(&pids_lock);
++    if (error != 0) die("could not create thread");
+ }
+ 
+ int_t sys_sched_yield() {
+diff --git a/kernel/task.h b/kernel/task.h
+--- a/kernel/task.h
++++ b/kernel/task.h
+@@ -114,6 +114,9 @@
+     cond_t *waiting_cond;
+     lock_t *waiting_lock;
+     lock_t waiting_cond_lock;
++
++    dword_t session_job; // immutable inherited ownership; pids_lock
++    bool session_job_started; // reservation transferred to pthread cleanup
+ };
+ 
+ // current will always give the process that is currently executing
+diff --git a/main.c b/main.c
+--- a/main.c
++++ b/main.c
+@@ -302,5 +302,10 @@
+     do_mount(&devptsfs, "devpts", "/dev/pts", "", 0);
+     ensure_guest_runtime_dirs();
+     apply_env_bind_mounts();
++    // Explicit host test/CLI opt-in; this variable is not copied into guest envp.
++    if (getenv("ISH_ENABLE_SESSION_JOBS") && !strcmp(getenv("ISH_ENABLE_SESSION_JOBS"), "1")) {
++        extern int ish_job_enable_controller(void);
++        if (ish_job_enable_controller() < 0) return 1;
++    }
+     task_run_current();
+ }
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -96,6 +96,7 @@
+         'kernel/user.c',
+         'kernel/vdso.c', vdso,
+         'kernel/task.c',
++        'kernel/session_job.c',
+         'kernel/group.c',
+         'kernel/log.c',
+ 

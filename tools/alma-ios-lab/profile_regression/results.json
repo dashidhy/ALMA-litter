@@ -1,0 +1,35 @@
+{
+  "exit_code": 0,
+  "bounded_stop_reason": null,
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+    "test",
+    "--offline",
+    "--lib",
+    "--manifest-path",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/profile_regression/.build/Cargo.toml",
+    "-j",
+    "2",
+    "--",
+    "--test-threads=1"
+  ],
+  "elapsed_seconds": 4.82,
+  "target_growth_bytes": 90112,
+  "upstream_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "sha256": {
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs": "3b4183201fc17a7ffbb73215b8d9b193a67b2d0482843cf45bab9fd1121f083f",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/profile_regression/tests.rs": "a3b3276454426cf474049147fe299b2389bd44be7f6caab83881206d8669412e",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/profile_regression/run.py": "5a9047f4bd6f7938166cb3c0879e2b6711ad2b2bbe7c85cb3a15e5caeedb1e38",
+    "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/native-profile.ts": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/features/src/lib.rs": "092fa6e9bd6b53d4a63aec2130fdfb90b74b28f222135ff34c499b58a53dc963",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/config/src/config_toml.rs": "e8f6b45b73eaca1a89be9524bb02bf069e9715e3aeba270e87285d941405c877",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/config/src/merge.rs": "926f4dff3c3ed480a2eabd5ed25742813c71f18071a8540c634af28744ac6aca"
+  },
+  "scope": "actual codex-config ConfigToml, strict validation and recursive merge; actual codex-features resolution; unchanged production module",
+  "not_verified": [
+    "full core ConfigBuilder materialization/managed requirements",
+    "session wiring",
+    "local RPC rejection",
+    "iOS/device"
+  ]
+}

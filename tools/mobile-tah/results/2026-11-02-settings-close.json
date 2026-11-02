@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-02",
+  "scope": "Settings save timing and dismissal presentation; no provider workflow changes",
+  "rootCause": "Settings close called checkpoint through global pending, inserting Saving draft into flex layout and disabling/fading controls; backdrop also changed abruptly at animation end",
+  "userDecision": "Save when settings change; dismissal only closes",
+  "changes": [
+    "Settings edit persists through the serialized native draft/checkpoint channel immediately",
+    "Interaction language persists as part of its change command",
+    "Reading appearance saves locally on selection and restores on mount",
+    "Removed Settings-close checkpoint",
+    "Quiet persistence does not publish global pending or apply stale/transient save snapshots; errors remain visible; subsequent actions queue normally",
+    "Backdrop transitions with sheet slide; focus restoration prevents scroll"
+  ],
+  "validation": {
+    "frontendTests": 137,
+    "preFixReproduction": "New Settings-dismiss test failed because Saving draft was inserted",
+    "frontendBuild": "passed",
+    "iOSBuild": "passed",
+    "installed": true
+  },
+  "physicalChecks": [
+    "Interaction language persisted to mobile-ui.json while Settings remained open: en",
+    "Restored zh-CN persisted before closing",
+    "Settings down-swipe closed without a Saving draft row or globally dimmed controls"
+  ],
+  "localEvidence": [
+    "tools/mobile-tah/.cache/settings-open-en.json",
+    "tools/mobile-tah/.cache/settings-open-zh.json"
+  ],
+  "limitations": [
+    "Model/reasoning/Web persistence and concurrent draft handling verified by component/controller tests, not a new provider task",
+    "Subjective flicker/comfort remains for user assessment; no frame-by-frame timing claim"
+  ],
+  "modelCalls": 0,
+  "assets": [
+    "index-BiGlAigA.css",
+    "index-Ctxp3SuE.js"
+  ],
+  "codeSHA256": {
+    "apps/ios/tah-ui/src/controller.ts": "7940b80c754b0721e2d54f3776dbc9c59b2838d17dc4fcdf892d01daab730b8f",
+    "apps/ios/tah-ui/src/App.tsx": "e28e9320019c0a2a84672a4e8fd43d22b0a51ecf19b109a9203637d0c47e42fb",
+    "apps/ios/tah-ui/src/components/Settings.tsx": "66053a8f6171542ca3177d35ce10fa502f800e44dcda56637e577410f8234873",
+    "apps/ios/tah-ui/src/useSheetDismiss.ts": "087b42aaff874693b424a1e1c766ad915cf2825a41c2bc25fc0835dffa4ba15d",
+    "apps/ios/tah-ui/src/components/sheet-gesture.css": "ab6f756f4079b800c3ebb39dc8c7d0d0f3149baaacbd0cb00f9cfcfc3ab61002",
+    "apps/ios/tah-ui/src/readingTheme.ts": "5fbc54da75d5a77d39c501340220e4ae2065658426075376d5fc00099b21dbc8"
+  }
+}

@@ -1,0 +1,7 @@
+/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo tree --manifest-path shared/rust-bridge/Cargo.toml --frozen --target aarch64-apple-ios -i netdev@0.45.0 -e normal,build --depth 5 -f {p} features=[{f}]
+netdev v0.45.0 features=[android-extra,apple-system-configuration-extra,default,gateway]
+└── netwatch v0.19.1 features=[]
+    ├── iroh v1.0.3 features=[default,fast-apple-datapath,metrics,portmapper,tls-ring]
+    │   └── codex-mobile-client v0.1.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client) features=[]
+    └── portmapper v0.19.1 features=[]
+        └── iroh v1.0.3 features=[default,fast-apple-datapath,metrics,portmapper,tls-ring] (*)

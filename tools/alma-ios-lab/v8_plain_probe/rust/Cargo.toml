@@ -1,0 +1,23 @@
+[package]
+name = "alma-v8-plain-probe"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+# Exact Codex 0.166 fork source, with the verified plain iOS binary. This
+# disposable probe deliberately does not enable or claim V8 memory sandboxing.
+v8 = { path = "../../.cache/v8-ios/rusty_v8-350c5a859a9b3c84ab8701b3ad51e3b7699b30c0" }
+serde_json = "1"
+libc = "0.2"
+
+[profile.dev]
+opt-level = 2
+debug = 0
+incremental = false
+codegen-units = 16

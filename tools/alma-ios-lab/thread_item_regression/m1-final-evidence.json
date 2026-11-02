@@ -1,0 +1,20 @@
+{
+  "status": "M1 Rust protocol migration compile-qualified",
+  "compile_run_owner": "main",
+  "log_source": "tools/alma-ios-lab/.cache/cargo-check-ios-local-4.log",
+  "log_copy": "cargo-check-ios-local-4.log",
+  "log_sha256": "2b3ae99a496dfe7538602a84fd14988ccef51b0fc8b9419f971cc1c8040ee79b",
+  "profile": "ios-dev",
+  "elapsed_seconds": 15.21,
+  "mobile_library_warning_count": 31,
+  "error_diagnostics": 0,
+  "full_check_rerun_by_this_agent": false,
+  "scope": "full local-profile mobile Rust library against actual Core; not app/device execution",
+  "remaining_environment_wiring": true,
+  "prior_focused_tests_passed": 42,
+  "prior_real_protocol_test_metadata_check": "passed; tests compiled, not executed",
+  "prior_remote_guard_modes": [
+    "disabled passed",
+    "enabled passed"
+  ]
+}

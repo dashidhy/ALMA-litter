@@ -1,0 +1,238 @@
+{
+  "date": "2026-11-02",
+  "status": "baseline_measured_cpu_hotspot_analysis_in_progress",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "transport": "wireless localNetwork; charger disconnected",
+  "sharedScreenCurrently": "off",
+  "modelTasksStartedByAgent": 0,
+  "tool": "Instruments 27.2 Power Profiler via GUI; custom template containing only Power Profiler for runs 1–4",
+  "metric": "Overall system battery-energy rate, percent per hour; short-window instrument estimate, not app-only energy or an hour-long drain test",
+  "runs": [
+    {
+      "run": 1,
+      "state": "TAH completed, mirror off",
+      "durationSeconds": 62.643765,
+      "systemPowerPercentPerHour": 8.8,
+      "displayBrightnessPercent": 51,
+      "thermal": "Nominal"
+    },
+    {
+      "run": 2,
+      "state": "TAH completed, mirror on",
+      "durationSeconds": 61.814263,
+      "systemPowerPercentPerHour": 11.4,
+      "displayBrightnessPercent": 51,
+      "thermal": "Nominal"
+    },
+    {
+      "run": 3,
+      "state": "TAH completed, mirror off again",
+      "durationSeconds": 61.784837,
+      "systemPowerPercentPerHour": 9.7,
+      "displayBrightnessPercent": 51,
+      "thermal": "Nominal"
+    },
+    {
+      "run": 4,
+      "state": "User-reported Actor running; mirror off",
+      "durationSeconds": 62.08988,
+      "systemPowerPercentPerHour": 35.5,
+      "displayBrightnessPercent": 51,
+      "thermal": "Fair"
+    }
+  ],
+  "observations": [
+    "Actor-active system power is substantially above both idle no-mirror samples.",
+    "Mirror adds a smaller observed increment in the completed-task conditions.",
+    "Nominal/Fair are thermal pressure categories, not surface temperature in degrees.",
+    "App runtime heat cause is not yet assigned to a specific function.",
+    "Earlier main-thread relocation improved responsiveness; it did not establish reduced total CPU or battery cost."
+  ],
+  "limitations": [
+    "Short samples; no claim that the rates remain constant for an entire task or hour.",
+    "Run 5 adds Time Profiler and targets ALMA process; do not mix its overhead into baseline energy comparisons.",
+    "Xcode-connected debugging can affect sleep; these are foreground connected conditions.",
+    "No earlier ASR trace has been normalized to these conditions."
+  ],
+  "tracePath": "tools/mobile-tah/.cache/2026-11-02-power-mirror-ab.trace",
+  "keyboard": {
+    "symptom": "focused textarea, no software keyboard during Device Hub sharing",
+    "captureKeyboardToggleWasOff": true,
+    "userConfirmedRecoveredAfterStoppingSharing": true,
+    "appHideButton": "composer-card:focus-within; focus is not proof of visible software keyboard"
+  },
+  "officialReference": "https://developer.apple.com/documentation/xcode/measuring-your-app-s-power-use-with-power-profiler",
+  "cpuProfile": {
+    "run": 5,
+    "durationSeconds": 62.4914,
+    "profilingAddsOverhead": true,
+    "interpretation": "Most sampled host work is in JavaScriptCore interpretation/byte-array/string operations; heap helper/collector threads are also expensive. Does not yet name a specific JS RPC.",
+    "breakdown": {
+      "sampleCPUSeconds": 75.313,
+      "groups": [
+        {
+          "group": "host workers",
+          "seconds": 52.754,
+          "percent": 70.04633994131159
+        },
+        {
+          "group": "JS heap workers",
+          "seconds": 19.52,
+          "percent": 25.91850012614024
+        },
+        {
+          "group": "node",
+          "seconds": 2.291,
+          "percent": 3.0419715055833656
+        },
+        {
+          "group": "main",
+          "seconds": 0.566,
+          "percent": 0.7515302802968943
+        },
+        {
+          "group": "other",
+          "seconds": 0.182,
+          "percent": 0.24165814666790594
+        }
+      ],
+      "threads": [
+        {
+          "name": "ALMA TAH (0x7e7f70) (ALMA TAH, pid: 36343)",
+          "seconds": 18.35,
+          "percent": 24.36498346898942
+        },
+        {
+          "name": "ALMA TAH (0x7e7dbb) (ALMA TAH, pid: 36343)",
+          "seconds": 12.455,
+          "percent": 16.53764954257565
+        },
+        {
+          "name": "ALMA TAH (0x7e7a96) (ALMA TAH, pid: 36343)",
+          "seconds": 8.249,
+          "percent": 10.952956328920639
+        },
+        {
+          "name": "ALMA TAH (0x7e7a71) (ALMA TAH, pid: 36343)",
+          "seconds": 7.585,
+          "percent": 10.07130243118718
+        },
+        {
+          "name": "Heap Helper Thread (0x7e6a5c) (ALMA TAH, pid: 36343)",
+          "seconds": 6.376,
+          "percent": 8.46600188546466
+        },
+        {
+          "name": "Heap Helper Thread (0x7e6a5d) (ALMA TAH, pid: 36343)",
+          "seconds": 6.291,
+          "percent": 8.353139564218662
+        },
+        {
+          "name": "Heap Helper Thread (0x7e6a5e) (ALMA TAH, pid: 36343)",
+          "seconds": 6.229,
+          "percent": 8.270816459309813
+        },
+        {
+          "name": "ALMA TAH (0x7e7f92) (ALMA TAH, pid: 36343)",
+          "seconds": 6.113,
+          "percent": 8.11679258560939
+        },
+        {
+          "name": "node-81 (0x7e82c6) (ALMA TAH, pid: 36343)",
+          "seconds": 2.285,
+          "percent": 3.0340047534954127
+        },
+        {
+          "name": "Main Thread (0x7dcf44) (ALMA TAH, pid: 36343)",
+          "seconds": 0.566,
+          "percent": 0.7515302802968943
+        },
+        {
+          "name": "JavaScriptCore libpas scavenger (0x7dcf9e) (ALMA TAH, pid: 36343)",
+          "seconds": 0.462,
+          "percent": 0.6134399107723766
+        },
+        {
+          "name": "JSC Heap Collector Thread (0x7e6a62) (ALMA TAH, pid: 36343)",
+          "seconds": 0.162,
+          "percent": 0.21510230637472946
+        },
+        {
+          "name": "alma-provider (0x7dcfdf) (ALMA TAH, pid: 36343)",
+          "seconds": 0.078,
+          "percent": 0.10356777714338826
+        },
+        {
+          "name": "ish-superviso-1 (0x7dcfe1) (ALMA TAH, pid: 36343)",
+          "seconds": 0.029,
+          "percent": 0.03850596842510589
+        },
+        {
+          "name": "tokio-rt-worker (0x7dcfbe) (ALMA TAH, pid: 36343)",
+          "seconds": 0.018,
+          "percent": 0.02390025626385883
+        },
+        {
+          "name": "ish-superviso-1 (0x7dcfe0) (ALMA TAH, pid: 36343)",
+          "seconds": 0.015,
+          "percent": 0.019916880219882357
+        },
+        {
+          "name": "bash-80 (0x7e82c5) (ALMA TAH, pid: 36343)",
+          "seconds": 0.014,
+          "percent": 0.018589088205223533
+        },
+        {
+          "name": "tokio-rt-worker (0x7dcfbf) (ALMA TAH, pid: 36343)",
+          "seconds": 0.011,
+          "percent": 0.014605712161247062
+        },
+        {
+          "name": "tokio-rt-worker (0x7dcfc8) (ALMA TAH, pid: 36343)",
+          "seconds": 0.007,
+          "percent": 0.009294544102611766
+        },
+        {
+          "name": "Log work queue (0x7dcfb8) (ALMA TAH, pid: 36343)",
+          "seconds": 0.007,
+          "percent": 0.009294544102611766
+        },
+        {
+          "name": "ALMA TAH (0x7e82c4) (ALMA TAH, pid: 36343)",
+          "seconds": 0.002,
+          "percent": 0.0026555840293176476
+        },
+        {
+          "name": "node-86 (0x7e82cc) (ALMA TAH, pid: 36343)",
+          "seconds": 0.002,
+          "percent": 0.0026555840293176476
+        },
+        {
+          "name": "node-85 (0x7e82cb) (ALMA TAH, pid: 36343)",
+          "seconds": 0.002,
+          "percent": 0.0026555840293176476
+        },
+        {
+          "name": "alma-provider (0x7e82dc) (ALMA TAH, pid: 36343)",
+          "seconds": 0.002,
+          "percent": 0.0026555840293176476
+        },
+        {
+          "name": "node-82 (0x7e82c8) (ALMA TAH, pid: 36343)",
+          "seconds": 0.001,
+          "percent": 0.0013277920146588238
+        },
+        {
+          "name": "node-84 (0x7e82ca) (ALMA TAH, pid: 36343)",
+          "seconds": 0.001,
+          "percent": 0.0013277920146588238
+        },
+        {
+          "name": "alma-provider (0x7e82dd) (ALMA TAH, pid: 36343)",
+          "seconds": 0.001,
+          "percent": 0.0013277920146588238
+        }
+      ]
+    }
+  }
+}

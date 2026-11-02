@@ -1,0 +1,61 @@
+{
+  "name": "AlmaLocalAgentProbe",
+  "options": {"deploymentTarget": {"iOS": "18.0"}},
+  "settings": {
+    "base": {
+      "DEVELOPMENT_TEAM": "C6635V7W82",
+      "CODE_SIGN_STYLE": "Automatic",
+      "SWIFT_VERSION": "5.9",
+      "SWIFT_STRICT_CONCURRENCY": "targeted",
+      "SWIFT_APPROACHABLE_CONCURRENCY": "NO",
+      "SWIFT_DEFAULT_ACTOR_ISOLATION": "nonisolated"
+    }
+  },
+  "targets": {
+    "AlmaLocalAgentProbe": {
+      "type": "application",
+      "platform": "iOS",
+      "sources": [
+        {"path": "Sources"},
+        {"path": "../../../apps/ios/Sources/Litter/Models/ChatGPTOAuth.swift"},
+        {"path": "../../../apps/ios/Sources/Litter/Models/LLog.swift"},
+        {"path": ".build/ProbeBuildReadiness.swift"}
+      ],
+      "settings": {
+        "base": {
+          "PRODUCT_BUNDLE_IDENTIFIER": "com.alma.litter.agent-probe",
+          "TARGETED_DEVICE_FAMILY": "1",
+          "SUPPORTED_PLATFORMS": "iphoneos iphonesimulator",
+          "SUPPORTS_MACCATALYST": "NO",
+          "GENERATE_INFOPLIST_FILE": "NO"
+        }
+      },
+      "info": {
+        "path": ".build/Info.plist",
+        "properties": {
+          "CFBundleDisplayName": "Local Agent Probe",
+          "CFBundleShortVersionString": "0.1",
+          "CFBundleVersion": "1",
+          "UILaunchScreen": {},
+          "UIApplicationSceneManifest": {"UIApplicationSupportsMultipleScenes": false},
+          "UISupportedInterfaceOrientations": ["UIInterfaceOrientationPortrait"],
+          "NSLocalNetworkUsageDescription": "Allow the local sign-in callback after you choose Sign in.",
+          "NSAppTransportSecurity": {"NSAllowsLocalNetworking": true}
+        }
+      },
+      "dependencies": [
+        {"sdk": "SwiftUI.framework"}, {"sdk": "UIKit.framework"},
+        {"sdk": "Foundation.framework"}, {"sdk": "CoreFoundation.framework"},
+        {"sdk": "AuthenticationServices.framework"}, {"sdk": "CryptoKit.framework"},
+        {"sdk": "Security.framework"}, {"sdk": "Network.framework"},
+        {"sdk": "SystemConfiguration.framework"}
+      ]
+    }
+  },
+  "schemes": {
+    "AlmaLocalAgentProbe": {
+      "build": {"targets": {"AlmaLocalAgentProbe": "all"}},
+      "run": {"config": "Release"}
+    }
+  }
+}

@@ -11,6 +11,7 @@ mod links;
 mod local_ish;
 mod local_proot;
 mod osc;
+#[cfg(feature = "remote-alleycat")]
 mod remote_alleycat;
 mod renderer;
 mod selection;

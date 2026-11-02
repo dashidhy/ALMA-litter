@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-01",
+  "bundle": "com.alma.litter.agent-probe",
+  "minimumOS": "18.0",
+  "signedBuild": "passed",
+  "installed": true,
+  "launched": false,
+  "reasonNotLaunched": "Device locked; require user unlock before runtime qualification",
+  "sourceScope": "real Codex0.166 local iOS archive + generatedSwift + productionOAuth + fixed nativeworkspace",
+  "noAuthOrModelRequest": true,
+  "debugInformationFormat": "dwarf; separate dSYM packaging deliberately skipped for qualification",
+  "binaryBytes": 410247472,
+  "sourceHashes": {
+    "tools/alma-ios-lab/local_agent_probe/Sources/BoundProbeSession.swift": "1e53844e3e4e74b4bd99e8ab49c9ce862b78ff2930eeefdce5459797f8e2e756",
+    "tools/alma-ios-lab/local_agent_probe/Sources/TrustedBootstrap.swift": "f673137178da13d3aaf503b777e43aea9d7b5d6f51b34fb4ec9ddadb3a6ab7d9",
+    "tools/alma-ios-lab/local_agent_probe/Sources/LocalAgentProbeApp.swift": "5e255d320a9a948df4c3bf532bba694c786750504efbc79f302c4923a9ae9b69",
+    "tools/alma-ios-lab/local_agent_probe/Sources/ProductionIshBootstrap.swift": "fcd09f53e3338ddfcaf1a6d6d2423d991cf723589f1d6c5436fdb55609832abd",
+    "tools/alma-ios-lab/local_agent_probe/Sources/ProbeModel.swift": "404cbb1612139dc81aa3a055f2ea5f5e99496ce277ff9e2d269af308c3c39467",
+    "apps/ios/Sources/Litter/Models/ChatGPTOAuth.swift": "e98497c67e74101d3364ba52f6654b8d8ca156a7e8b8676c6e57b10ddd4bea80",
+    "apps/ios/Sources/Litter/Models/ChatGPTAuthRefreshProvider.swift": "547d189461be00b1465f0775f901acb568d51d245723d7886ce2348fb90284cb"
+  }
+}

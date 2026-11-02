@@ -5,6 +5,10 @@ edition = "2024"
 description = "OpenAI Slingshot relay transport for Codex app-server"
 license-file = "../../../LICENSE"
 
+[features]
+default = ["json-line-transport"]
+json-line-transport = []
+
 [dependencies]
 codex-app-server-client = { workspace = true }
 codex-app-server-protocol = { workspace = true }

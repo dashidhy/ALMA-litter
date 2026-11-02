@@ -1,0 +1,8 @@
+{
+  "crate": "deno_core_icudata",
+  "version": "0.78.0",
+  "url": "https://static.crates.io/crates/deno_core_icudata/deno_core_icudata-0.78.0.crate",
+  "bytes": 4619641,
+  "sha256": "b963d2d79672b4c379e4511acccd27bb35b4c1b32a93f596d52ff14a064293bc",
+  "matches_cargo_lock": true
+}

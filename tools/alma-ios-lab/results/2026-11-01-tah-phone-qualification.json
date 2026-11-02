@@ -1,0 +1,134 @@
+{
+  "status": "passed",
+  "scope": "Small synthetic transcript; original Mac TAH controls acceptance/publication, phone runs native Codex+iSH one freshprocessperattempt; not fullmobileApp orlong-recording/background qualification",
+  "runID": "2b79017f-e37f-41b0-9e92-44aaed73afcd",
+  "acceptedRevisions": [
+    {
+      "revision": 0,
+      "publicationCommitID": "publication/244e606d-e6c8-4323-8bd7-5b9bc2c67718",
+      "candidateDigest": "758ff8087002bf589283f26bffc9218c28f3f642c164a00b697d83488b782377",
+      "files": {
+        "structured-notes.md": "5383aed942804415233edea4b48661288f7a1f6d2fec17f07a4cfdd8da852a08",
+        "suspicious-asr-terms.md": "516cd6b13546abfe2d4f3083baeb60d657437314ca00624b6255cf53daa5337e"
+      },
+      "folder": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/tah-phone-v0-v1-v2-20261101-d/accepted/v0"
+    },
+    {
+      "revision": 1,
+      "publicationCommitID": "publication/fa4cac9e-3468-44d7-b406-4604cc1dae49",
+      "candidateDigest": "407354a9643cc49a2604144c2e40e74354ff2e2ddc383812578ea8687aff10e9",
+      "files": {
+        "structured-notes.md": "8ec9a0d7abeea199e667809aecebd80c5ece174d3af928da607ccb1ce01e1f01",
+        "suspicious-asr-terms.md": "516cd6b13546abfe2d4f3083baeb60d657437314ca00624b6255cf53daa5337e"
+      },
+      "folder": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/tah-phone-v0-v1-v2-20261101-d/accepted/v1"
+    },
+    {
+      "revision": 2,
+      "publicationCommitID": "publication/ae7d3cc0-1e77-47fd-88e2-7c6c6009971c",
+      "candidateDigest": "2c8c22cc89830d50b501f00564278cde3db08a35ecec6f546da17c988e463c8b",
+      "files": {
+        "structured-notes.md": "e95d8d4eb2026186cce2a6c2935209ec0994876b6d2731f7ed4d3c4a09949195",
+        "suspicious-asr-terms.md": "516cd6b13546abfe2d4f3083baeb60d657437314ca00624b6255cf53daa5337e"
+      },
+      "folder": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/tah-phone-v0-v1-v2-20261101-d/accepted/v2"
+    }
+  ],
+  "semanticChecks": {
+    "v0PreservesSource14AndFlagsArithmetic": true,
+    "v1AddsRequestedCorrection": true,
+    "v2OnlyRenamesRequestedHeading": true,
+    "asrIndexUnchanged": true
+  },
+  "attempts": [
+    {
+      "role": "raw_guardian",
+      "attemptID": "2ddedffc-8677-4043-98a9-83c96251f5d4",
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "startedAt": "2026-11-01T05:13:09.157Z",
+      "seconds": 13.273,
+      "peakMiB": 43.14,
+      "pid": 35536,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    },
+    {
+      "role": "actor",
+      "attemptID": "cbb13e34-4ed0-4099-94c0-7da6039b5ca4",
+      "model": "gpt-6.1-sol",
+      "effort": null,
+      "startedAt": "2026-11-01T05:13:37.777Z",
+      "seconds": 20.127,
+      "peakMiB": 43.83,
+      "pid": 35549,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    },
+    {
+      "role": "extra_guardian",
+      "attemptID": "02caef84-a09a-426a-ac1d-aaf1b4bff624",
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "startedAt": "2026-11-01T05:14:14.674Z",
+      "seconds": 12.092,
+      "peakMiB": 43.19,
+      "pid": 35566,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    },
+    {
+      "role": "actor",
+      "attemptID": "7fb2e532-d0a2-4e8d-a3b7-048af49005c4",
+      "model": "gpt-6.1-sol",
+      "effort": null,
+      "startedAt": "2026-11-01T05:14:45.430Z",
+      "seconds": 21.734,
+      "peakMiB": 43.83,
+      "pid": 35580,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    },
+    {
+      "role": "extra_guardian",
+      "attemptID": "0b373bc4-047e-41f3-9e36-b37f1cff133d",
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "startedAt": "2026-11-01T05:15:24.360Z",
+      "seconds": 13.5,
+      "peakMiB": 43.53,
+      "pid": 35600,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    },
+    {
+      "role": "actor",
+      "attemptID": "e79785c7-f380-407b-9c95-3d69e3924390",
+      "model": "gpt-6.1-sol",
+      "effort": null,
+      "startedAt": "2026-11-01T05:15:55.392Z",
+      "seconds": 15.199,
+      "peakMiB": 45.03,
+      "pid": 35614,
+      "completed": true,
+      "inputsUnchanged": true,
+      "quiescenceObserved": true
+    }
+  ],
+  "sumPhoneAttemptSeconds": 95.925,
+  "observedInspectionAndAttemptSpanSeconds": 200.743,
+  "maxSampledAppPeakMiB": 45.03,
+  "processExitGate": "original controller returned accepted only after two independent PID-absence samples plusnonce/profile matching andAFCsnapshot reread; not a measuredOSexitcode",
+  "openItems": [
+    "long real transcripts",
+    "actual long Agent locked/background behavior",
+    "production phone-owned scheduler",
+    "V8 desktop memory-sandbox parity; qualification flag remains default OFF"
+  ],
+  "sourceRun": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/tah-phone-v0-v1-v2-20261101-d"
+}

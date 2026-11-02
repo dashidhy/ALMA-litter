@@ -1,0 +1,1 @@
+PASS: production native provider type-checks against actual generated UniFFI Swift interface.

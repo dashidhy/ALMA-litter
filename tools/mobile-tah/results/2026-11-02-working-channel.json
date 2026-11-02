@@ -1,0 +1,185 @@
+{
+  "date": "2026-11-02",
+  "status": "installed_phone_history_and_live_channel_verified",
+  "installed": true,
+  "deviceImageUUID": "16066F36-30FB-3BB7-B364-8F46D4838C42",
+  "deviceLaunchVerified": true,
+  "modelCallsThisRound": 3,
+  "powerMeasured": false,
+  "phoneData": {
+    "preservedEvents": 112,
+    "pendingWrites": 0,
+    "sqliteIntegrity": "ok",
+    "totalEventsAfter": 127,
+    "originalEventsPreserved": 112
+  },
+  "checks": {
+    "frontend": 186,
+    "swiftChannelScenarios": 40,
+    "legacyLogChecks": 26,
+    "controllerChecksPerMode": 110,
+    "controllerSwiftModes": 3,
+    "snapshotChecksPerMode": 45,
+    "snapshotModes": 4,
+    "coreStreamIsolatedGroups": 10,
+    "coreStreamIntegrationChecks": 22,
+    "rawAssertions": 80,
+    "workflowReplay": {
+      "publishedRevisions": 3,
+      "outputFiles": 6,
+      "multiChunkLogs": 3
+    }
+  },
+  "bounds": {
+    "unacknowledgedFrames": 1,
+    "rustQueueCapacity": 1,
+    "latestCoalescedStates": 1,
+    "retainedEvents": 512,
+    "retainedTextBytes": 2097152,
+    "serializedLogBytes": 4194304,
+    "transportFrameBytes": 8388608
+  },
+  "limitations": [
+    "Existing retention and list rendering remain; no unlimited history or virtualized pagination added.",
+    "No new long NVIDIA inference, FPS or power measurement; this is functional/channel validation.",
+    "Rust build emits AtomicU64::fetch_update deprecation warning; builds succeed."
+  ],
+  "sources": {
+    "shared/tah-runtime/platform/working-stream.ts": "d61543c7b9588cefd538aee06a0d8b3f2fc70c9b0572640d2e1e2d4cf5efc484",
+    "shared/tah-runtime/platform/runtime.ts": "6fc2cae428afff331cbd2da6abfbfc608436e37c9f4c45ce7719e017d1f65a9e",
+    "tools/mobile-tah/runtime_notifications.mjs": "5fa43b8a08c671cd210f753d6b10dd840665ea4418d995f72619af455c9198ae",
+    "shared/tah-runtime/generated/alma-tah.js": "f808c0cb77e3f362b7316cab420bb02f7420b29cb081790e916269bc8c1e7e3a",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWorkingLogChannel.swift": "099918f051cf16222e03dc6f63388b386103dcfb847b033f5b30cf2e457c6270",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMemoryWorkingLogReader.swift": "1b5712722baf0fe29326ad306c58258892c2d27b943ce4834f9aac9cf240bee5",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "76977e74b637a0c2875f03d2fe337dd05d3268c4483541a722f68f17f5fc4718",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift": "79099935a327f5195fc924227e96cf4c6ed9cbb63da3441a60a4fa3dafb3988b",
+    "tools/mobile-tah/Sources/TauriNativeHost.swift": "d8bc22b9c253066d6bd9cbdaea6db734716b3e7b064a8a94f6fed9d446da9d1e",
+    "apps/ios/tah-ui/src-tauri/src/lib.rs": "033a459846c913be9140f64f006130c49c2da0ac14b53b7051774aaeab41a5b2",
+    "apps/ios/tah-ui/src/working-stream.ts": "a6f1f875c71c943d18ecd7b7628b03a480ab1af62075e84fc7ec1bc095f3a8d2",
+    "apps/ios/tah-ui/src/bridge.ts": "a4a55404be6dfda96f0569dea70c5296c19cb1664259dfd8d8ec1b3af1bc1038",
+    "apps/ios/tah-ui/src/contract.ts": "3edc43440ad08d4395bdd6bc8adec5f8e63e02b55735f6ba099feacbcfd832b7",
+    "apps/ios/tah-ui/src/controller.ts": "6061988af25444ea4a423759213992228e5053444e9800f74d514241fcdd0dc5",
+    "apps/ios/tah-ui/src/App.tsx": "579375d52540e852ada31b88b7ee5136728736a2c7ba880196ff607f74348e4d",
+    "apps/ios/tah-ui/src-tauri/build.rs": "c29b99da6ef02ba3a2f84a76d6826961ff06877a509f0f5385bdf6b329f9db7a",
+    "apps/ios/tah-ui/src-tauri/capabilities/tah.json": "693a94e633cb4a6ce8630da5c230844489cb60626556723186a503f3c1727a2c",
+    "apps/ios/tah-ui/src/__tests__/bridge.test.ts": "fa2fdd3c5faac1bcf47bc4663c799ab63f6a7f889f5381fd4d57c2d5edde5ece",
+    "docs/ios/frontend-integration-notes.md": "53a3b0e20bda29414f0dcf9f9b4cca4f267a3355812545392103e7ac0ba67417",
+    "tools/mobile-tah/README.md": "98da6e2105e97deadb9352ab386abceea028db049c5eede6099af5ee2e99bbb1"
+  },
+  "evidence": [
+    "tools/mobile-tah/working_stream_checks.result.json",
+    "apps/ios/Sources/AlmaTAH/Presentation/working-channel-checks-result.json",
+    "tools/mobile-tah/.cache/channel-core-replay.log",
+    "tools/mobile-tah/.cache/channel-controller-checks.log",
+    "tools/mobile-tah/.cache/channel-bridge-checks.log",
+    "tools/mobile-tah/.cache/channel-host-checks.log",
+    "tools/mobile-tah/.cache/channel-device-build.log",
+    "tools/mobile-tah/.cache/channel-install.json",
+    "tools/mobile-tah/.cache/channel-launch.json",
+    "tools/mobile-tah/.cache/channel-final-validation.json",
+    "tools/mobile-tah/.cache/channel-frontend-tests.log"
+  ],
+  "phoneValidation": {
+    "historicalEventTestOpened": true,
+    "historicalNVIDIAOpenedAndScrolled": true,
+    "livePaneOpenedBeforeEvents": true,
+    "liveToolEventsArrivedWithoutRefresh": true,
+    "livePaneTransitionedToCriticPassed": true,
+    "paneClosedAndDifferentActionOpened": true,
+    "screenSharingStopped": true,
+    "keyboardCaptureOff": true,
+    "tasks": [
+      {
+        "actionID": "0f893c25-37d0-44c2-a3d6-894f97fafa8e",
+        "phase": "completed",
+        "revision": 0,
+        "inference": {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        "startedAt": "2026-11-02T09:53:44.532Z",
+        "endedAt": "2026-11-02T09:54:27.334Z",
+        "workingLogBytes": 2224,
+        "workingLogEvents": 3,
+        "resultKind": "completed",
+        "critic": "PASS",
+        "workingLogVerified": true
+      },
+      {
+        "actionID": "aa04f338-855a-48d7-922a-8b4f16e89297",
+        "phase": "completed",
+        "revision": 0,
+        "inference": {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        "startedAt": "2026-11-02T09:51:58.076Z",
+        "endedAt": "2026-11-02T09:52:15.596Z",
+        "workingLogBytes": 1495,
+        "workingLogEvents": 4,
+        "resultKind": "completed",
+        "critic": "PASS",
+        "workingLogVerified": true
+      },
+      {
+        "actionID": "f136bbec-2912-4482-8180-1e1f7931b52c",
+        "phase": "completed",
+        "revision": 0,
+        "inference": {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        "startedAt": "2026-11-02T09:50:20.532Z",
+        "endedAt": "2026-11-02T09:50:45.698Z",
+        "workingLogBytes": 1711,
+        "workingLogEvents": 5,
+        "resultKind": "completed",
+        "critic": "PASS",
+        "workingLogVerified": true
+      }
+    ],
+    "verifiedFiles": [
+      {
+        "actionID": "0f893c25-37d0-44c2-a3d6-894f97fafa8e",
+        "path": "structured-notes.md",
+        "bytes": 569,
+        "sha256": "ad20974c8f55969b8542782760e29e6bdc37a313ddf6de26a3de3bcd5abb749e"
+      },
+      {
+        "actionID": "0f893c25-37d0-44c2-a3d6-894f97fafa8e",
+        "path": "suspicious-asr-terms.md",
+        "bytes": 382,
+        "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de"
+      },
+      {
+        "actionID": "aa04f338-855a-48d7-922a-8b4f16e89297",
+        "path": "structured-notes.md",
+        "bytes": 631,
+        "sha256": "29f0a3c32161d112db352cb9f956df6afe1a8d07359e59a42295ab184bcf54c2"
+      },
+      {
+        "actionID": "aa04f338-855a-48d7-922a-8b4f16e89297",
+        "path": "suspicious-asr-terms.md",
+        "bytes": 382,
+        "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de"
+      },
+      {
+        "actionID": "f136bbec-2912-4482-8180-1e1f7931b52c",
+        "path": "structured-notes.md",
+        "bytes": 654,
+        "sha256": "8d358a200db9bc6e0e8bdb26cf7cf49700e4504aacd578e8da63aa35d4580e8b"
+      },
+      {
+        "actionID": "f136bbec-2912-4482-8180-1e1f7931b52c",
+        "path": "suspicious-asr-terms.md",
+        "bytes": 382,
+        "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de"
+      }
+    ],
+    "note": "Three new EventTest V0 tasks; first two completed before automation could enter the moving live link, third opened immediately and observed live updates through completion. No new NVIDIA inference."
+  },
+  "issuesFixedDuringAcceptance": [
+    "Tauri command implementation/registration lacked app-manifest and main-window capability entries; added only three working-stream permissions plus a cross-configuration regression test.",
+    "Older preview metadata could restart progression after memory stream finished; finished is sticky for the same execution."
+  ]
+}

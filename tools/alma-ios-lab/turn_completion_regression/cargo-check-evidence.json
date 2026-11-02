@@ -1,0 +1,25 @@
+{
+  "command": [
+    "bash",
+    "tools/alma-ios-lab/cargo_ios.sh",
+    "check",
+    "--locked",
+    "--offline",
+    "-p",
+    "codex-mobile-client",
+    "--target",
+    "aarch64-apple-ios",
+    "--profile",
+    "ios-dev",
+    "--no-default-features",
+    "--features",
+    "alma-code-mode-probe",
+    "-j2"
+  ],
+  "verified_v8_environment": {
+    "RUSTY_V8_ARCHIVE": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/v8-ios/v8-ios.a.gz",
+    "RUSTY_V8_ARCHIVE_SHA256": "9d2e64a2409a4b812e3d1d29da3e0a06b020c8ab1e0fed6fd9342523ba8b757c",
+    "RUSTY_V8_SRC_BINDING_PATH": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/v8-ios/bindings-ios.rs"
+  },
+  "exit_code": 0
+}

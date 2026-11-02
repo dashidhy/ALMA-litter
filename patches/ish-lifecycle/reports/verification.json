@@ -1,0 +1,58 @@
+{
+  "pinned_commit": "4f783cd957b83de3019d6a843408d5bb3ff902c7",
+  "archive_sha256": "3df629379e1403821909f5e822b24b631f7e576f4fce6f8357e85423a3a46067",
+  "baseline_entries": 516,
+  "patch_sha256": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+  "strict_forward_check": {
+    "returncode": 0,
+    "detail": ""
+  },
+  "strict_reverse_check": {
+    "returncode": 0,
+    "detail": ""
+  },
+  "duplicate_rejected": true,
+  "reverse_restores_pristine": true,
+  "baseline_unchanged": true,
+  "changed_paths": [
+    "embed/ffi.c",
+    "embed/ffi.h",
+    "embed/host/src/instance.rs",
+    "embed/host/src/lib.rs",
+    "embed/host/src/session.rs",
+    "embed/protocol/src/lib.rs",
+    "embed/supervisor/src/jobs.rs",
+    "embed/supervisor/src/main.rs",
+    "embed/supervisor/src/session.rs",
+    "embed/supervisor/src/spawn.rs",
+    "kernel/exec.c",
+    "kernel/misc.c",
+    "kernel/session_job.c",
+    "kernel/session_job.h",
+    "kernel/task.c",
+    "kernel/task.h",
+    "main.c",
+    "meson.build"
+  ],
+  "after_sha256": {
+    "embed/ffi.c": "c51d56c148f77c8c27d48fda361ff0e97f4e493847dc274f7ae214c8cd30f191",
+    "embed/ffi.h": "29827bc39903d073cfcd4bbfaf1f0bf0082f175270e57848a51347da9c285cf4",
+    "embed/host/src/instance.rs": "3a4538152abb1e26b8d6446d6155d774452e695fc2dfe192e6164785ed07ec87",
+    "embed/host/src/lib.rs": "f51596902745c6e0ab4b90d1dae5d420d3fd3481e1bface51252d403b2705bff",
+    "embed/host/src/session.rs": "1852dd143abd0742a5fbb2f0b3737615997121997805a172dbd464d2360e212d",
+    "embed/protocol/src/lib.rs": "21a0cb853355d500e5727edb832d9987eb5bb0552f69c4f422ad71f8ba2ff8cd",
+    "embed/supervisor/src/jobs.rs": "3f1e68c4f3d1766b9b305953418d67bb2ec83e5b5598952fd2325fc833e00ccd",
+    "embed/supervisor/src/main.rs": "53fb50924e56d8f6a6ce10c3a3e6250c198b4d0421aae105847ea5ace7cb9817",
+    "embed/supervisor/src/session.rs": "bd7458880566ef31eee8dd7ddb1935f2d92ce11af40a1e2f0ccab7a485a1e2bf",
+    "embed/supervisor/src/spawn.rs": "5e57e29f660b7220339cc2fbf01b44ca4574608e3352cb10bbcd8443266d0a09",
+    "kernel/exec.c": "489146d1391a0453c2ba4e1257a39276725eb9511744868baa862b629538ddaf",
+    "kernel/misc.c": "6000a095c457323ea67c181e9b011edb9d050b2a3f7b24e86f44e7c7dc72450a",
+    "kernel/session_job.c": "a021f552c5e1a1e1245d8e9782194eeb42cfc68b986cba9a4c772c389019005c",
+    "kernel/session_job.h": "35e52d349d0269952de54dd140cfa0b68030c5f232638e7f97c57cdaa34f8f48",
+    "kernel/task.c": "760733651d35a2327d4bd12d177b1d32c972091955340d045063ed476027b6af",
+    "kernel/task.h": "42d7002b82ee345533d7e4474b90e45bd204f0a414a148ac759ca0baa9430a8e",
+    "main.c": "69c5cf88f86cf0237803b23879ea8c3dc4cf54f8d3424b1cf654d78bc4cda417",
+    "meson.build": "68d8788803cdec68378dce13455fff4174629152ee0d03a7c523576cc75c7a67"
+  },
+  "scope": "patch/source verification; runtime results reported separately"
+}

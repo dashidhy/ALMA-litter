@@ -1,0 +1,6 @@
+{
+  "removedIncrementalDirectories": 408,
+  "retained": "mobile client, backend probe, iSH; static libraries/dependencies/bindings/evidence retained",
+  "freeBeforeBytes": 27844407296,
+  "freeAfterBytes": 27865362432
+}

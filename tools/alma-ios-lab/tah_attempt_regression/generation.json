@@ -1,0 +1,41 @@
+{
+  "records": [
+    {
+      "name": "raw",
+      "attemptID": "11111111-1111-4111-8111-111111111111",
+      "role": "raw_guardian",
+      "attemptSHA256": "4f3e199b937f04975ce19833dcbb449f1ed6c0e595129293ce6e3190df1b56e4",
+      "materialFiles": 1,
+      "originalSchemaAccepted": true,
+      "identities": "Explicit fixture-only a*64 / b*64; not real auth/account/profile evidence"
+    },
+    {
+      "name": "actor",
+      "attemptID": "22222222-2222-4222-8222-222222222222",
+      "role": "actor",
+      "attemptSHA256": "c6b34c84774ba82ad6fcf7fc713988e6eef22c48240c22b48bbe08d4dd4b1a62",
+      "materialFiles": 4,
+      "originalSchemaAccepted": true,
+      "identities": "Explicit fixture-only a*64 / b*64; not real auth/account/profile evidence"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/guest/adapter-kit/prompt-envelope.ts",
+      "sha256": "6eec53245df8ac59f3fad5c41b4905b0be640851c4ed475fd99eced3cd6729b6"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/attempt.ts",
+      "sha256": "25521e1dc1f6b72a86ba911d1e11f033e21856de0fc1a9ddf410335aa235621d"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_phone_controller/controller.ts",
+      "sha256": "b5d556a74c72d7c983197492fc3543a7e21ace5dfdc98336318d24f1a92baeac"
+    }
+  ],
+  "scope": "Original TS builders, original channel projector and exact byte-map projector; no provider calls"
+}

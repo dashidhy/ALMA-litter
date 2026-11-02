@@ -1,0 +1,147 @@
+{
+  "recorded_at_utc": "2026-11-01T04:27:05.499464+00:00",
+  "status": "Concrete qualification PhonePort with real CLI call implementation and injectable subprocess. Only mock commands executed in this task. Not installed/wired/run on a phone.",
+  "api": {
+    "entry": "createPhonePort(options): PhonePort",
+    "required_options": [
+      "workRoot: private caller-owned local evidence directory",
+      "profileFile: main-generated .build/bound/qualification-profile.json",
+      "expectedProfileDigest: exact digest from that compiled artifact baseline, never an observed phone echo"
+    ],
+    "optional_options": [
+      "command: injected RunCommand for tests; default usbCommand uses execFile, no shell",
+      "sleep: injected for bounded tests",
+      "executableSuffix: trusted installed product path suffix, default /LocalAgentProbe.app/LocalAgentProbe"
+    ],
+    "wiring": "Pass created port to existing runQualification with concrete journal; no change to controller.ts or file-journal.ts. Importing creates no device call.",
+    "baseline_note": "The expected profile file was not present at the requested local_agent_probe/.build/bound path during source review. Main supplies the actual generated file/path after preparation; missing/mismatched baseline fails before device calls."
+  },
+  "commands": {
+    "bundle": "com.alma.litter.agent-probe",
+    "udid": "supplied through ALMA_IOS_DEVICE; original device identifier omitted",
+    "cli": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/device-tools/bin/pymobiledevice3",
+    "usb_files": "apps push/pull --udid UDID BUNDLE ...; no Documents-only restriction, allowing the exact post-exit Library snapshot path",
+    "launch": "developer core-device launch-application --userspace --no-kill-existing BUNDLE -- --prepare-only (--inspect-tah-auth|--run-tah-attempt) --qualification-run-id UUID",
+    "processes": "developer core-device list-processes --userspace; PYMOBILEDEVICE3_UDID supplied in environment",
+    "forbidden_not_called": [
+      "--native",
+      "install",
+      "uninstall",
+      "screenshot",
+      "automatic relaunch",
+      "automatic remote process kill",
+      "auth/token file reads"
+    ]
+  },
+  "admission": [
+    "One host-process-wide lease across instances until admission; busy/replayed operations refused. All command timeouts are capped by a 240-second operation deadline; individual file operations cap at 20 seconds and CoreDevice calls at 45 seconds.",
+    "Pre-launch process-list success required; known existing probe process blocks launch. Launch response must contain exactly one positive PID. Unique CLI challenge binds outer runID, PID, kind, compiled profile digest and timestamps. Stale nonce observations are never admitted.",
+    "Two successful process-list snapshots showing launch PID absent, with no other recognized probe instance, required before inspection success or physical file pull. Unknown PID reuse/process identity, RSD failure, cancellation, deadlines or malformed data poison the port; no automatic retry/relaunch.",
+    "Account fingerprint comes only from actual same-App OAuth observation. Catalog maps model (not display name or synthetic alias) to original handles; real effort descriptions and defaults validated with original catalogSchema. Actual export is projectCodexAccountUsage, not normalizeCodexAccountUsage; it and original inspectionFailures derive a successful inspection only after exit checks.",
+    "Outbound alma.phone-attempt/v1 uses exact original attemptJSON/hash/inputFiles with runID/challenge/fingerprint/profile and original projected developer/turn channels. Current all-Web-false fixture enforced.",
+    "Attempt receipt checks every identity field, actual selected model/effort including catalog default for null effort, cwd, ephemeral flag, turn status/error, completed terminal and quiescence.",
+    "After exit, AFC re-pulls the entire exact attempt view. Every immutable material byte is compared, candidate bytes/length/hash/base64/total checked against native snapshot, and full file/directory membership compared including ancestors. Candidate root directory records are removed only from the framework-relative candidate manifest; actual physical root existence remains required.",
+    "Original CodexEventNormalizerV1 consumes actual notifications, validates authoritative completed final-item consistency and finish() emits normalized final lifecycle. Host adds only original attemptID and one-based contiguous sequence. Callback delivery occurs after OS-exit/file checks.",
+    "admitReaped accepts only this instance's once-use in-memory token tied to the request. No phone accepted/publication boolean is trusted. Original TAH Guardian parser/critic/publisher remain the only acceptance/publication owners."
+  ],
+  "process_identity_limits": {
+    "cli_source": "list_processes returns processTokens. Launch invokes bundleIdentifier and returns service response. There is no monitor-process-termination CLI command in this installed version.",
+    "underlying_api": "AppServiceService.monitor_process_termination(pid) exists but itself sends only processIdentifier; it supplies no documented stronger birth token here and was not called.",
+    "actual_evidence": "Launch PID + explicitly requested fixed bundle + unique App nonce + timestamps + compiled profile baseline + repeated PID absence, preserving full bounded launch/process output in memory. Not a proved stronger birth identity, measured exit code, or proof against arbitrary PID reuse between samples.",
+    "fail_closed": "Unexpected existing/replacement probe or a visible reused PID with nonmatching executable metadata fails. An unsupported list response fails. Cancellation does not assert App death or send a signal to an uncertain PID.",
+    "external_controller_limit": "The lease serializes instances in one host process; it does not lock out unrelated host processes/manual device tools. Main must run a single qualification controller and avoid parallel device actions."
+  },
+  "profile_and_snapshot_differences": [
+    "Original Mac profile is generated from the frozen attempt and actual guest cwd for event/tool normalization only. Its Linux runtime paths/feature list are NOT installed or claimed as iOS enforcement.",
+    "Current phone threadReceipt is a slim projection (threadID/model/reasoningEffort/ephemeral/cwd), so original assertThreadStartReceipt (pinned Linux version and permission metadata) cannot be used as-is. The adapter checks actual slim fields and relies on independently pinned compiled native scope implementation; full Mac native-profile receipt equivalence is not claimed.",
+    "controllerHome is a redaction-only nonexistent marker, not an auth path. No desktop AuthService/credential borrowing or credential export occurs.",
+    "Native snapshot capture source rejects symlinks/hardlinks and bounds candidates to 4 MiB; host repeats byte/tree checks. AFC pull follows remote symlinks before transfer, so the transferred tree alone cannot independently prove remote no-symlink topology. This remains dependent on trusted pinned native capture/enforcement; no stronger AFC claim is made.",
+    "Physical pulls have subprocess/deadline limits; local file/type/byte bounds are checked after transfer. This is not a pre-download disk quota against a malicious producer. Native source bounds and trusted fixture scope remain prerequisites.",
+    "Only observed/completed runs supported. Non-success native outcomes, unsupported notifications, missing general quota summary or profile/catalog drift fail closed rather than create partial successful receipts."
+  ],
+  "controller_handoff": "Existing controller roles[] six-step guard still refuses original structural repair. Main owns fixing that limit; this task did not edit controller.ts. This port admits arbitrary fresh framework attempt UUIDs within the declared all-Web-false qualification profile and does not fabricate revision transitions.",
+  "tests": {
+    "passed": 8,
+    "failed": 0,
+    "duration_ms": 366,
+    "command": "node /Users/dashidhy/Public/projects/agent/ALMA/app/TAH/node_modules/vitest/vitest.mjs run --config phone-port.vitest.config.ts",
+    "coverage": [
+      "actual original usage projection plus inspectionFailures",
+      "successful Raw and Actor shapes normalized by original CodexEventNormalizerV1 and checked by original NormalizedEventLedgerV1",
+      "post-exit physical candidate/material verification",
+      "unrecognized/replayed admission token rejection",
+      "quota and PID mismatch reject and lock without relaunch",
+      "physical input tampering rejects despite native unchanged=true",
+      "compiled-profile mismatch and pre-aborted operation perform zero commands",
+      "RSD failure locks port without relaunch"
+    ],
+    "scope": "All subprocess calls injected; mock phone observations use explicitly synthetic identities and fixtures. Tests verify host behavior, not actual CLI/device compatibility or real model success.",
+    "not_run": [
+      "TypeScript compiler check",
+      "build",
+      "device/model/network/login",
+      "real CLI help/device commands"
+    ]
+  },
+  "files": [
+    "phone-port.ts",
+    "phone-port.test.ts",
+    "phone-port.vitest.config.ts",
+    "phone-port-review.json"
+  ],
+  "implementation_lines": 253,
+  "source_evidence": [
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/account-usage.ts",
+      "sha256": "7a2bfab6a1049188c71d11e4fb47a02e3224d21641986b7ae4f2905f26496cf5"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/auth-prototype/inspection.ts",
+      "sha256": "8d996bb7702683f4b44ebf0f4c1753dda37acaa211dd6d8c73b1bfab3f21a91b"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/auth-prototype/protocol.ts",
+      "sha256": "68a6080f24a1dac9645f7494a7253617a106fbf540c155f2295d3c432338f534"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/event-normalizer.ts",
+      "sha256": "8d6b1ce7487d680c7a3bd7ebfbd3092407484a80c4a56123cc5568dcca2bbc8e"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/native-profile.ts",
+      "sha256": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/receipts.ts",
+      "sha256": "a8f92b2bb014a51cc8f4c6f9bb9f44b43e667ed9e68a00002e068c62e85cf25a"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/device-tools/lib/python3.14/site-packages/pymobiledevice3/cli/apps.py",
+      "sha256": "a56570e0c6c4d1ef216789b5ce52137587940f71b5607887681c44a0c1de17df"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/device-tools/lib/python3.14/site-packages/pymobiledevice3/cli/developer/core_device.py",
+      "sha256": "9638ee6cb05ae9f503339b69fbfb9eb2464b51c6549cc07ec11f629d5e4231fd"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/device-tools/lib/python3.14/site-packages/pymobiledevice3/remote/core_device/app_service.py",
+      "sha256": "1fb8c9dbd2ee6c1cb687e0dde303622112e9967ddbe23ff63d7b8217c4315e77"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/device-tools/lib/python3.14/site-packages/pymobiledevice3/services/afc.py",
+      "sha256": "dba7dfed8461a0c408fe6e0b5de02206f22aeb465d677b419ce76a5147103350"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/tah_runner.rs",
+      "sha256": "82ccbae12ea66638420d25d12fd11181b4cf0b9e1cb64aa11942408d955c5f6f"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/tah_attempt.rs",
+      "sha256": "c1dd71a0626db423159d101b248491a46a2f2347f41a1faecd1b83777f983a7e"
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/local_agent_probe/prepare.py",
+      "sha256": "6f3f0ab97263ef5223c3e1cd03afa2d0e662d35bc44546ecd48f16869062eba8"
+    }
+  ]
+}

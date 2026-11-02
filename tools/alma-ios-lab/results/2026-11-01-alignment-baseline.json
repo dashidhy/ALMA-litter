@@ -1,0 +1,18 @@
+{
+  "checkedOn": "2026-11-01",
+  "timezone": "Asia/Shanghai",
+  "officialStableRelease": {
+    "tag": "rust-v0.166.0",
+    "version": "0.166.0",
+    "publishedAt": "2026-10-29T19:47:53Z",
+    "prerelease": false,
+    "url": "https://github.com/openai/codex/releases/tag/rust-v0.166.0"
+  },
+  "latestEndpoint": "https://api.github.com/repos/openai/codex/releases/latest",
+  "localCodexCommit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "localTagMatchesHead": true,
+  "branch": "dev/ios",
+  "scope": "iOS Core/App Server adaptation for text TAH; not full desktop CLI capability parity or phone-independent workflow",
+  "statusDocument": "tools/alma-ios-lab/IMPLEMENTATION_PLAN.md",
+  "runtimeTestsRerunThisReview": false
+}

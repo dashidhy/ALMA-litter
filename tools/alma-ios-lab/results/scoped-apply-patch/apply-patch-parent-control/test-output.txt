@@ -1,0 +1,44 @@
+warning: patch `age v0.12.1 (https://github.com/str4d/rage?rev=b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f#b5b68c4f)` was not used in the crate graph
+warning: patch `ish-embed-host v0.1.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/.build/vendor/litter-ish-owned/embed/host)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+   Compiling alma-scoped-executor-regression v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-parent-control)
+    Finished `test` profile [unoptimized] target(s) in 5.77s
+     Running /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_executor_regression/apply_patch_tests.rs (.build/target/debug/deps/actual_apply_patch-9f50131e4356f5e6)
+
+running 12 tests
+test actual_apply_patch_add_update_move_delete_parents_and_utf8 ... ok
+test actual_native_fs_normal_operations_remain_supported ... ok
+test authorization_preflight_is_not_a_content_failure_transaction ... ok
+test denied_parent_creation_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_move_from_ro_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_move_into_ro_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_policy_denied_target_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_ro_add_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_ro_delete_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test mixed_rw_then_ro_update_is_rejected_before_any_mutation ... committed_delta=0 changed_entries=0
+ok
+test rejected_batch_does_not_create_first_hunks_parents ... committed_delta=0 created_parent=false
+ok
+test writable_file_inside_existing_readonly_parent_remains_supported ... 
+thread 'writable_file_inside_existing_readonly_parent_remains_supported' (20923982) panicked at /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_executor_regression/apply_patch_tests.rs:168:149:
+called `Result::unwrap()` on an `Err` value: ApplyPatchFailure { error: IoError(IoError { context: "I/O error", source: Custom { kind: PermissionDenied, error: "filesystem policy denies the virtual path" } }), delta: AppliedPatchDelta { changes: [], exact: true } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    writable_file_inside_existing_readonly_parent_remains_supported
+
+test result: FAILED. 11 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--test actual_apply_patch`

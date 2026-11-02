@@ -1,0 +1,12 @@
+{
+  "commit": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+  "sourceSHA256": "e2e7f9961af59dbb749a60ac0a3c34c9680f6b86dd04277f2715356b5a52feab",
+  "sourceBytes": 2018448,
+  "artifacts": {
+    "v8-ios.a.gz": "9d2e64a2409a4b812e3d1d29da3e0a06b020c8ab1e0fed6fd9342523ba8b757c",
+    "bindings-ios.rs": "b9d5652ebca515eb2bf4c2ee4a6551b2567117b5aa720f430d2032616dd7e3b5"
+  },
+  "sourceURL": "https://codeload.github.com/seanh-oai/rusty_v8/tar.gz/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+  "archiveURL": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/librusty_v8_release_aarch64-apple-ios.a.gz",
+  "bindingsURL": "https://github.com/denoland/rusty_v8/releases/download/v152.2.0/src_binding_release_aarch64-apple-ios.rs"
+}

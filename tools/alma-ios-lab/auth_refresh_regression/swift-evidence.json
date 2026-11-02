@@ -1,0 +1,47 @@
+{
+  "source_sha256": "9c7e1804f19eb8b7bcf4a26948728dc9dd57ef835113d3c5ce615f4de42c2507",
+  "provider_sha256": "547d189461be00b1465f0775f901acb568d51d245723d7886ce2348fb90284cb",
+  "runs": [
+    {
+      "swift_mode": "5",
+      "strict_concurrency": "targeted",
+      "command": [
+        "/usr/bin/swiftc",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-strict-concurrency=targeted",
+        "-warnings-as-errors",
+        "-module-cache-path",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/module-cache",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/Production.swift",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/Litter/Models/ChatGPTAuthRefreshProvider.swift",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/SwiftHarness.swift",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/swift-5"
+      ],
+      "exit_code": 0
+    },
+    {
+      "swift_mode": "6",
+      "strict_concurrency": "complete",
+      "command": [
+        "/usr/bin/swiftc",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-strict-concurrency=complete",
+        "-warnings-as-errors",
+        "-module-cache-path",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/module-cache",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/Production.swift",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/Litter/Models/ChatGPTAuthRefreshProvider.swift",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/SwiftHarness.swift",
+        "-o",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/swift-6"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "scope": "actual refresh/coordinator/provider source, dummy Keychain/network, binding signature stubs"
+}

@@ -1,0 +1,3948 @@
+{
+  "passed": true,
+  "artifacts": "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw",
+  "commands": [
+    [
+      "xcrun",
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-strict-concurrency=complete",
+      "-parse-as-library",
+      "-module-cache-path",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/cache",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHJournalRPC.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHJournalStore.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHRuntimeResources.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHRuntimeWire.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Presentation/TAHHistoryView.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Presentation/TAHMobileView.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Presentation/TAHPresentationContract.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/AlmaTAHJavaScriptHost.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHJavaScriptBytePrimitives.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHMobileController.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHWebPresentationBridge.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/VersionChecks.swift",
+      "-lsqlite3",
+      "-framework",
+      "JavaScriptCore",
+      "-o",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/checks"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/checks"
+    ],
+    [
+      "xcrun",
+      "--sdk",
+      "iphonesimulator",
+      "--show-sdk-path"
+    ],
+    [
+      "xcrun",
+      "--sdk",
+      "iphonesimulator",
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-strict-concurrency=complete",
+      "-parse-as-library",
+      "-module-cache-path",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/cache",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.2.sdk",
+      "-target",
+      "arm64-apple-ios18.0-simulator",
+      "-typecheck",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHJournalRPC.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHJournalStore.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHRuntimeResources.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Persistence/TAHRuntimeWire.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Presentation/TAHPresentationContract.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/AlmaTAHJavaScriptHost.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHJavaScriptBytePrimitives.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHMobileController.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/sources/Runtime/TAHWebPresentationBridge.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-log-versions-ksb93zsw/VersionChecks.swift"
+    ]
+  ],
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHJournalRPC.swift": "c92ae8f9d9d378e5da192076b13810db7c7343789c1f6d7053332c74f59b1b6a",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHJournalStore.swift": "e2eff11be950601fce8272837ac636c5be07732036cd513b343f7992b211215f",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeResources.swift": "64962420cf4800948f7cef18a159e048ef376807c3d46189f4e45ea9d7d7189e",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeWire.swift": "148601cfae190d902833e1ee88654c6da3dc35ad51b5675221b045d5167a48f4",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHHistoryView.swift": "d7913de2b2a635cd3a4ecc67204bd9ae9f6021d65e970a2ed4336c48cb919a5e",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHMobileView.swift": "8863c06378e819f65d579550885d8a8361ca7980846c69eb455103325b7cf195",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHPresentationContract.swift": "1f1226f3229f649c530497c1240755a858027034611f7f05a242fefe77c14077",
+    "apps/ios/Sources/AlmaTAH/Runtime/AlmaTAHJavaScriptHost.swift": "6765073bc1b21a2aa340954dd2892eff0cf6a4f8bb0bb2f4e99d90e9853d929d",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHJavaScriptBytePrimitives.swift": "7487a148e1d34d485f49f2732fbc48c4f1a92136683b090954d3dc6a3684864a",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "471e3b269db1cb793941871b9c388fa91a49eb27b23a7b723b1469dbe4691ccb",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift": "6ae69044d29f13bcdc78b7ded1e6696f2c7cd6c71d2234dbddb70eddd77b37cd"
+  },
+  "fixtureSHA256": "5bbad72951aab30581da6d872ef06a440058422d1da24f063a67aff653ea4953",
+  "fixtureSourceSHA256": "47f83e93165f3ec7d761b445f0fb363910934570e42c259e2ec3d22fc4ad8c35",
+  "hostCompileDiagnostics": "",
+  "hostRunDiagnostics": "",
+  "checks": [
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "advertised-A-missing-snapshot-B",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "799b4c74-9bbd-4521-abf3-7a09402d7fbb",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "799b4c74-9bbd-4521-abf3-7a09402d7fbb",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "799b4c74-9bbd-4521-abf3-7a09402d7fbb",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "799b4c74-9bbd-4521-abf3-7a09402d7fbb",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "B-notification-during-and-after-read-coalesces",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "067fe10f-76fe-4d32-9de3-e3ff2c7e6302",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "later-B-notification-uses-effective-loaded-hash",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "038252cb-6d01-4609-8f30-f61e0ddf2d6e",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "038252cb-6d01-4609-8f30-f61e0ddf2d6e",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "038252cb-6d01-4609-8f30-f61e0ddf2d6e",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "038252cb-6d01-4609-8f30-f61e0ddf2d6e",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "038252cb-6d01-4609-8f30-f61e0ddf2d6e",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        }
+      ],
+      "name": "pinned-B-survives-C-and-pending-C-coalesces",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "81578aca-2d4f-4f56-8b4b-6a28d5a22ea3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "pinned-B-succeeds-without-C-notification",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "b9745384-df5c-4520-bf4a-cf6bb0b95b3b",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "b9745384-df5c-4520-bf4a-cf6bb0b95b3b",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "b9745384-df5c-4520-bf4a-cf6bb0b95b3b",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "b9745384-df5c-4520-bf4a-cf6bb0b95b3b",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        }
+      ],
+      "name": "eviction-once-recovers-C-without-failed-callback",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "02aa906a-b365-41f9-a886-c1a6d752f9f3",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "C"
+        }
+      ],
+      "name": "persistent-source-failure-retries-once-preserves-events",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9fb3f554-83c4-459a-ac39-085e97969426",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "unchanged-snapshot-source-failure-does-not-retry",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "69439f92-c256-4060-b3dd-f2dad50cc71d",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "69439f92-c256-4060-b3dd-f2dad50cc71d",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "69439f92-c256-4060-b3dd-f2dad50cc71d",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "69439f92-c256-4060-b3dd-f2dad50cc71d",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "69439f92-c256-4060-b3dd-f2dad50cc71d",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "explicit-refresh-after-source-failure",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9c468482-9d0a-443d-b70d-f622cf0eaf68",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-SHA-mismatch-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "ecfbcdb1-daf1-47c1-a591-47782aff04ca",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-invalid-base64-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "58d653c6-1021-4d83-bfb5-cc2d68ca2ed2",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-empty-chunk-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "7cf6a277-30f0-43fe-9255-ba5f2eeac7f5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-zero-total-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "c8a9f952-5718-4b4e-94ef-e115dc18604d",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-negative-total-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "90944584-0c78-4ab7-84e6-af4743bb118b",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-4MiB-bound-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9308e52f-f1f9-4348-9378-b6b1b22ad5b5",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-changing-total-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "9aea2a55-5b2f-4f13-8be3-fbe43062d5ed",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-48KiB-chunk-bound-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "836643e7-7a43-4e74-a52d-13b908647034",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "0d877db215c996a5b7bd16862a161693dcb114f0af66fc7f4b43406a0f0e1dcc",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "old"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "integrity-chunk-exceeds-total-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [
+            "old",
+            "extra-safety-pass"
+          ],
+          "failed": true,
+          "id": "3307273f-fa3d-4fae-8eda-3ac422bcd081",
+          "limited": true,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "62b8125a6f6d924ec53345b5fcd58ca3ed3f5e7d51e2e146e5f1346508acce69",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "invalid-JSON"
+        }
+      ],
+      "name": "integrity-invalid-JSON-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "68f917f8-921e-404e-b552-6ea4a394074f",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "68f917f8-921e-404e-b552-6ea4a394074f",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "68f917f8-921e-404e-b552-6ea4a394074f",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "68f917f8-921e-404e-b552-6ea4a394074f",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "9a8651b4a07824e4d8a5b69b01d8067075165181a2a7eb0b247d0980cf049e1a",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "schema-version"
+        }
+      ],
+      "name": "integrity-schema-version-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "08b9c0c8-1374-4717-ae7d-580fc76ce2d4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "08b9c0c8-1374-4717-ae7d-580fc76ce2d4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "08b9c0c8-1374-4717-ae7d-580fc76ce2d4",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "08b9c0c8-1374-4717-ae7d-580fc76ce2d4",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "5eabfdabfa1a504cdfb694485fa1e57b2ca499d057c274834ec9ee662e069fee",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "event-count"
+        }
+      ],
+      "name": "integrity-event-count-never-retries-newer-C",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "4f53fc23-a1ba-431a-9635-541b7dbbfbe4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "4f53fc23-a1ba-431a-9635-541b7dbbfbe4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "4f53fc23-a1ba-431a-9635-541b7dbbfbe4",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "4f53fc23-a1ba-431a-9635-541b7dbbfbe4",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [],
+      "name": "snapshot-operation-change-refuses-before-chunks",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "3aba3172-70a5-440f-860b-2dc1e454b8df",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "3aba3172-70a5-440f-860b-2dc1e454b8df",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "3aba3172-70a5-440f-860b-2dc1e454b8df",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "chunks": [],
+      "name": "snapshot-action-change-refuses-before-chunks",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "6b96e4a9-cc3a-4204-bf3b-61acd1a73d19",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "6b96e4a9-cc3a-4204-bf3b-61acd1a73d19",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "6b96e4a9-cc3a-4204-bf3b-61acd1a73d19",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "operation-changes-after-pinned-read-refuses-content",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "000024f3-77fe-4c18-b36e-61fc87d583c1",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "000024f3-77fe-4c18-b36e-61fc87d583c1",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "000024f3-77fe-4c18-b36e-61fc87d583c1",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "retry-snapshot-new-operation-refuses-content",
+      "passed": true,
+      "snapshots": [
+        "a",
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "acc2c2b8-587c-4ea0-9b7e-c7294620ff25",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "acc2c2b8-587c-4ea0-9b7e-c7294620ff25",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "acc2c2b8-587c-4ea0-9b7e-c7294620ff25",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "cancel-close-ignores-late-chunk",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "46e6157f-a488-48dd-9f91-38e58413a3e8",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "46e6157f-a488-48dd-9f91-38e58413a3e8",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        null
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "cancel-selection-ignores-late-chunk",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "ecd881d4-85ae-44ab-b598-2e520689224a",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "ecd881d4-85ae-44ab-b598-2e520689224a",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        null
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": "op",
+          "position": null,
+          "version": "B"
+        }
+      ],
+      "name": "cancel-operation-notification-ignores-late-chunk",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "08d61738-daaf-4f74-ac02-d739e9cd1ba4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "08d61738-daaf-4f74-ac02-d739e9cd1ba4",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "08d61738-daaf-4f74-ac02-d739e9cd1ba4",
+          "limited": false,
+          "loading": false,
+          "position": null,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "chunks": [],
+      "name": "cancel-during-snapshot-prevents-chunks",
+      "passed": true,
+      "snapshots": [
+        "a"
+      ],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "e29beaa2-9221-4484-a1c1-5f6e574ca8c3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "e29beaa2-9221-4484-a1c1-5f6e574ca8c3",
+          "limited": false,
+          "loading": true,
+          "position": null,
+          "progressing": true,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        null
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": null,
+          "position": 7,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 49152,
+          "operationID": null,
+          "position": 7,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 98304,
+          "operationID": null,
+          "position": 7,
+          "version": "B"
+        }
+      ],
+      "name": "historical-position-hash-fixed-across-new-operation",
+      "passed": true,
+      "snapshots": [],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "cbac2041-b469-4903-989b-7e3141c3447e",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "cbac2041-b469-4903-989b-7e3141c3447e",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "cbac2041-b469-4903-989b-7e3141c3447e",
+          "limited": false,
+          "loading": false,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "B",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "cbac2041-b469-4903-989b-7e3141c3447e",
+          "limited": false,
+          "loading": false,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": null,
+          "position": 7,
+          "version": "B"
+        }
+      ],
+      "name": "historical-source-failure-never-follows-live-hash",
+      "passed": true,
+      "snapshots": [],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "e49626ec-2160-43b8-8616-3606d6fadce1",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "e49626ec-2160-43b8-8616-3606d6fadce1",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "e49626ec-2160-43b8-8616-3606d6fadce1",
+          "limited": false,
+          "loading": false,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": "Could not read this working log.",
+          "eventIDs": [],
+          "failed": true,
+          "id": "e49626ec-2160-43b8-8616-3606d6fadce1",
+          "limited": false,
+          "loading": false,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "chunks": [
+        {
+          "actionID": "a",
+          "hash": "1c507373b6259459694844b54589e16fda437c2be00f27ad6ddf604e8614880d",
+          "offset": 0,
+          "operationID": null,
+          "position": 7,
+          "version": "B"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 0,
+          "operationID": null,
+          "position": 8,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 49152,
+          "operationID": null,
+          "position": 8,
+          "version": "C"
+        },
+        {
+          "actionID": "a",
+          "hash": "6280ca77f8ce8141a135c4e27fe7d70e069214f327e54eddca4c23ae45cf7f97",
+          "offset": 98304,
+          "operationID": null,
+          "position": 8,
+          "version": "C"
+        }
+      ],
+      "name": "reopening-new-position-rejects-old-inflight-content",
+      "passed": true,
+      "snapshots": [],
+      "states": [
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "bb605d16-3a11-402c-b91b-6e117495cdd2",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "bb605d16-3a11-402c-b91b-6e117495cdd2",
+          "limited": false,
+          "loading": true,
+          "position": 7,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        null,
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "363d22a4-d74b-40a7-aa28-a3ad3615903f",
+          "limited": false,
+          "loading": true,
+          "position": 8,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [],
+          "failed": false,
+          "id": "363d22a4-d74b-40a7-aa28-a3ad3615903f",
+          "limited": false,
+          "loading": true,
+          "position": 8,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "363d22a4-d74b-40a7-aa28-a3ad3615903f",
+          "limited": false,
+          "loading": false,
+          "position": 8,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        },
+        {
+          "actionID": "a",
+          "error": null,
+          "eventIDs": [
+            "C",
+            "extra-safety-pass"
+          ],
+          "failed": false,
+          "id": "363d22a4-d74b-40a7-aa28-a3ad3615903f",
+          "limited": false,
+          "loading": false,
+          "position": 8,
+          "progressing": false,
+          "revisionIndex": 1,
+          "superseded": false
+        }
+      ]
+    }
+  ],
+  "phoneTouched": false,
+  "providerCalls": 0,
+  "timedSleeps": 0,
+  "simulatorSDKDiagnostics": "",
+  "simulatorTypecheckDiagnostics": "",
+  "simulatorTypecheckPassed": true
+}

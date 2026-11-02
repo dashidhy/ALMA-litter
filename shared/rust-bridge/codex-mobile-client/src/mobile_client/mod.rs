@@ -8,9 +8,11 @@ use tracing::{debug, info, trace, warn};
 use url::Url;
 
 use crate::alleycat::{
-    AgentInfo as AlleycatAgentInfo, AgentWire as AlleycatAgentWire, AlleycatReconnectTransport,
+    AgentInfo as AlleycatAgentInfo, AgentWire as AlleycatAgentWire,
     ParsedPairPayload as ParsedAlleycatPairPayload,
 };
+#[cfg(feature = "remote-alleycat")]
+use crate::alleycat::AlleycatReconnectTransport;
 use crate::session::connection::InProcessConfig;
 use crate::session::connection::{
     RemoteSessionExtras, RuntimeRemoteSessionResource, ServerConfig, ServerEvent, ServerSession,
@@ -99,6 +101,7 @@ pub struct MobileClient {
     /// discovery, and logging "Aborting ungracefully" on every drop.
     /// Lazily initialized on the first `list_agents` /
     /// `connect_remote_over_alleycat`.
+    #[cfg(feature = "remote-alleycat")]
     alleycat_endpoint: Arc<tokio::sync::OnceCell<iroh::Endpoint>>,
     /// Persisted iroh device secret key. The platform loads the key
     /// bytes from keychain (iOS) / EncryptedSharedPreferences (Android)
@@ -826,6 +829,7 @@ impl MobileClient {
             thread_runtime_routes: Arc::new(StdMutex::new(HashMap::new())),
             model_catalog_refreshes: StdMutex::new(HashMap::new()),
             model_catalog_locks: StdMutex::new(HashMap::new()),
+            #[cfg(feature = "remote-alleycat")]
             alleycat_endpoint: Arc::new(tokio::sync::OnceCell::new()),
             alleycat_secret_key: Arc::new(StdMutex::new(None)),
             ssh_bootstrap_flows: Arc::new(tokio::sync::Mutex::new(HashMap::new())),
@@ -859,10 +863,16 @@ impl MobileClient {
     /// Returns `None` if the endpoint hasn't been initialized yet.
     /// Platform calls this after `alleycat_endpoint()` initializes to
     /// persist freshly-generated keys to secure storage.
+    #[cfg(feature = "remote-alleycat")]
     pub fn alleycat_secret_key(&self) -> Option<Vec<u8>> {
         self.alleycat_endpoint
             .get()
             .map(|endpoint| endpoint.secret_key().to_bytes().to_vec())
+    }
+
+    #[cfg(not(feature = "remote-alleycat"))]
+    pub fn alleycat_secret_key(&self) -> Option<Vec<u8>> {
+        None
     }
 
     fn slingshot_credentials_directory(&self) -> Option<PathBuf> {
@@ -992,6 +1002,7 @@ impl MobileClient {
     /// from scratch — that's the model iroh is designed for and is
     /// what makes `Endpoint::network_change()` work across reconnect
     /// cycles.
+    #[cfg(feature = "remote-alleycat")]
     pub(crate) async fn alleycat_endpoint(
         &self,
     ) -> Result<iroh::Endpoint, crate::alleycat::AlleycatError> {
@@ -1042,6 +1053,7 @@ impl MobileClient {
         // Seed the home launch cache once, before servers reconnect, so the
         // first snapshot already lists recent sessions.
         if first_directory {
+            #[cfg(feature = "remote-alleycat")]
             crate::alleycat::set_direct_addr_cache_directory(&directory);
             self.app_store
                 .seed_cached_session_summaries(crate::home_cache::load(&directory));
@@ -1429,23 +1441,6 @@ impl MobileClient {
         .map_err(RpcClientError::Rpc)
     }
 
-    pub(crate) async fn server_thread_rollback(
-        &self,
-        server_id: &str,
-        params: upstream::ThreadRollbackParams,
-    ) -> Result<upstream::ThreadRollbackResponse, crate::RpcClientError> {
-        use crate::{RpcClientError, next_request_id};
-        self.request_typed_for_server(
-            server_id,
-            upstream::ClientRequest::ThreadRollback {
-                request_id: upstream::RequestId::Integer(next_request_id()),
-                params,
-            },
-        )
-        .await
-        .map_err(RpcClientError::Rpc)
-    }
-
     pub(crate) async fn server_collaboration_mode_list(
         &self,
         server_id: &str,
@@ -1581,6 +1576,12 @@ impl MobileClient {
     ///
     /// Returns the `server_id` from the config on success.
     pub async fn connect_remote(&self, config: ServerConfig) -> Result<String, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(
+                crate::network_scope::REMOTE_CLI_UNSUPPORTED.into(),
+            ));
+        }
+
         let server_id = config.server_id.clone();
         if self.existing_active_session(server_id.as_str()).is_some() {
             info!("MobileClient: reusing existing remote server session {server_id}");
@@ -1611,6 +1612,12 @@ impl MobileClient {
         environment_id: String,
         step_up_token: String,
     ) -> Result<String, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(
+                crate::network_scope::REMOTE_CLI_UNSUPPORTED.into(),
+            ));
+        }
+
         if self.existing_active_session(server_id.as_str()).is_some() {
             info!("MobileClient: reusing existing Slingshot server session {server_id}");
             return Ok(server_id);
@@ -1853,6 +1860,7 @@ impl MobileClient {
         Ok(server_id)
     }
 
+    #[cfg(feature = "remote-alleycat")]
     pub async fn list_alleycat_agents(
         &self,
         params: ParsedAlleycatPairPayload,
@@ -1899,6 +1907,16 @@ impl MobileClient {
         Ok(agents)
     }
 
+    #[cfg(not(feature = "remote-alleycat"))]
+    pub async fn list_alleycat_agents(
+        &self,
+        params: ParsedAlleycatPairPayload,
+        wait_for_registration: bool,
+    ) -> Result<Vec<AlleycatAgentInfo>, TransportError> {
+        let _ = (params, wait_for_registration);
+        Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()))
+    }
+
     fn runtime_supports_thread_permission_overrides(&self, runtime_kind: &str) -> bool {
         if matches!(runtime_kind, "pi" | "local-studio") {
             return false;
@@ -1913,6 +1931,7 @@ impl MobileClient {
             .unwrap_or(true)
     }
 
+    #[cfg(feature = "remote-alleycat")]
     pub async fn connect_remote_over_alleycat(
         &self,
         server_id: String,
@@ -2282,6 +2301,21 @@ impl MobileClient {
         })
     }
 
+    #[cfg(not(feature = "remote-alleycat"))]
+    pub async fn connect_remote_over_alleycat(
+        &self,
+        server_id: String,
+        display_name: String,
+        params: ParsedAlleycatPairPayload,
+        agent_name: String,
+        selected_agent_names: Vec<String>,
+        wire: AlleycatAgentWire,
+    ) -> Result<AlleycatConnectOutcome, TransportError> {
+        let _ = (server_id, display_name, params, agent_name, selected_agent_names, wire);
+        // Fail before inserting a server, persisting credentials, or publishing health.
+        Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()))
+    }
+
     pub async fn connect_remote_over_ssh_bridges(
         &self,
         ssh_client: Arc<SshClient>,
@@ -2292,6 +2326,12 @@ impl MobileClient {
         runtime_kinds: Vec<AgentRuntimeKind>,
         transport: crate::ssh_bridge::SshBridgeTransport,
     ) -> Result<AlleycatConnectOutcome, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(
+                crate::network_scope::REMOTE_CLI_UNSUPPORTED.into(),
+            ));
+        }
+
         if runtime_kinds.is_empty() {
             return Err(TransportError::ConnectionFailed(
                 "no SSH runtime kinds selected".to_string(),
@@ -2383,6 +2423,12 @@ impl MobileClient {
         accept_unknown_host: bool,
         working_dir: Option<String>,
     ) -> Result<String, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(
+                crate::network_scope::REMOTE_CLI_UNSUPPORTED.into(),
+            ));
+        }
+
         let server_id = config.server_id.clone();
         info!(
             "MobileClient: connect_remote_over_ssh start server_id={} host={} ssh_port={} accept_unknown_host={} working_dir={}",
@@ -2557,6 +2603,12 @@ impl MobileClient {
         bootstrap: SshBootstrapResult,
         working_dir: Option<String>,
     ) -> Result<String, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(
+                crate::network_scope::REMOTE_CLI_UNSUPPORTED.into(),
+            ));
+        }
+
         let server_id = config.server_id.clone();
         trace!(
             "MobileClient: finish_connect_remote_over_ssh start server_id={} host={} bootstrap_remote_port={} bootstrap_local_port={} pid={:?}",
@@ -2728,6 +2780,7 @@ impl MobileClient {
     /// CONNECTION_CLOSE to peers, drains in-flight ACKs). Idempotent —
     /// calling on an already-closed or never-initialized endpoint is a
     /// no-op.
+    #[cfg(feature = "remote-alleycat")]
     pub async fn shutdown_alleycat_endpoint(&self) {
         let Some(endpoint) = self.alleycat_endpoint.get().cloned() else {
             return;
@@ -2737,6 +2790,11 @@ impl MobileClient {
         }
         info!("MobileClient: shutting down alleycat endpoint");
         endpoint.close().await;
+    }
+
+    #[cfg(not(feature = "remote-alleycat"))]
+    pub async fn shutdown_alleycat_endpoint(&self) {
+        // No endpoint can exist in this build; cleanup has no resource to close.
     }
 
     /// Disconnect a server by its ID.
@@ -2771,11 +2829,17 @@ impl MobileClient {
     }
 
     pub async fn restart_app_server(&self, server_id: &str) -> Result<(), TransportError> {
+        #[cfg(not(feature = "remote-alleycat"))]
+        if server_id.starts_with("alleycat:") {
+            return Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()));
+        }
         self.clear_oauth_callback_tunnel(server_id).await;
+        #[cfg(feature = "remote-alleycat")]
         let alleycat_restart_target = match self.alleycat_restart_targets.lock() {
             Ok(guard) => guard.get(server_id).cloned(),
             Err(error) => error.into_inner().get(server_id).cloned(),
         };
+        #[cfg(feature = "remote-alleycat")]
         if let Some(target) = alleycat_restart_target {
             let endpoint = self
                 .alleycat_endpoint()
@@ -3862,48 +3926,16 @@ impl MobileClient {
         Ok(())
     }
 
-    /// Roll back the current thread to a selected user turn and return the
-    /// message text that should be restored into the composer for editing.
+    /// Editing a past message requires in-place rollback. The current protocol
+    /// removed that operation; reject it before any RPC or local state change.
     pub async fn edit_message(
         &self,
-        key: &ThreadKey,
-        selected_turn_index: u32,
+        _key: &ThreadKey,
+        _selected_turn_index: u32,
     ) -> Result<String, RpcError> {
-        self.get_session(&key.server_id)?;
-        let current = self.snapshot_thread(key)?;
-        ensure_thread_is_editable(&current)?;
-        let rollback_depth = rollback_depth_for_turn(&current, selected_turn_index as usize)?;
-        let prefill_text = user_boundary_text_for_turn(&current, selected_turn_index as usize)?;
-
-        if rollback_depth > 0 {
-            let response = self
-                .server_thread_rollback(
-                    &key.server_id,
-                    upstream::ThreadRollbackParams {
-                        thread_id: key.thread_id.clone(),
-                        num_turns: rollback_depth,
-                    },
-                )
-                .await
-                .map_err(|e| RpcError::Deserialization(e.to_string()))?;
-            let turns = response.thread.turns.clone();
-            let mut snapshot = thread_snapshot_from_upstream_thread_with_overrides(
-                &key.server_id,
-                response.thread,
-                current.model.clone(),
-                current.reasoning_effort.clone(),
-                current.effective_approval_policy.clone(),
-                current.effective_sandbox_policy.clone(),
-            )
-            .map_err(RpcError::Deserialization)?;
-            copy_thread_runtime_fields(&current, &mut snapshot);
-            reconcile_active_turn(Some(&current), &mut snapshot, &turns);
-            self.apply_persisted_thread_collaboration_mode(&mut snapshot);
-            self.app_store.upsert_thread_snapshot(snapshot);
-        }
-
-        self.set_active_thread(Some(key.clone()));
-        Ok(prefill_text)
+        Err(RpcError::Deserialization(
+            "editing a past message requires thread rollback, which is unsupported by this server protocol".to_string(),
+        ))
     }
 
     /// Fork a thread from a selected user message boundary.
@@ -3921,7 +3953,7 @@ impl MobileClient {
         self.get_session(&key.server_id)?;
         let source = self.snapshot_thread(key)?;
         ensure_thread_is_editable(&source)?;
-        let rollback_depth = rollback_depth_for_turn(&source, selected_turn_index as usize)?;
+        let last_turn_id = fork_boundary_turn_id(&source, selected_turn_index as usize)?;
 
         let developer_instructions =
             crate::local_runtime_instructions::splice_local_runtime_developer_instructions(
@@ -3930,22 +3962,23 @@ impl MobileClient {
                 developer_instructions,
             );
 
+        let mut params: upstream::ThreadForkParams = crate::types::AppForkThreadRequest {
+            thread_id: key.thread_id.clone(),
+            model,
+            cwd,
+            approval_policy,
+            sandbox,
+            developer_instructions,
+            persist_extended_history,
+            exclude_turns: false,
+        }
+        .try_into()
+        .map_err(|e: crate::RpcClientError| RpcError::Deserialization(e.to_string()))?;
+        // Current upstream supports an inclusive turn-ID boundary directly.
+        // Do not fork the whole history and then attempt a removed rollback.
+        params.last_turn_id = Some(last_turn_id);
         let response = self
-            .server_thread_fork(
-                &key.server_id,
-                crate::types::AppForkThreadRequest {
-                    thread_id: key.thread_id.clone(),
-                    model,
-                    cwd,
-                    approval_policy,
-                    sandbox,
-                    developer_instructions,
-                    persist_extended_history,
-                    exclude_turns: false,
-                }
-                .try_into()
-                .map_err(|e: crate::RpcClientError| RpcError::Deserialization(e.to_string()))?,
-            )
+            .server_thread_fork(&key.server_id, params)
             .await
             .map_err(|e| RpcError::Deserialization(e.to_string()))?;
 
@@ -3963,28 +3996,6 @@ impl MobileClient {
         )
         .map_err(RpcError::Deserialization)?;
         let next_key = snapshot.key.clone();
-
-        if rollback_depth > 0 {
-            let rollback_response = self
-                .server_thread_rollback(
-                    &key.server_id,
-                    upstream::ThreadRollbackParams {
-                        thread_id: next_key.thread_id.clone(),
-                        num_turns: rollback_depth,
-                    },
-                )
-                .await
-                .map_err(|e| RpcError::Deserialization(e.to_string()))?;
-            snapshot = thread_snapshot_from_upstream_thread_with_overrides(
-                &key.server_id,
-                rollback_response.thread,
-                fork_model,
-                fork_reasoning,
-                snapshot.effective_approval_policy.clone(),
-                snapshot.effective_sandbox_policy.clone(),
-            )
-            .map_err(RpcError::Deserialization)?;
-        }
 
         self.apply_persisted_thread_collaboration_mode(&mut snapshot);
         self.app_store.upsert_thread_snapshot(snapshot);
@@ -4214,6 +4225,7 @@ impl MobileClient {
         let event = UiEvent::TurnCompleted {
             key: key.clone(),
             turn_id: turn_id.to_string(),
+            status: upstream::TurnStatus::Interrupted,
             error: None,
         };
         self.app_store.apply_ui_event(&event);

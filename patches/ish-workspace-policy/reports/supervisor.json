@@ -1,0 +1,131 @@
+[
+  {
+    "version": 4,
+    "passed": true,
+    "seconds": 3.345137875061482,
+    "events": [
+      {
+        "tag": 0,
+        "version": 4
+      },
+      {
+        "tag": 5,
+        "id": 1,
+        "code": 5,
+        "error": "fork: Not supported (os error 95)"
+      },
+      {
+        "tag": 4,
+        "id": 1
+      },
+      {
+        "tag": 5,
+        "id": 2,
+        "code": 5,
+        "error": "fork: Operation not permitted (os error 1)"
+      },
+      {
+        "tag": 4,
+        "id": 2
+      },
+      {
+        "tag": 1,
+        "id": 3,
+        "pid": 2
+      },
+      {
+        "tag": 2,
+        "id": 3,
+        "seq": 1,
+        "stream": 0,
+        "output": "WIRE_POLICY_PASS\n"
+      },
+      {
+        "tag": 3,
+        "id": 3,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 3
+      },
+      {
+        "tag": 5,
+        "id": 4,
+        "code": 5,
+        "error": "fork: Operation not permitted (os error 1)"
+      },
+      {
+        "tag": 4,
+        "id": 4
+      }
+    ]
+  },
+  {
+    "version": 3,
+    "passed": true,
+    "seconds": 0.013008875073865056,
+    "events": [
+      {
+        "tag": 0,
+        "version": 3
+      },
+      {
+        "tag": 1,
+        "id": 1,
+        "pid": 2
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 1,
+        "stream": 0,
+        "output": "LEGACY_OK\n"
+      },
+      {
+        "tag": 3,
+        "id": 1,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 1
+      }
+    ]
+  },
+  {
+    "version": 2,
+    "passed": true,
+    "seconds": 0.010827874997630715,
+    "events": [
+      {
+        "tag": 0,
+        "version": 2
+      },
+      {
+        "tag": 1,
+        "id": 1,
+        "pid": 2
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 1,
+        "stream": 0,
+        "output": "LEGACY_OK\n"
+      },
+      {
+        "tag": 3,
+        "id": 1,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 1
+      }
+    ]
+  }
+]

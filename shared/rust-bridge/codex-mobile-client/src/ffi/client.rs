@@ -329,6 +329,19 @@ impl AppClient {
         }
     }
 
+    /// Register the native credential store callback. Only local Codex requests
+    /// can invoke it; credentials are never requested for remote servers.
+    pub fn set_chatgpt_auth_refresh_provider(
+        &self,
+        provider: Box<dyn crate::auth_refresh::ChatgptAuthRefreshProvider>,
+    ) {
+        crate::auth_refresh::dispatcher().set_provider(Some(Arc::from(provider)));
+    }
+
+    pub fn clear_chatgpt_auth_refresh_provider(&self) {
+        crate::auth_refresh::dispatcher().set_provider(None);
+    }
+
     // ── Agent metadata cache ─────────────────────────────────────────────
     //
     // Populated whenever `list_alleycat_agents` succeeds against any
@@ -485,6 +498,21 @@ impl AppClient {
         self.inner.alleycat_secret_key()
     }
 
+    /// Whether this build includes the remote CLI transport. This does not
+    /// indicate network reachability or a successful remote connection.
+    pub fn remote_cli_available(&self) -> bool {
+        crate::network_scope::remote_cli_available()
+    }
+
+    /// Compile-time capability, independent of temporary network failures.
+    pub fn remote_alleycat_available(&self) -> bool {
+        crate::network_scope::remote_alleycat_available()
+    }
+
+    pub fn pairing_available(&self) -> bool {
+        crate::network_scope::pairing_available()
+    }
+
     /// Force the shared alleycat iroh `Endpoint` to bind now (instead
     /// of lazily on first use). Returns the secret key bytes the
     /// endpoint was bound with — either the bytes the platform pushed
@@ -498,12 +526,20 @@ impl AppClient {
     /// "load → bind → save" sequence at launch (avoids racing the
     /// lazy-init path against the lifecycle reconnect chain).
     pub async fn ensure_alleycat_endpoint(&self) -> Option<Vec<u8>> {
-        match self.inner.alleycat_endpoint().await {
-            Ok(endpoint) => Some(endpoint.secret_key().to_bytes().to_vec()),
-            Err(error) => {
-                tracing::warn!("ensure_alleycat_endpoint: bind failed: {error}");
-                None
+        #[cfg(feature = "remote-alleycat")]
+        {
+            match self.inner.alleycat_endpoint().await {
+                Ok(endpoint) => Some(endpoint.secret_key().to_bytes().to_vec()),
+                Err(error) => {
+                    tracing::warn!("ensure_alleycat_endpoint: bind failed: {error}");
+                    None
+                }
             }
+        }
+        #[cfg(not(feature = "remote-alleycat"))]
+        {
+            tracing::warn!("{}", crate::network_scope::ALLEYCAT_UNSUPPORTED);
+            None
         }
     }
 
@@ -892,34 +928,22 @@ impl AppClient {
 
     pub async fn resolve_realtime_handoff(
         &self,
-        server_id: String,
-        params: types::AppResolveRealtimeHandoffRequest,
+        _server_id: String,
+        _params: types::AppResolveRealtimeHandoffRequest,
     ) -> Result<(), ClientError> {
-        blocking_async!(self.rt, self.inner, |c| {
-            let _: upstream::ThreadRealtimeResolveHandoffResponse = rpc(
-                c.as_ref(),
-                &server_id,
-                req!(server_id, ThreadRealtimeResolveHandoff, params.into()),
-            )
-            .await?;
-            Ok(())
-        })
+        Err(ClientError::Rpc(
+            "explicit realtime handoff resolve is unsupported by this server protocol".to_string(),
+        ))
     }
 
     pub async fn finalize_realtime_handoff(
         &self,
-        server_id: String,
-        params: types::AppFinalizeRealtimeHandoffRequest,
+        _server_id: String,
+        _params: types::AppFinalizeRealtimeHandoffRequest,
     ) -> Result<(), ClientError> {
-        blocking_async!(self.rt, self.inner, |c| {
-            let _: upstream::ThreadRealtimeFinalizeHandoffResponse = rpc(
-                c.as_ref(),
-                &server_id,
-                req!(server_id, ThreadRealtimeFinalizeHandoff, params.into()),
-            )
-            .await?;
-            Ok(())
-        })
+        Err(ClientError::Rpc(
+            "explicit realtime handoff finalize is unsupported by this server protocol".to_string(),
+        ))
     }
 
     // ── Review ───────────────────────────────────────────────────────────
@@ -2438,51 +2462,26 @@ async fn run_structured_turn(
             },
         )
         .await;
-    if let Err(e) = turn_outcome {
-        if is_stale_thread_error(&e) {
-            return Err(StructuredTurnError::StaleThread);
+    let started_turn = match turn_outcome {
+        Ok(response) => response.turn,
+        Err(e) => {
+            if is_stale_thread_error(&e) {
+                return Err(StructuredTurnError::StaleThread);
+            }
+            return Err(StructuredTurnError::Fatal(format!(
+                "turn/start failed: {e}"
+            )));
         }
-        return Err(StructuredTurnError::Fatal(format!(
-            "turn/start failed: {e}"
-        )));
-    }
+    };
 
     let wait_outcome = tokio::time::timeout(
         std::time::Duration::from_secs(STRUCTURED_RESPONSE_TIMEOUT_SECS),
-        async {
-            let mut last_agent_text: Option<String> = None;
-            loop {
-                match events_rx.recv().await {
-                    Ok(crate::session::events::UiEvent::ItemCompleted { notification, .. })
-                        if notification.thread_id == thread_id =>
-                    {
-                        if let upstream::ThreadItem::AgentMessage { text, .. } = &notification.item
-                        {
-                            last_agent_text = Some(text.clone());
-                        }
-                    }
-                    Ok(crate::session::events::UiEvent::TurnCompleted { key, error, .. })
-                        if key.thread_id == thread_id && key.server_id == server_id =>
-                    {
-                        return Ok((last_agent_text, error));
-                    }
-                    Ok(_) => continue,
-                    Err(tokio::sync::broadcast::error::RecvError::Lagged(_)) => continue,
-                    Err(tokio::sync::broadcast::error::RecvError::Closed) => {
-                        return Err("event stream closed".to_string());
-                    }
-                }
-            }
-        },
+        wait_for_structured_turn(&mut events_rx, server_id, thread_id, &started_turn.id),
     )
     .await;
 
     match wait_outcome {
-        Ok(Ok((_, Some(err)))) => Err(StructuredTurnError::Fatal(err)),
-        Ok(Ok((Some(text), None))) => Ok(text),
-        Ok(Ok((None, None))) => Err(StructuredTurnError::Fatal(
-            "turn completed with no assistant message".to_string(),
-        )),
+        Ok(Ok(text)) => Ok(text),
         Ok(Err(msg)) => Err(StructuredTurnError::Fatal(msg)),
         Err(_) => Err(StructuredTurnError::Fatal(format!(
             "timed out after {STRUCTURED_RESPONSE_TIMEOUT_SECS}s waiting for structured response"
@@ -2490,9 +2489,230 @@ async fn run_structured_turn(
     }
 }
 
+async fn wait_for_structured_turn(
+    events_rx: &mut tokio::sync::broadcast::Receiver<crate::session::events::UiEvent>,
+    server_id: &str,
+    thread_id: &str,
+    started_turn_id: &str,
+) -> Result<String, String> {
+    use crate::session::events::UiEvent;
+
+    let mut final_answer = None;
+    loop {
+        match events_rx.recv().await {
+            Ok(UiEvent::ItemCompleted { key, notification })
+                if key.server_id == server_id
+                    && key.thread_id == thread_id
+                    && notification.thread_id == thread_id
+                    && notification.turn_id == started_turn_id =>
+            {
+                if let upstream::ThreadItemPayload::AgentMessage {
+                    text,
+                    phase: Some(codex_protocol::models::MessagePhase::FinalAnswer),
+                    ..
+                } = notification.item.payload
+                {
+                    final_answer = Some(text);
+                }
+            }
+            Ok(UiEvent::TurnCompleted {
+                key,
+                turn_id,
+                status,
+                error,
+            })
+                if key.server_id == server_id
+                    && key.thread_id == thread_id
+                    && turn_id == started_turn_id =>
+            {
+                if let Some(error) = error {
+                    return Err(error);
+                }
+                if status != upstream::TurnStatus::Completed {
+                    return Err(format!(
+                        "structured response turn ended with status {status:?}"
+                    ));
+                }
+                return final_answer.ok_or_else(|| {
+                    "turn completed with no final_answer assistant message".to_string()
+                });
+            }
+            Ok(_) => continue,
+            Err(tokio::sync::broadcast::error::RecvError::Lagged(count)) => {
+                return Err(format!("event stream lagged by {count} events"));
+            }
+            Err(tokio::sync::broadcast::error::RecvError::Closed) => {
+                return Err("event stream closed".to_string());
+            }
+        }
+    }
+}
+
 enum StructuredTurnError {
     StaleThread,
     Fatal(String),
+}
+
+#[cfg(test)]
+mod structured_turn_tests {
+    use super::wait_for_structured_turn;
+    use crate::session::events::UiEvent;
+    use crate::types::ThreadKey;
+    use codex_app_server_protocol as upstream;
+    use codex_protocol::models::MessagePhase;
+    use tokio::sync::broadcast;
+
+    fn key() -> ThreadKey {
+        ThreadKey {
+            server_id: "server".into(),
+            thread_id: "thread".into(),
+        }
+    }
+
+    fn message(phase: Option<MessagePhase>, text: &str) -> UiEvent {
+        UiEvent::ItemCompleted {
+            key: key(),
+            notification: upstream::ItemCompletedNotification {
+                thread_id: "thread".into(),
+                turn_id: "started-turn".into(),
+                item: upstream::ThreadItem::untimed(upstream::ThreadItemPayload::AgentMessage {
+                    id: "answer".into(),
+                    text: text.into(),
+                    phase,
+                    memory_citation: None,
+                    delivery: None,
+                    questions: None,
+                }),
+                completed_at_ms: 1,
+            },
+        }
+    }
+
+    fn completion(status: upstream::TurnStatus, error: Option<&str>) -> UiEvent {
+        UiEvent::TurnCompleted {
+            key: key(),
+            turn_id: "started-turn".into(),
+            status,
+            error: error.map(str::to_string),
+        }
+    }
+
+    async fn collect(events: Vec<UiEvent>) -> Result<String, String> {
+        let (tx, mut rx) = broadcast::channel(32);
+        for event in events {
+            tx.send(event).unwrap();
+        }
+        drop(tx);
+        wait_for_structured_turn(&mut rx, "server", "thread", "started-turn").await
+    }
+
+    #[tokio::test]
+    async fn interrupted_failed_and_in_progress_without_error_reject_final_answer() {
+        for status in [
+            upstream::TurnStatus::Interrupted,
+            upstream::TurnStatus::Failed,
+            upstream::TurnStatus::InProgress,
+        ] {
+            let error = collect(vec![
+                message(Some(MessagePhase::FinalAnswer), "{\"ok\":true}"),
+                completion(status.clone(), None),
+            ]).await.unwrap_err();
+            assert!(error.contains(&format!("{status:?}")), "{error}");
+        }
+    }
+
+    #[tokio::test]
+    async fn completed_with_error_rejects_final_answer() {
+        assert_eq!(collect(vec![
+            message(Some(MessagePhase::FinalAnswer), "{}"),
+            completion(upstream::TurnStatus::Completed, Some("failure")),
+        ]).await, Err("failure".into()));
+    }
+
+    #[tokio::test]
+    async fn commentary_partial_unknown_and_absent_final_are_rejected() {
+        for phase in [
+            Some(MessagePhase::Commentary),
+            Some(MessagePhase::PartialAnswer),
+            None,
+        ] {
+            assert!(collect(vec![message(phase, "{}"), completion(upstream::TurnStatus::Completed, None)])
+                .await.unwrap_err().contains("no final_answer"));
+        }
+        assert!(collect(vec![completion(upstream::TurnStatus::Completed, None)])
+            .await.unwrap_err().contains("no final_answer"));
+    }
+
+    #[tokio::test]
+    async fn matching_final_answer_and_completion_succeed() {
+        assert_eq!(collect(vec![
+            message(Some(MessagePhase::Commentary), "working"),
+            message(Some(MessagePhase::FinalAnswer), "{\"ok\":true}"),
+            message(Some(MessagePhase::Commentary), "not the answer"),
+            completion(upstream::TurnStatus::Completed, None),
+        ]).await, Ok("{\"ok\":true}".into()));
+    }
+
+    #[tokio::test]
+    async fn unrelated_final_answers_cannot_satisfy_completion() {
+        for mismatch in ["server", "key_thread", "notification_thread", "turn"] {
+            let mut event = message(Some(MessagePhase::FinalAnswer), "{}");
+            if let UiEvent::ItemCompleted { key, notification } = &mut event {
+                match mismatch {
+                    "server" => key.server_id = "other".into(),
+                    "key_thread" => key.thread_id = "other".into(),
+                    "notification_thread" => notification.thread_id = "other".into(),
+                    "turn" => notification.turn_id = "other".into(),
+                    _ => unreachable!(),
+                }
+            }
+            assert!(collect(vec![event, completion(upstream::TurnStatus::Completed, None)])
+                .await.unwrap_err().contains("no final_answer"), "{mismatch}");
+        }
+    }
+
+    #[tokio::test]
+    async fn unrelated_completions_are_ignored() {
+        for mismatch in ["server", "thread", "turn"] {
+            let mut event = completion(upstream::TurnStatus::Interrupted, None);
+            if let UiEvent::TurnCompleted { key, turn_id, .. } = &mut event {
+                match mismatch {
+                    "server" => key.server_id = "other".into(),
+                    "thread" => key.thread_id = "other".into(),
+                    "turn" => *turn_id = "other".into(),
+                    _ => unreachable!(),
+                }
+            }
+            assert_eq!(collect(vec![event, message(Some(MessagePhase::FinalAnswer), "{}"),
+                completion(upstream::TurnStatus::Completed, None)]).await, Ok("{}".into()));
+        }
+    }
+
+    #[tokio::test]
+    async fn wrong_turn_completion_alone_cannot_succeed() {
+        let mut event = completion(upstream::TurnStatus::Completed, None);
+        if let UiEvent::TurnCompleted { turn_id, .. } = &mut event {
+            *turn_id = "other".into();
+        }
+        assert_eq!(collect(vec![message(Some(MessagePhase::FinalAnswer), "{}"), event]).await,
+            Err("event stream closed".into()));
+    }
+
+    #[tokio::test]
+    async fn lag_rejects_even_if_final_answer_and_completion_are_still_buffered() {
+        let (tx, mut rx) = broadcast::channel(2);
+        tx.send(message(Some(MessagePhase::Commentary), "lost")).unwrap();
+        tx.send(message(Some(MessagePhase::FinalAnswer), "{}")).unwrap();
+        tx.send(completion(upstream::TurnStatus::Completed, None)).unwrap();
+        assert!(wait_for_structured_turn(&mut rx, "server", "thread", "started-turn")
+            .await.unwrap_err().contains("lagged"));
+    }
+
+    #[tokio::test]
+    async fn closed_stream_rejects_even_with_final_answer() {
+        assert_eq!(collect(vec![message(Some(MessagePhase::FinalAnswer), "{}")]).await,
+            Err("event stream closed".into()));
+    }
 }
 
 async fn perform_structured_response(

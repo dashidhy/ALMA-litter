@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+    "--edition=2024",
+    "--target=aarch64-apple-ios",
+    "--test",
+    "--emit=metadata",
+    "--crate-name=alignment_protocol_check",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/real-protocol/alignment.rs",
+    "-o",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/thread_item_regression/.build/real-protocol/alignment.rmeta",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps",
+    "--extern",
+    "codex_app_server_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_app_server_protocol-5b2b77658f59339d.rmeta",
+    "--extern",
+    "codex_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_protocol-e3956978ca57ab69.rmeta",
+    "--extern",
+    "serde=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde-2e33733aafc074a4.rmeta",
+    "--extern",
+    "serde_json=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde_json-95e9300dd7d03497.rmeta",
+    "--extern",
+    "thiserror=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libthiserror-b020fc0eb0b6a306.rmeta"
+  ],
+  "exit_code": 0,
+  "tests_executed": false,
+  "actual_protocol_artifacts": {
+    "codex_app_server_protocol": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_app_server_protocol-5b2b77658f59339d.rmeta",
+    "codex_protocol": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_protocol-e3956978ca57ab69.rmeta",
+    "serde": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde-2e33733aafc074a4.rmeta",
+    "serde_json": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde_json-95e9300dd7d03497.rmeta",
+    "thiserror": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libthiserror-b020fc0eb0b6a306.rmeta"
+  },
+  "source_sha256": {
+    "shared/rust-bridge/codex-mobile-client/src/types/models.rs": "e2200e32cf522eed0f41a4c1f6804fcdd39cc059974f422c26259eb9d901ce69",
+    "shared/rust-bridge/codex-mobile-client/src/types/server_requests.rs": "36ec87963b44c570194b6da8d49d9eb189f62e447c446308559d8192162405d5",
+    "shared/rust-bridge/codex-mobile-client/src/types/enums.rs": "48f3a802525de28c80566b3f17d4d07cbd6ea57192d9a79833d645e600464563",
+    "shared/rust-bridge/codex-mobile-client/src/lib.rs": "3ad763166afe6313c55c651cf3ccb3c5f7e94b70df8fbb0407bfb3d036e2ca29"
+  }
+}

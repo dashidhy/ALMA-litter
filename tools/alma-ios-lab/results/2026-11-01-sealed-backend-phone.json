@@ -1,0 +1,99 @@
+{
+  "elapsedSeconds": 9.315190458321013,
+  "footprintBytes": 39847704,
+  "availableMemoryBytes": 3181377768,
+  "thermalState": 0,
+  "peakFootprintBytes": 48433088,
+  "phase": "completed",
+  "scope": "Actual Codex0.166 ExecBackend/apply_patch + sealed iSH native workspace; fixed fixtures only; no model, account or TAH acceptance",
+  "summary": {
+    "allExpectationsMatched": true,
+    "scope": "actual sealed iSH + native workspace +0.166 ExecBackend/apply_patch; fixed fixtures only; no account/model/TAH test",
+    "type": "finished",
+    "cases": 10
+  },
+  "reason": "Results saved",
+  "freeDiskBytes": 52838400000,
+  "cases": [
+    {
+      "peakAppFootprintBytes": 18728680,
+      "id": "unicode",
+      "passed": true,
+      "seconds": 0.0268245,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 19285736,
+      "id": "stdin",
+      "passed": true,
+      "seconds": 0.021651625,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 23381760,
+      "id": "interrupt",
+      "passed": true,
+      "seconds": 1.037035125,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 23136000,
+      "id": "cancel",
+      "passed": true,
+      "seconds": 0.687976083,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18253568,
+      "id": "fast",
+      "passed": true,
+      "seconds": 0.045527625,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 23545576,
+      "id": "budget",
+      "passed": true,
+      "seconds": 0.138023125,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 24086248,
+      "id": "shared-write",
+      "passed": true,
+      "seconds": 0.032503459,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 23594728,
+      "id": "shared-read",
+      "passed": true,
+      "seconds": 0.023200083,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 48433088,
+      "id": "language-tools",
+      "passed": true,
+      "seconds": 4.677865292,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 39880472,
+      "id": "leases",
+      "passed": true,
+      "quarantined": 0,
+      "completed": 9,
+      "type": "case"
+    }
+  ],
+  "runID": "92c14c4a-dcde-4f15-a5f1-23507395b0c8",
+  "collection": {
+    "runID": "92c14c4a-dcde-4f15-a5f1-23507395b0c8",
+    "pid": 35034,
+    "processEnded": true,
+    "hostStoppedProcess": false,
+    "lastPhase": "completed",
+    "seconds": 12.576636000070721
+  }
+}

@@ -1,0 +1,72 @@
+warning: unused import: `serde_json::Value as JsonValue`
+ --> lib.rs:3:41
+  |
+3 | use serde::{Serialize,Deserialize}; use serde_json::Value as JsonValue;
+  |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `CALLBACK_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:16:7
+   |
+16 | const CALLBACK_BUDGET: Duration = Duration::from_secs(7);
+   |       ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `RESPONSE_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:17:7
+   |
+17 | const RESPONSE_BUDGET: Duration = Duration::from_secs(9);
+   |       ^^^^^^^^^^^^^^^
+
+warning: constant `NATIVE_BUDGET_MS` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:18:7
+   |
+18 | const NATIVE_BUDGET_MS: u32 = 6_000;
+   |       ^^^^^^^^^^^^^^^^
+
+warning: struct `AuthRefreshDispatcher` is never constructed
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:70:19
+   |
+70 | pub(crate) struct AuthRefreshDispatcher {
+   |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `dispatcher` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:74:15
+   |
+74 | pub(crate) fn dispatcher() -> &'static AuthRefreshDispatcher {
+   |               ^^^^^^^^^^
+
+warning: methods `set_provider`, `refresh`, and `dispatch` are never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:80:19
+    |
+ 79 | impl AuthRefreshDispatcher {
+    | -------------------------- methods in this implementation
+ 80 |     pub(crate) fn set_provider(&self, provider: Option<Arc<dyn ChatgptAuthRefreshProvider>>) {
+    |                   ^^^^^^^^^^^^
+...
+ 87 |     async fn refresh(
+    |              ^^^^^^^
+...
+143 |     pub(crate) async fn dispatch<R, F>(
+    |                         ^^^^^^^^
+
+warning: function `rpc_error` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:165:15
+    |
+165 | pub(crate) fn rpc_error(error: ChatgptAuthRefreshError) -> JSONRPCErrorError {
+    |               ^^^^^^^^^
+
+warning: enum `AuthRefreshDeliveryError` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:174:17
+    |
+174 | pub(crate) enum AuthRefreshDeliveryError {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `alma-auth-refresh-regression` (lib) generated 9 warnings (run `cargo fix --lib -p alma-auth-refresh-regression` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s
+
+   Compiling auth-refresh-bindgen-evidence v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/bindgen)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.78s
+     Running `target/debug/auth-refresh-bindgen-evidence generate --library /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/rust/target/debug/libalma_auth_refresh_regression.dylib --language swift --out-dir /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/generated`

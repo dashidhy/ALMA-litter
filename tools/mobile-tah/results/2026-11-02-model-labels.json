@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-02",
+  "rule": "Prefer catalog display name; fall back to model ID only when name is absent or blank. Never concatenate both.",
+  "scope": [
+    "Settings model picker",
+    "composer configuration button",
+    "historical revision configuration label"
+  ],
+  "unchanged": [
+    "option values use original model IDs",
+    "stored drafts and provider requests use original model IDs",
+    "reasoning levels retain exact standard labels"
+  ],
+  "checks": {
+    "frontendTests": 137,
+    "frontendBuild": "passed",
+    "finalNativeBuild": "passed",
+    "modelCalls": 0
+  },
+  "installed": true,
+  "assets": [
+    "index-BiGlAigA.css",
+    "index-Ds680D-D.js"
+  ],
+  "sourceSHA256": {
+    "apps/ios/tah-ui/src/components/Settings.tsx": "9114486c304ff9a94daa11d07f2d52c61fc28da8f4a57089cfc11013d2ef8555",
+    "apps/ios/tah-ui/src/App.tsx": "d3b4245eb0835d8d39b9b1dd508094ad5dee78e5b47baaea613db47ec17385cc",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "d546f7a9c9d43dfc6b58fc91db1f6c15d9b0a580b9db74e25f86e6177f832ad8"
+  },
+  "physicalChecks": [
+    "NVIDIA existing draft restored with original model and reasoning",
+    "Composer displays GPT-6.1-Sol rather than raw ID",
+    "Model picker entries display each catalog name once without appended ID"
+  ],
+  "limits": [
+    "No new provider/model task run",
+    "Historical configuration-name projection compiled; not separately opened on phone in this round"
+  ]
+}

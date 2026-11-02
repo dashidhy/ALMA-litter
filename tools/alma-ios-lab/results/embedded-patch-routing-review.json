@@ -1,0 +1,278 @@
+{
+  "recorded_at_utc": "2026-11-01T02:42:26.831271+00:00",
+  "status": "Minimal proposal only; not applied, compiled, run or phone-tested.",
+  "patch": {
+    "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/embedded-patch-routing.patch",
+    "sha256": "f2cb2332c42436e43052ddedb60bcdc6bfcc7003957c960985e094bcba276add",
+    "changed_upstream_files": [
+      "codex-rs/core/src/tools/handlers/apply_patch.rs"
+    ],
+    "production_change": "One predicate replacement only: is_remote() -> uses_exec_backend() inside prepare_verified_patch. No helper extraction or test-framework changes.",
+    "baseline_sha256": "17ac10916bfb719850fcbf57ff7add094ca61fdb5f28f4b709d57e20f3749f4b",
+    "proposed_sha256": "567d97e52666f8695e93570af52ea595a01fefb8c5e6bee17e38dce6ff5ff81d",
+    "read_only_git_apply_check": "PASS against current actual submodule with --check --whitespace=error",
+    "application_order": "After existing embedded-exec-backend.patch (which defines uses_exec_backend and already fixes ApplyPatchRuntime); main applies and updates preparation stack sequentially."
+  },
+  "exact_0166_source": {
+    "archive": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+    "member": "codex-rust-v0.166.0/codex-rs/core/src/tools/handlers/apply_patch.rs",
+    "pristine_sha256": "17ac10916bfb719850fcbf57ff7add094ca61fdb5f28f4b709d57e20f3749f4b",
+    "pristine_contains_original_remote_only_selector": true,
+    "actual_handler_equals_pristine": true,
+    "basis": "Review uses current real 0.166 working sources plus existing embedded/preflight patches; not shadow/copied trait definitions."
+  },
+  "root_cause": {
+    "preparation_selector": {
+      "file": "codex-rs/core/src/tools/handlers/apply_patch.rs",
+      "line": 517,
+      "before": "let sandbox_route = if turn_environment.environment.is_remote() {",
+      "after": "let sandbox_route = if turn_environment.environment.uses_exec_backend() {"
+    },
+    "embedded_identity": "Environment::embedded stores embedded_info and has remote_client=None. is_remote() checks remote_client.is_some(); uses_exec_backend() is is_remote() || is_embedded().",
+    "effect": "Embedded was classified as Platform during patch authorization, despite its backend-managed execution. get_platform_sandbox returns None on iOS. A writable managed-profile patch therefore lacks sandbox_available in assess_patch_safety and is rejected under AskForApproval::Never (or asks under eligible approval policies).",
+    "qualified_limit": "This is source proof of the routing defect, not a reproduced phone result or a guarantee that every other operation succeeds."
+  },
+  "routing_inventory": [
+    {
+      "entry": "Direct freeform apply_patch tool",
+      "path": "ApplyPatchHandler::handle_call -> prepare_patch_request -> verify_apply_patch_args(selected fs, sandbox) -> prepare_verified_patch -> execute_prepared_patch -> ToolOrchestrator -> ApplyPatchRuntime::run",
+      "effect": "Shared preparation selector receives this one-line fix."
+    },
+    {
+      "entry": "Recognized apply_patch inside unified exec command",
+      "path": "unified_exec/exec_command.rs -> intercept_apply_patch -> maybe_parse_apply_patch_verified(selected fs, sandbox) -> prepare_verified_patch -> same orchestrator/runtime",
+      "effect": "Same preparation fix; no second replacement needed."
+    },
+    {
+      "entry": "Runtime backend selector",
+      "path": "core/src/tools/runtimes/apply_patch.rs:164-165",
+      "actual": "uses_executor_managed_process_sandbox returns req.turn_environment.environment.uses_exec_backend()",
+      "effect": "Already correct in current tree via embedded-exec-backend.patch. Do not reapply or replace it."
+    },
+    {
+      "entry": "Actual patch I/O",
+      "path": "ApplyPatchRuntime::run:178-203",
+      "actual": "get_filesystem() clones the selected registered filesystem, then codex_apply_patch::apply_patch_with_options receives fs and file_system_sandbox_context_for_attempt. No extra is_remote gate or host-native process spawn here.",
+      "effect": "Uses the registered ScopedExecutorFileSystem for Embedded. It does not need to invoke the shell ExecBackend to perform filesystem operations."
+    },
+    {
+      "entry": "Orchestrator sandbox selection",
+      "path": "core/src/tools/orchestrator.rs:327-375",
+      "actual": "Backend-managed execution avoids platform sandbox selection while retaining sandbox_requested and effective permission context. SandboxType::None here is not a request to disable backend enforcement."
+    },
+    {
+      "entry": "Apply-patch library and scoped mutation preflight",
+      "path": "apply-patch/src/lib.rs:456-479; scoped_executor_fs.rs:103-155",
+      "actual": "Official parsed hunks enumerate every write/delete and both move endpoints before mutation, and ScopedExecutorFileSystem intersects host authority with passed context. No remote-only selector in this I/O path."
+    }
+  ],
+  "preserved_safety": [
+    "No approval policy changes. patch_approval_requirement still calls assess_patch_safety; AutoApprove still becomes Skip with bypass_sandbox=false.",
+    "Every add/delete/update source and move destination remains checked by is_write_patch_constrained_to_writable_paths. Empty patches, RO targets and denied paths retain rejection behavior.",
+    "Existing granted-permission calculation, additional-permission derivation, orchestrator approval/escalation rules and explicit filesystem context remain unchanged.",
+    "ExecutorManaged uses configured virtual-path policy matching rather than host-native path canonicalization. This aligns matching with the embedded filesystem namespace; it does not create new permissions.",
+    "Registered ScopedFiles authority, context restrictions and full-batch mutation preflight remain active. No filesystem, readonly policy, preflight, source/destination enumeration or native fallback changes are proposed.",
+    "Native local environments still return false from uses_exec_backend and retain Platform handling; remote environments still return true and retain ExecutorManaged handling.",
+    "The trusted Environment::embedded constructor contract still requires supplied providers to enforce every request or reject before I/O. Backend routing alone is not proof of a security boundary."
+  ],
+  "regression_plan_not_executed": [
+    {
+      "name": "actual_embedded_prepare",
+      "setup": "Construct actual codex_exec_server::Environment::embedded with registered enforcing backend and filesystem in an owned temporary workspace; assert is_embedded=true, is_remote=false, uses_exec_backend=true. Use managed RO input/RW output policy and approval Never.",
+      "exercise": "Real prepare_patch_request for an add/update entirely within RW output, and the intercepted command path through intercept_apply_patch.",
+      "expect": "Preparation permits the already-authorized patch without requesting approval; resulting Skip retains bypass_sandbox=false. On iOS the original remote-only selector rejects this case."
+    },
+    {
+      "name": "same_real_execution_path",
+      "exercise": "Run actual handler/orchestrator/runtime with selected ScopedExecutorFileSystem; cover add/update/delete/move, parent creation and UTF-8 within the owned fixture.",
+      "expect": "Correct output bytes via selected filesystem, explicit effective context and confirmed cleanup; no host-native platform sandbox fallback."
+    },
+    {
+      "name": "authorization_stays_closed",
+      "exercise": "Approval Never with full RO policy, an RO leaf within an RW root, a move with RO source or destination, and a patch containing an earlier valid RW change plus later RO target.",
+      "expect": "Reject; no approval-policy override. Mixed authorization denial causes no mutations because Core checks and the existing complete mutation preflight remain active."
+    },
+    {
+      "name": "routing_non_regression",
+      "exercise": "Native-local and remote real Environment variants through the same production preparation function.",
+      "expect": "Native remains Platform; remote remains ExecutorManaged. Existing native/remote safety and runtime tests remain applicable."
+    }
+  ],
+  "other_blockers": "No additional is_remote-based gate found in the reviewed apply_patch handler/runtime/library route. The separate exec-policy Windows proxy-settings defect is main-owned and untouched. This does not certify unrelated backend, policy or model paths.",
+  "validation": {
+    "git_apply_check_passed": true,
+    "source_edits_applied": false,
+    "rust_tests_run": false,
+    "builds_run": false,
+    "device_model_network_calls": false,
+    "test_patch_included": false,
+    "reason": "Latest handoff requested minimal delivery while main is blocked; exact regression plan supplied instead of new Core test setup."
+  },
+  "source_evidence": [
+    {
+      "id": "handler",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/handlers/apply_patch.rs",
+      "sha256": "17ac10916bfb719850fcbf57ff7add094ca61fdb5f28f4b709d57e20f3749f4b",
+      "line_ranges": [
+        [
+          317,
+          330
+        ],
+        [
+          423,
+          443
+        ],
+        [
+          464,
+          489
+        ],
+        [
+          509,
+          580
+        ]
+      ]
+    },
+    {
+      "id": "runtime",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/runtimes/apply_patch.rs",
+      "sha256": "8897414cce3e2437d611ba928e7f4824d11da53ecca3f01a4a915a2d0c24ab0d",
+      "line_ranges": [
+        [
+          94,
+          124
+        ],
+        [
+          159,
+          205
+        ],
+        [
+          240,
+          260
+        ]
+      ]
+    },
+    {
+      "id": "environment",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/exec-server/src/environment.rs",
+      "sha256": "d6e62a1a03a12ca9ad9250fbbe51c38a8772719b56438d57154e51ed2da5881c",
+      "line_ranges": [
+        [
+          857,
+          859
+        ],
+        [
+          1207,
+          1209
+        ]
+      ]
+    },
+    {
+      "id": "embedded_environment",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/exec-server/src/environment/embedded.rs",
+      "sha256": "0b936f33400b30adca6ae8c0189c22cb47b9069ba0e903fbccb83f5be1d210ce",
+      "line_ranges": [
+        [
+          8,
+          25
+        ],
+        [
+          53,
+          63
+        ]
+      ]
+    },
+    {
+      "id": "safety",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/safety.rs",
+      "sha256": "e51f66251ebc60c4db8d2a5458ada9960a8845b49d7fabeb3bc2ae04b00f6b72",
+      "line_ranges": [
+        [
+          39,
+          64
+        ],
+        [
+          67,
+          126
+        ],
+        [
+          153,
+          195
+        ]
+      ]
+    },
+    {
+      "id": "approval",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/apply_patch.rs",
+      "sha256": "f37e3773a9c18bf8ffb6115974512831dae3553e24bb72678bbcbda48fe9815d",
+      "line_ranges": [
+        [
+          15,
+          46
+        ]
+      ]
+    },
+    {
+      "id": "orchestrator",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/orchestrator.rs",
+      "sha256": "ea7c9d0e23b3f0dc78c65d809b6cbb90c20901dc8763a9781e916004fe0429e8",
+      "line_ranges": [
+        [
+          155,
+          155
+        ],
+        [
+          327,
+          375
+        ]
+      ]
+    },
+    {
+      "id": "platform",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/sandboxing/src/manager.rs",
+      "sha256": "8abe2a5f66f8101a669dd0c1571fb7c5edbab9eff2e80c8d13d9064bc5bc175d",
+      "line_ranges": [
+        [
+          50,
+          64
+        ]
+      ]
+    },
+    {
+      "id": "batch_preflight",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/apply-patch/src/lib.rs",
+      "sha256": "2b26d4f886fe4742d9c0c494be78a5e420afaaafa776ae28791c079d404b4067",
+      "line_ranges": [
+        [
+          443,
+          480
+        ]
+      ]
+    },
+    {
+      "id": "scoped_preflight",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+      "sha256": "67839d0e1d852ebb14074076b41196db8a531a07a277eaae045a1acbadb1c92d",
+      "line_ranges": [
+        [
+          103,
+          155
+        ]
+      ]
+    },
+    {
+      "id": "shell_interception",
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/core/src/tools/handlers/unified_exec/exec_command.rs",
+      "sha256": "541ce03d24f0f67dec4bd4e1728ce9e39ade3744f04573b16f714682efd95404",
+      "line_ranges": [
+        [
+          165,
+          193
+        ]
+      ]
+    }
+  ],
+  "write_scope": [
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/embedded-patch-routing.patch",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/embedded-patch-routing-review.json"
+  ]
+}

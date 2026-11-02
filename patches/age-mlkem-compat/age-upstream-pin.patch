@@ -1,0 +1,13 @@
+diff --git a/shared/rust-bridge/Cargo.toml b/shared/rust-bridge/Cargo.toml
+--- a/shared/rust-bridge/Cargo.toml
++++ b/shared/rust-bridge/Cargo.toml
+@@ -115,6 +115,9 @@
+ codegen-units = 16
+ 
+ [patch.crates-io]
++# Upstream age crypto migration: ML-KEM 0.3 / KEM 0.3, compatible with Russh/Clatter.
++age = { git = "https://github.com/str4d/rage", rev = "b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f" }
++
+ # Upstream fix for Starlark's exact blake3 pin, which conflicts with iroh.
+ starlark = { git = "https://github.com/facebook/starlark-rust", rev = "3bed1c40f93da22b8e251dd520dfb8d35bfe1fb7" }
+ 

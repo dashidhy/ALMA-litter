@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "date": "2026-11-01",
+  "scope": "Actual signed Tauri+React iOS presentation over the existing phone-owned TAH core; no new model task during UI acceptance",
+  "branch": "dev/ios",
+  "device": {
+    "model": "iPhone 12 Pro",
+    "os": "iOS 27.0.1",
+    "bundleID": "com.alma.litter.agent-probe"
+  },
+  "nativeBuild": {
+    "exitCode": 0,
+    "seconds": 411.44213462481275,
+    "command": [
+      "bash",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/cargo_ios.sh",
+      "rustc",
+      "--lib",
+      "--offline",
+      "-p",
+      "alma-tah-ui",
+      "--target",
+      "aarch64-apple-ios",
+      "--profile",
+      "ios-dev",
+      "-j",
+      "2",
+      "--crate-type",
+      "staticlib"
+    ],
+    "scope": "Native Tauri+existing Codex build only, no phone/model work"
+  },
+  "readiness": {
+    "phase": "ready",
+    "frontend": "tauri",
+    "at": "2026-11-01T12:21:27Z"
+  },
+  "verifiedThroughRealDeviceUI": [
+    "Library lists all four existing transcripts including SAM and NVIDIA",
+    "Selected existing SAM Structured Notes action; successful v0 remains readable",
+    "SAM notes show Markdown headings, paragraphs, bold lists and links",
+    "ASR terms opens v0 suspicious-asr-terms.md, not structured-notes.md",
+    "Real ASR-01 row and independent horizontal scrolling show previously hidden table columns",
+    "Transcript tab shows original timestamped plain transcript text",
+    "Settings show separate interaction/output languages, frozen notes language, actual model and Web settings",
+    "Reasoning choices display exact low/medium/high/xhigh/max/ultra identifiers",
+    "Ink/Paper appearance changes; restored original Ink appearance",
+    "No preview fixture banner and no localhost dev server needed on phone"
+  ],
+  "dataPreservation": {
+    "before-tauri-journal": {
+      "integrity": "ok",
+      "eventKinds": {
+        "document": 31,
+        "proposal": 7,
+        "publication": 7
+      },
+      "pending": 0,
+      "streams": 20
+    },
+    "after-tauri-journal": {
+      "integrity": "ok",
+      "eventKinds": {
+        "document": 31,
+        "proposal": 7,
+        "publication": 7
+      },
+      "pending": 0,
+      "streams": 20
+    },
+    "allJournalEventsByteIdentical": true,
+    "allChunkBytesIdentical": true
+  },
+  "migration": {
+    "initialProblem": "Black window on in-place SwiftUI-to-Tauri update",
+    "evidence": "Saved Application State contained com.apple.SwiftUI.sceneID and SwiftUI.WindowGroup<ALMAMobileTAH.MobileTAHRoot>-1",
+    "recovery": "Backed up and removed only the old bundle-specific scene-restoration cache, then relaunched",
+    "uninstalled": false,
+    "databaseOrKeychainDeleted": false
+  },
+  "hashes": {
+    "frontendLock": "665d056f15f333cde95977da63fb434d4d89c1593a6b4c88b6a6014a2c283e31",
+    "tauriConfig": "05db164f29f7437294c580fd46c8883ff047ea2fb3f9b1fdb0b70fc9e798ef70",
+    "nativeHost": "c1b82d63f05e63754b858770ea5000d3fbfcfeb9259e326c62c52b332ea24d2d",
+    "nativeWebGateway": "fe8f2cf2c60e2a0b3d87119cce5af213a98f15d0752cbe6db5518899292ea4f6",
+    "embeddedFrontendAssets": {
+      "dist/assets/index-BmlHokRt.js": "b35e98f9be576bf7fa6ecb8f1b6396f772090d44154b00d2a39527b4aec765da",
+      "dist/assets/index-DTKklnAa.css": "d2fa33355ae2fe1fbd95cccbc9db26bc44c81567e59c45fbd3936c367bccf355",
+      "dist/index.html": "701fff9f231cf3e458724550113ed1bf0abd55d7e26145ff107ad04ab3ed38ee"
+    }
+  },
+  "screenshot": {
+    "path": "tools/mobile-tah/.cache/tauri-phone-sam-notes.png",
+    "sha256": "2d614fa9314e2559edbfc8baf1da9c573a6dacf987605976fb11850ea89180e0",
+    "kind": "physical-device screenshot, not browser fixture"
+  },
+  "limits": [
+    "This UI pass read existing accepted results and did not re-run an inference/revision cycle. Existing live phone V0/V1/V2 core evidence is separate.",
+    "Background/lock recovery, failure matrices and Android acceptance remain outside this iOS UI pass.",
+    "Code block and unsafe-link renderer coverage comes from frontend tests/browser QA; physical SAM document covered headings/lists/links/tables."
+  ]
+}

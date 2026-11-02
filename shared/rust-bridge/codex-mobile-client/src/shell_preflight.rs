@@ -17,6 +17,10 @@
 //! Rewriting it to the native iOS container TMPDIR produces paths that iSH
 //! cannot traverse.
 //!
+//! iOS also preserves the selected interpreter and all its arguments. Default
+//! Bash selection belongs upstream, where a default can be distinguished from
+//! an explicit `sh` or `zsh` request; preflight must not guess from script text.
+//!
 //! Only mutates exact `/tmp` and `/tmp/...` absolute path boundaries. Other
 //! absolute paths pass through unchanged. Only fires for **local** codex shell
 //! invocations — SSH/WebSocket remote execution never enters this function.
@@ -27,33 +31,25 @@ use std::path::Path;
 /// Normalize argv for the mobile local executor. This is installed as the
 /// single preflight hook called by upstream Codex immediately before exec.
 pub(crate) fn prepare_mobile_exec_argv(argv: &mut Vec<String>) {
-    prepare_mobile_exec_argv_inner(argv, should_rewrite_tmp_paths_for_platform());
+    prepare_mobile_exec_argv_inner(argv, cfg!(target_os = "android"));
 }
 
-fn prepare_mobile_exec_argv_inner(argv: &mut Vec<String>, rewrite_tmp_paths_enabled: bool) {
-    normalize_shell_invocation(argv);
-    if rewrite_tmp_paths_enabled {
+fn prepare_mobile_exec_argv_inner(argv: &mut Vec<String>, android: bool) {
+    // Keep Android's existing shell and native-temp policy. iOS executes in
+    // iSH's guest filesystem and must retain Bash, explicit sh, and other
+    // interpreter semantics (including login flags and positional arguments).
+    if android {
+        normalize_shell_invocation(argv);
         rewrite_tmp_paths(argv);
     }
-}
-
-#[cfg(target_os = "android")]
-fn should_rewrite_tmp_paths_for_platform() -> bool {
-    true
-}
-
-#[cfg(not(target_os = "android"))]
-fn should_rewrite_tmp_paths_for_platform() -> bool {
-    false
 }
 
 fn normalize_shell_invocation(argv: &mut Vec<String>) {
     let Some((_, script)) = extract_shell_command(argv) else {
         return;
     };
-    // Reuse the same shell-wrapper parser used for command display, then run
-    // the extracted script through the bundled mobile `sh -c`. iSH's
-    // /bin/sh supports `-c` like any POSIX shell.
+    // Android's existing normalization uses the display parser to select its
+    // bundled `sh -c`. Do not apply this lossy conversion to iOS.
     *argv = vec!["sh".to_string(), "-c".to_string(), script.to_string()];
 }
 
@@ -125,10 +121,8 @@ fn is_path_component_continuation(byte: u8) -> bool {
 
 /// Install the mobile exec preflight. Safe to call multiple times; the
 /// underlying `OnceLock` accepts only the first registration.
-#[cfg(any(
-    all(target_os = "ios", not(target_abi = "macabi")),
-    target_os = "android"
-))]
+// Legacy Android registration; iOS0.166 uses the embedded execution backend.
+#[cfg(target_os = "android")]
 pub fn install() {
     codex_core::exec::set_mobile_exec_preflight(prepare_mobile_exec_argv);
 }
@@ -232,9 +226,9 @@ mod tests {
     }
 
     #[test]
-    fn normalizes_login_shell_to_plain_sh_c() {
+    fn android_keeps_legacy_login_shell_normalization() {
         let mut argv = vec!["/bin/zsh".into(), "-lc".into(), "echo hello".into()];
-        prepare_mobile_exec_argv(&mut argv);
+        prepare_mobile_exec_argv_inner(&mut argv, true);
         assert_eq!(
             argv,
             vec!["sh".to_string(), "-c".to_string(), "echo hello".to_string()]
@@ -242,12 +236,16 @@ mod tests {
     }
 
     #[test]
-    fn normalizes_bash_wrapper_with_same_parser_as_display_command() {
+    fn ios_preserves_bash_wrapper() {
         let mut argv = vec!["/bin/bash".into(), "-lc".into(), "echo hello".into()];
-        prepare_mobile_exec_argv(&mut argv);
+        prepare_mobile_exec_argv_inner(&mut argv, false);
         assert_eq!(
             argv,
-            vec!["sh".to_string(), "-c".to_string(), "echo hello".to_string()]
+            vec![
+                "/bin/bash".to_string(),
+                "-lc".to_string(),
+                "echo hello".to_string()
+            ]
         );
     }
 

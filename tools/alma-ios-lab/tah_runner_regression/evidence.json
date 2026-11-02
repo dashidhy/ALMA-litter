@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+    "--edition=2024",
+    "--test",
+    "--target=aarch64-apple-ios",
+    "--emit=metadata",
+    "--crate-name=tah_runner_check",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_runner_regression/.build/check.rs",
+    "-o",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_runner_regression/.build/check.rmeta",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps",
+    "--extern",
+    "codex_app_server_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_app_server_protocol-6d6131a716b623c7.rmeta",
+    "--extern",
+    "codex_protocol=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libcodex_protocol-7811c33f32130ee4.rmeta",
+    "--extern",
+    "serde=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde-643eb2a0fe94cdc8.rmeta",
+    "--extern",
+    "serde_json=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libserde_json-680ae4985efa6705.rmeta",
+    "--extern",
+    "tokio=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libtokio-9f0c113cc61bdf3b.rmeta"
+  ],
+  "exit_code": 0,
+  "tests_executed": false,
+  "runner_sha256": "56f244e182b4acdd25709af4dae38f6e0b0cb66a162d4f5391ffa3271ff564f1",
+  "limitations": "App/session shell stubs; actual protocol + Tokio + serde; no requests or device execution"
+}

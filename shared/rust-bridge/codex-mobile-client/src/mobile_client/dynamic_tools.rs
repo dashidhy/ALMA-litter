@@ -282,6 +282,8 @@ pub(super) async fn list_sessions_tool_output(
             local_studio_only_runtime(&runtime_kinds),
             "thread/list",
             &upstream::ThreadListParams {
+                attached_to_thread_id: None,
+                excluded_thread_ids: None,
                 cursor: None,
                 limit: Some(limit),
                 sort_key: None,

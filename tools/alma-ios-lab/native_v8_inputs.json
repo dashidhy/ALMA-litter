@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "qualification": "Opt-in iOS qualification only. Plain V8 lacks the desktop V8 memory sandbox; no security-parity claim.",
+  "source_lock": "v8_plain_probe/source-lock.json",
+  "commit": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+  "source_sha256": "e2e7f9961af59dbb749a60ac0a3c34c9680f6b86dd04277f2715356b5a52feab",
+  "source_expanded_bytes": 2018448,
+  "source_files": 163,
+  "artifact_sha256": {
+    "v8-ios.a.gz": "9d2e64a2409a4b812e3d1d29da3e0a06b020c8ab1e0fed6fd9342523ba8b757c",
+    "bindings-ios.rs": "b9d5652ebca515eb2bf4c2ee4a6551b2567117b5aa720f430d2032616dd7e3b5"
+  },
+  "asset_max_bytes": {
+    "source.tar.gz": 8388608,
+    "v8-ios.a.gz": 50331648,
+    "bindings-ios.rs": 1048576
+  },
+  "download_timeout_seconds": 45,
+  "max_new_disk_bytes": 104857600
+}

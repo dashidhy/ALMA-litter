@@ -15,6 +15,7 @@ final class AppRuntimeController {
     @ObservationIgnored private var lastLiveActivitySyncTime: CFAbsoluteTime = 0
 
     func bind(appModel: AppModel, voiceRuntime: VoiceRuntimeController) {
+        appModel.client.setChatgptAuthRefreshProvider(provider: ChatGPTAuthRefreshProvider())
         self.appModel = appModel
         self.voiceRuntime = voiceRuntime
         // Notification permission is requested contextually, after the

@@ -1,0 +1,129 @@
+{
+  "phase": "tools",
+  "results": [
+    {
+      "id": "tools-versions",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16016883286647499,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "tools-python-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.324450791813433,
+      "stopReason": null,
+      "peakSampledRSSBytes": 30064640,
+      "note": null
+    },
+    {
+      "id": "tools-python-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.3311861669644713,
+      "stopReason": null,
+      "peakSampledRSSBytes": 26296320,
+      "note": null
+    },
+    {
+      "id": "tools-node-default-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1073007499799132,
+      "stopReason": null,
+      "peakSampledRSSBytes": 66486272,
+      "note": null
+    },
+    {
+      "id": "tools-reset-note",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.332803042139858,
+      "stopReason": null,
+      "peakSampledRSSBytes": 30294016,
+      "note": null
+    },
+    {
+      "id": "tools-node-jitless-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1133525839541107,
+      "stopReason": null,
+      "peakSampledRSSBytes": 65896448,
+      "note": null
+    },
+    {
+      "id": "tools-node-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1156077499035746,
+      "stopReason": null,
+      "peakSampledRSSBytes": 71254016,
+      "note": null
+    },
+    {
+      "id": "tools-bash-script",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16358641698025167,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2080768,
+      "note": null
+    },
+    {
+      "id": "tools-sh-bash-array",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 2,
+      "exit": 2,
+      "seconds": 0.16418191697448492,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2195456,
+      "note": "Expected unavailable/unsupported behavior"
+    },
+    {
+      "id": "tools-readback",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16559320804663002,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    }
+  ],
+  "corpusStats": {
+    "turns": 254,
+    "bytes": 117155,
+    "characters": 44661,
+    "sha256": "4a6a25fc2470c69a228caf02c5b692cca6b357b279eac29bb12a2adff6894801"
+  },
+  "scope": "Host iSH tool replay only; no Codex inference, no iPhone measurements",
+  "diagnosticsLocation": "/Users/dashidhy/Public/projects/agent/ALMA/frontier/mobile/codex_litter/.cache/tool-suite-v3"
+}

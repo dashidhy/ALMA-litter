@@ -86,19 +86,9 @@ impl MobileClient {
                     .map(|_| ())
                     .map_err(RpcError::Deserialization)
             }
-            "thread/rollback" => {
-                let response = downcast_public_rpc_response::<upstream::ThreadRollbackResponse>(
-                    wire_method,
-                    response,
-                )?;
-                let params = downcast_public_rpc_params::<upstream::ThreadRollbackParams>(
-                    wire_method,
-                    params.map(|value| value as &dyn Any),
-                )?;
-                self.apply_thread_rollback_response(server_id, &params.thread_id, response)
-                    .map(|_| ())
-                    .map_err(RpcError::Deserialization)
-            }
+            "thread/rollback" => Err(RpcError::Deserialization(
+                "thread rollback is unsupported by this server protocol".to_string(),
+            )),
             "account/read" => {
                 let response = downcast_public_rpc_response::<upstream::GetAccountResponse>(
                     wire_method,
@@ -422,46 +412,6 @@ impl MobileClient {
         self.app_store.upsert_thread_snapshot(thread);
         Ok(())
     }
-
-    pub fn apply_thread_rollback_response(
-        &self,
-        server_id: &str,
-        thread_id: &str,
-        response: &upstream::ThreadRollbackResponse,
-    ) -> Result<ThreadKey, String> {
-        let key = ThreadKey {
-            server_id: server_id.to_string(),
-            thread_id: thread_id.to_string(),
-        };
-        let current = self.app_store.thread_snapshot(&key);
-        let mut snapshot = crate::thread_snapshot_from_upstream_thread_with_overrides(
-            server_id,
-            response.thread.clone(),
-            current.as_ref().and_then(|thread| thread.model.clone()),
-            current.as_ref().and_then(|thread| {
-                thread
-                    .reasoning_effort
-                    .as_deref()
-                    .and_then(crate::reasoning_effort_from_string)
-                    .map(crate::reasoning_effort_string)
-            }),
-            current
-                .as_ref()
-                .and_then(|thread| thread.effective_approval_policy.clone()),
-            current
-                .as_ref()
-                .and_then(|thread| thread.effective_sandbox_policy.clone()),
-        )
-        .map_err(|e| e.to_string())?;
-        if let Some(current) = current.as_ref() {
-            crate::copy_thread_runtime_fields(current, &mut snapshot);
-            crate::reconcile_active_turn(Some(current), &mut snapshot, &response.thread.turns);
-        }
-        let next_key = snapshot.key.clone();
-        self.apply_persisted_thread_collaboration_mode(&mut snapshot);
-        self.app_store.upsert_thread_snapshot(snapshot);
-        Ok(next_key)
-    }
 }
 
 /// Decide how a resume/fork response's embedded `thread.turns` field maps
@@ -479,7 +429,7 @@ pub(crate) fn apply_pagination_merge(
 ) {
     // A read started before a follow-up may contain only the previous turn.
     // Absence of the live turn is not evidence that it ended or that its
-    // messages should be removed. Rollback has its own explicit path.
+    // messages should be removed. A fork is reconciled on its own thread key.
     let misses_live_turn = existing
         .and_then(|thread| thread.active_turn_id.as_ref())
         .is_some_and(|id| !upstream_turns.iter().any(|turn| &turn.id == id));
@@ -1035,33 +985,11 @@ mod tests {
             .await
             .expect("thread/list reconciliation should succeed without params");
 
-        let rollback_response = upstream::ThreadRollbackResponse {
-            thread: test_upstream_thread("thread-1"),
-        };
-
-        let missing_params_error = client
-            .reconcile_public_rpc(
-                "thread/rollback",
-                "srv",
-                Option::<&()>::None,
-                &rollback_response,
-            )
+        let error = client
+            .reconcile_public_rpc("thread/rollback", "srv", Option::<&()>::None, &())
             .await
-            .expect_err("thread/rollback should reject missing params");
-        assert!(
-            missing_params_error
-                .to_string()
-                .contains("unexpected params type while reconciling thread/rollback")
-        );
-
-        let params = upstream::ThreadRollbackParams {
-            thread_id: "thread-1".to_string(),
-            num_turns: 1,
-        };
-        client
-            .reconcile_public_rpc("thread/rollback", "srv", Some(&params), &rollback_response)
-            .await
-            .expect("thread/rollback reconciliation should succeed with params");
+            .expect_err("removed rollback must not report successful reconciliation");
+        assert!(error.to_string().contains("rollback is unsupported"));
 
         let snapshot = client.app_snapshot();
         assert!(snapshot.threads.contains_key(&ThreadKey {
@@ -1389,6 +1317,7 @@ mod tests {
         let mut incoming = test_thread_snapshot();
         incoming.items = vec![item_with_turn("turn-1", "old")].into();
         let turns = vec![upstream::Turn {
+            root_turn_id: None,
             id: "turn-1".into(),
             items: vec![],
             items_view: upstream::TurnItemsView::Full,
@@ -1430,6 +1359,7 @@ mod tests {
         .into();
         let turns = (1..=3)
             .map(|index| upstream::Turn {
+                root_turn_id: None,
                 id: format!("turn-{index}"),
                 items: vec![],
                 items_view: if index == 1 {
@@ -1467,6 +1397,7 @@ mod tests {
         // target already populated from upstream thread with hydrated items.
         target.items = vec![item_with_turn("turn-1", "i1")].into();
         let upstream_turn = upstream::Turn {
+            root_turn_id: None,
             id: "turn-1".to_string(),
             status: upstream::TurnStatus::Completed,
             items: Vec::new(),
@@ -1616,16 +1547,19 @@ mod tests {
 
         let mut embedded_thread = test_upstream_thread("thread-1");
         embedded_thread.turns = vec![upstream::Turn {
+            root_turn_id: None,
             id: "turn-1".to_string(),
             status: upstream::TurnStatus::Completed,
-            items: vec![upstream::ThreadItem::UserMessage {
-                client_id: None,
-                id: "server-user-item".to_string(),
-                content: vec![upstream::UserInput::Text {
-                    text: "hi".to_string(),
-                    text_elements: Vec::new(),
-                }],
-            }],
+            items: vec![upstream::ThreadItem::untimed(
+                upstream::ThreadItemPayload::UserMessage {
+                    client_id: None,
+                    id: "server-user-item".to_string(),
+                    content: vec![upstream::UserInput::Text {
+                        text: "hi".to_string(),
+                        text_elements: Vec::new(),
+                    }],
+                },
+            )],
             items_view: upstream::TurnItemsView::Full,
             error: None,
             started_at: None,
@@ -1763,16 +1697,19 @@ mod tests {
 
         let mut violating_thread = test_upstream_thread("thread-1");
         violating_thread.turns = vec![upstream::Turn {
+            root_turn_id: None,
             id: "unbounded-turn".to_string(),
             status: upstream::TurnStatus::Completed,
-            items: vec![upstream::ThreadItem::UserMessage {
-                client_id: None,
-                id: "unbounded-item".to_string(),
-                content: vec![upstream::UserInput::Text {
-                    text: "bridge returned history despite includeTurns=false".to_string(),
-                    text_elements: Vec::new(),
-                }],
-            }],
+            items: vec![upstream::ThreadItem::untimed(
+                upstream::ThreadItemPayload::UserMessage {
+                    client_id: None,
+                    id: "unbounded-item".to_string(),
+                    content: vec![upstream::UserInput::Text {
+                        text: "bridge returned history despite includeTurns=false".to_string(),
+                        text_elements: Vec::new(),
+                    }],
+                },
+            )],
             items_view: upstream::TurnItemsView::Full,
             error: None,
             started_at: None,

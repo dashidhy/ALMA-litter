@@ -1,5 +1,7 @@
 # Development Guide
 
+ALMA iOS work on `dev/ios`: read the [mobile frontend integration notes](ios/frontend-integration-notes.md) before assembling the full app. They record the reusable Tauri UI, keyboard and Markdown fixes, source locations, and device acceptance boundaries. Native reproduction is in [tools/mobile-tah](../tools/mobile-tah/README.md).
+
 ## Prerequisites
 
 - **Xcode.app** (full install, not only Command Line Tools):

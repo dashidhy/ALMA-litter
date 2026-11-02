@@ -1,0 +1,13 @@
+{
+  "scope": "No full client build/link/device test",
+  "checks": [
+    "proposal and optional cleanup apply-check",
+    "three shell scripts parse",
+    "Bash 3.2 empty/default/local/rpc-trace feature arrays",
+    "no other-agent ownership files changed; all proposal hashes match",
+    "isolated contracts local: PASS",
+    "isolated contracts default: PASS",
+    "isolated contracts ios: PASS"
+  ],
+  "evidence": "/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/ios-network-scope/.cache/validate-jxq04g33"
+}

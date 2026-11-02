@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/usr/bin/swiftc",
+    "-typecheck",
+    "-target",
+    "arm64-apple-ios18.0",
+    "-sdk",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.2.sdk",
+    "-swift-version",
+    "5",
+    "-strict-concurrency=targeted",
+    "-warnings-as-errors",
+    "-module-cache-path",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/module-cache",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/Litter/Models/ChatGPTOAuth.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/apps/ios/Sources/Litter/Models/ChatGPTAuthRefreshProvider.swift",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/auth_refresh_regression/.build/swift/IOSBindingSignatures.swift"
+  ],
+  "exit_code": 0,
+  "scope": "whole auth/provider Swift files, actual iOS SDK, generated binding signatures/logging stubs; not app link or regenerated bindings"
+}

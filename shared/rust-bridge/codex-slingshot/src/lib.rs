@@ -11,6 +11,10 @@ pub mod device_key;
 pub mod enrollment;
 pub mod envelope;
 pub mod errors;
+#[cfg(feature = "json-line-transport")]
+pub mod json_line_wire;
+#[cfg(not(feature = "json-line-transport"))]
+#[path = "json_line_wire_disabled.rs"]
 pub mod json_line_wire;
 pub mod stream;
 pub mod types;
@@ -28,13 +32,15 @@ pub use types::{
     DeviceKeyProof, EnvironmentKind, KnownOperatingSystem, OperatingSystem, SlingshotEnvironment,
 };
 
-use std::io::Error as IoError;
-use std::io::ErrorKind;
+#[cfg(feature = "json-line-transport")]
+use std::io::{Error as IoError, ErrorKind};
 
 use codex_app_server_client::{AppServerClient, RemoteAppServerConnectArgs};
+#[cfg(feature = "json-line-transport")]
 use crate::json_line_wire::connect_json_line_stream;
 
 /// Connect an upstream app-server client through one Slingshot environment.
+#[cfg(feature = "json-line-transport")]
 pub async fn connect_app_server_client(
     api: SlingshotApi,
     environment_id: String,
@@ -52,4 +58,15 @@ pub async fn connect_app_server_client(
             )
         })?;
     Ok(AppServerClient::Remote(remote))
+}
+
+#[cfg(not(feature = "json-line-transport"))]
+pub async fn connect_app_server_client(
+    _api: SlingshotApi,
+    _environment_id: String,
+    _args: RemoteAppServerConnectArgs,
+) -> std::io::Result<AppServerClient> {
+    // Fail before enrollment, network requests, or a controller stream is created.
+    Err(std::io::Error::new(std::io::ErrorKind::Unsupported,
+        "remote CLI transport is not included in this ALMA local build"))
 }

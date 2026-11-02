@@ -44,7 +44,8 @@ mod tests {
 
     #[test]
     fn thread_item_parses_mcp_arguments_json() {
-        let item = upstream::ThreadItem::McpToolCall {
+        let item = upstream::ThreadItem::untimed(upstream::ThreadItemPayload::McpToolCall {
+            mcp_app_ui: None,
             id: "mcp-1".into(),
             server: "filesystem".into(),
             tool: "read_file".into(),
@@ -58,9 +59,9 @@ mod tests {
             result: None,
             error: None,
             duration_ms: Some(42),
-        };
+        });
 
-        let upstream::ThreadItem::McpToolCall { arguments, .. } = item else {
+        let upstream::ThreadItemPayload::McpToolCall { arguments, .. } = item.payload else {
             panic!("expected mcp tool call");
         };
         assert_eq!(
@@ -71,25 +72,27 @@ mod tests {
 
     #[test]
     fn thread_item_parses_collab_agent_states_json() {
-        let item = upstream::ThreadItem::CollabAgentToolCall {
-            id: "collab-1".into(),
-            tool: upstream::CollabAgentTool::SpawnAgent,
-            status: upstream::CollabAgentToolCallStatus::Completed,
-            sender_thread_id: "parent-thread".into(),
-            receiver_thread_ids: vec!["sub-thread-1".into()],
-            prompt: Some("Review the changes".into()),
-            model: None,
-            reasoning_effort: None,
-            agents_states: HashMap::from([(
-                "sub-thread-1".into(),
-                upstream::CollabAgentState {
-                    status: upstream::CollabAgentStatus::Running,
-                    message: Some("Working".into()),
-                },
-            )]),
-        };
+        let item =
+            upstream::ThreadItem::untimed(upstream::ThreadItemPayload::CollabAgentToolCall {
+                id: "collab-1".into(),
+                tool: upstream::CollabAgentTool::SpawnAgent,
+                status: upstream::CollabAgentToolCallStatus::Completed,
+                sender_thread_id: "parent-thread".into(),
+                receiver_thread_ids: vec!["sub-thread-1".into()],
+                prompt: Some("Review the changes".into()),
+                model: None,
+                reasoning_effort: None,
+                agents_states: HashMap::from([(
+                    "sub-thread-1".into(),
+                    upstream::CollabAgentState {
+                        status: upstream::CollabAgentStatus::Running,
+                        message: Some("Working".into()),
+                    },
+                )]),
+            });
 
-        let upstream::ThreadItem::CollabAgentToolCall { agents_states, .. } = item else {
+        let upstream::ThreadItemPayload::CollabAgentToolCall { agents_states, .. } = item.payload
+        else {
             panic!("expected collab agent tool call");
         };
         let state = agents_states

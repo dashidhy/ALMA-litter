@@ -1,0 +1,29 @@
+{
+  "status": "COMPILED_BUT_CACHE_CEILING_EXCEEDED_STOPPED",
+  "cargo_finished": true,
+  "cargo_log_completion": "Finished dev profile [unoptimized] target(s) in 2m 47s",
+  "staticlib": {
+    "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/official_code_mode_probe/.cache/target/aarch64-apple-ios/debug/libalma_official_code_mode_probe.a",
+    "exists": true,
+    "bytes": 509078984,
+    "sha256": "df6033ee4a179c445a24294df01c3242af5a41362c0d0c722e2993d2da440af2"
+  },
+  "cache_limit_bytes": 3221225472,
+  "observed_cache_bytes_before_cleanup": 3550218563,
+  "cache_limit_exceeded": true,
+  "removed_private_redundant_metadata_bytes": {
+    "git": 528702238,
+    "registry/index": 81141048
+  },
+  "cache_bytes_after_cleanup": 2940375277,
+  "free_bytes_after_cleanup": 22898225152,
+  "build_wall_limit_seconds": 600,
+  "jobs": 2,
+  "final_link_checked": false,
+  "export_symbol_checked": false,
+  "runtime_cases_executed": 0,
+  "device_run": false,
+  "full_upstream_tests_run": false,
+  "v8_memory_sandbox_enabled": false,
+  "build_monitor_issue": "Cargo finished; final resource guard raised before build.py could serialize its report. This replacement reports the actual log, artifact, and resource failure. No subsequent build/link checks performed."
+}

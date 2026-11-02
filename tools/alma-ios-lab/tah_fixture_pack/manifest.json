@@ -1,0 +1,875 @@
+{
+  "schema": "alma.tah.qualification-fixture-pack/v1",
+  "status": "Static qualification plan and exact source assets; no runner, model output, accepted revision or parity claim.",
+  "purpose": "One real Raw Guardian -> initial V0 -> accepted V1 -> accepted V2 sequence using current Mac ALMA TAH contracts and a tiny explicitly synthetic source. Not full ALMA/App integration.",
+  "source": {
+    "root": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH",
+    "git_head": "ba75b0f579822bfdf11a1e74ffd1c3717686f312",
+    "inventory_read_first": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/tah-contract-inventory.json",
+    "working_tree_tah_clean_at_read": true,
+    "asset_policy": "source/ mirrors exact selected relative paths. TypeScript schema and prompt-renderer files are reference copies, not a standalone engine; use the original TAH functions for construction/validation. No workflow, transport, auth implementation, dependencies or build/cache tree copied.",
+    "inventory_sha256": "fbb51026915f1563a68132435c65778ffcfb6b3effafee497cc892501ca59936",
+    "recorded_at_utc": "2026-11-01T01:57:22.900647+00:00",
+    "noncopied_behavior_references": [
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/actions.ts",
+        "source_relative_path": "src/app-runtime/actions.ts",
+        "sha256": "6a9f33faaa55f40dbe25472229e927ba8a42e95751b6471dbb5d5cac63fcfa20",
+        "line_ranges": [
+          [
+            102,
+            109
+          ],
+          [
+            510,
+            539
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/raw-safety.ts",
+        "source_relative_path": "src/app-runtime/raw-safety.ts",
+        "sha256": "7c5439a0a981b32554e442cf34b164f2e889b06b0211dbcb0c36af30803a3d45",
+        "line_ranges": [
+          [
+            15,
+            20
+          ],
+          [
+            41,
+            56
+          ],
+          [
+            113,
+            125
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+        "source_relative_path": "src/framework/attempt-builders.ts",
+        "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+        "line_ranges": [
+          [
+            83,
+            105
+          ],
+          [
+            106,
+            155
+          ],
+          [
+            168,
+            245
+          ],
+          [
+            246,
+            343
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/role-requirements.ts",
+        "source_relative_path": "src/framework/role-requirements.ts",
+        "sha256": "e0faf6691263709b9b5ebeeebf503a6f2ea29d7e646fe9e069730e2f105f9b4d",
+        "line_ranges": [
+          [
+            19,
+            70
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/workflow.ts",
+        "source_relative_path": "src/framework/workflow.ts",
+        "sha256": "120fdc4a4aa891bade9bd819c9aeba2a364a9727f4daa860d7c3c485863bf7b3",
+        "line_ranges": [
+          [
+            385,
+            430
+          ],
+          [
+            603,
+            675
+          ],
+          [
+            797,
+            844
+          ],
+          [
+            1402,
+            1434
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/persistence-state.ts",
+        "source_relative_path": "src/framework/persistence-state.ts",
+        "sha256": "72e55045564c26bb4a34c9dce248d0a339ca7fa0b1ebdbfe6bb771259eeaee10",
+        "line_ranges": [
+          [
+            449,
+            505
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/guest-adapter.ts",
+        "source_relative_path": "providers/codex/adapter/src/guest-adapter.ts",
+        "sha256": "0cad30bf2b7fdffc34ccfb965f85cb9feee4b4c05981f549778758cb8a3df3f1",
+        "line_ranges": [
+          [
+            143,
+            225
+          ],
+          [
+            266,
+            305
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/native-profile.ts",
+        "source_relative_path": "providers/codex/adapter/src/native-profile.ts",
+        "sha256": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c",
+        "line_ranges": [
+          [
+            102,
+            180
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/prompt.ts",
+        "source_relative_path": "providers/codex/adapter/src/prompt.ts",
+        "sha256": "5a5a7d68cf105f9f1e8fb2114721a59eaa52ee43310a60bec98da64a10626541",
+        "line_ranges": [
+          [
+            1,
+            15
+          ]
+        ],
+        "copied": false
+      },
+      {
+        "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/event-normalizer.ts",
+        "source_relative_path": "providers/codex/adapter/src/event-normalizer.ts",
+        "sha256": "8d6b1ce7487d680c7a3bd7ebfbd3092407484a80c4a56123cc5568dcca2bbc8e",
+        "line_ranges": [
+          [
+            746,
+            815
+          ]
+        ],
+        "copied": false
+      }
+    ],
+    "policy_version_note": "Preserved the selected v0_2 policy asset exactly; its internal Policy ID remains safety_guardian/v0.1 and version 1. Do not rewrite the original."
+  },
+  "qualification_limits": {
+    "pack_maximum_bytes": 2097152,
+    "nominal_model_attempts": 6,
+    "maximum_actor_repairs_per_revision": 1,
+    "maximum_model_attempts_including_structural_repairs": 9,
+    "automatic_infrastructure_or_uncertain_side_effect_retries": false,
+    "web_enabled": false,
+    "external_research": false,
+    "proposed_host_attempt_deadline_seconds": 120,
+    "proposed_host_run_deadline_seconds": 1200,
+    "budget_origin": "Fixture-runner bounds proposed here, not existing TAH contract constants. A deadline requires cancel/cleanup confirmation; elapsed time is not a completion or cleanup receipt. Preserve schema output limits below."
+  },
+  "synthetic_fixture": {
+    "id": "synthetic-cafe-segmentation-arithmetic-v1",
+    "classification": "SYNTHETIC TEST DATA — invented for qualification; not a real recording, user history or transcript export.",
+    "raw_transcript_utf8": "# SYNTHETIC QUALIFICATION TRANSCRIPT\n\nThis text is invented test data, not a real recording. It deliberately contains one arithmetic typo for a later user correction.\n\n[00:00] Café Segmentation assigns each image pixel to foreground or background.\n[00:08] The demonstration has 3 batches of 4 images, for a total of 14 images.\n[00:16] No accuracy measurement was reported for this demonstration.\n",
+    "known_issue": {
+      "kind": "Deliberate factual arithmetic typo, not an ASR ambiguity.",
+      "original_claim": "3 batches of 4 images, for a total of 14 images",
+      "correct_total": 12,
+      "correction_basis": "The fixture author supplies the arithmetic correction at V1; no Web or source-history inference is required."
+    },
+    "note_language": "en",
+    "interaction_language": "en",
+    "revision_instruction_deltas": [
+      {
+        "revision_index": 0,
+        "text": "",
+        "meaning": "No additional user instruction. Initial ledger value becomes null and renders N/A. V0 output files must still be generated.",
+        "byteLength": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "revision_index": 1,
+        "text": "For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.",
+        "byteLength": 360,
+        "sha256": "371d4f9f61754133e37393ba1fd95310adf37d3033cb3db732eb4564c2ec1c14"
+      },
+      {
+        "revision_index": 2,
+        "text": "Replace the subsection title \"Batch count\" with \"Arithmetic correction\". Retain the corrected total of 12, its user-provided correction label, and the attributed original claim of 14. Keep the other notes content and both required output files. Do not claim online verification.",
+        "byteLength": 278,
+        "sha256": "654aee5305aafc006a33e24a20a82e744f9790a78552de6d51e9cbeab5153e98"
+      }
+    ],
+    "content_storage": "The transcript and deltas live only in this manifest. Main materializes the exact UTF-8 bytes at each role's required logical path; never substitute a real transcript.",
+    "expected_model_responses": "None supplied. ALLOW and structural PASS are expected for this benign fixture but must be produced and validated, never prefilled.",
+    "raw_transcript_byteLength": 397,
+    "raw_transcript_sha256": "31a43bd3cfcc39c4dd96cb70996f5271e5b9fb8ab482f149b28e88187ae0a5df",
+    "cumulative_instruction_fixtures": [
+      {
+        "revisionIndex": 0,
+        "ledger": [
+          {
+            "revisionIndex": 0,
+            "initial": null,
+            "retries": []
+          }
+        ],
+        "rendered_utf8": "# Extra Instructions\n\n## revision v0\n\nN/A\n",
+        "byteLength": 42,
+        "sha256": "bdf6e3be2181be448ad7df9969ec69f9d355adb9f4ed2da4219ae5c42e8b72c4",
+        "derivation": "Fixture expectation using the exact formatting inspected in copied user-instructions.ts; runner must use original renderer and compare."
+      },
+      {
+        "revisionIndex": 1,
+        "ledger": [
+          {
+            "revisionIndex": 0,
+            "initial": null,
+            "retries": []
+          },
+          {
+            "revisionIndex": 1,
+            "initial": "For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.",
+            "retries": []
+          }
+        ],
+        "rendered_utf8": "# Extra Instructions\n\n## revision v0\n\nN/A\n\n## revision v1\n\n> For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.\n",
+        "byteLength": 422,
+        "sha256": "b94428165c4853d84eba663a9874d8dedc5182e44b6869812e2fa8c7f422406b",
+        "derivation": "Fixture expectation using the exact formatting inspected in copied user-instructions.ts; runner must use original renderer and compare."
+      },
+      {
+        "revisionIndex": 2,
+        "ledger": [
+          {
+            "revisionIndex": 0,
+            "initial": null,
+            "retries": []
+          },
+          {
+            "revisionIndex": 1,
+            "initial": "For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.",
+            "retries": []
+          },
+          {
+            "revisionIndex": 2,
+            "initial": "Replace the subsection title \"Batch count\" with \"Arithmetic correction\". Retain the corrected total of 12, its user-provided correction label, and the attributed original claim of 14. Keep the other notes content and both required output files. Do not claim online verification.",
+            "retries": []
+          }
+        ],
+        "rendered_utf8": "# Extra Instructions\n\n## revision v0\n\nN/A\n\n## revision v1\n\n> For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.\n\n## revision v2\n\n> Replace the subsection title \"Batch count\" with \"Arithmetic correction\". Retain the corrected total of 12, its user-provided correction label, and the attributed original claim of 14. Keep the other notes content and both required output files. Do not claim online verification.\n",
+        "byteLength": 720,
+        "sha256": "dc17db2745d5eff2859104a4b89db2b496a840fe47863d119e4a714fabf19d5c",
+        "derivation": "Fixture expectation using the exact formatting inspected in copied user-instructions.ts; runner must use original renderer and compare."
+      }
+    ]
+  },
+  "inference": {
+    "providerID": "codex",
+    "guardian": {
+      "modelID": "gpt-5.6-luna",
+      "reasoningEffortID": "low",
+      "source_asset": "source/providers/codex/app-profile.json",
+      "contextWindowTokens": "omit"
+    },
+    "actor": {
+      "selection_required": true,
+      "modelID": null,
+      "reasoningEffortID": null,
+      "meaning": "Plan placeholders only, not a FrozenAttempt. Bind a real currently catalog-validated Actor model and supported effort before the run. Null reasoningEffortID intentionally selects the native default. Freeze the same Actor choice for V0/V1/V2 and each structural repair.",
+      "contextWindowTokens": "omit"
+    },
+    "catalog_gate": "Validate exact Guardian model+low and Actor model/effort in the actual authenticated catalog. If the Guardian pair is unavailable, stop the exact-profile qualification; do not silently alias it to the phone default. A deliberately changed profile would be a separately labeled variation, not this source-profile run.",
+    "identity": "Use the actual user's existing authorized account path at run time. No account data, auth files, cached catalog or credentials are included.",
+    "mac_native_identity": {
+      "name": "@alma/tah-codex-guest",
+      "title": "ALMA TAH Codex Guest",
+      "version": "1.0.0"
+    },
+    "fallback": "Explicit no-provider-model-fallback; preserve actual model selectors/CodeModeOnly metadata.",
+    "mac_reference": "src/app-runtime/actions.ts:510 and providers/codex/adapter/src/guest-adapter.ts:172"
+  },
+  "action_contract": {
+    "actionID": "structured_notes",
+    "definitionID": "structured_notes/v1",
+    "definition_digest": "Compute with the original createStructuredNotesActionDefinitionV1. It binds the exact action-template SHA, JSON.stringify(ASR_INDEX_PRESENTATIONS) and JSON.stringify(STRUCTURED_NOTES_OUTCOME_CONTRACT_V1) using its domain separator; do not invent a digest.",
+    "template": "source/prompts/action_instructions/structured_notes_v4_3.txt",
+    "rendering": {
+      "NOTE_PRIMARY_LANGUAGE": "English",
+      "INTERACTION_LANGUAGE": "English",
+      "ASR_INDEX_PRESENTATION": "Exact ASR_INDEX_PRESENTATIONS.en from source/src/framework/asr-index-presentation.ts; use original source/src/framework/action-definition.ts renderer."
+    },
+    "outcome": {
+      "schemaVersion": 1,
+      "contractID": "structured_notes/v2",
+      "files": [
+        {
+          "relativePath": "structured-notes.md",
+          "contentKind": "utf8_markdown",
+          "minimumBytes": 1,
+          "maximumBytes": 8388608
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "contentKind": "utf8_markdown",
+          "minimumBytes": 1,
+          "maximumBytes": 1048576
+        }
+      ]
+    },
+    "outcome_rules": "Exactly these two nonempty regular UTF-8 Markdown files under the current revision root. No NUL, extra files or subdirectories. Final answer is separate, <=65536 UTF-8 bytes; it is not the notes artifact.",
+    "critic_source": "source/src/framework/outcome-critic.ts::evaluateOutcomeCandidateV1",
+    "critic_scope": "Structural only. It does not validate factual corrections, instructions, language or ASR semantics.",
+    "asr_semantics": "The arithmetic typo is not evidence of mistranscription. For this fixture no unresolved ASR item is expected. Retain the exact English title and scope from ASR_INDEX_PRESENTATIONS.en, omit the table, and use its exact no-issues sentence. 'None.' or N/A alone is not the semantic target. Validate separately from structural critic."
+  },
+  "roles": {
+    "raw_guardian": {
+      "prompt_parts": [
+        {
+          "authority": "tah_instruction",
+          "asset": "source/prompts/system_prompts/safety_guardian_raw_prompt_v0_3.txt"
+        },
+        {
+          "authority": "tah_instruction",
+          "asset": "source/prompts/system_prompts/safety_guardian_policy_v0_2.txt"
+        },
+        {
+          "authority": "tah_trusted_context",
+          "text": "{\"explanationLanguage\":\"English (en)\"}"
+        }
+      ],
+      "materials": [
+        {
+          "relativePath": "raw-transcript.md",
+          "mediaType": "text/plain",
+          "bytes_from": "synthetic_fixture.raw_transcript_utf8"
+        }
+      ],
+      "writableRoots": [],
+      "candidateSeeds": [],
+      "web": false,
+      "responseExpectation": {
+        "kind": "strict_json",
+        "schemaID": "safety_guardian/raw-v2",
+        "maximumUTF8Bytes": 4096
+      },
+      "schema": "source/src/framework/guardian-assessment.ts::parseRawGuardianAssessmentV2",
+      "note": "Raw Guardian path is at the attempt root, NOT inbox/raw-transcript.md. No accepted outputs or other materials are exposed."
+    },
+    "extra_guardian": {
+      "prompt_parts": [
+        {
+          "authority": "tah_instruction",
+          "asset": "source/prompts/system_prompts/safety_guardian_extra_prompt_v0_6.txt"
+        },
+        {
+          "authority": "tah_instruction",
+          "asset": "source/prompts/system_prompts/safety_guardian_policy_v0_2.txt"
+        },
+        {
+          "authority": "tah_trusted_context",
+          "value_from": "The exact ordered context constructed by src/framework/attempt-builders.ts:121; fields specified below."
+        }
+      ],
+      "trusted_context_keys": [
+        "explanationLanguage",
+        "actionInstructionsIdentity",
+        "outcomeContractSummary",
+        "permissionSummary",
+        "reviewMetadata"
+      ],
+      "trusted_context_values": {
+        "explanationLanguage": "English (en)",
+        "actionInstructionsIdentity": "{path:'inbox/action-instructions.md',byteLength,sha256} from actual rendered bytes",
+        "outcomeContractSummary": "action_contract.outcome",
+        "permissionSummary": {
+          "web": "Forbidden"
+        },
+        "reviewMetadata": "{actionID:'structured_notes',revisionIndex:N,extraInstructionDeltaSHA256:SHA256(UTF8(exact proposed delta))}"
+      },
+      "materials": [
+        "inbox/action-instructions.md",
+        "inbox/critic-instructions.md",
+        "inbox/extra-instructions.md",
+        "inbox/raw-transcript.md",
+        "all actually accepted outbox/revision_vK/{structured-notes.md,suspicious-asr-terms.md}, K<N"
+      ],
+      "writableRoots": [],
+      "candidateSeeds": [],
+      "web": false,
+      "current_revision_directory": "Must not exist in this role's view.",
+      "responseExpectation": {
+        "kind": "strict_json",
+        "schemaID": "safety_guardian/extra-v2",
+        "maximumUTF8Bytes": 4096
+      },
+      "schema": "source/src/framework/guardian-assessment.ts::parseExtraGuardianAssessmentV2",
+      "critic_instructions_utf8": "# Critic Instructions\n\nN/A\n"
+    },
+    "actor": {
+      "prompt_parts": [
+        {
+          "authority": "tah_instruction",
+          "asset": "source/prompts/system_prompts/actor_prompt_v4_2.txt",
+          "render_with": "src/framework/attempt-builders.ts::renderActorPrompt"
+        }
+      ],
+      "template_replacements": {
+        "ALMA_JOB_FOLDER": ".",
+        "WEB_PERMISSION": "Forbidden",
+        "VERSION_INDEX": "decimal revision index N",
+        "ALMA_CURRENT_REVISION_FOLDER": "outbox/revision_vN"
+      },
+      "exact_interaction_suffix": "\n\nHost-selected interaction language for this attempt: English.\nUse it for public commentary and final replies, including before the first file read; never infer it from inputs or expose private reasoning. Notes language is separate. Preserve source quotations, names, code, URLs and native tool text.\n",
+      "materials": [
+        "inbox/action-instructions.md",
+        "inbox/critic-instructions.md",
+        "inbox/extra-instructions.md",
+        "inbox/raw-transcript.md",
+        "all actually accepted outbox/revision_vK/{structured-notes.md,suspicious-asr-terms.md}, K<N"
+      ],
+      "writableRoots": [
+        "outbox/revision_vN"
+      ],
+      "web": false,
+      "responseExpectation": {
+        "kind": "workspace_outcome",
+        "contractID": "structured_notes/v2",
+        "maximumFinalMessageUTF8Bytes": 65536
+      },
+      "critic_instructions_utf8": "# Critic Instructions\n\nN/A\n",
+      "seed_rule": "V0: host creates empty current revision directory, no seed files. V1: independent exact copies of accepted V0 files. V2: independent exact copies of accepted V1 files. Host performs copying; Actor must not copy/move prior revisions. Never hardlink the writable seed to immutable accepted bytes."
+    }
+  },
+  "guardian_schema_summary": {
+    "ordered_keys": [
+      "decision",
+      "reasonCodes",
+      "explanation"
+    ],
+    "decisions": [
+      "ALLOW",
+      "BLOCK"
+    ],
+    "raw_reason_codes": [
+      "harmful_content",
+      "indirect_prompt_injection_suspected"
+    ],
+    "extra_reason_codes": [
+      "harmful_request",
+      "authority_override",
+      "action_contract_conflict"
+    ],
+    "raw_rule": "BLOCK iff harmful_content present; suspected injection alone does not block.",
+    "extra_rule": "BLOCK iff reasonCodes nonempty.",
+    "validation": "Use the exact copied v2 parser, not merely JSON.parse: ordered keys, no duplicate/escaped/extra keys, no fences/prose, exact enums, unique reasons, whole envelope <=4096 UTF-8 bytes, nonblank explanation 1..1024 JS UTF-16 string units and allowed control/Unicode rules. Invalid/incomplete review is unavailable, not ALLOW."
+  },
+  "attempt_projection": {
+    "builder_reference": "Original src/framework/attempt-builders.ts and src/framework/role-requirements.ts; these workflow builders are not reimplemented or shipped in this pack.",
+    "frozen_attempt_schema": "source/src/contract/attempt.ts::frozenAttemptSchema",
+    "attempt_identity": "Fresh lowercase UUIDv4 for every Guardian/Actor attempt and structural repair; do not freeze attempt IDs in this reusable pack.",
+    "requiredAbilities": {
+      "guardian": [
+        "prompt.inline_text",
+        "workspace.entries.list",
+        "workspace.text.read",
+        "workspace.text.search"
+      ],
+      "actor": [
+        "prompt.inline_text",
+        "workspace.entries.list",
+        "workspace.text.read",
+        "workspace.text.search",
+        "workspace.text.write",
+        "workspace.text.edit"
+      ]
+    },
+    "frozen_workspace": "Canonical UTF-8 sorted materials and candidateSeeds with actual byteLength/SHA256 and inputBytes, no traversal/collisions or RO/RW overlap. Ledger and accepted seeds are bound to each attempt before submission.",
+    "prompt_projection_source": "source/src/guest/adapter-kit/prompt-envelope.ts::projectNativePromptChannelsV1",
+    "developerInstructions": "Exact TAH_NATIVE_MESSAGE_GUIDANCE plus the indexed tah_instruction blocks. Do not send the entire manifest, source code or controller evidence to the model.",
+    "turn_text": "JSON {schema:'alma.tah.prompt-envelope/v1',blocks:[{index,authority,text}]} containing remaining original-index blocks. Actor blocks=[]; both Guardian roles retain trusted context. Transcript is in files, never pasted into the envelope.",
+    "rpc_plan": {
+      "thread_start": "Fresh ephemeral thread per attempt, selected model, explicit logical-workspace cwd, developerInstructions, runtimeWorkspaceRoots, enforcing permissions, approved native threadConfig, approvalPolicy=never, no provider fallback.",
+      "turn_start": "threadId, text envelope, clientUserMessageId=attemptID, explicit model, effort (nullable), summary=concise. Preserve original adapter's thread-vs-turn permission behavior; no added outputSchema or invented completion instruction."
+    },
+    "platform_translation": "Mac paths (/opt, /run, Linux appliance) and its historical feature inventory are references, not literal iOS grants. Main must map supported actual 0.166 APIs without losing role restrictions, injected Code Mode provider, no-Web policy or tool surface. Never claim copying Mac config is platform enforcement."
+  },
+  "revision_flow": [
+    {
+      "step": 1,
+      "role": "raw_guardian",
+      "revisionIndex": null,
+      "input": "Fresh synthetic transcript, no cached receipt borrowed.",
+      "gate": "Validate actual completed final JSON and cleanup. ALLOW bound to this transcript/provider/profile/inference/prompts/policy/account identity is required to proceed."
+    },
+    {
+      "step": 2,
+      "role": "actor",
+      "revisionIndex": 0,
+      "currentInstructions": [],
+      "instructionDelta": "",
+      "acceptedRevisions": [],
+      "extraGuardian": "SKIP only because first initial delta normalizes to null.",
+      "proposal": "Commit canonical ledger [{revisionIndex:0,initial:null,retries:[]}] with skipped_initial_v0 evidence before Actor.",
+      "seed": "Empty current root only, no files.",
+      "gate": "After exact completed-turn admission, cleanup, quarantine and critic PASS, commit/publish V0 before any V1 preparation."
+    },
+    {
+      "step": 3,
+      "role": "extra_guardian",
+      "revisionIndex": 1,
+      "instructionDelta_from": "synthetic_fixture.revision_instruction_deltas[1].text",
+      "accepted_history": [
+        0
+      ],
+      "gate": "ALLOW on cumulative proposed ledger; no revision_v1 directory; commit proposal/reservation before Actor."
+    },
+    {
+      "step": 4,
+      "role": "actor",
+      "revisionIndex": 1,
+      "accepted_history": [
+        0
+      ],
+      "seed_from": "Exact accepted V0 candidate with real publicationCommitID and matching candidateDigest.",
+      "gate": "Quarantine -> structural PASS -> real publication receipt. V1 cannot come from a rejected/unpublished V0."
+    },
+    {
+      "step": 5,
+      "role": "extra_guardian",
+      "revisionIndex": 2,
+      "instructionDelta_from": "synthetic_fixture.revision_instruction_deltas[2].text",
+      "accepted_history": [
+        0,
+        1
+      ],
+      "gate": "ALLOW on cumulative proposed ledger; no revision_v2 directory; commit proposal/reservation before Actor."
+    },
+    {
+      "step": 6,
+      "role": "actor",
+      "revisionIndex": 2,
+      "accepted_history": [
+        0,
+        1
+      ],
+      "seed_from": "Exact accepted V1 candidate with real publicationCommitID and matching candidateDigest.",
+      "gate": "Quarantine -> structural PASS -> real publication receipt. Review semantic V0/V1/V2 deltas separately."
+    }
+  ],
+  "repair_and_transition_rules": {
+    "index": "revisionIndex is the accepted publication count. Extra approvals and Actor repair rounds do not increment it.",
+    "accepted_input_schema": "AcceptedRevisionInputV1 = {revisionIndex, publicationCommitID, outcome:CandidateOutcomeV1}. Actual immutable accepted bytes, not expected answers, populate these inputs.",
+    "candidate_schema": "CandidateOutcomeV1 = {writableRoot,candidateDigest,entries}; each file entry has kind,relativePath,byteLength,sha256,dataBase64. Use exact source/src/framework/outcome-contract.ts parsing/digest logic.",
+    "normal_transition": "Validate history order/provenance and require exact previous accepted revision. Seed digest must match latest accepted candidate, then rebase independent copied files into the new current root. Keep old history RO and verify its hashes remain unchanged.",
+    "repair": "Only structural REJECT triggers the original one-repair rule: fresh attempt ID, same revision/model/effort, rejected candidate copied into same current root, exact renderCriticInstructionsV1 output. Second REJECT => contract_exhausted. A repair is not V1/V2. No fabricated corrections to satisfy semantic expectations.",
+    "retry": "Initial empty V0 is allowed only once. Retried V0 requires explicit nonempty instructions; infrastructure retry leases/uncertain side effects are not automatically exercised by this pack.",
+    "ledger": "Use exact source/src/framework/user-instructions.ts canonical append/render functions. Keep all accepted earlier revision entries; later revision and later Retry instructions override only conflicts."
+  },
+  "artifact_paths": {
+    "raw_only": [
+      "raw-transcript.md"
+    ],
+    "revision_inbox": [
+      "inbox/action-instructions.md",
+      "inbox/critic-instructions.md",
+      "inbox/extra-instructions.md",
+      "inbox/raw-transcript.md"
+    ],
+    "outputs_by_revision": [
+      {
+        "revisionIndex": 0,
+        "root": "outbox/revision_v0",
+        "files": [
+          "outbox/revision_v0/structured-notes.md",
+          "outbox/revision_v0/suspicious-asr-terms.md"
+        ]
+      },
+      {
+        "revisionIndex": 1,
+        "root": "outbox/revision_v1",
+        "files": [
+          "outbox/revision_v1/structured-notes.md",
+          "outbox/revision_v1/suspicious-asr-terms.md"
+        ]
+      },
+      {
+        "revisionIndex": 2,
+        "root": "outbox/revision_v2",
+        "files": [
+          "outbox/revision_v2/structured-notes.md",
+          "outbox/revision_v2/suspicious-asr-terms.md"
+        ]
+      }
+    ],
+    "evidence_location": "Host-owned outside every model-visible workspace. No fabricated path is claimed as Mac persistence storage. Record actual proposal, attempt, cleanup, candidate, critic and publication receipts using main's trusted runner.",
+    "not_in_pack": [
+      "Generated notes/index outputs",
+      "Guardian verdicts",
+      "publication/proposal receipts",
+      "accepted revision digests",
+      "attempt/run UUIDs",
+      "auth/account data",
+      "real transcript/history"
+    ]
+  },
+  "acceptance": {
+    "provider": "Authoritative turn/completed with completed status, exactly one final_answer consistent with completed item stream, and confirmed cleanup. Deltas, stream closure or 'Done' text alone are insufficient.",
+    "guardian": "No candidates/writes; exact role parser ALLOW and material/profile binding. BLOCK stops the flow; malformed, incomplete or cleanup-uncertain runs do not advance.",
+    "actor": "Host quarantines actual bytes, verifies canonical exact manifest/lengths/hashes/UTF-8/NUL and declared root; structural critic must PASS. Bind round/proposal/reservation/ledger/candidate evidence and require real publication commit receipt before calling the revision completed.",
+    "semantic_checks": [
+      "V0 preserves the source total 14 as what was said; no silent factual replacement by 12. A clearly labeled observation of the inconsistency is not the same as changing the attributed source.",
+      "V1 contains the explicitly user-provided total 12 and its arithmetic basis, preserves the original total 14 as attributed source, and uses the requested 'Batch count' subsection.",
+      "V2 applies the later heading 'Arithmetic correction' while retaining the V1 correction and source attribution.",
+      "Foreground/background labels, Café Segmentation name and absence of accuracy measurement survive; no invented accuracy score, web verification or factual history.",
+      "ASR index uses exact selected title/scope/no-issues presentation if no material ambiguity remains; arithmetic inconsistency alone must not generate a fabricated ASR uncertainty.",
+      "Only each current root changes. Prior accepted bytes stay identical. Semantic expectations are evaluated by a separate reviewer/check; they are not manufactured golden Markdown or structural-critic guarantees."
+    ],
+    "parity_claim_limit": "Passing establishes this bounded sequence and recorded contract evidence only. It does not establish full TAH/App parity, account lifecycle, all retries/recovery, Web parity or VM/native-memory isolation."
+  },
+  "missing_implementation_requirements": [
+    "Main-owned real-attempt runner using original builders/renderers and canonical schema validation or a reviewed exact port; this pack contains no execution engine.",
+    "Catalog/inference binding, identity/consent checking and fresh attempt IDs. Exact Guardian model+effort availability is not established by this offline pack.",
+    "Role-specific immutable RO views and current-root-only RW grants in both guest tools and native ScopedFiles, including Guardians with no writable candidate root. The broad fixed /workspace/output RW grant alone is not TAH role enforcement. Logical cwd must expose the exact relative tree and hide controller/auth/evidence.",
+    "Trusted creation of empty V0 root, independent accepted-file seeds, per-attempt snapshots and cumulative ledger/proposal state. Extra review must not expose a precreated current output directory.",
+    "Typed production API projection and normalized completion/final-answer reconciliation, cancellation and confirmed teardown for every attempt. No uncertain model/tool retry.",
+    "Host-owned quarantine, deterministic critic/one repair, durable proposal/reservation/publication receipts and digest-bound transitions; no boolean 'accepted' shortcut.",
+    "Actual model semantic review and evidence comparison. Native plain Code Mode security/resource limitations remain recorded independently; this fixture cannot close them."
+  ],
+  "next_run_instructions": [
+    "Verify pack hashes, bind one catalog-valid Actor model/effort for all revisions, and verify exact gpt-5.6-luna/low Guardian availability. Prepare enforcing role views and original TAH validators before releasing model work.",
+    "Materialize only synthetic raw bytes for Raw Guardian. Admit the real ALLOW only after exact final/cleanup validation.",
+    "Run V0 with empty delta, canonical N/A ledger, empty output root and no Extra Guardian. Publish actual accepted V0 before forming V1.",
+    "Run Extra1 -> Actor1 seeded from accepted V0, then Extra2 -> Actor2 seeded from accepted V1. Preserve all accepted history RO and the cumulative quoted ledger.",
+    "Use original structural-repair rule at most once per revision; stop on safety BLOCK, malformed review, uncertain cleanup, unsupported capability/model, budget exhaustion or second critic REJECT.",
+    "Report actual outputs/digests/receipts plus separate semantic observations, model/effort, platform and acknowledged deviations. Do not label a files-only run or this pack itself as parity."
+  ],
+  "assets": [
+    {
+      "pack_path": "source/prompts/action_instructions/structured_notes_v4_3.txt",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/prompts/action_instructions/structured_notes_v4_3.txt",
+      "source_relative_path": "prompts/action_instructions/structured_notes_v4_3.txt",
+      "kind": "action_prompt",
+      "byteLength": 5916,
+      "sha256": "a4cb4a76f1e20f23bf7b2f9362f7e77ca8000da79dc324915908999d4a56f283",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/prompts/system_prompts/actor_prompt_v4_2.txt",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/prompts/system_prompts/actor_prompt_v4_2.txt",
+      "source_relative_path": "prompts/system_prompts/actor_prompt_v4_2.txt",
+      "kind": "role_prompt",
+      "byteLength": 2628,
+      "sha256": "c703eed830f22caa003795a89840682717b680bcb8d82c4654be93216c87ac9f",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/prompts/system_prompts/safety_guardian_raw_prompt_v0_3.txt",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/prompts/system_prompts/safety_guardian_raw_prompt_v0_3.txt",
+      "source_relative_path": "prompts/system_prompts/safety_guardian_raw_prompt_v0_3.txt",
+      "kind": "role_prompt",
+      "byteLength": 2441,
+      "sha256": "70d45d26d7320f33d770348fe7c8d6d34a0c99df617e0bde00a13a45ce4a08fe",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/prompts/system_prompts/safety_guardian_extra_prompt_v0_6.txt",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/prompts/system_prompts/safety_guardian_extra_prompt_v0_6.txt",
+      "source_relative_path": "prompts/system_prompts/safety_guardian_extra_prompt_v0_6.txt",
+      "kind": "role_prompt",
+      "byteLength": 4695,
+      "sha256": "3ed24979778b3ada80b35e9c0f27fb4e48a71dee4e5f99577e556640d086b205",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/prompts/system_prompts/safety_guardian_policy_v0_2.txt",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/prompts/system_prompts/safety_guardian_policy_v0_2.txt",
+      "source_relative_path": "prompts/system_prompts/safety_guardian_policy_v0_2.txt",
+      "kind": "policy_prompt",
+      "byteLength": 999,
+      "sha256": "411832a58c777418a73502e0416b1217bdbddbbf409f082ca6fd31cf254cb74f",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/providers/codex/app-profile.json",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/app-profile.json",
+      "source_relative_path": "providers/codex/app-profile.json",
+      "kind": "inference_profile",
+      "byteLength": 194,
+      "sha256": "bf74ffdce5f73b8170a04e12b3a2d1417bad3fc274f6329a92dc9406a2deb9d2",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/action-definition.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/action-definition.ts",
+      "source_relative_path": "src/framework/action-definition.ts",
+      "kind": "prompt_renderer_and_identity",
+      "byteLength": 4508,
+      "sha256": "649c32dda3bdf687e2c494c87386d5a5dced029197336e26fa7e3b3be1e9dc0b",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/asr-index-presentation.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/asr-index-presentation.ts",
+      "source_relative_path": "src/framework/asr-index-presentation.ts",
+      "kind": "prompt_presentation",
+      "byteLength": 1847,
+      "sha256": "0e0df53f4a7bd8b5d9eea6f69beda67fb61a1c1e66dd25dc6027be148be8d884",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/user-instructions.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/user-instructions.ts",
+      "source_relative_path": "src/framework/user-instructions.ts",
+      "kind": "instruction_schema_and_renderer",
+      "byteLength": 4442,
+      "sha256": "81482ccfd549a530df02753020a338568b4128b414997c8ace79d225b51fb877",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/guardian-assessment.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/guardian-assessment.ts",
+      "source_relative_path": "src/framework/guardian-assessment.ts",
+      "kind": "guardian_schema_parser",
+      "byteLength": 4736,
+      "sha256": "f1b4ef6f0c553fba4cfdf3e588e9c9e7bb878416d85f4b99c8946fad43950f32",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/outcome-contract.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/outcome-contract.ts",
+      "source_relative_path": "src/framework/outcome-contract.ts",
+      "kind": "outcome_schema_and_digest",
+      "byteLength": 12813,
+      "sha256": "0d471e44b708f7c871c625511e2f748fbfa047d1b2c40b26e7f0fe4214f8b3f5",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/framework/outcome-critic.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/outcome-critic.ts",
+      "source_relative_path": "src/framework/outcome-critic.ts",
+      "kind": "critic_schema_and_correction_prompt",
+      "byteLength": 8103,
+      "sha256": "7a9a4691bf217e653e8abc2f902127eb5b8a5760e20fee5f08f1213e744909e6",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/guest/adapter-kit/prompt-envelope.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/guest/adapter-kit/prompt-envelope.ts",
+      "source_relative_path": "src/guest/adapter-kit/prompt-envelope.ts",
+      "kind": "prompt_projection",
+      "byteLength": 2065,
+      "sha256": "6eec53245df8ac59f3fad5c41b4905b0be640851c4ed475fd99eced3cd6729b6",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/abilities.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/abilities.ts",
+      "source_relative_path": "src/contract/abilities.ts",
+      "kind": "contract_schema",
+      "byteLength": 1717,
+      "sha256": "a07df18dd06781d900801285de982ff72df110794a58b3d67109926c16579e2f",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/account-usage.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/account-usage.ts",
+      "source_relative_path": "src/contract/account-usage.ts",
+      "kind": "contract_schema",
+      "byteLength": 3067,
+      "sha256": "16411535dc690b9d6f15791fbe4c092da31f727d6dcce11f6fa4780c96a60687",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/attempt.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/attempt.ts",
+      "source_relative_path": "src/contract/attempt.ts",
+      "kind": "contract_schema",
+      "byteLength": 12038,
+      "sha256": "25521e1dc1f6b72a86ba911d1e11f033e21856de0fc1a9ddf410335aa235621d",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/canonical-order.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/canonical-order.ts",
+      "source_relative_path": "src/contract/canonical-order.ts",
+      "kind": "contract_schema",
+      "byteLength": 1109,
+      "sha256": "a3f38ecf3f355c746ab1888d9a2e3a2b9491937bd0bf53944e2d89ce7a34b7de",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/context-window.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/context-window.ts",
+      "source_relative_path": "src/contract/context-window.ts",
+      "kind": "contract_schema",
+      "byteLength": 767,
+      "sha256": "5e15be416a5c3a0468c6134110e5053b9b2d50cb35c01a113a251e7ff61a7399",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/events.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/events.ts",
+      "source_relative_path": "src/contract/events.ts",
+      "kind": "contract_schema",
+      "byteLength": 10483,
+      "sha256": "700e0f947cca692208b7fbec54b7b028228f15b1d56fdfc3fb7a23f8054a29c8",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/failure.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/failure.ts",
+      "source_relative_path": "src/contract/failure.ts",
+      "kind": "contract_schema",
+      "byteLength": 692,
+      "sha256": "3e424cdd27ed5687cc3840c5b83af2a06e196c9f84edd7f1b3e2f770abe39be9",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/index.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/index.ts",
+      "source_relative_path": "src/contract/index.ts",
+      "kind": "contract_schema",
+      "byteLength": 224,
+      "sha256": "5c29e748b088f5363da9eeb1479966669c8a57ca6d0edec65d02beef3ef7ac1b",
+      "copy_mode": "exact_bytes_no_transform"
+    },
+    {
+      "pack_path": "source/src/contract/result.ts",
+      "source_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/result.ts",
+      "source_relative_path": "src/contract/result.ts",
+      "kind": "contract_schema",
+      "byteLength": 779,
+      "sha256": "5f2c6ca5dbecbdec77d8accb0f39d53eb3477bb16e1f7759a5e5babb268e0a29",
+      "copy_mode": "exact_bytes_no_transform"
+    }
+  ],
+  "verification": {
+    "exact_copied_assets": 22,
+    "copied_bytes": 86263,
+    "all_five_selected_prompt_hashes_match_inventory": true,
+    "synthetic_raw_utf8_valid": true,
+    "no_runtime_outputs_or_acceptance_receipts": true,
+    "model_device_network_build_actions": false,
+    "pack_bytes": 132120
+  }
+}

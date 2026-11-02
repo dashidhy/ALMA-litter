@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc",
+    "--edition=2024",
+    "--test",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_runner_regression/.build/host.rs",
+    "-L",
+    "dependency=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps",
+    "-o",
+    "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_runner_regression/.build/host-tests",
+    "--extern",
+    "serde_json=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps/libserde_json-ab2a536578dd668a.rlib",
+    "--extern",
+    "serde=/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/target/ios-dev/deps/libserde-7ddbc1efc4a31f39.rlib"
+  ],
+  "exit_code": 0,
+  "runner_sha256": "56f244e182b4acdd25709af4dae38f6e0b0cb66a162d4f5391ffa3271ff564f1",
+  "scope": "six pure boundary helper tests only, no transport or model"
+}

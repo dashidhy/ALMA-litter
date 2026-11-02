@@ -4,7 +4,17 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 IOS_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_DIR="$(cd "$IOS_DIR/../.." && pwd)"
-source "$REPO_DIR/tools/scripts/load-sccache-aws-creds.sh"
+# Decide the local qualification lane before touching any remote-cache setup.
+ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
+for argument in "$@"; do
+  if [[ "$argument" == "--alma-local" ]]; then ALMA_LOCAL=1; fi
+done
+if [[ "$ALMA_LOCAL" != "1" ]]; then
+  source "$REPO_DIR/tools/scripts/load-sccache-aws-creds.sh"
+else
+  export RUSTC_WRAPPER=
+  export SCCACHE_DISABLE=1
+fi
 RUST_BRIDGE_DIR="$REPO_DIR/shared/rust-bridge"
 CARGO_TARGET_DIR_EFFECTIVE="${CARGO_TARGET_DIR:-$RUST_BRIDGE_DIR/target}"
 FRAMEWORKS_DIR="$IOS_DIR/Frameworks"
@@ -35,7 +45,8 @@ MACABI_ONLY=0
 FAST_MACABI=0
 FORCE_BINDINGS=0
 SKIP_BINDINGS=0
-CARGO_FEATURES=""
+CARGO_FEATURES=()
+ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
 PROFILE="release"
 CARGO_PROFILE_FLAG="--release"
 IOS_RUST_PROFILE="${IOS_RUST_PROFILE:-release}"
@@ -99,15 +110,24 @@ for arg in "$@"; do
     --skip-bindings)
       SKIP_BINDINGS=1
       ;;
+    --alma-local)
+      ALMA_LOCAL=1
+      ;;
     --rpc-trace)
-      CARGO_FEATURES="--features rpc-trace"
+      CARGO_FEATURES+=(--features rpc-trace)
       ;;
     *)
-      echo "usage: $(basename "$0") [--preserve-current|--recorded-gitlink] [--device-only] [--fast-device] [--fast-sim] [--macabi-only] [--fast-macabi] [--force-bindings] [--skip-bindings] [--rpc-trace]" >&2
+      echo "usage: $(basename "$0") [--preserve-current|--recorded-gitlink] [--device-only] [--fast-device] [--fast-sim] [--macabi-only] [--fast-macabi] [--force-bindings] [--skip-bindings] [--rpc-trace] [--alma-local]" >&2
       exit 1
       ;;
   esac
 done
+
+export LITTER_ALMA_LOCAL="$ALMA_LOCAL"
+if [ "$ALMA_LOCAL" = "1" ]; then
+  CARGO_FEATURES+=(--no-default-features)
+  export LITTER_SKIP_ALLEYCAT_UPDATE=1
+fi
 
 PATCHES_WERE_APPLIED=()
 for PATCH_FILE in "${PATCH_FILES[@]}"; do
@@ -335,18 +355,18 @@ rustup target add i686-unknown-linux-musl aarch64-unknown-linux-musl
 
 if [ "$DEVICE_ONLY" -eq 1 ]; then
   echo "==> Building codex-mobile-client for aarch64-apple-ios ($PROFILE)..."
-  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib $CARGO_FEATURES
+  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   check_ish_vdso_for aarch64-apple-ios
   copy_device_artifact
 elif [ "$SIM_ONLY" -eq 1 ]; then
   echo "==> Building codex-mobile-client for aarch64-apple-ios-sim ($PROFILE)..."
-  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib $CARGO_FEATURES
+  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   check_ish_vdso_for aarch64-apple-ios-sim
   copy_sim_artifact "$CARGO_TARGET_DIR_EFFECTIVE/aarch64-apple-ios-sim/$PROFILE/libcodex_mobile_client.a"
 elif [ "$MACABI_ONLY" -eq 1 ]; then
   if [ "$FAST_MACABI" -eq 1 ]; then
     echo "==> Building codex-mobile-client for $MACABI_HOST_TARGET ($PROFILE)..."
-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target "$MACABI_HOST_TARGET" --crate-type staticlib $CARGO_FEATURES
+    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target "$MACABI_HOST_TARGET" --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
     check_ish_vdso_for "$MACABI_HOST_TARGET"
     copy_if_changed "$CARGO_TARGET_DIR_EFFECTIVE/$MACABI_HOST_TARGET/$PROFILE/libcodex_mobile_client.a" \
       "$GENERATED_MACABI_DIR/libcodex_mobile_client.a"
@@ -354,11 +374,11 @@ elif [ "$MACABI_ONLY" -eq 1 ]; then
     echo "==> Building codex-mobile-client for Mac Catalyst macabi targets ($PROFILE) in parallel..."
 
     build_macabi_arm64() {
-      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
+      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
     }
 
     build_macabi_x86_64() {
-      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
+      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
     }
 
     build_macabi_arm64 &
@@ -386,19 +406,19 @@ else
   echo "==> Building codex-mobile-client for device, simulator, and Catalyst macabi targets ($PROFILE) in parallel..."
 
   build_device() {
-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib $CARGO_FEATURES
+    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   }
 
   build_sim() {
-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib $CARGO_FEATURES
+    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   }
 
   build_macabi_arm64() {
-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
+    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   }
 
   build_macabi_x86_64() {
-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
+    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
   }
 
   build_device &

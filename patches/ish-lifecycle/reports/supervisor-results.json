@@ -1,0 +1,200 @@
+[
+  {
+    "patch_sha256": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+    "supervisor_sha256": "d2f51b13d8cbb6467089badeeb0f07fbe16bdecd667f6d456304467f6d4bb6dd",
+    "owned": true,
+    "passed": true,
+    "seconds": 4.675365875009447,
+    "events": [
+      {
+        "tag": 0,
+        "version": 3
+      },
+      {
+        "tag": 1,
+        "id": 1,
+        "pid": 3
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 1,
+        "stream": 0,
+        "output": "OUT:hello\n"
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 2,
+        "stream": 1,
+        "output": "ERR:ok\n"
+      },
+      {
+        "tag": 3,
+        "id": 1,
+        "exit": 7,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 1
+      },
+      {
+        "tag": 1,
+        "id": 2,
+        "pid": 4
+      },
+      {
+        "tag": 3,
+        "id": 2,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 2
+      },
+      {
+        "tag": 1,
+        "id": 3,
+        "pid": 6
+      },
+      {
+        "tag": 3,
+        "id": 3,
+        "exit": -1,
+        "signal": 9
+      },
+      {
+        "tag": 4,
+        "id": 3
+      },
+      {
+        "tag": 1,
+        "id": 4,
+        "pid": 7
+      },
+      {
+        "tag": 1,
+        "id": 5,
+        "pid": 8
+      },
+      {
+        "tag": 3,
+        "id": 4,
+        "exit": -1,
+        "signal": 9
+      },
+      {
+        "tag": 4,
+        "id": 4
+      },
+      {
+        "tag": 2,
+        "id": 5,
+        "seq": 1,
+        "stream": 0,
+        "output": "SURVIVED:ok\n"
+      },
+      {
+        "tag": 3,
+        "id": 5,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 5
+      },
+      {
+        "tag": 1,
+        "id": 6,
+        "pid": 9
+      },
+      {
+        "tag": 2,
+        "id": 6,
+        "seq": 1,
+        "stream": 0,
+        "output": "INT_READY\n"
+      },
+      {
+        "tag": 2,
+        "id": 6,
+        "seq": 2,
+        "stream": 0,
+        "output": "INTERRUPTED\n"
+      },
+      {
+        "tag": 3,
+        "id": 6,
+        "exit": 0,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 6
+      },
+      {
+        "tag": 5,
+        "id": 7,
+        "code": 5,
+        "error": "execve: No such file or directory (os error 2)"
+      },
+      {
+        "tag": 3,
+        "id": 7,
+        "exit": 127,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 7
+      }
+    ],
+    "host_exit": 0
+  },
+  {
+    "patch_sha256": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+    "supervisor_sha256": "d2f51b13d8cbb6467089badeeb0f07fbe16bdecd667f6d456304467f6d4bb6dd",
+    "owned": false,
+    "passed": true,
+    "seconds": 0.01625899993814528,
+    "events": [
+      {
+        "tag": 0,
+        "version": 2
+      },
+      {
+        "tag": 1,
+        "id": 1,
+        "pid": 3
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 1,
+        "stream": 0,
+        "output": "OUT:hello\n"
+      },
+      {
+        "tag": 2,
+        "id": 1,
+        "seq": 2,
+        "stream": 0,
+        "output": "ERR:ok\n"
+      },
+      {
+        "tag": 3,
+        "id": 1,
+        "exit": 7,
+        "signal": 0
+      },
+      {
+        "tag": 4,
+        "id": 1
+      }
+    ],
+    "host_exit": 0
+  }
+]

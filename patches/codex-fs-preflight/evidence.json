@@ -1,0 +1,22 @@
+{
+  "actual_source_unchanged": true,
+  "patch_applicability": "both patches pass git apply --check",
+  "runs": {
+    "apply-patch-baseline": {
+      "exit_code": 101,
+      "summary": "test result: FAILED. 4 passed; 8 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s",
+      "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "build_jobs": 2,
+      "log": "tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-baseline/test-output.txt",
+      "evidence": "tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-baseline/evidence.json"
+    },
+    "apply-patch-proposal": {
+      "exit_code": 0,
+      "summary": "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s",
+      "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "build_jobs": 2,
+      "log": "tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-proposal/test-output.txt",
+      "evidence": "tools/alma-ios-lab/scoped_executor_regression/.build/apply-patch-proposal/evidence.json"
+    }
+  }
+}

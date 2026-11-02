@@ -1,0 +1,160 @@
+--- a/src/sys/socket/mod.rs
++++ b/src/sys/socket/mod.rs
+@@ -50,7 +50,7 @@
+ pub use crate::sys::socket::addr::alg::AlgAddr;
+ #[cfg(linux_android)]
+ pub use crate::sys::socket::addr::netlink::NetlinkAddr;
+-#[cfg(apple_targets)]
++#[cfg(target_os = "macos")]
+ #[cfg(feature = "ioctl")]
+ pub use crate::sys::socket::addr::sys_control::SysControlAddr;
+ #[cfg(any(linux_android, apple_targets))]
+@@ -125,7 +125,7 @@
+     Raw = libc::IPPROTO_RAW,
+     /// Allows applications to configure and control a KEXT
+     /// ([ref](https://developer.apple.com/library/content/documentation/Darwin/Conceptual/NKEConceptual/control/control.html))
+-    #[cfg(apple_targets)]
++    #[cfg(target_os = "macos")]
+     KextControl = libc::SYSPROTO_CONTROL,
+     /// Receives routing and link updates and may be used to modify the routing tables (both IPv4 and IPv6), IP addresses, link
+     // parameters, neighbor setups, queueing disciplines, traffic classes and packet classifiers
+--- a/src/sys/socket/addr.rs
++++ b/src/sys/socket/addr.rs
+@@ -16,7 +16,7 @@
+ use crate::sys::socket::addr::alg::AlgAddr;
+ #[cfg(linux_android)]
+ use crate::sys::socket::addr::netlink::NetlinkAddr;
+-#[cfg(all(feature = "ioctl", apple_targets))]
++#[cfg(all(feature = "ioctl", target_os = "macos"))]
+ use crate::sys::socket::addr::sys_control::SysControlAddr;
+ use crate::{NixPath, Result};
+ use cfg_if::cfg_if;
+@@ -1116,7 +1116,7 @@
+     dl: LinkAddr,
+     #[cfg(linux_android)]
+     nl: NetlinkAddr,
+-    #[cfg(all(feature = "ioctl", apple_targets))]
++    #[cfg(all(feature = "ioctl", target_os = "macos"))]
+     #[cfg_attr(docsrs, doc(cfg(feature = "ioctl")))]
+     sctl: SysControlAddr,
+     #[cfg(feature = "net")]
+@@ -1197,7 +1197,7 @@
+                 libc::AF_PACKET => unsafe {
+                     LinkAddr::from_raw(addr, l).map(|dl| Self { dl })
+                 },
+-                #[cfg(all(feature = "ioctl", apple_targets))]
++                #[cfg(all(feature = "ioctl", target_os = "macos"))]
+                 libc::AF_SYSTEM => unsafe {
+                     SysControlAddr::from_raw(addr, l).map(|sctl| Self { sctl })
+                 },
+@@ -1354,7 +1354,7 @@
+     accessors! {as_netlink_addr, as_netlink_addr_mut, NetlinkAddr,
+     AddressFamily::Netlink, libc::sockaddr_nl, nl}
+ 
+-    #[cfg(all(feature = "ioctl", apple_targets))]
++    #[cfg(all(feature = "ioctl", target_os = "macos"))]
+     #[cfg_attr(docsrs, doc(cfg(feature = "ioctl")))]
+     accessors! {as_sys_control_addr, as_sys_control_addr_mut, SysControlAddr,
+     AddressFamily::System, libc::sockaddr_ctl, sctl}
+@@ -1392,7 +1392,7 @@
+                 #[cfg(any(linux_android, target_os = "fuchsia"))]
+                 #[cfg(feature = "net")]
+                 libc::AF_PACKET => self.dl.fmt(f),
+-                #[cfg(apple_targets)]
++                #[cfg(target_os = "macos")]
+                 #[cfg(feature = "ioctl")]
+                 libc::AF_SYSTEM => self.sctl.fmt(f),
+                 libc::AF_UNIX => self.su.fmt(f),
+@@ -1454,7 +1454,7 @@
+                 #[cfg(any(linux_android, target_os = "fuchsia"))]
+                 #[cfg(feature = "net")]
+                 libc::AF_PACKET => self.dl.hash(s),
+-                #[cfg(apple_targets)]
++                #[cfg(target_os = "macos")]
+                 #[cfg(feature = "ioctl")]
+                 libc::AF_SYSTEM => self.sctl.hash(s),
+                 libc::AF_UNIX => self.su.hash(s),
+@@ -1484,7 +1484,7 @@
+                 #[cfg(any(linux_android, target_os = "fuchsia"))]
+                 #[cfg(feature = "net")]
+                 (libc::AF_PACKET, libc::AF_PACKET) => self.dl == other.dl,
+-                #[cfg(apple_targets)]
++                #[cfg(target_os = "macos")]
+                 #[cfg(feature = "ioctl")]
+                 (libc::AF_SYSTEM, libc::AF_SYSTEM) => self.sctl == other.sctl,
+                 (libc::AF_UNIX, libc::AF_UNIX) => self.su == other.su,
+@@ -1706,7 +1706,7 @@
+ 
+ feature! {
+ #![feature = "ioctl"]
+-#[cfg(apple_targets)]
++#[cfg(target_os = "macos")]
+ pub mod sys_control {
+     use crate::sys::socket::addr::AddressFamily;
+     use libc::{self, c_uchar};
+--- a/src/sys/socket/sockopt.rs
++++ b/src/sys/socket/sockopt.rs
+@@ -5,8 +5,12 @@
+ use crate::Result;
+ use cfg_if::cfg_if;
+ use libc::{self, c_int, c_void, socklen_t};
+-use std::ffi::{CStr, CString, OsStr, OsString};
++#[cfg(all(target_os = "macos", feature = "net"))]
++use std::ffi::{CStr, CString};
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
++use std::ffi::{OsStr, OsString};
+ use std::mem::{self, MaybeUninit};
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
+ use std::os::unix::ffi::OsStrExt;
+ use std::os::unix::io::{AsFd, AsRawFd};
+ 
+@@ -1075,7 +1079,7 @@
+     libc::IPV6_DONTFRAG,
+     bool
+ );
+-#[cfg(apple_targets)]
++#[cfg(target_os = "macos")]
+ #[cfg(feature = "net")]
+ sockopt_impl!(
+     /// Get the utun interface name.
+@@ -1540,11 +1544,13 @@
+ }
+ 
+ /// Getter for a `OsString` value.
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
+ struct GetOsString<T: AsMut<[u8]>> {
+     len: socklen_t,
+     val: MaybeUninit<T>,
+ }
+ 
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
+ impl<T: AsMut<[u8]>> Get<OsString> for GetOsString<T> {
+     fn uninit() -> Self {
+         GetOsString {
+@@ -1569,10 +1575,12 @@
+ }
+ 
+ /// Setter for a `OsString` value.
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
+ struct SetOsString<'a> {
+     val: &'a OsStr,
+ }
+ 
++#[cfg(any(linux_android, all(target_os = "freebsd", feature = "net")))]
+ impl<'a> Set<'a, OsString> for SetOsString<'a> {
+     fn new(val: &'a OsString) -> SetOsString {
+         SetOsString {
+@@ -1590,11 +1598,13 @@
+ }
+ 
+ /// Getter for a `CString` value.
++#[cfg(all(target_os = "macos", feature = "net"))]
+ struct GetCString<T: AsMut<[u8]>> {
+     len: socklen_t,
+     val: MaybeUninit<T>,
+ }
+ 
++#[cfg(all(target_os = "macos", feature = "net"))]
+ impl<T: AsMut<[u8]>> Get<CString> for GetCString<T> {
+     fn uninit() -> Self {
+         GetCString {

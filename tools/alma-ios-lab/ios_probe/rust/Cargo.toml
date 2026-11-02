@@ -1,0 +1,25 @@
+[package]
+name = "alma-ish-phone-probe"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+ish-embed-host = { path = "../../.cache/litter-ish-4f783cd957b83de3019d6a843408d5bb3ff902c7/embed/host" }
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = "=1.0.149"
+sha2 = "=0.10.9"
+tokio = { version = "=1.50.0", features = ["rt", "time"] }
+libc = "=0.2.183"
+
+[build-dependencies]
+cc = "=1.2.57"
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+codegen-units = 4
+debug = "line-tables-only"
+panic = "abort"

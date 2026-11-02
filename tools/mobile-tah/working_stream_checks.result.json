@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "bundleSHA256": "f808c0cb77e3f362b7316cab420bb02f7420b29cb081790e916269bc8c1e7e3a",
+  "isolated": {
+    "passed": true,
+    "modelCalls": false,
+    "realCredentials": false,
+    "checks": [
+      "Open full reset contract",
+      "10,000 busy updates coalesce to one latest bounded upsert",
+      "Same content and repeated exact ACK keep revision unchanged",
+      "Status-only upsert and stale ACK rejection",
+      "Retention removes evicted IDs and preserves full current order",
+      "Meta-only changes and terminal stopped normalization",
+      "Close/reopen and failed Open invalidate the old scope",
+      "Visibility and Guardian filtering use existing policy",
+      "2 MiB text and 4 MiB escaped JSON caps match original workingLog",
+      "Build seams reject source drift in both owned modules"
+    ],
+    "bundleSHA256": "f808c0cb77e3f362b7316cab420bb02f7420b29cb081790e916269bc8c1e7e3a"
+  },
+  "integrated": {
+    "passed": true,
+    "modelCalls": false,
+    "realCredentials": false,
+    "nativeProviderCalls": 0,
+    "checks": [
+      "No in-memory execution does not fall back to journal",
+      "Real runtime opens actor memory",
+      "Actual AppActions emits latest diff",
+      "Real runtime unchanged response is minimal",
+      "Live Open/Next perform zero journal reads or writes",
+      "Real runtime rejects stale ACK",
+      "Completed phase is not finished while Core is active",
+      "Final cleanup notification exposes inactive finished owner",
+      "Retained owner survives terminal cleanup",
+      "Same-phase active-to-inactive handoff observed on actual Core",
+      "Open after completion returns same-operation retained view",
+      "Private Guardian data excluded",
+      "Retained terminal read has no historical journal fallback",
+      "Restarted runtime cannot claim old in-memory owner",
+      "New execution invalidates old operation stream",
+      "Guardian-only current scope is unavailable",
+      "New scope has its own tracker",
+      "Retained old operation never crosses revision",
+      "Failed new Open still invalidates preceding session",
+      "Actual Core event is running before cancellation",
+      "Actual Core terminal view changes running status to stopped only after inactive",
+      "Shutdown clears owner and session"
+    ]
+  },
+  "validation": {
+    "bundleBuild": true,
+    "typecheck": true,
+    "rawNotificationRegression": {
+      "passed": true,
+      "cases": 12,
+      "assertions": 80
+    },
+    "sourceModulesUnchanged": true
+  }
+}

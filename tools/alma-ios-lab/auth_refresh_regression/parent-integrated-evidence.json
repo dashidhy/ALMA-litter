@@ -1,0 +1,19 @@
+{
+  "status": "M4 full local-profile mobile Rust check passed after parent wiring",
+  "run_owner": "main",
+  "log_source": "tools/alma-ios-lab/.cache/cargo-check-ios-local-6.log",
+  "log_copy": "cargo-check-ios-local-6.log",
+  "log_sha256": "df3d58fece39bc7a04cd6668e635d8dc050d18971bb840ebe87677752ee1acbd",
+  "elapsed_seconds": 16.03,
+  "mobile_library_warnings": 31,
+  "error_diagnostics": 0,
+  "parent_changes": [
+    "pub mod auth_refresh",
+    "ServerSession::reject_for_runtime",
+    "shared server_response_sender with known-route/Codex-only fallback/unknown-route rejection"
+  ],
+  "no_duplicate_large_build_by_this_agent": true,
+  "native_generated_interface_fixture_typecheck": "passed",
+  "real_accounts_or_auth_network_used": false,
+  "remaining": "production static archive/full bindings and native qualification are parent/Averroes work"
+}

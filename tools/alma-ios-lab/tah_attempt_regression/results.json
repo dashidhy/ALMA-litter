@@ -1,0 +1,114 @@
+{
+  "source_hashes_before": {
+    "tah_attempt.rs": "646196fa01b4560b0d267f116e8585fd9e093fa3cf354501b892d0c093b267bc",
+    "scoped_files.rs": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1"
+  },
+  "source_paths": {
+    "tah_attempt.rs": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/tah_attempt.rs",
+    "scoped_files.rs": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/scoped_files.rs"
+  },
+  "scope": "Original Mac builder/projector fixtures -> unchanged production Rust module; no mobile build, device, model, auth or network",
+  "limits": {
+    "new_cache_bytes": 1073741824,
+    "jobs": 2,
+    "build_seconds": 180
+  },
+  "runs": [
+    {
+      "command": [
+        "node",
+        "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/node_modules/vitest/vitest.mjs",
+        "run",
+        "--config",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_attempt_regression/vitest.config.ts"
+      ],
+      "exit": 0,
+      "host_seconds": 0.8885,
+      "deadline_seconds": 30,
+      "stopped_reason": null,
+      "log": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_attempt_regression/.cache/generate.log"
+    },
+    {
+      "command": [
+        "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/bin/cargo",
+        "test",
+        "--offline",
+        "-j",
+        "2",
+        "--target",
+        "aarch64-apple-darwin",
+        "--manifest-path",
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_attempt_regression/.cache/harness/Cargo.toml",
+        "--",
+        "--test-threads=1"
+      ],
+      "exit": 0,
+      "host_seconds": 2.0124,
+      "deadline_seconds": 180,
+      "stopped_reason": null,
+      "log": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_attempt_regression/.cache/rust-tests.log"
+    }
+  ],
+  "cases": {
+    "capture_candidates_exercised": false,
+    "cases": [
+      {
+        "error": null,
+        "name": "valid_raw_exact_import",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "valid_actor_exact_import",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "wrong_attempt_and_material_hash",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "extra_missing_duplicate_files",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "escaped_path_and_noncanonical_write_root",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "reused_attempt_id_preserves_first_view",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "malformed_manifest_no_output_io",
+        "status": "passed"
+      },
+      {
+        "error": null,
+        "name": "prompt_channel_mismatch",
+        "status": "passed"
+      }
+    ],
+    "diagnostic": null,
+    "no_io_definition": "Rejected input creates no workspace/output tree; reading the inbound manifest is required and not forbidden",
+    "passed": true,
+    "scope": "Actual unchanged Rust prepare and ScopedFiles modules; original TS builder/projector bytes; no phone/model/auth/network"
+  },
+  "passed": true,
+  "source_hashes_after": {
+    "tah_attempt.rs": "646196fa01b4560b0d267f116e8585fd9e093fa3cf354501b892d0c093b267bc",
+    "scoped_files.rs": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1"
+  },
+  "production_sources_unchanged": true,
+  "cache_bytes": 251640766,
+  "test_hashes": {
+    "tests.rs": "3ab83db2b03f9167476428c6607ab2e01e570f2d9720c41315b32b0854badf60",
+    "generate.test.ts": "30d43de57c30e6226bdb13705459902e85bdf1f33c641f286668ebbb8fa7d908",
+    "run.py": "270c81ac2687aae7a4c60580de0a961acfec3d0c2c55f0b0d4b82817087583cb",
+    "vitest.config.ts": "dbd0532f921ba5eaf502a06c5067815184b3a2885e321a6f7d35933b82d1d7e4"
+  }
+}

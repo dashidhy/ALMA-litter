@@ -1,0 +1,16 @@
+
+running 11 tests
+test structured_turn_tests::closed_stream_rejects_even_with_final_answer ... ok
+test session::events::tests::local_interrupt_is_interrupted_without_error ... ok
+test structured_turn_tests::completed_with_error_rejects_final_answer ... ok
+test structured_turn_tests::lag_rejects_even_if_final_answer_and_completion_are_still_buffered ... ok
+test structured_turn_tests::matching_final_answer_and_completion_succeed ... ok
+test structured_turn_tests::wrong_turn_completion_alone_cannot_succeed ... ok
+test structured_turn_tests::commentary_partial_unknown_and_absent_final_are_rejected ... ok
+test structured_turn_tests::unrelated_completions_are_ignored ... ok
+test structured_turn_tests::interrupted_failed_and_in_progress_without_error_reject_final_answer ... ok
+test structured_turn_tests::unrelated_final_answers_cannot_satisfy_completion ... ok
+test session::events::tests::turn_completed_preserves_upstream_status_and_error ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,2956 @@
+{
+  "passed": true,
+  "artifacts": "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l",
+  "commands": [
+    [
+      "xcrun",
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-strict-concurrency=complete",
+      "-parse-as-library",
+      "-module-cache-path",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/cache",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHJournalRPC.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHJournalStore.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHRuntimeResources.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHRuntimeWire.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Presentation/TAHHistoryView.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Presentation/TAHMobileView.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Presentation/TAHPresentationContract.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/AlmaTAHJavaScriptHost.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHJavaScriptBytePrimitives.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHMemoryWorkingLogReader.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHMobileController.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHWebPresentationBridge.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHWorkingLogChannel.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/ChannelChecks.swift",
+      "-lsqlite3",
+      "-framework",
+      "JavaScriptCore",
+      "-o",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "--list"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-first-nil-reset"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-first-state-roundtrip"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-10000-noack-latest-delta-and-invalid-acks"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-pane-close-reopen-with-old-frame-inflight"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-large-changed-body-and-metadata-only-delta"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-unsubscribe-cancels-pending-encode-and-new-subscription"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-resubscribe-old-flight-and-encode-generation"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "sender-send-failure-unsubscribes"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-blocked-10000-events-resume-one-latest-open"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-valid-upsert-remove-order-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-unchanged-fast-path-settles"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-samehash-new-sourceKey-flushes-finished-metadata"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-repeated-summary-preserves-Core-finished-metadata"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-superseded-operation-releases-live-stream"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-source-error-preserves-prior-state-and-retry"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-close-reopen-discards-late-open-and-releases-lease"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-supersede-during-next-discards-late-data"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-schema-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-action-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-operation-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-stream-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-base-revision-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-revision-skip-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-unexpected-reset-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-duplicate-event-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-duplicate-removed-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-duplicate-order-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-unknown-order-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-missing-order-ID-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-overlapping-upsert-remove-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-private-event-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-disguised-guardian-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-513-events-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-4MiB-body-bound-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-unchanged-wrong-stream-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-unchanged-wrong-revision-preserves-events-and-cursor"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-initial-base"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "reader-rejects-initial-revision"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "integration-ACK-gates-open-next-coalesces-and-unchanged-settles"
+    ],
+    [
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/checks",
+      "integration-synchronous-send-ACK-reentrancy"
+    ],
+    [
+      "xcrun",
+      "--sdk",
+      "iphonesimulator",
+      "--show-sdk-path"
+    ],
+    [
+      "xcrun",
+      "--sdk",
+      "iphonesimulator",
+      "swiftc",
+      "-swift-version",
+      "6",
+      "-strict-concurrency=complete",
+      "-parse-as-library",
+      "-module-cache-path",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/cache",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.2.sdk",
+      "-target",
+      "arm64-apple-ios18.0-simulator",
+      "-typecheck",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHJournalRPC.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHJournalStore.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHRuntimeResources.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Persistence/TAHRuntimeWire.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Presentation/TAHPresentationContract.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/AlmaTAHJavaScriptHost.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHJavaScriptBytePrimitives.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHMemoryWorkingLogReader.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHMobileController.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHWebPresentationBridge.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/sources/Runtime/TAHWorkingLogChannel.swift",
+      "/private/var/folders/28/0hwxyw9n7t5db9gtzln5vpgc0000gn/T/alma-working-channel-47r8v07l/ChannelChecks.swift"
+    ]
+  ],
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHJournalRPC.swift": "c92ae8f9d9d378e5da192076b13810db7c7343789c1f6d7053332c74f59b1b6a",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHJournalStore.swift": "e2eff11be950601fce8272837ac636c5be07732036cd513b343f7992b211215f",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeResources.swift": "64962420cf4800948f7cef18a159e048ef376807c3d46189f4e45ea9d7d7189e",
+    "apps/ios/Sources/AlmaTAH/Persistence/TAHRuntimeWire.swift": "148601cfae190d902833e1ee88654c6da3dc35ad51b5675221b045d5167a48f4",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHHistoryView.swift": "d7913de2b2a635cd3a4ecc67204bd9ae9f6021d65e970a2ed4336c48cb919a5e",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHMobileView.swift": "8863c06378e819f65d579550885d8a8361ca7980846c69eb455103325b7cf195",
+    "apps/ios/Sources/AlmaTAH/Presentation/TAHPresentationContract.swift": "1f1226f3229f649c530497c1240755a858027034611f7f05a242fefe77c14077",
+    "apps/ios/Sources/AlmaTAH/Runtime/AlmaTAHJavaScriptHost.swift": "6765073bc1b21a2aa340954dd2892eff0cf6a4f8bb0bb2f4e99d90e9853d929d",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHJavaScriptBytePrimitives.swift": "7487a148e1d34d485f49f2732fbc48c4f1a92136683b090954d3dc6a3684864a",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMemoryWorkingLogReader.swift": "1b5712722baf0fe29326ad306c58258892c2d27b943ce4834f9aac9cf240bee5",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "76977e74b637a0c2875f03d2fe337dd05d3268c4483541a722f68f17f5fc4718",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWebPresentationBridge.swift": "79099935a327f5195fc924227e96cf4c6ed9cbb63da3441a60a4fa3dafb3988b",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHWorkingLogChannel.swift": "099918f051cf16222e03dc6f63388b386103dcfb847b033f5b30cf2e457c6270"
+  },
+  "checks": [
+    {
+      "deltaCount": 0,
+      "frameCount": 1,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [],
+          "eventIDs": [],
+          "metadataContainsEvents": false,
+          "order": [],
+          "orderCount": 0,
+          "paneID": null,
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 1,
+          "upsertCount": 0,
+          "wireBytes": 128
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-first-nil-reset",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true
+      ],
+      "resetCount": 1
+    },
+    {
+      "deltaCount": 0,
+      "frameCount": 1,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            25
+          ],
+          "eventIDs": [
+            "e"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "e"
+          ],
+          "orderCount": 1,
+          "paneID": "pane",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 2,
+          "upsertCount": 1,
+          "wireBytes": 532
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-first-state-roundtrip",
+      "passed": true,
+      "readinessTransitions": [
+        false
+      ],
+      "resetCount": 1
+    },
+    {
+      "deltaCount": 1,
+      "frameCount": 2,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            1,
+            1600000,
+            6
+          ],
+          "eventIDs": [
+            "edit",
+            "keep",
+            "gone"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "edit",
+            "keep",
+            "gone"
+          ],
+          "orderCount": 3,
+          "paneID": "pane",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 3,
+          "upsertCount": 3,
+          "wireBytes": 1600828
+        },
+        {
+          "baseSequence": 1,
+          "detailBytes": [
+            6,
+            5
+          ],
+          "eventIDs": [
+            "added",
+            "edit"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "added",
+            "edit",
+            "keep"
+          ],
+          "orderCount": 3,
+          "paneID": "pane",
+          "removed": [
+            "gone"
+          ],
+          "removedCount": 1,
+          "reset": false,
+          "sequence": 2,
+          "subscriptionID": 3,
+          "upsertCount": 2,
+          "wireBytes": 692
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-10000-noack-latest-delta-and-invalid-acks",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true
+      ],
+      "resetCount": 1
+    },
+    {
+      "deltaCount": 0,
+      "frameCount": 2,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            6
+          ],
+          "eventIDs": [
+            "old"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "old"
+          ],
+          "orderCount": 1,
+          "paneID": "old",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 4,
+          "upsertCount": 1,
+          "wireBytes": 512
+        },
+        {
+          "baseSequence": 1,
+          "detailBytes": [
+            6
+          ],
+          "eventIDs": [
+            "new"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "new"
+          ],
+          "orderCount": 1,
+          "paneID": "new",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 2,
+          "subscriptionID": 4,
+          "upsertCount": 1,
+          "wireBytes": 512
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-pane-close-reopen-with-old-frame-inflight",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true
+      ],
+      "resetCount": 2
+    },
+    {
+      "deltaCount": 2,
+      "frameCount": 3,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            700000,
+            700000
+          ],
+          "eventIDs": [
+            "keep",
+            "edit"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "keep",
+            "edit"
+          ],
+          "orderCount": 2,
+          "paneID": "large",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 14,
+          "upsertCount": 2,
+          "wireBytes": 1600667
+        },
+        {
+          "baseSequence": 1,
+          "detailBytes": [
+            700007
+          ],
+          "eventIDs": [
+            "edit"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "keep",
+            "edit"
+          ],
+          "orderCount": 2,
+          "paneID": "large",
+          "removed": [],
+          "removedCount": 0,
+          "reset": false,
+          "sequence": 2,
+          "subscriptionID": 14,
+          "upsertCount": 1,
+          "wireBytes": 800526
+        },
+        {
+          "baseSequence": 2,
+          "detailBytes": [],
+          "eventIDs": [],
+          "metadataContainsEvents": false,
+          "order": [
+            "keep",
+            "edit"
+          ],
+          "orderCount": 2,
+          "paneID": "large",
+          "removed": [],
+          "removedCount": 0,
+          "reset": false,
+          "sequence": 3,
+          "subscriptionID": 14,
+          "upsertCount": 0,
+          "wireBytes": 390
+        }
+      ],
+      "metadataOnlyDeltaCount": 1,
+      "name": "sender-large-changed-body-and-metadata-only-delta",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "resetCount": 1
+    },
+    {
+      "deltaCount": 0,
+      "frameCount": 1,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            6
+          ],
+          "eventIDs": [
+            "new"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "new"
+          ],
+          "orderCount": 1,
+          "paneID": "new",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 6,
+          "upsertCount": 1,
+          "wireBytes": 512
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-unsubscribe-cancels-pending-encode-and-new-subscription",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true
+      ],
+      "resetCount": 1
+    },
+    {
+      "deltaCount": 0,
+      "frameCount": 2,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [],
+          "eventIDs": [],
+          "metadataContainsEvents": false,
+          "order": [],
+          "orderCount": 0,
+          "paneID": "old",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 10,
+          "upsertCount": 0,
+          "wireBytes": 355
+        },
+        {
+          "baseSequence": 0,
+          "detailBytes": [
+            6
+          ],
+          "eventIDs": [
+            "latest"
+          ],
+          "metadataContainsEvents": false,
+          "order": [
+            "latest"
+          ],
+          "orderCount": 1,
+          "paneID": "latest",
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 12,
+          "upsertCount": 1,
+          "wireBytes": 522
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-resubscribe-old-flight-and-encode-generation",
+      "passed": true,
+      "readinessTransitions": [
+        false,
+        true
+      ],
+      "resetCount": 2
+    },
+    {
+      "deltaCount": 0,
+      "frameCount": 1,
+      "frames": [
+        {
+          "baseSequence": 0,
+          "detailBytes": [],
+          "eventIDs": [],
+          "metadataContainsEvents": false,
+          "order": [],
+          "orderCount": 0,
+          "paneID": null,
+          "removed": [],
+          "removedCount": 0,
+          "reset": true,
+          "sequence": 1,
+          "subscriptionID": 9,
+          "upsertCount": 0,
+          "wireBytes": 128
+        }
+      ],
+      "metadataOnlyDeltaCount": 0,
+      "name": "sender-send-failure-unsubscribes",
+      "passed": true,
+      "readinessTransitions": [
+        false
+      ],
+      "resetCount": 1
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-blocked-10000-events-resume-one-latest-open",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "98cc14d9-eb5b-46cf-9713-51054fea1800",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "latest"
+          ],
+          "failed": false,
+          "id": "98cc14d9-eb5b-46cf-9713-51054fea1800",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-valid-upsert-remove-order-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "9855f956-ca4b-40df-ba75-8028123c38fa",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "edit",
+            "gone",
+            "keep"
+          ],
+          "failed": false,
+          "id": "9855f956-ca4b-40df-ba75-8028123c38fa",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "added",
+            "keep",
+            "edit"
+          ],
+          "failed": false,
+          "id": "9855f956-ca4b-40df-ba75-8028123c38fa",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-unchanged-fast-path-settles",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "7abffb0a-a4b8-4c71-9660-6ae59f770885",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "7abffb0a-a4b8-4c71-9660-6ae59f770885",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-samehash-new-sourceKey-flushes-finished-metadata",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "0fded4f6-f46f-4447-9738-43933a37d260",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "0fded4f6-f46f-4447-9738-43933a37d260",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "0fded4f6-f46f-4447-9738-43933a37d260",
+          "limited": false,
+          "loading": false,
+          "progressing": false,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-repeated-summary-preserves-Core-finished-metadata",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "c511ed78-5b3b-40bf-92e9-0360d11c5507",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "c511ed78-5b3b-40bf-92e9-0360d11c5507",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "c511ed78-5b3b-40bf-92e9-0360d11c5507",
+          "limited": false,
+          "loading": false,
+          "progressing": false,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-superseded-operation-releases-live-stream",
+      "passed": true,
+      "releases": [
+        "stream-1"
+      ],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "9517f985-93d9-496c-a370-fa2482817ab6",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "9517f985-93d9-496c-a370-fa2482817ab6",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "9517f985-93d9-496c-a370-fa2482817ab6",
+          "limited": false,
+          "loading": false,
+          "progressing": false,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-source-error-preserves-prior-state-and-retry",
+      "passed": true,
+      "releases": [
+        "stream-1"
+      ],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "beb0aa50-5ba9-4f83-9198-4c4a05e5545e",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "beb0aa50-5ba9-4f83-9198-4c4a05e5545e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "beb0aa50-5ba9-4f83-9198-4c4a05e5545e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "recovered"
+          ],
+          "failed": false,
+          "id": "beb0aa50-5ba9-4f83-9198-4c4a05e5545e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-close-reopen-discards-late-open-and-releases-lease",
+      "passed": true,
+      "releases": [
+        "stream-1"
+      ],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "cbc9046e-e987-4216-8a49-36a23d9a20bf",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        null,
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "b52916b2-e54f-47d2-be6f-84c59c7db845",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "new"
+          ],
+          "failed": false,
+          "id": "b52916b2-e54f-47d2-be6f-84c59c7db845",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-supersede-during-next-discards-late-data",
+      "passed": true,
+      "releases": [
+        "stream-1"
+      ],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "b9784e5e-fc9d-4f5e-b65e-9a6eba9fd820",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "b9784e5e-fc9d-4f5e-b65e-9a6eba9fd820",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "b9784e5e-fc9d-4f5e-b65e-9a6eba9fd820",
+          "limited": false,
+          "loading": false,
+          "progressing": false,
+          "superseded": true
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-schema-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "68eab979-6c97-4029-ae03-ff51bb2b9b21",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "68eab979-6c97-4029-ae03-ff51bb2b9b21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "68eab979-6c97-4029-ae03-ff51bb2b9b21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "68eab979-6c97-4029-ae03-ff51bb2b9b21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-action-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "532858d6-385f-4a2c-affd-0fe89f03e942",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "532858d6-385f-4a2c-affd-0fe89f03e942",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "532858d6-385f-4a2c-affd-0fe89f03e942",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "532858d6-385f-4a2c-affd-0fe89f03e942",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-operation-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "9ee2b9e2-068f-499a-946d-f7a569231a7c",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "9ee2b9e2-068f-499a-946d-f7a569231a7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "9ee2b9e2-068f-499a-946d-f7a569231a7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "9ee2b9e2-068f-499a-946d-f7a569231a7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-stream-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "2fe23a3f-b977-4254-8154-c23fd0edad67",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "2fe23a3f-b977-4254-8154-c23fd0edad67",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "2fe23a3f-b977-4254-8154-c23fd0edad67",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "2fe23a3f-b977-4254-8154-c23fd0edad67",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-base-revision-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "d0e4247d-c4f3-4934-a343-09cdbf81b006",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "d0e4247d-c4f3-4934-a343-09cdbf81b006",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "d0e4247d-c4f3-4934-a343-09cdbf81b006",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "d0e4247d-c4f3-4934-a343-09cdbf81b006",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-revision-skip-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "4cbf393f-4d3b-435e-a9da-cd1b9050bd9f",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "4cbf393f-4d3b-435e-a9da-cd1b9050bd9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "4cbf393f-4d3b-435e-a9da-cd1b9050bd9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "4cbf393f-4d3b-435e-a9da-cd1b9050bd9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-unexpected-reset-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "14f0cfb7-1aa3-41d7-b3ae-e2c10f637db0",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "14f0cfb7-1aa3-41d7-b3ae-e2c10f637db0",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "14f0cfb7-1aa3-41d7-b3ae-e2c10f637db0",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "14f0cfb7-1aa3-41d7-b3ae-e2c10f637db0",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-duplicate-event-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "6452559b-0a1e-440a-8828-b8428adc56c7",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "6452559b-0a1e-440a-8828-b8428adc56c7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "6452559b-0a1e-440a-8828-b8428adc56c7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "6452559b-0a1e-440a-8828-b8428adc56c7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-duplicate-removed-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "fdd7b9e7-26f7-401c-bfff-d2a48d7edf71",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "fdd7b9e7-26f7-401c-bfff-d2a48d7edf71",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "fdd7b9e7-26f7-401c-bfff-d2a48d7edf71",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "fdd7b9e7-26f7-401c-bfff-d2a48d7edf71",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-duplicate-order-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "738330d1-c27f-4b7c-845f-ff6a8684ff21",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "738330d1-c27f-4b7c-845f-ff6a8684ff21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "738330d1-c27f-4b7c-845f-ff6a8684ff21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "738330d1-c27f-4b7c-845f-ff6a8684ff21",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-unknown-order-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "5cbb0c61-6e77-4ae5-9a1c-a18d1b3e2dc7",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "5cbb0c61-6e77-4ae5-9a1c-a18d1b3e2dc7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "5cbb0c61-6e77-4ae5-9a1c-a18d1b3e2dc7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "5cbb0c61-6e77-4ae5-9a1c-a18d1b3e2dc7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-missing-order-ID-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "8178fefb-9cbc-4b2a-8406-982c2dfbd5e6",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "8178fefb-9cbc-4b2a-8406-982c2dfbd5e6",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "8178fefb-9cbc-4b2a-8406-982c2dfbd5e6",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "8178fefb-9cbc-4b2a-8406-982c2dfbd5e6",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-overlapping-upsert-remove-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "e868c397-5f3b-48bf-88a0-2f7e2309ce4b",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "e868c397-5f3b-48bf-88a0-2f7e2309ce4b",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "e868c397-5f3b-48bf-88a0-2f7e2309ce4b",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "e868c397-5f3b-48bf-88a0-2f7e2309ce4b",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-private-event-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "03074e36-08fa-40a9-966a-147195123cf7",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "03074e36-08fa-40a9-966a-147195123cf7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "03074e36-08fa-40a9-966a-147195123cf7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "03074e36-08fa-40a9-966a-147195123cf7",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-disguised-guardian-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "7f52f2cf-5eea-4dbb-b2a7-10b0c05979b8",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "7f52f2cf-5eea-4dbb-b2a7-10b0c05979b8",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "7f52f2cf-5eea-4dbb-b2a7-10b0c05979b8",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "7f52f2cf-5eea-4dbb-b2a7-10b0c05979b8",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-513-events-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "d8aa1b37-6f87-41ef-870c-42fefd622d9f",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "d8aa1b37-6f87-41ef-870c-42fefd622d9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "d8aa1b37-6f87-41ef-870c-42fefd622d9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "d8aa1b37-6f87-41ef-870c-42fefd622d9f",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-4MiB-body-bound-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "ea531a54-0ae1-4b53-a836-af5004b85f7c",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "ea531a54-0ae1-4b53-a836-af5004b85f7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "ea531a54-0ae1-4b53-a836-af5004b85f7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "ea531a54-0ae1-4b53-a836-af5004b85f7c",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-unchanged-wrong-stream-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "e2060172-7f23-40d1-b349-1a5c2c7fe55e",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "e2060172-7f23-40d1-b349-1a5c2c7fe55e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "e2060172-7f23-40d1-b349-1a5c2c7fe55e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "e2060172-7f23-40d1-b349-1a5c2c7fe55e",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        },
+        {
+          "fields": {
+            "afterRevision": "integer(1)",
+            "streamID": "string(\"stream-1\")"
+          },
+          "method": "action.workingNext"
+        }
+      ],
+      "name": "reader-rejects-unchanged-wrong-revision-preserves-events-and-cursor",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "f3d3eb7e-55c9-4fed-ad37-0069ff9d6eed",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "f3d3eb7e-55c9-4fed-ad37-0069ff9d6eed",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": true,
+          "id": "f3d3eb7e-55c9-4fed-ad37-0069ff9d6eed",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [
+            "seed"
+          ],
+          "failed": false,
+          "id": "f3d3eb7e-55c9-4fed-ad37-0069ff9d6eed",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-rejects-initial-base",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "1e556558-5106-46da-9770-cf2678c9470d",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [],
+          "failed": true,
+          "id": "1e556558-5106-46da-9770-cf2678c9470d",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "calls": [
+        {
+          "fields": {
+            "actionID": "string(\"a\")",
+            "operationID": "string(\"op\")"
+          },
+          "method": "action.workingOpen"
+        }
+      ],
+      "name": "reader-rejects-initial-revision",
+      "passed": true,
+      "releases": [],
+      "states": [
+        null,
+        {
+          "eventIDs": [],
+          "failed": false,
+          "id": "9d71ee7f-4572-4ce7-bd9f-a451628677c9",
+          "limited": false,
+          "loading": true,
+          "progressing": true,
+          "superseded": false
+        },
+        {
+          "eventIDs": [],
+          "failed": true,
+          "id": "9d71ee7f-4572-4ce7-bd9f-a451628677c9",
+          "limited": false,
+          "loading": false,
+          "progressing": true,
+          "superseded": false
+        }
+      ]
+    },
+    {
+      "name": "integration-ACK-gates-open-next-coalesces-and-unchanged-settles",
+      "passed": true,
+      "reader": {
+        "calls": [
+          {
+            "fields": {
+              "actionID": "string(\"a\")",
+              "operationID": "string(\"op\")"
+            },
+            "method": "action.workingOpen"
+          },
+          {
+            "fields": {
+              "afterRevision": "integer(1)",
+              "streamID": "string(\"stream-1\")"
+            },
+            "method": "action.workingNext"
+          },
+          {
+            "fields": {
+              "afterRevision": "integer(2)",
+              "streamID": "string(\"stream-1\")"
+            },
+            "method": "action.workingNext"
+          }
+        ],
+        "releases": [],
+        "states": [
+          null,
+          {
+            "eventIDs": [],
+            "failed": false,
+            "id": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "limited": false,
+            "loading": true,
+            "progressing": true,
+            "superseded": false
+          },
+          {
+            "eventIDs": [
+              "seed"
+            ],
+            "failed": false,
+            "id": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "limited": false,
+            "loading": false,
+            "progressing": true,
+            "superseded": false
+          },
+          {
+            "eventIDs": [
+              "seed"
+            ],
+            "failed": false,
+            "id": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "limited": false,
+            "loading": false,
+            "progressing": true,
+            "superseded": false
+          }
+        ]
+      },
+      "sender": {
+        "deltaCount": 2,
+        "frameCount": 4,
+        "frames": [
+          {
+            "baseSequence": 0,
+            "detailBytes": [],
+            "eventIDs": [],
+            "metadataContainsEvents": false,
+            "order": [],
+            "orderCount": 0,
+            "paneID": null,
+            "removed": [],
+            "removedCount": 0,
+            "reset": true,
+            "sequence": 1,
+            "subscriptionID": 70,
+            "upsertCount": 0,
+            "wireBytes": 129
+          },
+          {
+            "baseSequence": 1,
+            "detailBytes": [],
+            "eventIDs": [],
+            "metadataContainsEvents": false,
+            "order": [],
+            "orderCount": 0,
+            "paneID": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "removed": [],
+            "removedCount": 0,
+            "reset": true,
+            "sequence": 2,
+            "subscriptionID": 70,
+            "upsertCount": 0,
+            "wireBytes": 387
+          },
+          {
+            "baseSequence": 2,
+            "detailBytes": [
+              6
+            ],
+            "eventIDs": [
+              "seed"
+            ],
+            "metadataContainsEvents": false,
+            "order": [
+              "seed"
+            ],
+            "orderCount": 1,
+            "paneID": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "removed": [],
+            "removedCount": 0,
+            "reset": false,
+            "sequence": 3,
+            "subscriptionID": 70,
+            "upsertCount": 1,
+            "wireBytes": 549
+          },
+          {
+            "baseSequence": 3,
+            "detailBytes": [
+              6
+            ],
+            "eventIDs": [
+              "seed"
+            ],
+            "metadataContainsEvents": false,
+            "order": [
+              "seed"
+            ],
+            "orderCount": 1,
+            "paneID": "d6d721e2-e9c9-4028-82e8-0bad05de7460",
+            "removed": [],
+            "removedCount": 0,
+            "reset": false,
+            "sequence": 4,
+            "subscriptionID": 70,
+            "upsertCount": 1,
+            "wireBytes": 549
+          }
+        ],
+        "metadataOnlyDeltaCount": 0,
+        "readinessTransitions": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "resetCount": 2
+      }
+    },
+    {
+      "name": "integration-synchronous-send-ACK-reentrancy",
+      "passed": true,
+      "reader": {
+        "calls": [
+          {
+            "fields": {
+              "actionID": "string(\"a\")",
+              "operationID": "string(\"op\")"
+            },
+            "method": "action.workingOpen"
+          },
+          {
+            "fields": {
+              "afterRevision": "integer(1)",
+              "streamID": "string(\"stream-1\")"
+            },
+            "method": "action.workingNext"
+          },
+          {
+            "fields": {
+              "afterRevision": "integer(2)",
+              "streamID": "string(\"stream-1\")"
+            },
+            "method": "action.workingNext"
+          }
+        ],
+        "releases": [],
+        "states": [
+          null,
+          {
+            "eventIDs": [],
+            "failed": false,
+            "id": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "limited": false,
+            "loading": true,
+            "progressing": true,
+            "superseded": false
+          },
+          {
+            "eventIDs": [
+              "seed"
+            ],
+            "failed": false,
+            "id": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "limited": false,
+            "loading": false,
+            "progressing": true,
+            "superseded": false
+          },
+          {
+            "eventIDs": [
+              "seed"
+            ],
+            "failed": false,
+            "id": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "limited": false,
+            "loading": false,
+            "progressing": true,
+            "superseded": false
+          },
+          {
+            "eventIDs": [
+              "seed"
+            ],
+            "failed": false,
+            "id": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "limited": false,
+            "loading": false,
+            "progressing": true,
+            "superseded": false
+          }
+        ]
+      },
+      "sender": {
+        "deltaCount": 3,
+        "frameCount": 5,
+        "frames": [
+          {
+            "baseSequence": 0,
+            "detailBytes": [],
+            "eventIDs": [],
+            "metadataContainsEvents": false,
+            "order": [],
+            "orderCount": 0,
+            "paneID": null,
+            "removed": [],
+            "removedCount": 0,
+            "reset": true,
+            "sequence": 1,
+            "subscriptionID": 70,
+            "upsertCount": 0,
+            "wireBytes": 129
+          },
+          {
+            "baseSequence": 1,
+            "detailBytes": [],
+            "eventIDs": [],
+            "metadataContainsEvents": false,
+            "order": [],
+            "orderCount": 0,
+            "paneID": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "removed": [],
+            "removedCount": 0,
+            "reset": true,
+            "sequence": 2,
+            "subscriptionID": 70,
+            "upsertCount": 0,
+            "wireBytes": 387
+          },
+          {
+            "baseSequence": 2,
+            "detailBytes": [
+              6
+            ],
+            "eventIDs": [
+              "seed"
+            ],
+            "metadataContainsEvents": false,
+            "order": [
+              "seed"
+            ],
+            "orderCount": 1,
+            "paneID": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "removed": [],
+            "removedCount": 0,
+            "reset": false,
+            "sequence": 3,
+            "subscriptionID": 70,
+            "upsertCount": 1,
+            "wireBytes": 549
+          },
+          {
+            "baseSequence": 3,
+            "detailBytes": [
+              1
+            ],
+            "eventIDs": [
+              "seed"
+            ],
+            "metadataContainsEvents": false,
+            "order": [
+              "seed"
+            ],
+            "orderCount": 1,
+            "paneID": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "removed": [],
+            "removedCount": 0,
+            "reset": false,
+            "sequence": 4,
+            "subscriptionID": 70,
+            "upsertCount": 1,
+            "wireBytes": 544
+          },
+          {
+            "baseSequence": 4,
+            "detailBytes": [
+              1
+            ],
+            "eventIDs": [
+              "seed"
+            ],
+            "metadataContainsEvents": false,
+            "order": [
+              "seed"
+            ],
+            "orderCount": 1,
+            "paneID": "8f7ab4af-0824-4647-afa0-2e64dbb97f67",
+            "removed": [],
+            "removedCount": 0,
+            "reset": false,
+            "sequence": 5,
+            "subscriptionID": 70,
+            "upsertCount": 1,
+            "wireBytes": 544
+          }
+        ],
+        "metadataOnlyDeltaCount": 0,
+        "readinessTransitions": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true
+        ],
+        "resetCount": 2
+      }
+    }
+  ],
+  "providerCalls": 0,
+  "phoneTouched": false,
+  "timedSleeps": 0,
+  "scheduling": "manual continuations; 128 bounded yields only for no-work assertions",
+  "caseTimeoutSeconds": 20,
+  "fixtureSHA256": "d7233d77e2c238df7912daac678624de899e224494e5e37a128d8944e592b635",
+  "fixtureSourceSHA256": "47f83e93165f3ec7d761b445f0fb363910934570e42c259e2ec3d22fc4ad8c35",
+  "hostCompilePassed": true,
+  "simulatorTypecheckPassed": true,
+  "sourcesChangedDuringRun": []
+}

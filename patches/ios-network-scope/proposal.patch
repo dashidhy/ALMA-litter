@@ -1,0 +1,818 @@
+--- a/apps/ios/scripts/build-rust.sh
++++ b/apps/ios/scripts/build-rust.sh
+@@ -35,7 +35,8 @@
+ FAST_MACABI=0
+ FORCE_BINDINGS=0
+ SKIP_BINDINGS=0
+-CARGO_FEATURES=""
++CARGO_FEATURES=()
++ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
+ PROFILE="release"
+ CARGO_PROFILE_FLAG="--release"
+ IOS_RUST_PROFILE="${IOS_RUST_PROFILE:-release}"
+@@ -99,15 +100,24 @@
+     --skip-bindings)
+       SKIP_BINDINGS=1
+       ;;
++    --alma-local)
++      ALMA_LOCAL=1
++      ;;
+     --rpc-trace)
+-      CARGO_FEATURES="--features rpc-trace"
++      CARGO_FEATURES+=(--features rpc-trace)
+       ;;
+     *)
+-      echo "usage: $(basename "$0") [--preserve-current|--recorded-gitlink] [--device-only] [--fast-device] [--fast-sim] [--macabi-only] [--fast-macabi] [--force-bindings] [--skip-bindings] [--rpc-trace]" >&2
++      echo "usage: $(basename "$0") [--preserve-current|--recorded-gitlink] [--device-only] [--fast-device] [--fast-sim] [--macabi-only] [--fast-macabi] [--force-bindings] [--skip-bindings] [--rpc-trace] [--alma-local]" >&2
+       exit 1
+       ;;
+   esac
+ done
++
++export LITTER_ALMA_LOCAL="$ALMA_LOCAL"
++if [ "$ALMA_LOCAL" = "1" ]; then
++  CARGO_FEATURES+=(--no-default-features)
++  export LITTER_SKIP_ALLEYCAT_UPDATE=1
++fi
+ 
+ PATCHES_WERE_APPLIED=()
+ for PATCH_FILE in "${PATCH_FILES[@]}"; do
+@@ -335,18 +345,18 @@
+ 
+ if [ "$DEVICE_ONLY" -eq 1 ]; then
+   echo "==> Building codex-mobile-client for aarch64-apple-ios ($PROFILE)..."
+-  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib $CARGO_FEATURES
++  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   check_ish_vdso_for aarch64-apple-ios
+   copy_device_artifact
+ elif [ "$SIM_ONLY" -eq 1 ]; then
+   echo "==> Building codex-mobile-client for aarch64-apple-ios-sim ($PROFILE)..."
+-  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib $CARGO_FEATURES
++  cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   check_ish_vdso_for aarch64-apple-ios-sim
+   copy_sim_artifact "$CARGO_TARGET_DIR_EFFECTIVE/aarch64-apple-ios-sim/$PROFILE/libcodex_mobile_client.a"
+ elif [ "$MACABI_ONLY" -eq 1 ]; then
+   if [ "$FAST_MACABI" -eq 1 ]; then
+     echo "==> Building codex-mobile-client for $MACABI_HOST_TARGET ($PROFILE)..."
+-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target "$MACABI_HOST_TARGET" --crate-type staticlib $CARGO_FEATURES
++    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target "$MACABI_HOST_TARGET" --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+     check_ish_vdso_for "$MACABI_HOST_TARGET"
+     copy_if_changed "$CARGO_TARGET_DIR_EFFECTIVE/$MACABI_HOST_TARGET/$PROFILE/libcodex_mobile_client.a" \
+       "$GENERATED_MACABI_DIR/libcodex_mobile_client.a"
+@@ -354,11 +364,11 @@
+     echo "==> Building codex-mobile-client for Mac Catalyst macabi targets ($PROFILE) in parallel..."
+ 
+     build_macabi_arm64() {
+-      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
++      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+     }
+ 
+     build_macabi_x86_64() {
+-      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
++      cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+     }
+ 
+     build_macabi_arm64 &
+@@ -386,19 +396,19 @@
+   echo "==> Building codex-mobile-client for device, simulator, and Catalyst macabi targets ($PROFILE) in parallel..."
+ 
+   build_device() {
+-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib $CARGO_FEATURES
++    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   }
+ 
+   build_sim() {
+-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib $CARGO_FEATURES
++    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-sim --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   }
+ 
+   build_macabi_arm64() {
+-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
++    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target aarch64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   }
+ 
+   build_macabi_x86_64() {
+-    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib $CARGO_FEATURES
++    cargo rustc --manifest-path "$RUST_BRIDGE_DIR/Cargo.toml" -p codex-mobile-client $CARGO_PROFILE_FLAG --target x86_64-apple-ios-macabi --crate-type staticlib ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+   }
+ 
+   build_device &
+--- a/shared/rust-bridge/codex-mobile-client/Cargo.toml
++++ b/shared/rust-bridge/codex-mobile-client/Cargo.toml
+@@ -11,7 +11,7 @@
+ 
+ [dependencies]
+ uniffi = { version = "0.31.0", features = ["tokio"] }
+-iroh = "1.0.3"
++iroh = { version = "1.0.3", optional = true }
+ codex-app-server = { workspace = true }
+ codex-app-server-client = { workspace = true }
+ codex-app-server-protocol = { workspace = true }
+@@ -52,6 +52,9 @@
+ unicode-segmentation = "1"
+ 
+ [features]
++default = ["remote-alleycat", "remote-pairing"]
++remote-alleycat = ["dep:iroh"]
++remote-pairing = []
+ rpc-trace = []
+ 
+ [dev-dependencies]
+--- a/shared/rust-bridge/codex-mobile-client/src/alleycat.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/alleycat.rs
+@@ -17,109 +17,9 @@
+ 
+ use crate::session::remote_transport::{Reconnected, RemoteTransport, SessionKeepalive};
+ use crate::transport::TransportError;
+-use crate::types::AgentRuntimeKind;
+-
+-pub const ALLEYCAT_PROTOCOL_VERSION: u32 = 1;
+-pub const ALLEYCAT_ALPN: &[u8] = b"alleycat/1";
++
++pub use crate::alleycat_types::*;
+ pub(crate) const MAX_FRAME_BYTES: usize = 1024 * 1024;
+-
+-#[derive(Debug, Clone, PartialEq, Eq)]
+-pub struct ParsedPairPayload {
+-    pub version: u32,
+-    pub node_id: String,
+-    pub token: String,
+-    pub relay: Option<String>,
+-    pub host_name: Option<String>,
+-}
+-
+-#[derive(Debug, Clone, PartialEq, Eq)]
+-pub struct AgentInfo {
+-    pub name: String,
+-    pub display_name: String,
+-    pub wire: AgentWire,
+-    pub available: bool,
+-    /// UI-facing hints from the alleycat host (label/sort/beta/aliases).
+-    /// `None` means the host is older or doesn't ship rich metadata; the
+-    /// client falls back to generic rendering.
+-    pub presentation: Option<AgentPresentation>,
+-    /// Behavioral capability flags that gate UI logic (Amp reasoning lock,
+-    /// SSH-bridge eligibility, direct-Codex-port routing) without litter
+-    /// branching on the agent name.
+-    pub capabilities: Option<AgentCapabilities>,
+-}
+-
+-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+-pub struct AgentPresentation {
+-    pub title: Option<String>,
+-    pub is_beta: bool,
+-    pub sort_order: i32,
+-    pub description: Option<String>,
+-    pub aliases: Vec<String>,
+-}
+-
+-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+-pub struct AgentCapabilities {
+-    pub locks_reasoning_effort_after_activity: bool,
+-    pub visible_modes: Option<Vec<String>>,
+-    pub supports_ssh_bridge: bool,
+-    pub uses_direct_codex_port: bool,
+-    pub supports_thread_permission_overrides: bool,
+-    pub reports_effective_thread_permissions: bool,
+-}
+-
+-/// Map an alleycat-advertised agent (`name` + `display_name`) to the
+-/// canonical runtime-kind id litter uses internally. Known agents get
+-/// their well-known alias normalized (e.g. `pi.dev` → `pi`,
+-/// `factory-droid` → `droid`) so the rest of the code can match against
+-/// stable ids. Anything else falls through to the agent's own
+-/// lowercased name (or display name if name is empty), so new agents
+-/// advertised by alleycat work without a litter release.
+-pub fn agent_runtime_kind(name: &str, display_name: &str) -> Option<AgentRuntimeKind> {
+-    let name = name.trim().to_ascii_lowercase();
+-    let display_name = display_name.trim().to_ascii_lowercase();
+-    let candidate = if name.is_empty() {
+-        display_name.as_str()
+-    } else {
+-        name.as_str()
+-    };
+-    let canonical = match candidate {
+-        "codex" => Some("codex"),
+-        "pi" | "pi.dev" | "pidev" => Some("pi"),
+-        "omp" | "oh-my-pi" | "oh_my_pi" | "oh my pi" => Some("omp"),
+-        "amp" | "ampcode" | "amp-code" | "amp_code" => Some("amp"),
+-        "opencode" | "open-code" | "open_code" => Some("opencode"),
+-        "claude" | "claude-code" | "claude_code" => Some("claude"),
+-        "droid" | "factory" | "factory-droid" | "factory_droid" => Some("droid"),
+-        "hermes" => Some("hermes"),
+-        _ if display_name == "codex" => Some("codex"),
+-        _ if display_name == "pi" || display_name == "pi.dev" => Some("pi"),
+-        _ if display_name == "omp" || display_name == "oh my pi" => Some("omp"),
+-        _ if display_name == "amp" || display_name == "amp code" => Some("amp"),
+-        _ if display_name == "opencode" || display_name == "open code" => Some("opencode"),
+-        _ if display_name == "claude" || display_name == "claude code" => Some("claude"),
+-        _ if display_name == "droid"
+-            || display_name == "factory"
+-            || display_name == "factory droid" =>
+-        {
+-            Some("droid")
+-        }
+-        _ if display_name == "hermes" => Some("hermes"),
+-        _ => None,
+-    };
+-    if let Some(kind) = canonical {
+-        return Some(kind.to_string());
+-    }
+-    if candidate.is_empty() {
+-        return None;
+-    }
+-    Some(candidate.to_string())
+-}
+-
+-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+-pub enum AgentWire {
+-    Websocket,
+-    Jsonl,
+-}
+ 
+ /// Reconnect strategy for an alleycat-backed session. The transport
+ /// holds a clone of the app-wide shared iroh `Endpoint` (cheap — iroh's
+@@ -287,17 +187,6 @@
+     }
+ }
+ 
+-#[derive(Debug, thiserror::Error)]
+-pub enum AlleycatError {
+-    #[error("invalid pair payload: {0}")]
+-    InvalidPayload(String),
+-    #[error("protocol version mismatch: payload={payload} client={client}")]
+-    ProtocolMismatch { payload: u32, client: u32 },
+-    #[error("host rejected request: {0}")]
+-    Rejected(String),
+-    #[error("transport error: {0}")]
+-    Transport(String),
+-}
+ 
+ #[derive(Debug, Deserialize)]
+ struct PairPayloadWire {
+--- /dev/null
++++ b/shared/rust-bridge/codex-mobile-client/src/alleycat_disabled.rs
+@@ -0,0 +1,6 @@
++//! Capability boundary for builds without the remote transport.
++pub use crate::alleycat_types::*;
++
++pub fn parse_pair_payload(_json: &str) -> Result<ParsedPairPayload, AlleycatError> {
++    Err(AlleycatError::Transport(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()))
++}
+--- /dev/null
++++ b/shared/rust-bridge/codex-mobile-client/src/alleycat_types.rs
+@@ -0,0 +1,116 @@
++//! Transport-independent records and runtime-name normalization.
++use crate::types::AgentRuntimeKind;
++
++pub const ALLEYCAT_PROTOCOL_VERSION: u32 = 1;
++pub const ALLEYCAT_ALPN: &[u8] = b"alleycat/1";
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct ParsedPairPayload {
++    pub version: u32,
++    pub node_id: String,
++    pub token: String,
++    pub relay: Option<String>,
++    pub host_name: Option<String>,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++pub struct AgentInfo {
++    pub name: String,
++    pub display_name: String,
++    pub wire: AgentWire,
++    pub available: bool,
++    /// UI-facing hints from the alleycat host (label/sort/beta/aliases).
++    /// `None` means the host is older or doesn't ship rich metadata; the
++    /// client falls back to generic rendering.
++    pub presentation: Option<AgentPresentation>,
++    /// Behavioral capability flags that gate UI logic (Amp reasoning lock,
++    /// SSH-bridge eligibility, direct-Codex-port routing) without litter
++    /// branching on the agent name.
++    pub capabilities: Option<AgentCapabilities>,
++}
++
++#[derive(Debug, Clone, Default, PartialEq, Eq)]
++pub struct AgentPresentation {
++    pub title: Option<String>,
++    pub is_beta: bool,
++    pub sort_order: i32,
++    pub description: Option<String>,
++    pub aliases: Vec<String>,
++}
++
++#[derive(Debug, Clone, Default, PartialEq, Eq)]
++pub struct AgentCapabilities {
++    pub locks_reasoning_effort_after_activity: bool,
++    pub visible_modes: Option<Vec<String>>,
++    pub supports_ssh_bridge: bool,
++    pub uses_direct_codex_port: bool,
++    pub supports_thread_permission_overrides: bool,
++    pub reports_effective_thread_permissions: bool,
++}
++
++/// Map an alleycat-advertised agent (`name` + `display_name`) to the
++/// canonical runtime-kind id litter uses internally. Known agents get
++/// their well-known alias normalized (e.g. `pi.dev` → `pi`,
++/// `factory-droid` → `droid`) so the rest of the code can match against
++/// stable ids. Anything else falls through to the agent's own
++/// lowercased name (or display name if name is empty), so new agents
++/// advertised by alleycat work without a litter release.
++pub fn agent_runtime_kind(name: &str, display_name: &str) -> Option<AgentRuntimeKind> {
++    let name = name.trim().to_ascii_lowercase();
++    let display_name = display_name.trim().to_ascii_lowercase();
++    let candidate = if name.is_empty() {
++        display_name.as_str()
++    } else {
++        name.as_str()
++    };
++    let canonical = match candidate {
++        "codex" => Some("codex"),
++        "pi" | "pi.dev" | "pidev" => Some("pi"),
++        "omp" | "oh-my-pi" | "oh_my_pi" | "oh my pi" => Some("omp"),
++        "amp" | "ampcode" | "amp-code" | "amp_code" => Some("amp"),
++        "opencode" | "open-code" | "open_code" => Some("opencode"),
++        "claude" | "claude-code" | "claude_code" => Some("claude"),
++        "droid" | "factory" | "factory-droid" | "factory_droid" => Some("droid"),
++        "hermes" => Some("hermes"),
++        _ if display_name == "codex" => Some("codex"),
++        _ if display_name == "pi" || display_name == "pi.dev" => Some("pi"),
++        _ if display_name == "omp" || display_name == "oh my pi" => Some("omp"),
++        _ if display_name == "amp" || display_name == "amp code" => Some("amp"),
++        _ if display_name == "opencode" || display_name == "open code" => Some("opencode"),
++        _ if display_name == "claude" || display_name == "claude code" => Some("claude"),
++        _ if display_name == "droid"
++            || display_name == "factory"
++            || display_name == "factory droid" =>
++        {
++            Some("droid")
++        }
++        _ if display_name == "hermes" => Some("hermes"),
++        _ => None,
++    };
++    if let Some(kind) = canonical {
++        return Some(kind.to_string());
++    }
++    if candidate.is_empty() {
++        return None;
++    }
++    Some(candidate.to_string())
++}
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum AgentWire {
++    Websocket,
++    Jsonl,
++}
++
++#[derive(Debug, thiserror::Error)]
++pub enum AlleycatError {
++    #[error("invalid pair payload: {0}")]
++    InvalidPayload(String),
++    #[error("protocol version mismatch: payload={payload} client={client}")]
++    ProtocolMismatch { payload: u32, client: u32 },
++    #[error("host rejected request: {0}")]
++    Rejected(String),
++    #[error("transport error: {0}")]
++    Transport(String),
++}
++
+--- a/shared/rust-bridge/codex-mobile-client/src/android_context.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/android_context.rs
+@@ -124,22 +124,28 @@
+         let _ = context.vm();
+         let _ = context.context();
+ 
+-        let _resolver = iroh::dns::DnsResolver::new();
++        #[cfg(feature = "remote-alleycat")]
++        {
++            let _resolver = iroh::dns::DnsResolver::new();
+ 
+-        let runtime = tokio::runtime::Builder::new_current_thread()
+-            .enable_all()
+-            .build()
+-            .map_err(|error| format!("building tokio runtime: {error}"))?;
+-        runtime
+-            .block_on(async {
+-                let endpoint = iroh::Endpoint::builder(iroh::endpoint::presets::N0)
+-                    .bind()
+-                    .await
+-                    .map_err(|error| format!("binding iroh endpoint: {error}"))?;
+-                endpoint.close().await;
+-                Ok::<(), String>(())
+-            })
+-            .map_err(|error| format!("probing iroh endpoint: {error}"))?;
++            let runtime = tokio::runtime::Builder::new_current_thread()
++                .enable_all()
++                .build()
++                .map_err(|error| format!("building tokio runtime: {error}"))?;
++            runtime
++                .block_on(async {
++                    let endpoint = iroh::Endpoint::builder(iroh::endpoint::presets::N0)
++                        .bind()
++                        .await
++                        .map_err(|error| format!("binding iroh endpoint: {error}"))?;
++                    endpoint.close().await;
++                    Ok::<(), String>(())
++                })
++                .map_err(|error| format!("probing iroh endpoint: {error}"))?;
++
++        }
++        #[cfg(not(feature = "remote-alleycat"))]
++        return Err::<String, String>(crate::network_scope::ALLEYCAT_UNSUPPORTED.into());
+ 
+         Ok::<String, String>("ok".to_string())
+     }) {
+--- a/shared/rust-bridge/codex-mobile-client/src/ffi/client.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/ffi/client.rs
+@@ -485,6 +485,15 @@
+         self.inner.alleycat_secret_key()
+     }
+ 
++    /// Compile-time capability, independent of temporary network failures.
++    pub fn remote_alleycat_available(&self) -> bool {
++        crate::network_scope::remote_alleycat_available()
++    }
++
++    pub fn pairing_available(&self) -> bool {
++        crate::network_scope::pairing_available()
++    }
++
+     /// Force the shared alleycat iroh `Endpoint` to bind now (instead
+     /// of lazily on first use). Returns the secret key bytes the
+     /// endpoint was bound with — either the bytes the platform pushed
+@@ -498,12 +507,20 @@
+     /// "load → bind → save" sequence at launch (avoids racing the
+     /// lazy-init path against the lifecycle reconnect chain).
+     pub async fn ensure_alleycat_endpoint(&self) -> Option<Vec<u8>> {
+-        match self.inner.alleycat_endpoint().await {
+-            Ok(endpoint) => Some(endpoint.secret_key().to_bytes().to_vec()),
+-            Err(error) => {
+-                tracing::warn!("ensure_alleycat_endpoint: bind failed: {error}");
+-                None
++        #[cfg(feature = "remote-alleycat")]
++        {
++            match self.inner.alleycat_endpoint().await {
++                Ok(endpoint) => Some(endpoint.secret_key().to_bytes().to_vec()),
++                Err(error) => {
++                    tracing::warn!("ensure_alleycat_endpoint: bind failed: {error}");
++                    None
++                }
+             }
++        }
++        #[cfg(not(feature = "remote-alleycat"))]
++        {
++            tracing::warn!("{}", crate::network_scope::ALLEYCAT_UNSUPPORTED);
++            None
+         }
+     }
+ 
+--- a/shared/rust-bridge/codex-mobile-client/src/lib.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/lib.rs
+@@ -140,6 +140,12 @@
+ ))]
+ pub mod shell_preflight;
+ 
++mod alleycat_types;
++pub mod network_scope;
++#[cfg(feature = "remote-alleycat")]
++pub mod alleycat;
++#[cfg(not(feature = "remote-alleycat"))]
++#[path = "alleycat_disabled.rs"]
+ pub mod alleycat;
+ pub mod cloud_sync;
+ pub mod conversation;
+--- a/shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs
+@@ -8,9 +8,11 @@
+ use url::Url;
+ 
+ use crate::alleycat::{
+-    AgentInfo as AlleycatAgentInfo, AgentWire as AlleycatAgentWire, AlleycatReconnectTransport,
++    AgentInfo as AlleycatAgentInfo, AgentWire as AlleycatAgentWire,
+     ParsedPairPayload as ParsedAlleycatPairPayload,
+ };
++#[cfg(feature = "remote-alleycat")]
++use crate::alleycat::AlleycatReconnectTransport;
+ use crate::session::connection::InProcessConfig;
+ use crate::session::connection::{
+     RemoteSessionExtras, RuntimeRemoteSessionResource, ServerConfig, ServerEvent, ServerSession,
+@@ -99,6 +101,7 @@
+     /// discovery, and logging "Aborting ungracefully" on every drop.
+     /// Lazily initialized on the first `list_agents` /
+     /// `connect_remote_over_alleycat`.
++    #[cfg(feature = "remote-alleycat")]
+     alleycat_endpoint: Arc<tokio::sync::OnceCell<iroh::Endpoint>>,
+     /// Persisted iroh device secret key. The platform loads the key
+     /// bytes from keychain (iOS) / EncryptedSharedPreferences (Android)
+@@ -826,6 +829,7 @@
+             thread_runtime_routes: Arc::new(StdMutex::new(HashMap::new())),
+             model_catalog_refreshes: StdMutex::new(HashMap::new()),
+             model_catalog_locks: StdMutex::new(HashMap::new()),
++            #[cfg(feature = "remote-alleycat")]
+             alleycat_endpoint: Arc::new(tokio::sync::OnceCell::new()),
+             alleycat_secret_key: Arc::new(StdMutex::new(None)),
+             ssh_bootstrap_flows: Arc::new(tokio::sync::Mutex::new(HashMap::new())),
+@@ -859,10 +863,16 @@
+     /// Returns `None` if the endpoint hasn't been initialized yet.
+     /// Platform calls this after `alleycat_endpoint()` initializes to
+     /// persist freshly-generated keys to secure storage.
++    #[cfg(feature = "remote-alleycat")]
+     pub fn alleycat_secret_key(&self) -> Option<Vec<u8>> {
+         self.alleycat_endpoint
+             .get()
+             .map(|endpoint| endpoint.secret_key().to_bytes().to_vec())
++    }
++
++    #[cfg(not(feature = "remote-alleycat"))]
++    pub fn alleycat_secret_key(&self) -> Option<Vec<u8>> {
++        None
+     }
+ 
+     fn slingshot_credentials_directory(&self) -> Option<PathBuf> {
+@@ -992,6 +1002,7 @@
+     /// from scratch — that's the model iroh is designed for and is
+     /// what makes `Endpoint::network_change()` work across reconnect
+     /// cycles.
++    #[cfg(feature = "remote-alleycat")]
+     pub(crate) async fn alleycat_endpoint(
+         &self,
+     ) -> Result<iroh::Endpoint, crate::alleycat::AlleycatError> {
+@@ -1042,6 +1053,7 @@
+         // Seed the home launch cache once, before servers reconnect, so the
+         // first snapshot already lists recent sessions.
+         if first_directory {
++            #[cfg(feature = "remote-alleycat")]
+             crate::alleycat::set_direct_addr_cache_directory(&directory);
+             self.app_store
+                 .seed_cached_session_summaries(crate::home_cache::load(&directory));
+@@ -1853,6 +1865,7 @@
+         Ok(server_id)
+     }
+ 
++    #[cfg(feature = "remote-alleycat")]
+     pub async fn list_alleycat_agents(
+         &self,
+         params: ParsedAlleycatPairPayload,
+@@ -1899,6 +1912,16 @@
+         Ok(agents)
+     }
+ 
++    #[cfg(not(feature = "remote-alleycat"))]
++    pub async fn list_alleycat_agents(
++        &self,
++        params: ParsedAlleycatPairPayload,
++        wait_for_registration: bool,
++    ) -> Result<Vec<AlleycatAgentInfo>, TransportError> {
++        let _ = (params, wait_for_registration);
++        Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()))
++    }
++
+     fn runtime_supports_thread_permission_overrides(&self, runtime_kind: &str) -> bool {
+         if matches!(runtime_kind, "pi" | "local-studio") {
+             return false;
+@@ -1913,6 +1936,7 @@
+             .unwrap_or(true)
+     }
+ 
++    #[cfg(feature = "remote-alleycat")]
+     pub async fn connect_remote_over_alleycat(
+         &self,
+         server_id: String,
+@@ -2280,6 +2304,21 @@
+             node_id: params.node_id,
+             agent_name: persisted_agents,
+         })
++    }
++
++    #[cfg(not(feature = "remote-alleycat"))]
++    pub async fn connect_remote_over_alleycat(
++        &self,
++        server_id: String,
++        display_name: String,
++        params: ParsedAlleycatPairPayload,
++        agent_name: String,
++        selected_agent_names: Vec<String>,
++        wire: AlleycatAgentWire,
++    ) -> Result<AlleycatConnectOutcome, TransportError> {
++        let _ = (server_id, display_name, params, agent_name, selected_agent_names, wire);
++        // Fail before inserting a server, persisting credentials, or publishing health.
++        Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()))
+     }
+ 
+     pub async fn connect_remote_over_ssh_bridges(
+@@ -2728,6 +2767,7 @@
+     /// CONNECTION_CLOSE to peers, drains in-flight ACKs). Idempotent —
+     /// calling on an already-closed or never-initialized endpoint is a
+     /// no-op.
++    #[cfg(feature = "remote-alleycat")]
+     pub async fn shutdown_alleycat_endpoint(&self) {
+         let Some(endpoint) = self.alleycat_endpoint.get().cloned() else {
+             return;
+@@ -2737,6 +2777,11 @@
+         }
+         info!("MobileClient: shutting down alleycat endpoint");
+         endpoint.close().await;
++    }
++
++    #[cfg(not(feature = "remote-alleycat"))]
++    pub async fn shutdown_alleycat_endpoint(&self) {
++        // No endpoint can exist in this build; cleanup has no resource to close.
+     }
+ 
+     /// Disconnect a server by its ID.
+@@ -2771,11 +2816,17 @@
+     }
+ 
+     pub async fn restart_app_server(&self, server_id: &str) -> Result<(), TransportError> {
++        #[cfg(not(feature = "remote-alleycat"))]
++        if server_id.starts_with("alleycat:") {
++            return Err(TransportError::ConnectionFailed(crate::network_scope::ALLEYCAT_UNSUPPORTED.into()));
++        }
+         self.clear_oauth_callback_tunnel(server_id).await;
++        #[cfg(feature = "remote-alleycat")]
+         let alleycat_restart_target = match self.alleycat_restart_targets.lock() {
+             Ok(guard) => guard.get(server_id).cloned(),
+             Err(error) => error.into_inner().get(server_id).cloned(),
+         };
++        #[cfg(feature = "remote-alleycat")]
+         if let Some(target) = alleycat_restart_target {
+             let endpoint = self
+                 .alleycat_endpoint()
+--- /dev/null
++++ b/shared/rust-bridge/codex-mobile-client/src/network_scope.rs
+@@ -0,0 +1,12 @@
++//! Build capabilities; independent of network reachability or account state.
++pub const ALLEYCAT_UNSUPPORTED: &str =
++    "unsupported: remote Alleycat/Iroh is not included in this local build";
++pub const PAIRING_UNSUPPORTED: &str =
++    "unsupported: remote pairing is not included in this local build";
++
++pub const fn remote_alleycat_available() -> bool {
++    cfg!(feature = "remote-alleycat")
++}
++pub const fn pairing_available() -> bool {
++    cfg!(feature = "remote-pairing")
++}
+--- a/shared/rust-bridge/codex-mobile-client/src/pair/mod.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/pair/mod.rs
+@@ -289,6 +289,7 @@
+ /// Start the Mac-side pair host. Binds an OS-assigned TCP port, returns
+ /// the bound port + suggested TXT entries so Swift can publish a Bonjour
+ /// service. The handle owns the listener and any in-flight pair session.
++#[cfg(feature = "remote-pairing")]
+ pub async fn start_pair_host(
+     device_name: String,
+     mac_id: String,
+@@ -346,6 +347,16 @@
+             ],
+         },
+     ))
++}
++
++#[cfg(not(feature = "remote-pairing"))]
++pub async fn start_pair_host(
++    device_name: String,
++    mac_id: String,
++    codex_port: u16,
++) -> Result<(Arc<PairHostHandle>, PairServiceInfo), PairError> {
++    let _ = (device_name, mac_id, codex_port);
++    Err(PairError::Transport(crate::network_scope::PAIRING_UNSUPPORTED.into()))
+ }
+ 
+ async fn handle_incoming(
+@@ -531,6 +542,7 @@
+ /// and return a handle the platform polls for events. The handshake itself
+ /// happens asynchronously on the spawned reader task — Swift drives state
+ /// purely via `poll_event`.
++#[cfg(feature = "remote-pairing")]
+ pub async fn pair_from_iphone(
+     host: String,
+     port: u16,
+@@ -651,6 +663,17 @@
+     }))
+ }
+ 
++#[cfg(not(feature = "remote-pairing"))]
++pub async fn pair_from_iphone(
++    host: String,
++    port: u16,
++    device_name: String,
++    ni_discovery_token_b64: String,
++) -> Result<Arc<PairClientHandle>, PairError> {
++    let _ = (host, port, device_name, ni_discovery_token_b64);
++    Err(PairError::Transport(crate::network_scope::PAIRING_UNSUPPORTED.into()))
++}
++
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+--- a/shared/rust-bridge/codex-mobile-client/src/reconnect.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/reconnect.rs
+@@ -293,6 +293,13 @@
+ ) -> Option<ReconnectPlan> {
+     // 1. Skip if already connected
+     if is_connected {
++        return None;
++    }
++
++    // Disabled remote records must not fall through to another transport.
++    if !crate::network_scope::remote_alleycat_available()
++        && server.alleycat_node_id.is_some()
++    {
+         return None;
+     }
+ 
+--- a/shared/rust-bridge/codex-mobile-client/src/terminal/backend.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/terminal/backend.rs
+@@ -32,6 +32,11 @@
+     match kind {
+         TerminalBackendKind::LocalIsh { cwd } => super::local_ish::open(cwd, size).await,
+         TerminalBackendKind::LocalProot { cwd } => super::local_proot::open(cwd, size).await,
++        #[cfg(not(feature = "remote-alleycat"))]
++        TerminalBackendKind::RemoteAlleycat { .. } => Err(TerminalError::Unsupported {
++            detail: crate::network_scope::ALLEYCAT_UNSUPPORTED.into(),
++        }),
++        #[cfg(feature = "remote-alleycat")]
+         TerminalBackendKind::RemoteAlleycat {
+             node_id,
+             token,
+--- a/shared/rust-bridge/codex-mobile-client/src/terminal/mod.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/terminal/mod.rs
+@@ -11,6 +11,7 @@
+ mod local_ish;
+ mod local_proot;
+ mod osc;
++#[cfg(feature = "remote-alleycat")]
+ mod remote_alleycat;
+ mod renderer;
+ mod selection;
+--- a/shared/rust-bridge/generate-bindings.sh
++++ b/shared/rust-bridge/generate-bindings.sh
+@@ -25,14 +25,18 @@
+     export RUSTC_WRAPPER="$sccache_path"
+ fi
+ 
+-"$WORKSPACE_DIR/../../tools/scripts/update-alleycat-main.sh" --shared
+ 
+ PROFILE="debug"
++CARGO_FEATURES=()
++ALMA_LOCAL="${LITTER_ALMA_LOCAL:-0}"
+ GENERATE_SWIFT=1
+ GENERATE_KOTLIN=1
+ 
+ for arg in "$@"; do
+     case "$arg" in
++        --alma-local)
++            ALMA_LOCAL=1
++            ;;
+         --release)
+             PROFILE="release"
+             ;;
+@@ -43,11 +47,18 @@
+             GENERATE_SWIFT=0
+             ;;
+         *)
+-            echo "usage: $(basename "$0") [--release] [--swift-only] [--kotlin-only]" >&2
++            echo "usage: $(basename "$0") [--release] [--swift-only] [--kotlin-only] [--alma-local]" >&2
+             exit 1
+             ;;
+     esac
+ done
++
++export LITTER_ALMA_LOCAL="$ALMA_LOCAL"
++if [[ "$ALMA_LOCAL" == "1" ]]; then
++    CARGO_FEATURES+=(--no-default-features)
++    export LITTER_SKIP_ALLEYCAT_UPDATE=1
++fi
++"$WORKSPACE_DIR/../../tools/scripts/update-alleycat-main.sh" --shared
+ 
+ if [[ "$GENERATE_SWIFT" -eq 0 && "$GENERATE_KOTLIN" -eq 0 ]]; then
+     echo "error: nothing to generate" >&2
+@@ -60,9 +71,9 @@
+ echo "==> Building codex-mobile-client cdylib ($PROFILE)..."
+ 
+ if [[ "$PROFILE" == "release" ]]; then
+-    cargo build -p codex-mobile-client --release
++    cargo build -p codex-mobile-client --release ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+ else
+-    cargo build -p codex-mobile-client
++    cargo build -p codex-mobile-client ${CARGO_FEATURES[@]+"${CARGO_FEATURES[@]}"}
+ fi
+ 
+ DYLIB_PATH="${CARGO_TARGET_DIR:-$WORKSPACE_DIR/target}/$PROFILE"
+--- a/tools/scripts/uniffi-bindings-input-hash.sh
++++ b/tools/scripts/uniffi-bindings-input-hash.sh
+@@ -37,7 +37,10 @@
+   exit 1
+ fi
+ 
++{
++printf 'LITTER_ALMA_LOCAL=%s\n' "${LITTER_ALMA_LOCAL:-0}"
+ bindings_inputs | while IFS= read -r file; do
+   [ -f "$file" ] || continue
+   shasum -a 256 "$file"
+-done | shasum -a 256 | awk '{print $1}'
++done
++} | shasum -a 256 | awk '{print $1}'

@@ -1,0 +1,17 @@
+{
+  "stage": "applied; iOS compile check passed; provider not yet wired",
+  "sourceSHA256": "8a64137ba4cb99112d51da630a7928da0460cf1ef982dc4a40b3b6811fb507af",
+  "patchSHA256": "fd53722b10be092ea6a53529f67ce6b8a5a0bb5e982e17065e79660b5342d0f1",
+  "strictApplicability": "passed",
+  "scope": "public forwarding to existing MessageProcessorArgs.code_mode_session_provider; no model selector override, no runtime implementation or build claim",
+  "validationLog": "tools/alma-ios-lab/.cache/code-mode-provider-check.log",
+  "note": "No model selectors or permission rules changed. Installed Agent test binary predates this optional forwarding API.",
+  "runtimeFeaturePatch": {
+    "file": "runtime-optional-sandbox.patch",
+    "default": "desktop V8 memory sandbox retained",
+    "qualification": "explicit iOS caller disables defaults; ordinary App feature off",
+    "runtimeSourceChanged": false,
+    "sandboxTestRemoved": false,
+    "securityParityClaim": false
+  }
+}

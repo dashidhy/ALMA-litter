@@ -1,0 +1,1029 @@
+{
+  "consentSource": "explicit_mobile_tah_qualification_launch_flag",
+  "elapsedSeconds": 155.09744945832063,
+  "needsUserUnlocked": false,
+  "outcomes": [
+    {
+      "file": "structured-notes.md",
+      "renderedSHA256": "ac460f552896a09ca209e522cc0cd81879b0699b55404123803dec360f5cac9b",
+      "renderedUTF8Bytes": 5816,
+      "revision": 0,
+      "sanitizedText": "# NIST AI 风险管理框架：建立可信赖人工智能的风险管理要点\n\n## 概览\n\n转录围绕美国国家标准与技术研究院（NIST）的 AI Risk Management Framework（AI RMF）展开。演讲先说明人工智能在医疗、金融和国防等领域带来效益，也可能放大偏见、违反安全政策并作出灾难性决定；随后介绍可信赖 AI 的特征、AI RMF Core 的四项功能——Govern、Map、Measure、Manage——以及它们如何形成持续改进的循环。最后区分 Core 与面向具体实施环境和用例的 Profiles。文中 [ASR-01] 至 [ASR-03] 是仍需复核的转写疑点，详见配套索引。\n\n## 1. 为什么需要框架\n\nAI 正改变医疗、金融、国防等领域，但其能力也伴随严重失误的风险。AI 系统可以带来速度、效率和洞察；管理不善时，可能放大偏见、违反安全政策，甚至作出灾难性决定。因此需要结构化方法来管理风险，在风险与收益之间保持平衡。演讲将 AI RMF 介绍为建立信任的工具。\n\n## 2. 可信赖 AI 的特征\n\n演讲列举了以下特征：\n\n- 有效（valid）且准确（accurate）：输出应有意义且真实，并因而可靠（reliable）；否则系统整体不可信。\n- 安全（safe）：不应危及人的生命、财产或环境。\n- 安全防护且有韧性（secure and resilient）：AI 中有有价值的内容，攻击者可能使系统不可用、泄露信息，或污染系统，使其变得不可信。\n- 可解释且可理解（explainable and interpretable）：应能说明系统为何作出某个结果、表达某种内容，以及结果意味着什么。理解结果的人不一定是技术专家；例如医疗问题的结果应能由医生判断为可解释、可理解。\n- 保护隐私（privacy-enhancing）：系统应具备保护和增强隐私的能力，不把输入内容向全世界泄露。转录中的原文短语 “private preserving enhancing capabilities” [ASR-01] 可能是术语识别问题，保留以待复核。\n- 公平（fair）：不应对特定群体偏向支持或反对。偏见还会损害信息准确性，进而影响系统有效性。\n- 负责且透明（accountable and transparent）：不能是无法观察的“黑箱”；应能了解系统如何工作及其技术基础。\n\n## 3. AI RMF Core 与四项功能\n\n转录称核心由四项功能组成：Govern（治理）、Map（映射）、Measure（测量）、Manage（管理）。NIST 官方《Artificial Intelligence Risk Management Framework (AI RMF 1.0)》确认，AI RMF Core 由这四项功能构成；Govern 是贯穿其他三项功能的跨领域功能。NIST AI RMF 1.0\n\n### 3.1 Govern（治理）\n\nGovern 从设定系统整体风险管理文化开始：系统要如何运行、要实现什么目标。它是跨领域关注点，治理层的工作会影响其他功能，并处于整体核心位置。治理还包括合规：组织规章和适用的监管要求都必须落实。\n\n### 3.2 Map（映射）\n\nMap 用于建立上下文。AI 生命周期中有许多参与者：构建、使用、运行系统或从系统中获益的人；他们未必能看到其他人的全部工作。上下文把这些部分联系起来，使风险评估可以端到端地观察系统。\n\nMap 还包括：\n\n- 设定目标，明确系统要完成什么，并检查实际情况是否与目标相符；\n- 识别系统中的所有参与者、利益相关者及其角色，评估他们如何使用系统、如何引入或降低风险；\n- 理解组织的风险容忍度。不同组织、不同应用的容忍度可能不同，这会影响对风险的理解。\n\n转录在目标讨论处出现 “see if I'm actually mapping up to that” 以及 “goals of art that we set” [ASR-02]；前者的表达和后者的 “art” 均可能存在识别问题，具体含义需结合原始音频复核。\n\n### 3.3 Measure（测量）\n\nMeasure 针对风险采用不同工具和方法。演讲比较了定量风险分析（大量数字）与定性评级（例如高、中、低）：两者各有优点，不应盲目受制于任何一方。数字可能造成虚假的安全感，让人误以为精度和认知程度超过实际水平，错误也可能被不加警惕地层层相乘。因此可结合定量与定性测量工具。\n\nMeasure 还包括分析系统、检查风险是否与此前设定的目标相符，以及测试、评估、验证和确认。工具与程序应覆盖整个生命周期，从而持续观察系统整体。\n\n### 3.4 Manage（管理）\n\nManage 回到 Map 阶段的目标，重新检查目标是否达成；对其他阶段发现的风险排序，区分最重要和最不重要的风险，并对已识别风险作出响应。\n\n可能的响应包括：\n\n- 缓解：加入补偿性控制，以消除或降低问题；\n- 接受：承受某些必须接受的风险；\n- 转移：把风险转给其他安排；\n- 保险和赔偿/补偿：通过购买保险等方式应对风险。\n\n## 4. 循环改进与 Profiles\n\nGovern 会贯穿其他功能；每个阶段的工作也会流入其他阶段，形成持续改进的良性循环，目标是降低风险并提高 AI 的可信赖性。NIST 官方资料同样将风险管理描述为持续进行，并说明治理应融入其他三项功能。NIST AI RMF 1.0\n\n在完成这类工作后，可以建立 Profiles（配置文件/画像）。Profile 针对特定实施、环境或用例，具体写明相关要求和细节；一个组织可以有多个 Profile。演讲将 Core 与 Profiles 结合后，视为应对 AI 风险问题的解决方案。\n\n## 5. 结论\n\n在 AI 无处不在的环境中，信任至关重要。AI RMF 不仅帮助人们信任技术，也帮助人们信任技术的使用方式。与 AI 工作或受其影响的人，都可以用这一工具管理相关风险。\n\n",
+      "textTruncated": false
+    },
+    {
+      "file": "suspicious-asr-terms.md",
+      "renderedSHA256": "d1d9472ce6bc5f9a697c8792dab0ec88b13cc69c3a373d432ee71d8af90d5b11",
+      "renderedUTF8Bytes": 1100,
+      "revision": 0,
+      "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n| 编号 | 可疑原文 | 原转录时间 | 在 structured-notes.md 中的位置 | 未解决的歧义 |\n| --- | --- | --- | --- | --- |\n| ASR-01 | “private preserving enhancing capabilities” | 00:02:07 - 00:02:35 | 2. 可信赖 AI 的特征；保护隐私 | 可能是隐私相关的复合技术术语；当前转写无法确定词组边界或确切措辞，可能影响对系统隐私能力的理解。 |\n| ASR-02 | “see if I'm actually mapping up to that” 以及 “goals of art that we set” | 00:04:09 - 00:04:36 | 3.2 Map（映射） | 前一句的 “mapping up” 可能描述目标对齐，后一句的 “art” 可能不是实际词语；若误识别，可能影响对 Map 阶段目标检查的表述，但上下文支持其涉及目标设定与核对。 |\n",
+      "textTruncated": false
+    },
+    {
+      "file": "structured-notes.md",
+      "renderedSHA256": "a47805d597aa5bfc7f3848167fa3b0aba65e8dee171ffac40568c008ee6537c1",
+      "renderedUTF8Bytes": 5993,
+      "revision": 1,
+      "sanitizedText": "# NIST AI 风险管理框架：建立可信赖人工智能的风险管理要点\n\n## 概览\n\n转录围绕美国国家标准与技术研究院（NIST）的 AI Risk Management Framework（AI RMF）展开。演讲先说明人工智能在医疗、金融和国防等领域带来效益，也可能放大偏见、违反安全政策并作出灾难性决定；随后介绍可信赖 AI 的特征、AI RMF Core 的四项功能——Govern、Map、Measure、Manage——以及它们如何形成持续改进的循环。最后区分 Core 与面向具体实施环境和用例的 Profiles。\n\n## 1. 为什么需要框架\n\nAI 正改变医疗、金融、国防等领域，但其能力也伴随严重失误的风险。AI 系统可以带来速度、效率和洞察；管理不善时，可能放大偏见、违反安全政策，甚至作出灾难性决定。因此需要结构化方法来管理风险，在风险与收益之间保持平衡。演讲将 AI RMF 介绍为建立信任的工具。\n\n## 2. 可信赖 AI 的特征\n\n演讲列举了以下特征：\n\n- 有效（valid）且准确（accurate）：输出应有意义且真实，并因而可靠（reliable）；否则系统整体不可信。\n- 安全（safe）：不应危及人的生命、财产或环境。\n- 安全防护且有韧性（secure and resilient）：AI 中有有价值的内容，攻击者可能使系统不可用、泄露信息，或污染系统，使其变得不可信。\n- 可解释且可理解（explainable and interpretable）：应能说明系统为何作出某个结果、表达某种内容，以及结果意味着什么。理解结果的人不一定是技术专家；例如医疗问题的结果应能由医生判断为可解释、可理解。\n- 保护隐私（privacy-enhancing）：系统应具备保护和增强隐私的能力，不把输入内容向全世界泄露。\n- 公平（fair）：不应对特定群体偏向支持或反对。偏见还会损害信息准确性，进而影响系统有效性。\n- 负责且透明（accountable and transparent）：不能是无法观察的“黑箱”；应能了解系统如何工作及其技术基础。\n\n## 3. AI RMF Core 与四项功能\n\n转录称核心由四项功能组成：Govern（治理）、Map（映射）、Measure（测量）、Manage（管理）。NIST 官方《Artificial Intelligence Risk Management Framework (AI RMF 1.0)》确认，AI RMF Core 由这四项功能构成；Govern 是贯穿其他三项功能的跨领域功能。NIST AI RMF 1.0\n\n### 四项核心功能\n\n以下为演讲内容的简要归纳；四项功能的英文名称已通过 NIST 官方 Playbook 页面核对，外部核验不作为演讲原话。\n\n- Govern（治理）：建立风险管理文化并落实合规要求，贯穿其他三项功能。\n- Map（映射）：明确系统上下文、目标、参与者及组织和应用的风险容忍度。\n- Measure（测量）：结合定量与定性方法分析风险，通过测试、评估、验证和确认覆盖整个生命周期。\n- Manage（管理）：检查目标是否达成，对风险排序，并采取缓解、接受或转移等响应措施。\n\n### 3.1 Govern（治理）\n\nGovern 从设定系统整体风险管理文化开始：系统要如何运行、要实现什么目标。它是跨领域关注点，治理层的工作会影响其他功能，并处于整体核心位置。治理还包括合规：组织规章和适用的监管要求都必须落实。\n\n### 3.2 Map（映射）\n\nMap 用于建立上下文。AI 生命周期中有许多参与者：构建、使用、运行系统或从系统中获益的人；他们未必能看到其他人的全部工作。上下文把这些部分联系起来，使风险评估可以端到端地观察系统。\n\nMap 还包括：\n\n- 设定目标，明确系统要完成什么，并检查实际情况是否与目标相符；\n- 识别系统中的所有参与者、利益相关者及其角色，评估他们如何使用系统、如何引入或降低风险；\n- 理解组织的风险容忍度。不同组织、不同应用的容忍度可能不同，这会影响对风险的理解。\n\n\n### 3.3 Measure（测量）\n\nMeasure 针对风险采用不同工具和方法。演讲比较了定量风险分析（大量数字）与定性评级（例如高、中、低）：两者各有优点，不应盲目受制于任何一方。数字可能造成虚假的安全感，让人误以为精度和认知程度超过实际水平，错误也可能被不加警惕地层层相乘。因此可结合定量与定性测量工具。\n\nMeasure 还包括分析系统、检查风险是否与此前设定的目标相符，以及测试、评估、验证和确认。工具与程序应覆盖整个生命周期，从而持续观察系统整体。\n\n### 3.4 Manage（管理）\n\nManage 回到 Map 阶段的目标，重新检查目标是否达成；对其他阶段发现的风险排序，区分最重要和最不重要的风险，并对已识别风险作出响应。\n\n可能的响应包括：\n\n- 缓解：加入补偿性控制，以消除或降低问题；\n- 接受：承受某些必须接受的风险；\n- 转移：把风险转给其他安排；\n- 保险和赔偿/补偿：通过购买保险等方式应对风险。\n\n## 4. 循环改进与 Profiles\n\nGovern 会贯穿其他功能；每个阶段的工作也会流入其他阶段，形成持续改进的良性循环，目标是降低风险并提高 AI 的可信赖性。NIST 官方资料同样将风险管理描述为持续进行，并说明治理应融入其他三项功能。NIST AI RMF 1.0\n\n在完成这类工作后，可以建立 Profiles（配置文件/画像）。Profile 针对特定实施、环境或用例，具体写明相关要求和细节；一个组织可以有多个 Profile。演讲将 Core 与 Profiles 结合后，视为应对 AI 风险问题的解决方案。\n\n## 5. 结论\n\n在 AI 无处不在的环境中，信任至关重要。AI RMF 不仅帮助人们信任技术，也帮助人们信任技术的使用方式。与 AI 工作或受其影响的人，都可以用这一工具管理相关风险。\n\n",
+      "textTruncated": false
+    },
+    {
+      "file": "suspicious-asr-terms.md",
+      "renderedSHA256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+      "renderedUTF8Bytes": 382,
+      "revision": 1,
+      "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n没有影响语义完整性的 ASR 疑点需要复核。\n",
+      "textTruncated": false
+    },
+    {
+      "file": "structured-notes.md",
+      "renderedSHA256": "315229e9f1b55d7885fd4daa4a9a23c28205189d0105a76e5a82c401ad35ee67",
+      "renderedUTF8Bytes": 5994,
+      "revision": 2,
+      "sanitizedText": "# NIST AI 风险管理框架：建立可信赖人工智能的风险管理要点\n\n## 概览\n\n转录围绕美国国家标准与技术研究院（NIST）的 AI Risk Management Framework（AI RMF）展开。演讲先说明人工智能在医疗、金融和国防等领域带来效益，也可能放大偏见、违反安全政策并作出灾难性决定；随后介绍可信赖 AI 的特征、AI RMF Core 的四项功能——Govern、Map、Measure、Manage——以及它们如何形成持续改进的循环。最后区分 Core 与面向具体实施环境和用例的 Profiles。\n\n## 1. 为什么需要框架\n\nAI 正改变医疗、金融、国防等领域，但其能力也伴随严重失误的风险。AI 系统可以带来速度、效率和洞察；管理不善时，可能放大偏见、违反安全政策，甚至作出灾难性决定。因此需要结构化方法来管理风险，在风险与收益之间保持平衡。演讲将 AI RMF 介绍为建立信任的工具。\n\n## 2. 可信赖 AI 的特征\n\n演讲列举了以下特征：\n\n- 有效（valid）且准确（accurate）：输出应有意义且真实，并因而可靠（reliable）；否则系统整体不可信。\n- 安全（safe）：不应危及人的生命、财产或环境。\n- 安全防护且有韧性（secure and resilient）：AI 中有有价值的内容，攻击者可能使系统不可用、泄露信息，或污染系统，使其变得不可信。\n- 可解释且可理解（explainable and interpretable）：应能说明系统为何作出某个结果、表达某种内容，以及结果意味着什么。理解结果的人不一定是技术专家；例如医疗问题的结果应能由医生判断为可解释、可理解。\n- 保护隐私（privacy-enhancing）：系统应具备保护和增强隐私的能力，不把输入内容向全世界泄露。\n- 公平（fair）：不应对特定群体偏向支持或反对。偏见还会损害信息准确性，进而影响系统有效性。\n- 负责且透明（accountable and transparent）：不能是无法观察的“黑箱”；应能了解系统如何工作及其技术基础。\n\n## 3. AI RMF Core 与四项功能\n\n转录称核心由四项功能组成：Govern（治理）、Map（映射）、Measure（测量）、Manage（管理）。NIST 官方《Artificial Intelligence Risk Management Framework (AI RMF 1.0)》确认，AI RMF Core 由这四项功能构成；Govern 是贯穿其他三项功能的跨领域功能。NIST AI RMF 1.0\n\n### AI RMF 核心功能\n\n以下为演讲内容的简要归纳；四项功能的英文名称已通过 NIST 官方 Playbook 页面核对，外部核验不作为演讲原话。\n\n- Govern（治理）：建立风险管理文化并落实合规要求，贯穿其他三项功能。\n- Map（映射）：明确系统上下文、目标、参与者及组织和应用的风险容忍度。\n- Measure（测量）：结合定量与定性方法分析风险，通过测试、评估、验证和确认覆盖整个生命周期。\n- Manage（管理）：检查目标是否达成，对风险排序，并采取缓解、接受或转移等响应措施。\n\n### 3.1 Govern（治理）\n\nGovern 从设定系统整体风险管理文化开始：系统要如何运行、要实现什么目标。它是跨领域关注点，治理层的工作会影响其他功能，并处于整体核心位置。治理还包括合规：组织规章和适用的监管要求都必须落实。\n\n### 3.2 Map（映射）\n\nMap 用于建立上下文。AI 生命周期中有许多参与者：构建、使用、运行系统或从系统中获益的人；他们未必能看到其他人的全部工作。上下文把这些部分联系起来，使风险评估可以端到端地观察系统。\n\nMap 还包括：\n\n- 设定目标，明确系统要完成什么，并检查实际情况是否与目标相符；\n- 识别系统中的所有参与者、利益相关者及其角色，评估他们如何使用系统、如何引入或降低风险；\n- 理解组织的风险容忍度。不同组织、不同应用的容忍度可能不同，这会影响对风险的理解。\n\n\n### 3.3 Measure（测量）\n\nMeasure 针对风险采用不同工具和方法。演讲比较了定量风险分析（大量数字）与定性评级（例如高、中、低）：两者各有优点，不应盲目受制于任何一方。数字可能造成虚假的安全感，让人误以为精度和认知程度超过实际水平，错误也可能被不加警惕地层层相乘。因此可结合定量与定性测量工具。\n\nMeasure 还包括分析系统、检查风险是否与此前设定的目标相符，以及测试、评估、验证和确认。工具与程序应覆盖整个生命周期，从而持续观察系统整体。\n\n### 3.4 Manage（管理）\n\nManage 回到 Map 阶段的目标，重新检查目标是否达成；对其他阶段发现的风险排序，区分最重要和最不重要的风险，并对已识别风险作出响应。\n\n可能的响应包括：\n\n- 缓解：加入补偿性控制，以消除或降低问题；\n- 接受：承受某些必须接受的风险；\n- 转移：把风险转给其他安排；\n- 保险和赔偿/补偿：通过购买保险等方式应对风险。\n\n## 4. 循环改进与 Profiles\n\nGovern 会贯穿其他功能；每个阶段的工作也会流入其他阶段，形成持续改进的良性循环，目标是降低风险并提高 AI 的可信赖性。NIST 官方资料同样将风险管理描述为持续进行，并说明治理应融入其他三项功能。NIST AI RMF 1.0\n\n在完成这类工作后，可以建立 Profiles（配置文件/画像）。Profile 针对特定实施、环境或用例，具体写明相关要求和细节；一个组织可以有多个 Profile。演讲将 Core 与 Profiles 结合后，视为应对 AI 风险问题的解决方案。\n\n## 5. 结论\n\n在 AI 无处不在的环境中，信任至关重要。AI RMF 不仅帮助人们信任技术，也帮助人们信任技术的使用方式。与 AI 工作或受其影响的人，都可以用这一工具管理相关风险。\n\n",
+      "textTruncated": false
+    },
+    {
+      "file": "suspicious-asr-terms.md",
+      "renderedSHA256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+      "renderedUTF8Bytes": 382,
+      "revision": 2,
+      "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n没有影响语义完整性的 ASR 疑点需要复核。\n",
+      "textTruncated": false
+    }
+  ],
+  "phaseDeadlineSeconds": 300,
+  "phoneOwned": true,
+  "schemaVersion": 1,
+  "stage": "completed",
+  "status": "completed",
+  "steps": [
+    {
+      "elapsedSeconds": 0.059757333365269005,
+      "stage": "authorization",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 0.06093945831526071,
+      "stage": "authorization",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 3.729562208405696,
+      "stage": "authorization",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 3.740434249979444,
+      "stage": "import",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 3.7984476250130683,
+      "stage": "import",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 4.063122333376668,
+      "stage": "import",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": true,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 4.069060791749507,
+      "stage": "raw_check",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": true,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 4.073219000012614,
+      "stage": "raw_check",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 12.19579783338122,
+      "stage": "raw_check",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 12.197648458415642,
+      "stage": "create_action",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 12.199472583364695,
+      "stage": "create_action",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": ""
+      }
+    },
+    {
+      "elapsedSeconds": 12.47527220833581,
+      "stage": "create_action",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": true,
+        "hasError": false,
+        "outputLanguageFrozen": false,
+        "phase": "draft"
+      }
+    },
+    {
+      "elapsedSeconds": 12.47792970831506,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": true,
+        "hasError": false,
+        "outputLanguageFrozen": false,
+        "phase": "draft"
+      }
+    },
+    {
+      "elapsedSeconds": 12.48159220837988,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": false,
+        "phase": "draft"
+      }
+    },
+    {
+      "elapsedSeconds": 12.76070704171434,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "extra_guardian"
+      }
+    },
+    {
+      "elapsedSeconds": 22.20078308333177,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "actor"
+      }
+    },
+    {
+      "elapsedSeconds": 51.23397166666109,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 54.95941754174419,
+      "stage": "send_v0",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 54.96819562499877,
+      "stage": "read_v0_notes",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 54.975833833334036,
+      "stage": "read_v0_notes",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 55.58993954164907,
+      "stage": "read_v0_notes",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 55.59343608340714,
+      "stage": "read_v0_notes",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 55.5961525416933,
+      "stage": "read_v0_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 55.597931083408184,
+      "stage": "read_v0_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 56.12490179168526,
+      "stage": "read_v0_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 56.130497916718014,
+      "stage": "read_v0_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 56.143002708326094,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 56.15432858339045,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 56.97697912505828,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "extra_guardian"
+      }
+    },
+    {
+      "elapsedSeconds": 66.68557912507094,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "actor"
+      }
+    },
+    {
+      "elapsedSeconds": 116.21015062497463,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.00776675005909,
+      "stage": "send_v1",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.00955704168882,
+      "stage": "read_v1_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.01098962500691,
+      "stage": "read_v1_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.8583745417418,
+      "stage": "read_v1_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.86695841664914,
+      "stage": "read_v1_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.92008058330975,
+      "stage": "read_v1_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 119.9229117083596,
+      "stage": "read_v1_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 120.75326854165178,
+      "stage": "read_v1_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 120.76224237505812,
+      "stage": "read_v1_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 120.78376254171599,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 120.79132104164455,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 121.93532441672869,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "extra_guardian"
+      }
+    },
+    {
+      "elapsedSeconds": 130.82255949999671,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "actor"
+      }
+    },
+    {
+      "elapsedSeconds": 149.9645690000616,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.01938487507869,
+      "stage": "send_v2",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.02197554172017,
+      "stage": "read_v2_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.0242890000809,
+      "stage": "read_v2_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.94733095832635,
+      "stage": "read_v2_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.95024041668512,
+      "stage": "read_v2_notes",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.95585550006945,
+      "stage": "read_v2_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 153.95788358338177,
+      "stage": "read_v2_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": true,
+        "canCheckRaw": false,
+        "canCreateAction": false,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 155.06681566673797,
+      "stage": "read_v2_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 155.07600925001316,
+      "stage": "read_v2_asr_terms",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    },
+    {
+      "elapsedSeconds": 155.09744945832063,
+      "stage": "completed",
+      "state": {
+        "acceptedRevisions": [
+          0,
+          1,
+          2
+        ],
+        "busy": false,
+        "canCheckRaw": false,
+        "canCreateAction": true,
+        "canSend": false,
+        "hasError": false,
+        "outputLanguageFrozen": true,
+        "phase": "completed"
+      }
+    }
+  ],
+  "workflowMayStillBeRunning": false,
+  "journalValidation": {
+    "revisions": true,
+    "allOutputChinese": true,
+    "allLanguageFrozenZhCN": true,
+    "allWebGranted": true,
+    "observedCompletedNativeWebCalls": 2,
+    "v2OnlyRequestedHeadingChanged": true,
+    "v2ASRIndexUnchanged": true,
+    "pendingWrites": 0
+  },
+  "acceptedPublications": [
+    {
+      "revision": 0,
+      "actorRounds": 1,
+      "inference": [
+        {
+          "modelID": "gpt-5.6-luna",
+          "reasoningEffortID": "low"
+        }
+      ],
+      "files": {
+        "structured-notes.md": {
+          "sha256": "45ea4f58160cd4cbee9832e19c708432c75a3fcad562faca7e447166f8427730",
+          "bytes": 5988
+        },
+        "suspicious-asr-terms.md": {
+          "sha256": "d1d9472ce6bc5f9a697c8792dab0ec88b13cc69c3a373d432ee71d8af90d5b11",
+          "bytes": 1100
+        }
+      }
+    },
+    {
+      "revision": 1,
+      "actorRounds": 1,
+      "inference": [
+        {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": null
+        }
+      ],
+      "files": {
+        "structured-notes.md": {
+          "sha256": "a484d1646c38b38a1562fdf0cc1a820045b795611bf2242785de666a6137c779",
+          "bytes": 6255
+        },
+        "suspicious-asr-terms.md": {
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "bytes": 382
+        }
+      }
+    },
+    {
+      "revision": 2,
+      "actorRounds": 1,
+      "inference": [
+        {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        }
+      ],
+      "files": {
+        "structured-notes.md": {
+          "sha256": "aed891b37dd93b051beffb1fd9f23f9f111389f3ab3e2daf185096d15b091dc5",
+          "bytes": 6256
+        },
+        "suspicious-asr-terms.md": {
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "bytes": 382
+        }
+      }
+    }
+  ],
+  "sourceTranscript": {
+    "source": "Read-only Mac ALMA session database; entire 27 saved turns rendered using Mac timestamp layout",
+    "audioSeconds": 515.12,
+    "utf8Bytes": 9305,
+    "sha256": "4ef08649a89ba993862bd2a74f660c6b4736a800deb9f61f5bfb46bdb94de4e3"
+  },
+  "scope": "Foreground, phone-owned UI commands, original TAH core and publication, native Codex backend. Mac only installs/launches/observes.",
+  "knownToolLimitation": "Perl is not installed in the fixed rootfs; actor encountered two failed Perl commands and completed the revision using existing tools. No task failed and no structural repair round was needed.",
+  "sourcePhonePID": 35994,
+  "timingScope": "From phone qualification runner start. Includes revisions, Guardians, remaining account-inspection wait and result reads; excludes build/install and preceding runtime preparation. Not single-inference latency."
+}

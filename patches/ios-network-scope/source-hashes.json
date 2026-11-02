@@ -1,0 +1,66 @@
+{
+  "shared/rust-bridge/codex-mobile-client/Cargo.toml": {
+    "before": "36d28209c2d8ae18fc40532046e9b0295cb62ee57d04cf31ffdea3bb3358574e",
+    "after": "0e30a6b98aa0cc8a5bf61ae7c9729c5126c173ad9d886fa21e5ddbcd87162e11"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/alleycat.rs": {
+    "before": "d9915eeb4e2dfebcba4d1d4678dc566b1af576367a0d0f22b1cb08f87cf54b78",
+    "after": "52e5bb05027bc070db41afe234a7fe93255d6f58990b2d4ed2d8e077b93ba90d"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/alleycat_types.rs": {
+    "before": null,
+    "after": "07370c1343ab3d615391bd2cd297c19a1e47a54949d0457206b0fd4f617ab1e6"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/alleycat_disabled.rs": {
+    "before": null,
+    "after": "874c44d25d10afada87f2b893c4b2aef94a183eb7245f02bf2c0d65d1490d7c4"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/network_scope.rs": {
+    "before": null,
+    "after": "6579f71e6081bab0a06da4296a41c67e043d1bdd02511f579fe7f5dff0f33aeb"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/lib.rs": {
+    "before": "ac0bd5d7ff2ddc5c2659ff7f0728787d550c8478e30c948a9ca64496b63ceaac",
+    "after": "3ad763166afe6313c55c651cf3ccb3c5f7e94b70df8fbb0407bfb3d036e2ca29"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs": {
+    "before": "bf7176a96178546ff02b8227e6d8a5eff8fb29123582bae9176ea568d69e1290",
+    "after": "76bfd7dfde88b10a980fa2aab670cb1f232f2970a4c774fd62c342f260eb8674"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/ffi/client.rs": {
+    "before": "2fa56fd72e4848a65de7a8e2327b315c91bdc5f0bd150292f4ef81e1b1fbfbc8",
+    "after": "7e80427b1693ef6a8851ea367f6b277432a6c0a914c17b3776fa7b9c3581a364"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/terminal/mod.rs": {
+    "before": "7bfd47f6815570294319e2bf1657ec79282a5b5b8842b0782269cd0c3ab6cb00",
+    "after": "245a15436e1e3a0ee47249289049fce099ecc36dcbea9c10c73d8d3cc2fd9cd4"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/terminal/backend.rs": {
+    "before": "c4606fba72e29c17b879bf4375c97a3ffd0facfb353960687a57813c82985518",
+    "after": "61210ff6eb950465054ba905ca9bb97870fa54445ff27069a95a00dc78514619"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/pair/mod.rs": {
+    "before": "ae6dab32a9bc4b19ecf9616f337573504d5eeac9632be9dac1f6f054b116fc3f",
+    "after": "90f37215fec64cbcf5597a018963085e0d67bf8c4673d3e3da35328d68b94ccf"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/android_context.rs": {
+    "before": "f8dedd18b079d33710cdfce184ab569297fe1e72861bbd714218e3f8b7a47f30",
+    "after": "598d80d8f2b235e0392622811544824af19df21cae59438309c52e11ce3c1ff7"
+  },
+  "shared/rust-bridge/codex-mobile-client/src/reconnect.rs": {
+    "before": "1b0b7babcf034de55f3d1aca21410e9b768fe41cdfaff44509cf4cfcbef2d863",
+    "after": "d55b4258d793fb995032f576a645ca4e7972c4aa93ab545143499d9eeadc02fe"
+  },
+  "apps/ios/scripts/build-rust.sh": {
+    "before": "67bbe2b172667d0ee5b887629b895673d7669fbfeacef7f98c64030bc5f01abf",
+    "after": "389fc468304f609db8411d1a21921c26d7b16ffa3641215b1e282488385694e4"
+  },
+  "shared/rust-bridge/generate-bindings.sh": {
+    "before": "0a9460b154fa863c536c5859e7f1db6b29063ead25f6ae2ade39d946710a24cb",
+    "after": "8a0d2f3ed04da526ac39431b0130214c85245c64cf7ecc221b0b292f7d0085c9"
+  },
+  "tools/scripts/uniffi-bindings-input-hash.sh": {
+    "before": "2adf572cb1cb7f9d0b7a6121c10f36e28ad2bb83014a5edb9e1cda067c03f67e",
+    "after": "c6a9ec5ab317fc91c120f774e0435528105d9120ec74ab53d96076419b69e050"
+  }
+}

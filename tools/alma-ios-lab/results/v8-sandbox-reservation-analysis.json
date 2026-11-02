@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-11-01T01:18:34.104Z",
+  "scope": {
+    "task": "Bounded source-only review of the exact pinned V8 sandbox reservation path, small-VA fallback and security limitations.",
+    "only_written_file": "tools/alma-ios-lab/results/v8-sandbox-reservation-analysis.json",
+    "production_boundary_changed": false,
+    "source_clone": false,
+    "binary_downloads": false,
+    "builds": false,
+    "device_calls": false,
+    "model_or_auth_calls": false,
+    "retrieval": "One public nonrecursive GitHub tree request using verified-TLS curl with 5-second connect/20-second total timeout and 2 MiB cap; pinned .gitmodules and six C++ source/header files through the GitHub public-resource fetch tool. Those source fetch batches completed in under three seconds each. Source bodies retained in tool memory, not written to a checkout."
+  },
+  "provenance": {
+    "rust_crate_version": "152.2.0",
+    "rusty_v8_fork": "https://github.com/seanh-oai/rusty_v8",
+    "rusty_v8_revision": "350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+    "tree_url": "https://api.github.com/repos/seanh-oai/rusty_v8/git/trees/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+    "tree_http_status": 200,
+    "tree_truncated": false,
+    "gitlink": {
+      "path": "v8",
+      "mode": "160000",
+      "type": "commit",
+      "sha": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe"
+    },
+    "submodule_repository": "https://github.com/denoland/v8.git",
+    "submodule_repository_evidence": "https://github.com/seanh-oai/rusty_v8/blob/350c5a859a9b3c84ab8701b3ad51e3b7699b30c0/.gitmodules#L1-L3",
+    "baseline": "Exact fork gitlink, not current V8 main or a generic release document."
+  },
+  "decision": {
+    "small_va_support_in_pinned_source": true,
+    "ios_normal_initialization": "With V8_ENABLE_SANDBOX and V8_TARGET_OS_IOS, the existing source selects an 8 GiB no-access reservation, aligned to 4 GiB, backing a logically 16 GiB partially reserved sandbox. This is built-in behavior, not a proposed cage-size modification.",
+    "security": "Partial reservation is explicitly not equivalent to the intended fully reserved memory boundary. Unrelated host mappings can occupy the unreserved logical sandbox, and surrounding guard regions are absent.",
+    "strict_mode": "sandbox_prohibit_insecure_mode defaults false. If true, successful partial initialization is rejected with FatalProcessOutOfMemory; the check also requires the low Smi address range to be inaccessible.",
+    "full_configuration": "The unchanged iOS initialization branch deliberately chooses partial reservation even when a VirtualAddressSpace can allocate subspaces. These sources therefore do not establish a fully reserved secure configuration on iOS. This is a statement about this pinned implementation, not a platform-impossibility claim.",
+    "interpretation_of_phone_probe": "The user-reported 1 TiB and 2 TiB mmap ENOMEM results do not rule out this built-in 8 GiB partial path. A successful partial or plain functional run would not establish the full intended V8 sandbox boundary."
+  },
+  "reported_context_not_independently_verified": {
+    "source": "User's current message; no device evidence read or reproduced.",
+    "plain_v8": "Reported six cases, 18.8 MiB, 29 ms after Apple Extended Virtual Addressing entitlement.",
+    "reservation_probe": "Reported separate PROT_NONE 1 TiB and 2 TiB mmap failures with ENOMEM and no pages touched.",
+    "entitlement": "Extended Virtual Addressing, not an increased physical-memory-limit entitlement.",
+    "qualification_scope": "Main/Dewey own separate no-account functional probes; ALMA production boundary unchanged."
+  },
+  "verified_facts": [
+    {
+      "id": "ios_logical_size",
+      "statement": "For V8_TARGET_OS_IOS, kSandboxSizeLog2 is 34, so kSandboxSize is 16 GiB. The generic non-special-case branch uses 1 TiB. Sandboxed-pointer offsets are shifted according to this logical size.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L218-L259"
+      ]
+    },
+    {
+      "id": "ios_address_space_estimate",
+      "statement": "DetermineAddressSpaceLimit assigns iOS 37 hardware address bits, then subtracts one for the userspace/kernel split, giving a 64 GiB userspace estimate before software-limit handling. The source describes this as best-effort, not a measurement of the current phone. It comments that this holds even with the extended-VA entitlement.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L253-L288",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L314-L335"
+      ]
+    },
+    {
+      "id": "minimum_and_alignment",
+      "statement": "The fixed minimum reservation is 8 GiB, larger than the 4 GiB pointer-compression cage. Sandbox alignment equals pointer-compression cage base alignment, 2^32 bytes (4 GiB). This minimum supports the cage plus ArrayBuffer partition; it is not an 8 GiB resident-memory allocation.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L164-L168",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L248-L275",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L561-L565"
+      ]
+    },
+    {
+      "id": "ios_forces_partial",
+      "statement": "Initialize normally caps reservation at one quarter of the estimated address space. The explicit iOS branch overrides the cap to kSandboxMinimumReservationSize so that 8 GiB is strictly below the 16 GiB logical sandbox. It directly calls InitializeAsPartiallyReservedSandbox.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L338-L391"
+      ]
+    },
+    {
+      "id": "generic_fallback_and_failure",
+      "statement": "On other applicable paths a failed full reservation is followed by successively halved partial reservations down to 8 GiB. On iOS the first request is already that minimum, so there is no smaller-size fallback. Failure to initialize causes FatalProcessOutOfMemory. The fallback allowance constant is true.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L67-L72",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L393-L406"
+      ]
+    },
+    {
+      "id": "partial_placement",
+      "statement": "Partial initialization requires power-of-two total and reservation sizes with reservation strictly smaller than total. It requests kNoAccess pages with 4 GiB alignment and randomized placement, preferably within the first half of the estimated address space. Up to ten placement attempts are permitted; an allocation failure returns false immediately. The final attempt may accept a base outside the preferred half.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L533-L588"
+      ]
+    },
+    {
+      "id": "partial_emulation",
+      "statement": "EmulatedVirtualAddressSubspace exposes the whole logical range but initially owns only the reserved prefix. It first allocates within that prefix, then can request separate mappings in the unreserved region using hints and verifies returned addresses are within that region. It does not make the intervening unreserved range exclusively owned.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.h#L18-L40",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.cc#L13-L29",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.cc#L46-L94"
+      ]
+    },
+    {
+      "id": "emulation_limits",
+      "statement": "Individual allocations in the unreserved region are limited to half that region's size; for the iOS 16/8 GiB layout this is 4 GiB. Allocation attempts are bounded and can fail. The emulated space cannot allocate child subspaces.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.h#L86-L116",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.cc#L64-L94",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.cc#L168-L179"
+      ]
+    },
+    {
+      "id": "security_limitation",
+      "statement": "The sandbox and emulated-space documentation explicitly says partial reservation lacks the desired security properties: unrelated mappings can land within the logical sandbox and be corrupted. It has no surrounding guard regions. Sandboxed offsets and allocation-range restrictions still exist, but do not exclude unrelated host memory from that range.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L117-L126",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L304-L312",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.h#L18-L30",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L255-L275"
+      ]
+    },
+    {
+      "id": "last_page_not_guaranteed_in_partial",
+      "statement": "FinishInitialization tries to reserve the last logical sandbox page as inaccessible; failure is tolerated for partial reservations. The empty backing-store pointer is placed at end minus one. This is an additional reason not to equate partial initialization success with all full-mode protections.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L600-L631"
+      ]
+    },
+    {
+      "id": "strict_security_flag",
+      "statement": "The flag sandbox_prohibit_insecure_mode is defined with default false. If enabled, Sandbox::Initialize fatally rejects either is_partially_reserved() or failure to mark the low Smi address range inaccessible. The full-mode code attempts to protect the first 4 GiB plus padding or accepts sufficient platform zero-segment protection.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/flags/flag-definitions.h#L3763-L3764",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L408-L415",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L501-L523"
+      ]
+    },
+    {
+      "id": "full_reservation_path",
+      "statement": "The full path reserves one subspace of logical size plus two guard regions and an additional trailing guard, aligned to 4 GiB, with maximum page permissions read/write. The no-guard overload is private and documented for tests; normal initialization sets use_guard_regions=true.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L387-L391",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L436-L498",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L283-L312"
+      ]
+    },
+    {
+      "id": "current_guard_arithmetic",
+      "statement": "Current constants evaluate to 64 GiB per ordinary guard region and 224 GiB additional trailing guard on iOS. A hypothetical full iOS reservation under these constants is 16 + 2*64 + 224 = 368 GiB, excluding any separate low-address reservation. The iOS comment in sandbox.cc still mentions 72/260 GiB guard figures and the sandbox.h diagram shows 32 GiB guards; those comments are not the current executable constant arithmetic.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L277-L318",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L367-L375",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc#L442-L448",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L50-L60"
+      ]
+    },
+    {
+      "id": "compile_flag_is_not_reservation_proof",
+      "statement": "SandboxIsEnabled() in the public internal header returns a compile-time V8_ENABLE_SANDBOX boolean. That alone does not distinguish partial from full reservation; Sandbox exposes separate size(), reservation_size(), and is_partially_reserved() state.",
+      "sources": [
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h#L203-L211",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L117-L126",
+        "https://github.com/denoland/v8/blob/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h#L156-L168"
+      ]
+    }
+  ],
+  "constants": {
+    "units": "Binary GiB = 2^30 bytes; source spells these GB.",
+    "logical_ios_size_bytes": 17179869184,
+    "minimum_reservation_bytes": 8589934592,
+    "required_base_alignment_bytes": 4294967296,
+    "pointer_compression_cage_bytes": 4294967296,
+    "guard_region_each_bytes": 68719476736,
+    "additional_trailing_guard_bytes": 240518168576,
+    "hypothetical_full_ios_subspace_bytes": 395136991232,
+    "minimum_is_total_process_va_requirement": false,
+    "note": "These are source-derived reservation values, not measured RSS or proof that aligned reservations succeed. Other tables/allocators also consume address space."
+  },
+  "unknowns": [
+    "Whether an actual sandbox-enabled iOS archive built from this exact source, with matching Rust bindings/build defines, initializes its 8 GiB aligned reservation successfully on the current signed app and phone.",
+    "Actual available/fragmented virtual address space, allocator over-reservation needs, low-address protections, and additional table/heap reservations for that binary. The source's iOS address-space estimate is not a device measurement.",
+    "Whether the existing published plain binary was built with any relevant sandbox macros: this review did not inspect or execute binaries. Plain probe success is separate evidence.",
+    "Any fully reserved secure iOS design beyond this unchanged source path. This review supplies no proof of platform impossibility and proposes no guard/cage-size modification.",
+    "End-to-end security of host callbacks, guest enforcement or ALMA. This is a reservation-source review, not a security audit or VM-equivalence claim."
+  ],
+  "handoff": [
+    "Report a functional partial-reservation run explicitly as partial, not as validation of the full intended V8 sandbox memory boundary.",
+    "The exact iOS source gives a concrete small-VA implementation to evaluate; the failed 1 TiB reservation is not its minimum requirement.",
+    "Retain the distinction between compile-time sandbox enabled, successful partial initialization, and full reservation plus required low-address protection.",
+    "No runtime implementation, flag changes, entitlement changes, or production boundary changes were made."
+  ],
+  "source_inventory": [
+    {
+      "path": "src/sandbox/sandbox.cc",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.cc",
+      "utf8_text_characters": 28200,
+      "line_count": 705
+    },
+    {
+      "path": "src/sandbox/sandbox.h",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/sandbox/sandbox.h",
+      "utf8_text_characters": 15838,
+      "line_count": 406
+    },
+    {
+      "path": "include/v8-internal.h",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/include/v8-internal.h",
+      "utf8_text_characters": 78635,
+      "line_count": 1911
+    },
+    {
+      "path": "src/base/emulated-virtual-address-subspace.cc",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.cc",
+      "utf8_text_characters": 7502,
+      "line_count": 202
+    },
+    {
+      "path": "src/base/emulated-virtual-address-subspace.h",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/base/emulated-virtual-address-subspace.h",
+      "utf8_text_characters": 5166,
+      "line_count": 141
+    },
+    {
+      "path": "src/flags/flag-definitions.h",
+      "revision": "c4ca1eccb90c5464d826b7713dc27178a53b0cfe",
+      "raw_url": "https://raw.githubusercontent.com/denoland/v8/c4ca1eccb90c5464d826b7713dc27178a53b0cfe/src/flags/flag-definitions.h",
+      "utf8_text_characters": 216979,
+      "line_count": 4560
+    }
+  ]
+}

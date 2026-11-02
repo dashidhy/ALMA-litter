@@ -36,6 +36,62 @@ const REMOTE_RECONNECT_MAX_ATTEMPTS: u32 = 5;
 const REMOTE_RECONNECT_DELAY: Duration = Duration::from_secs(1);
 const OPENAI_BASE_URL_ENV_KEY: &str = "OPENAI_BASE_URL";
 const APP_SERVER_PROXY_WEBSOCKET_URL: &str = "ws://codex-app-server-proxy.localhost/rpc";
+const ALMA_CLIENT_NAME: &str = "@alma/tah-codex-guest";
+
+fn prepare_alma_client_identity(codex_home: Option<&std::path::Path>) -> std::io::Result<()> {
+    use codex_login::default_client::{originator, set_default_originator, SetOriginatorError};
+    match set_default_originator(ALMA_CLIENT_NAME.into()) {
+        Ok(()) | Err(SetOriginatorError::AlreadyInitialized) => {},
+        Err(SetOriginatorError::InvalidHeaderValue) => return Err(std::io::Error::other("invalid ALMA client identity")),
+    }
+    if originator().value != ALMA_CLIENT_NAME {
+        return Err(std::io::Error::other("another client originator was initialized before ALMA"));
+    }
+    if let Some(home) = codex_home {
+        // Migrate only the derived default catalog when the client identity
+        // changes. Auth, settings, history and workspace files are untouched.
+        let stamp = home.join(".alma-catalog-client");
+        let previous = match std::fs::read_to_string(&stamp) {
+            Ok(value) => Some(value),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
+            Err(error) => return Err(error),
+        };
+        if previous.as_deref() != Some(ALMA_CLIENT_NAME) {
+            match std::fs::remove_file(home.join("models_cache.json")) {
+                Ok(()) => {},
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => {},
+                Err(error) => return Err(error),
+            }
+            std::fs::write(stamp, ALMA_CLIENT_NAME)?;
+        }
+    }
+    Ok(())
+}
+
+async fn build_embedded_config(
+    builder: codex_core::config::ConfigBuilder,
+    provider_web: bool,
+) -> std::io::Result<codex_core::config::Config> {
+    if !crate::network_scope::alma_local() {
+        return builder.build().await;
+    }
+    let config = builder.without_project_context().strict_config(true)
+        .build_with_validation(|raw, _, _| {
+            crate::alma_local_profile::validate_alma_local_config(raw, provider_web)
+        }).await?;
+    crate::alma_local_profile::validate_alma_local_effective_features(
+        config.features.enabled_features().into_iter().map(|feature| feature.key()),
+    )?;
+    let expected = if provider_web {
+        codex_protocol::config_types::WebSearchMode::Live
+    } else {
+        codex_protocol::config_types::WebSearchMode::Disabled
+    };
+    if config.web_search_mode.value() != expected {
+        return Err(std::io::Error::other("effective Web mode differs from the trusted ALMA grant"));
+    }
+    Ok(config)
+}
 
 #[derive(Clone)]
 pub(crate) struct SshReconnectTransport {
@@ -582,10 +638,10 @@ impl ServerSession {
         config: ServerConfig,
         in_process: InProcessConfig,
     ) -> Result<Self, TransportError> {
-        use codex_app_server::in_process::InProcessStartArgs;
+        use codex_app_server::in_process::{EmbeddedNetworkPolicy, InProcessStartArgs};
         use codex_app_server_protocol::{ClientInfo, InitializeCapabilities, InitializeParams};
         use codex_arg0::Arg0DispatchPaths;
-        use codex_cloud_config::cloud_config_bundle_loader;
+        use codex_cloud_config::managed_config_bundle_loader;
         use codex_config::LoaderOverrides;
         use codex_core::config::ConfigBuilder;
         use codex_feedback::CodexFeedback;
@@ -598,6 +654,19 @@ impl ServerSession {
         });
 
         let in_process = prepare_in_process_config(in_process)?;
+        if crate::network_scope::alma_local() {
+            prepare_alma_client_identity(in_process.codex_home.as_deref())
+                .map_err(|e| TransportError::ConnectionFailed(format!("ALMA client setup failed: {e}")))?;
+        }
+
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        let execution = crate::embedded_runtime::installed().map_err(|e| {
+            TransportError::ConnectionFailed(e.to_string())
+        })?;
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        let trusted_provider_web = execution.provider_web;
+        #[cfg(not(all(target_os = "ios", not(target_abi = "macabi"))))]
+        let trusted_provider_web = false;
 
         // Apply codex_home override if provided.
         if let Some(ref codex_home) = in_process.codex_home {
@@ -621,7 +690,9 @@ impl ServerSession {
             )));
         }
 
-        let mut cli_overrides = vec![
+        let mut cli_overrides = if crate::network_scope::alma_local() {
+            crate::alma_local_profile::alma_local_cli_overrides(trusted_provider_web)
+        } else { vec![
             ("features.goals".to_string(), true.into()),
             ("features.realtime_conversation".to_string(), true.into()),
             (
@@ -633,39 +704,51 @@ impl ServerSession {
                 "realtime.type".to_string(),
                 "conversational".to_string().into(),
             ),
-        ];
+        ] };
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        cli_overrides.extend(execution.config_overrides());
         if let Some(base_url) = openai_base_url_from_env() {
             cli_overrides.push(("openai_base_url".to_string(), base_url.into()));
         }
 
-        let mut base_builder = ConfigBuilder::default().cli_overrides(cli_overrides.clone());
+        // The embedder and server must share one live policy controller. Load
+        // local bootstrap requirements before constructing authenticated clients.
+        let loader_overrides = LoaderOverrides::default();
+        let embedded_network_policy = EmbeddedNetworkPolicy::load(&loader_overrides).await;
+        let mut base_builder = ConfigBuilder::default()
+            .cli_overrides(cli_overrides.clone())
+            .loader_overrides(loader_overrides.clone());
         if let Some(ref codex_home) = in_process.codex_home {
             base_builder = base_builder.codex_home(codex_home.clone());
         }
         if let Some(ref working_dir) = in_process.working_directory {
             base_builder = base_builder.fallback_cwd(Some(working_dir.clone()));
         }
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        { base_builder=base_builder.fallback_cwd(Some(execution.guest_cwd().map_err(|e|TransportError::ConnectionFailed(e.to_string()))?)); }
 
-        let base_config = base_builder
-            .build()
-            .await
+        let base_config = build_embedded_config(base_builder, trusted_provider_web).await
             .map_err(|e| TransportError::ConnectionFailed(format!("config build failed: {e}")))?;
 
-        let auth_manager = AuthManager::shared_from_config(&base_config, false)
+        let bootstrap_auth = embedded_network_policy.bind_bootstrap_auth(base_config.auth_config());
+        let bootstrap_http = bootstrap_auth.auth_route_config.http_client_factory().clone();
+        let auth_manager = AuthManager::shared_from_auth_config(bootstrap_auth, false)
             .await
             .map_err(|e| {
                 TransportError::ConnectionFailed(format!("auth initialization failed: {e}"))
             })?;
 
-        let cloud_config_bundle = cloud_config_bundle_loader(
+        let cloud_config_bundle = managed_config_bundle_loader(
             auth_manager.clone(),
             base_config.chatgpt_base_url.clone(),
             base_config.codex_home.to_path_buf(),
-            base_config.http_client_factory(),
+            bootstrap_http,
+            base_config.config_layer_stack.requirements_toml(),
         );
 
         let mut resolved_builder = ConfigBuilder::default()
             .cli_overrides(cli_overrides.clone())
+            .loader_overrides(loader_overrides.clone())
             .cloud_config_bundle(cloud_config_bundle.clone());
         if let Some(ref codex_home) = in_process.codex_home {
             resolved_builder = resolved_builder.codex_home(codex_home.clone());
@@ -673,34 +756,48 @@ impl ServerSession {
         if let Some(ref working_dir) = in_process.working_directory {
             resolved_builder = resolved_builder.fallback_cwd(Some(working_dir.clone()));
         }
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        { resolved_builder=resolved_builder.fallback_cwd(Some(execution.guest_cwd().map_err(|e|TransportError::ConnectionFailed(e.to_string()))?)); }
 
-        let resolved_config = resolved_builder.build().await.unwrap_or(base_config);
+        // A failed requirements load must not silently revert to the earlier
+        // bootstrap-only config and lose workspace/application restrictions.
+        let mut resolved_config = build_embedded_config(resolved_builder, trusted_provider_web).await.map_err(|e| {
+            TransportError::ConnectionFailed(format!("effective config build failed: {e}"))
+        })?;
+        embedded_network_policy.activate(&mut resolved_config);
+
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+        let environment_manager = execution.manager(&resolved_config).map_err(|e| {
+            TransportError::ConnectionFailed(format!("embedded environment registration failed: {e}"))
+        })?;
+        #[cfg(not(all(target_os = "ios", not(target_abi = "macabi"))))]
+        let environment_manager = Arc::new(codex_exec_server::EnvironmentManager::default_for_tests());
 
         let feedback = CodexFeedback::new();
         let session_source = SessionSource::VSCode;
+        let diagnostic_home = resolved_config.codex_home.to_path_buf();
 
         let args = InProcessStartArgs {
             arg0_paths: Arg0DispatchPaths::default(),
             config: Arc::new(resolved_config),
             cli_overrides,
-            loader_overrides: LoaderOverrides::default(),
-            strict_config: false,
+            loader_overrides,
+            strict_config: crate::network_scope::alma_local(),
             cloud_config_bundle,
+            embedded_network_policy,
             feedback,
             log_db: None,
             state_db: None,
             thread_config_loader: Arc::new(codex_config::NoopThreadConfigLoader),
-            environment_manager: Arc::new(
-                codex_exec_server::EnvironmentManager::default_for_tests(),
-            ),
+            environment_manager,
             config_warnings: Vec::new(),
             session_source,
-            enable_codex_api_key_env: true,
+            enable_codex_api_key_env: !cfg!(all(target_os = "ios", not(target_abi = "macabi"))),
             initialize: InitializeParams {
                 client_info: ClientInfo {
-                    name: "Litter".to_string(),
-                    version: "1.0".to_string(),
-                    title: None,
+                    name: if crate::network_scope::alma_local() { ALMA_CLIENT_NAME } else { "Litter" }.to_string(),
+                    version: if crate::network_scope::alma_local() { "1.0.0" } else { "1.0" }.to_string(),
+                    title: crate::network_scope::alma_local().then(|| "ALMA TAH Codex Guest".to_string()),
                 },
                 capabilities: Some(InitializeCapabilities {
                     experimental_api: true,
@@ -712,11 +809,33 @@ impl ServerSession {
             channel_capacity: in_process.channel_capacity,
         };
 
-        let mut handle = codex_app_server::in_process::start(args)
-            .await
+        #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+        let started = if crate::network_scope::alma_local() {
+            let provider = crate::alma_code_mode::IosCodeModeProbeProvider::initialize()
+                .map_err(|e| TransportError::ConnectionFailed(format!("native Code Mode initialization failed: {e}")))?;
+            codex_app_server::in_process::start_with_code_mode_provider(args, provider).await
+        } else {
+            codex_app_server::in_process::start(args).await
+        };
+        #[cfg(not(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe")))]
+        let started = codex_app_server::in_process::start(args).await;
+
+        let mut handle = started
             .map_err(|e| {
                 TransportError::ConnectionFailed(format!("in-process start failed: {e}"))
             })?;
+
+        if crate::network_scope::alma_local() {
+            let metadata = serde_json::json!({
+                "clientName": ALMA_CLIENT_NAME,
+                "originator": codex_login::default_client::originator().value,
+                "userAgent": codex_login::default_client::get_codex_user_agent(),
+                "scope": "client identity metadata only; no auth or request payload"
+            });
+            if let Ok(bytes) = serde_json::to_vec(&metadata) {
+                let _ = std::fs::write(diagnostic_home.join("alma-runtime-metadata.json"), bytes);
+            }
+        }
 
         let sender = handle.sender();
         let (event_tx, _) = broadcast::channel::<ServerEvent>(256);
@@ -812,6 +931,9 @@ impl ServerSession {
     /// Uses the upstream `RemoteAppServerClient` which handles the
     /// initialize/initialized handshake, request routing, and event streaming.
     pub async fn connect_remote(config: ServerConfig) -> Result<Self, TransportError> {
+        if !crate::network_scope::remote_cli_available() {
+            return Err(TransportError::ConnectionFailed(crate::network_scope::REMOTE_CLI_UNSUPPORTED.into()));
+        }
         let (_, args) = remote_connect_args(&config);
         let client = connect_remote_client(&args).await?;
         let resource = RuntimeRemoteSessionResource {
@@ -965,6 +1087,12 @@ impl ServerSession {
         request: ClientRequest,
     ) -> Result<JsonValue, RpcError> {
         let wire_method = request.method_name();
+        if self.config.is_local && crate::network_scope::alma_local()
+            && wire_method.starts_with("thread/realtime/") {
+            return Err(RpcError::Transport(TransportError::SendFailed(
+                "realtime operations are not part of the ALMA local profile".into(),
+            )));
+        }
         let (response_tx, response_rx) = oneshot::channel();
         let command_tx = self
             .runtime_command_txs
@@ -1063,12 +1191,8 @@ impl ServerSession {
     ) -> Result<(), RpcError> {
         let request_id = json_value_to_request_id(&id)?;
         let (response_tx, response_rx) = oneshot::channel();
-        let command_tx = self
-            .runtime_command_txs
-            .get(&runtime_kind)
-            .unwrap_or(&self.command_tx);
-        command_tx
-            .send(SessionCommand::Resolve {
+        let command_tx = self.server_response_sender(&runtime_kind)?;
+        command_tx.send(SessionCommand::Resolve {
                 request_id,
                 result,
                 response_tx,
@@ -1083,10 +1207,18 @@ impl ServerSession {
 
     /// Reject a server-initiated request with a JSON-RPC error.
     pub async fn reject(&self, id: JsonValue, error: JSONRPCErrorError) -> Result<(), RpcError> {
+        self.reject_for_runtime("codex".to_string(), id, error).await
+    }
+
+    pub async fn reject_for_runtime(
+        &self,
+        runtime_kind: AgentRuntimeKind,
+        id: JsonValue,
+        error: JSONRPCErrorError,
+    ) -> Result<(), RpcError> {
         let request_id = json_value_to_request_id(&id)?;
         let (response_tx, response_rx) = oneshot::channel();
-        self.command_tx
-            .send(SessionCommand::Reject {
+        self.server_response_sender(&runtime_kind)?.send(SessionCommand::Reject {
                 request_id,
                 error,
                 response_tx,
@@ -1097,6 +1229,23 @@ impl ServerSession {
         response_rx
             .await
             .map_err(|_| RpcError::Transport(TransportError::Disconnected))?
+    }
+
+    fn server_response_sender(
+        &self,
+        runtime_kind: &str,
+    ) -> Result<&mpsc::Sender<SessionCommand>, RpcError> {
+        if let Some(sender) = self.runtime_command_txs.get(runtime_kind) {
+            return Ok(sender);
+        }
+        if runtime_kind == "codex" {
+            return Ok(&self.command_tx);
+        }
+        // A reply containing credentials must never fall back to a different
+        // runtime merely because the original request's route disappeared.
+        Err(RpcError::Transport(TransportError::SendFailed(
+            "server-request runtime is unavailable".into(),
+        )))
     }
 
     /// Disconnect from the server, shutting down all background tasks.
@@ -1186,6 +1335,9 @@ pub(crate) fn remote_connect_args(config: &ServerConfig) -> (String, RemoteAppSe
 pub(crate) async fn connect_remote_client(
     args: &RemoteAppServerConnectArgs,
 ) -> Result<AppServerClient, TransportError> {
+    if !crate::network_scope::remote_cli_available() {
+        return Err(TransportError::ConnectionFailed(crate::network_scope::REMOTE_CLI_UNSUPPORTED.into()));
+    }
     #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
     {
         let home_dir = std::env::var_os("HOME").map(PathBuf::from);
@@ -1200,6 +1352,7 @@ pub(crate) async fn connect_remote_client(
     ))
 }
 
+#[cfg(feature = "remote-cli")]
 pub(crate) async fn connect_remote_client_over_app_server_proxy(
     ssh_client: &SshClient,
     args: &RemoteAppServerConnectArgs,
@@ -1230,6 +1383,16 @@ pub(crate) async fn connect_remote_client_over_app_server_proxy(
             .await
             .map_err(|e| TransportError::ConnectionFailed(e.to_string()))?,
     ))
+}
+
+#[cfg(not(feature = "remote-cli"))]
+pub(crate) async fn connect_remote_client_over_app_server_proxy(
+    _ssh_client: &SshClient,
+    _args: &RemoteAppServerConnectArgs,
+    _codex_path: &str,
+    _remote_shell: RemoteShell,
+) -> Result<AppServerClient, TransportError> {
+    Err(TransportError::ConnectionFailed(crate::network_scope::REMOTE_CLI_UNSUPPORTED.into()))
 }
 
 pub(crate) async fn connect_remote_client_over_slingshot(

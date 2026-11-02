@@ -1,0 +1,80 @@
+{
+  "elapsedSeconds": 0.07213212503120303,
+  "footprintBytes": 18663168,
+  "availableMemoryBytes": 3202562304,
+  "thermalState": 0,
+  "peakFootprintBytes": 19679000,
+  "phase": "completed",
+  "scope": "Plain native iOS V8 fixed scripts only; no account, recording, Code Mode integration or memory-sandbox qualification",
+  "summary": {
+    "allExpectationsMatched": true,
+    "scope": "plain iOS V8, fixed scripts only; no memory sandbox, Code Mode integration, account or recording data",
+    "seconds": 0.02951925,
+    "type": "finished",
+    "cases": 6
+  },
+  "reason": "Results saved",
+  "freeDiskBytes": 52428800000,
+  "cases": [
+    {
+      "passed": true,
+      "id": "initialize",
+      "jitRequested": false,
+      "seconds": 0.009603625,
+      "type": "case",
+      "peakAppFootprintBytes": 14239440,
+      "memorySandboxRequested": false,
+      "v8Version": "15.2.124.1-rusty"
+    },
+    {
+      "peakAppFootprintBytes": 18908952,
+      "id": "arithmetic",
+      "passed": true,
+      "seconds": 0.005021083,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 19679000,
+      "id": "unicode-json",
+      "passed": true,
+      "seconds": 0.002967208,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18630400,
+      "id": "set-global",
+      "passed": true,
+      "seconds": 0.000468875,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18630400,
+      "id": "fresh-context",
+      "passed": true,
+      "seconds": 0.000349958,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18663168,
+      "id": "wasm-disabled",
+      "passed": true,
+      "seconds": 0.000691041,
+      "type": "case"
+    }
+  ],
+  "runID": "38ecb3b4-9cc7-41d1-8208-9398c430f370",
+  "collection": {
+    "runID": "38ecb3b4-9cc7-41d1-8208-9398c430f370",
+    "pid": 35205,
+    "processEnded": true,
+    "lastPhase": "completed",
+    "passed": true
+  },
+  "configuration": {
+    "extendedVirtualAddressing": true,
+    "increasedMemoryLimit": false,
+    "bundle": "com.alma.litter.v8-probe",
+    "build": "2",
+    "source": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.kernel.extended-virtual-addressing"
+  }
+}

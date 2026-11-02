@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "modelCalls": false,
+  "hostOnly": true,
+  "calls": [
+    {
+      "role": "raw_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "extra_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": null
+      },
+      "web": true
+    },
+    {
+      "role": "extra_guardian",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    },
+    {
+      "role": "actor",
+      "inference": {
+        "modelID": "gpt-5.6-luna",
+        "reasoningEffortID": "low"
+      },
+      "web": false
+    }
+  ],
+  "outcomes": [
+    {
+      "revision": 0,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 1
+    },
+    {
+      "revision": 1,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 2
+    },
+    {
+      "revision": 2,
+      "language": "en",
+      "phase": "completed",
+      "revisions": 3
+    }
+  ],
+  "historyItems": 6,
+  "bundle": "5d4229dafd57295a49b9e8e4b24172712708c8142c4536a6b19672764ce62947",
+  "validation": "Same-process model-free replay using original AppActions/AuthService/workflow/SQLite journal. All six published files match recorded accepted V0/V1/V2 bytes. Not a phone or live Provider acceptance."
+}

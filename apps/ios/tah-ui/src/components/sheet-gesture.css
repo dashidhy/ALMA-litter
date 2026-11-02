@@ -1,0 +1,8 @@
+.sheet .sheet-surface { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+.sheet .sheet-drag-region { flex-shrink: 0; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+.sheet .sheet-drag-region:active { cursor: grabbing; }
+.sheet .sheet-handle { margin-block: 10px 3px; }
+/* This static heading receives initial accessibility focus, but is not a control. */
+.sheet .sheet-header h2:focus { outline: none; }
+.sheet[open]::backdrop { background: rgba(0, 0, 0, var(--sheet-backdrop-alpha, .53)); }
+.sheet[data-settling]::backdrop { transition: background-color var(--sheet-settle-duration) cubic-bezier(.22,1,.36,1); }

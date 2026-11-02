@@ -1,0 +1,482 @@
+{
+  "compiler": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "archive_sha256": {
+    "nix-0.28.0": "ab2156c4fce2f8df6c499cc1c763e4394b7482525bf2a9701c9d79d215f519e4",
+    "nix-0.29.0": "71e2746dc3a24dd78b3cfcb7be93368c6de9963d30f43a6a73998a9cf4b17b46",
+    "nix-0.30.1": "74523f3a35e05aba87a1d978330aef40f67b0304ac79c1c00b294c9830543db6",
+    "nix-0.31.2": "5d6d0705320c1e6ba1d912b5e37cf18071b6c2e9b7fa8215a1e8a7651966f5d3",
+    "libc-0.2.191": "65cd87c9a6d60536580b316ad985726104730a5151c99845f2490428ef91240a",
+    "bitflags-2.13.2": "3ded4057c258ba199e2d26386d3af3780957ecaee6c4ef4041c6b4b8b97c0b06",
+    "cfg-if-1.0.4": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+    "cfg_aliases-0.1.1": "fd16c4719339c4530435d38e511904438d07cce7950afa3718a84ac36c10e89e",
+    "cfg_aliases-0.2.2": "f079e83a288787bcd14a6aea84cee5c87a67c5a3e660c30f557a3d24761b3527",
+    "memoffset-0.9.1": "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a",
+    "autocfg-1.5.1": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+    "nix-0.31.3": "cf20d2fde8ff38632c426f1165ed7436270b44f199fc55284c38276f9db47c3d"
+  },
+  "project_lock_sha256": "802191a0069229737037312e465f74aa48d0b7a6008e165f6ccb25a98884fb29",
+  "prepare_checks": [
+    "idempotent",
+    "dirty destination refused",
+    "corrupt archive refused",
+    "post-patch lock provenance",
+    "missing/changed selections refused"
+  ],
+  "date": "2026-11-01",
+  "status": "PASS",
+  "local_evidence": ".cache/validation-sydsb18n/results.json",
+  "build_test_seconds": 24.98,
+  "results": [
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "fs",
+        "ioctl",
+        "poll",
+        "process",
+        "signal",
+        "term"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.91,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/00-0.28.0-aarch64-apple-ios-actual/build.log"
+    },
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "fs",
+        "ioctl",
+        "poll",
+        "process",
+        "signal",
+        "term"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.35,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/01-0.28.0-aarch64-apple-darwin-actual/build.log"
+    },
+    {
+      "version": "0.30.1",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "feature"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 0.67,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/02-0.30.1-aarch64-apple-darwin-actual/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "fs",
+        "mman",
+        "poll",
+        "process",
+        "signal"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.21,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/03-0.31.2-aarch64-apple-ios-actual/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "fs",
+        "mman",
+        "poll",
+        "process",
+        "signal"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 0.8,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/04-0.31.2-aarch64-apple-darwin-actual/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "feature",
+        "fs",
+        "memoffset",
+        "mount",
+        "net",
+        "process",
+        "sched",
+        "signal",
+        "socket",
+        "term",
+        "uio",
+        "user"
+      ],
+      "patched": false,
+      "label": "actual",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "UTUN_OPT_IFNAME"
+      ],
+      "exit_code": 101,
+      "seconds": 1.51,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/05-0.29.0-aarch64-apple-ios-actual/build.log"
+    },
+    {
+      "version": "0.31.3",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": false,
+      "label": "official-candidate",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "UTUN_OPT_IFNAME"
+      ],
+      "exit_code": 101,
+      "seconds": 0.85,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/06-0.31.3-aarch64-apple-ios-official-candidate/build.log"
+    },
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": false,
+      "label": "latent",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "AF_SYS_CONTROL"
+      ],
+      "exit_code": 101,
+      "seconds": 0.8,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/07-0.28.0-aarch64-apple-ios-latent/build.log"
+    },
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.17,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/08-0.28.0-aarch64-apple-ios-net/build.log"
+    },
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.22,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/09-0.28.0-aarch64-apple-darwin-net/build.log"
+    },
+    {
+      "version": "0.28.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "absent-api",
+      "expected_errors": [
+        "KextControl",
+        "SysControlAddr"
+      ],
+      "exit_code": 101,
+      "seconds": 0.12,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/10-0.28.0-aarch64-apple-ios-absent-api/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": false,
+      "label": "latent",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "AF_SYS_CONTROL"
+      ],
+      "exit_code": 101,
+      "seconds": 0.83,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/11-0.29.0-aarch64-apple-ios-latent/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.09,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/12-0.29.0-aarch64-apple-ios-net/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.12,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/13-0.29.0-aarch64-apple-darwin-net/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "absent-api",
+      "expected_errors": [
+        "KextControl",
+        "SysControlAddr",
+        "UtunIfname"
+      ],
+      "exit_code": 101,
+      "seconds": 0.09,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/14-0.29.0-aarch64-apple-ios-absent-api/build.log"
+    },
+    {
+      "version": "0.30.1",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": false,
+      "label": "latent",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "AF_SYS_CONTROL"
+      ],
+      "exit_code": 101,
+      "seconds": 0.87,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/15-0.30.1-aarch64-apple-ios-latent/build.log"
+    },
+    {
+      "version": "0.30.1",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.13,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/16-0.30.1-aarch64-apple-ios-net/build.log"
+    },
+    {
+      "version": "0.30.1",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.16,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/17-0.30.1-aarch64-apple-darwin-net/build.log"
+    },
+    {
+      "version": "0.30.1",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "absent-api",
+      "expected_errors": [
+        "KextControl",
+        "SysControlAddr",
+        "UtunIfname"
+      ],
+      "exit_code": 101,
+      "seconds": 0.09,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/18-0.30.1-aarch64-apple-ios-absent-api/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": false,
+      "label": "latent",
+      "expected_errors": [
+        "SYSPROTO_CONTROL",
+        "AF_SYS_CONTROL"
+      ],
+      "exit_code": 101,
+      "seconds": 0.87,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/19-0.31.2-aarch64-apple-ios-latent/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.16,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/20-0.31.2-aarch64-apple-ios-net/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "net",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.13,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/21-0.31.2-aarch64-apple-darwin-net/build.log"
+    },
+    {
+      "version": "0.31.2",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "net",
+        "ioctl"
+      ],
+      "patched": true,
+      "label": "absent-api",
+      "expected_errors": [
+        "KextControl",
+        "SysControlAddr",
+        "UtunIfname"
+      ],
+      "exit_code": 101,
+      "seconds": 0.09,
+      "outcome": "expected failure",
+      "log": ".cache/validation-sydsb18n/22-0.31.2-aarch64-apple-ios-absent-api/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-ios",
+      "features": [
+        "feature",
+        "fs",
+        "memoffset",
+        "mount",
+        "net",
+        "process",
+        "sched",
+        "signal",
+        "socket",
+        "term",
+        "uio",
+        "user"
+      ],
+      "patched": true,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.92,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/23-0.29.0-aarch64-apple-ios-actual/build.log"
+    },
+    {
+      "version": "0.29.0",
+      "target": "aarch64-apple-darwin",
+      "features": [
+        "feature",
+        "fs",
+        "memoffset",
+        "mount",
+        "net",
+        "process",
+        "sched",
+        "signal",
+        "socket",
+        "term",
+        "uio",
+        "user"
+      ],
+      "patched": true,
+      "label": "actual",
+      "expected_errors": [],
+      "exit_code": 0,
+      "seconds": 1.82,
+      "outcome": "PASS",
+      "log": ".cache/validation-sydsb18n/24-0.29.0-aarch64-apple-darwin-actual/build.log"
+    }
+  ]
+}

@@ -170,7 +170,10 @@ fn maybe_persist_thread_mode_from_event(
     let UiEvent::ItemCompleted { key, notification } = event else {
         return;
     };
-    if !matches!(notification.item, upstream::ThreadItem::Plan { .. }) {
+    if !matches!(
+        &notification.item.payload,
+        upstream::ThreadItemPayload::Plan { .. }
+    ) {
         return;
     }
     let directory = {
@@ -261,8 +264,8 @@ fn maybe_hydrate_collab_agent_metadata(
 
 fn collab_receiver_thread_ids(event: &UiEvent) -> Option<(String, Vec<String>)> {
     match event {
-        UiEvent::ItemStarted { key, notification } => match &notification.item {
-            upstream::ThreadItem::CollabAgentToolCall {
+        UiEvent::ItemStarted { key, notification } => match &notification.item.payload {
+            upstream::ThreadItemPayload::CollabAgentToolCall {
                 receiver_thread_ids,
                 ..
             } if !receiver_thread_ids.is_empty() => Some((
@@ -271,8 +274,8 @@ fn collab_receiver_thread_ids(event: &UiEvent) -> Option<(String, Vec<String>)> 
             )),
             _ => None,
         },
-        UiEvent::ItemCompleted { key, notification } => match &notification.item {
-            upstream::ThreadItem::CollabAgentToolCall {
+        UiEvent::ItemCompleted { key, notification } => match &notification.item.payload {
+            upstream::ThreadItemPayload::CollabAgentToolCall {
                 receiver_thread_ids,
                 ..
             } if !receiver_thread_ids.is_empty() => Some((
@@ -618,10 +621,10 @@ mod tests {
         let event = UiEvent::ItemCompleted {
             key: key.clone(),
             notification: upstream::ItemCompletedNotification {
-                item: upstream::ThreadItem::Plan {
+                item: upstream::ThreadItem::untimed(upstream::ThreadItemPayload::Plan {
                     id: "plan".to_string(),
                     text: "plan text".to_string(),
-                },
+                }),
                 thread_id: key.thread_id.clone(),
                 turn_id: "turn-plan".to_string(),
                 completed_at_ms: 0,
@@ -680,21 +683,23 @@ mod tests {
                 thread_id: "parent".to_string(),
             },
             notification: upstream::ItemCompletedNotification {
-                item: upstream::ThreadItem::CollabAgentToolCall {
-                    id: "call-1".to_string(),
-                    tool: upstream::CollabAgentTool::SpawnAgent,
-                    status: upstream::CollabAgentToolCallStatus::Completed,
-                    sender_thread_id: "parent".to_string(),
-                    receiver_thread_ids: vec![
-                        " child-1 ".to_string(),
-                        "child-2".to_string(),
-                        "child-1".to_string(),
-                    ],
-                    prompt: None,
-                    model: None,
-                    reasoning_effort: None,
-                    agents_states: HashMap::new(),
-                },
+                item: upstream::ThreadItem::untimed(
+                    upstream::ThreadItemPayload::CollabAgentToolCall {
+                        id: "call-1".to_string(),
+                        tool: upstream::CollabAgentTool::SpawnAgent,
+                        status: upstream::CollabAgentToolCallStatus::Completed,
+                        sender_thread_id: "parent".to_string(),
+                        receiver_thread_ids: vec![
+                            " child-1 ".to_string(),
+                            "child-2".to_string(),
+                            "child-1".to_string(),
+                        ],
+                        prompt: None,
+                        model: None,
+                        reasoning_effort: None,
+                        agents_states: HashMap::new(),
+                    },
+                ),
                 thread_id: "parent".to_string(),
                 turn_id: "turn-1".to_string(),
                 completed_at_ms: 0,

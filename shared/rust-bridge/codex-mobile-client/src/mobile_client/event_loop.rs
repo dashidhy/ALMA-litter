@@ -132,6 +132,48 @@ impl MobileClient {
                         runtime_kind,
                         request,
                     }) => {
+                        if let upstream::ServerRequest::ChatgptAuthTokensRefresh {
+                            request_id,
+                            params,
+                        } = &request
+                        {
+                            // Handle secrets on the Rust-owned request/response path,
+                            // before raw-notification projection or request logging.
+                            let received_at = tokio::time::Instant::now();
+                            let local_codex_server =
+                                oauth_session.config().is_local && runtime_kind == "codex";
+                            let request_id = request_id.clone();
+                            let params = params.clone();
+                            let session = Arc::clone(&oauth_session);
+                            let sessions = Arc::clone(&sessions);
+                            let server_id = server_id.clone();
+                            Self::spawn_detached(async move {
+                                let local_codex_server = local_codex_server
+                                    && session_is_current(&sessions, &server_id, &session);
+                                let outcome = crate::auth_refresh::dispatcher().dispatch(
+                                    local_codex_server, params, received_at,
+                                    |mut response| async move {
+                                        if !session_is_current(&sessions, &server_id, &session) {
+                                            response = Err(crate::auth_refresh::rpc_error(
+                                                crate::auth_refresh::ChatgptAuthRefreshError::AccountChanged,
+                                            ));
+                                        }
+                                        let id = serde_json::to_value(request_id).map_err(|_| ())?;
+                                        match response {
+                                            Ok(tokens) => session.respond_for_runtime(
+                                                runtime_kind, id, serde_json::to_value(tokens).map_err(|_| ())?,
+                                            ).await.map_err(|_| ()),
+                                            Err(error) => session.reject_for_runtime(runtime_kind, id, error)
+                                                .await.map_err(|_| ()),
+                                        }
+                                    },
+                                ).await;
+                                if outcome.is_err() {
+                                    warn!("local auth refresh response could not be delivered");
+                                }
+                            });
+                            continue;
+                        }
                         debug!("event reader server_id={} request={:?}", server_id, request);
                         let dynamic_tool_request = match &request {
                             upstream::ServerRequest::DynamicToolCall { request_id, params } => {
@@ -364,9 +406,6 @@ impl MobileClient {
             upstream::ClientRequest::ThreadRead { params, .. } => Some(params.thread_id.as_str()),
             upstream::ClientRequest::ThreadResume { params, .. } => Some(params.thread_id.as_str()),
             upstream::ClientRequest::ThreadFork { params, .. } => Some(params.thread_id.as_str()),
-            upstream::ClientRequest::ThreadRollback { params, .. } => {
-                Some(params.thread_id.as_str())
-            }
             upstream::ClientRequest::ThreadUnsubscribe { params, .. } => {
                 Some(params.thread_id.as_str())
             }
@@ -1225,7 +1264,6 @@ pub(crate) fn client_request_wire_method(request: &upstream::ClientRequest) -> &
         upstream::ClientRequest::ThreadRead { .. } => "thread/read",
         upstream::ClientRequest::ThreadResume { .. } => "thread/resume",
         upstream::ClientRequest::ThreadFork { .. } => "thread/fork",
-        upstream::ClientRequest::ThreadRollback { .. } => "thread/rollback",
         upstream::ClientRequest::ThreadTurnsList { .. } => "thread/turns/list",
         upstream::ClientRequest::TurnStart { .. } => "turn/start",
         upstream::ClientRequest::TurnSteer { .. } => "turn/steer",
@@ -1241,6 +1279,7 @@ mod tests {
     use crate::store::snapshot::ThreadSnapshot;
     use codex_app_server_protocol::{
         CommandAction, CommandExecutionSource, CommandExecutionStatus, ThreadItem,
+        ThreadItemPayload,
     };
     use serde::Deserialize;
     use serde::de::Error as _;
@@ -1559,7 +1598,9 @@ mod tests {
         let parsed: upstream::ThreadTurnsListResponse =
             deserialize_typed_response(&payload).expect("thread turns should deserialize");
 
-        let upstream::ThreadItem::UserMessage { content, .. } = &parsed.data[0].items[0] else {
+        let upstream::ThreadItemPayload::UserMessage { content, .. } =
+            &parsed.data[0].items[0].payload
+        else {
             panic!("expected user message");
         };
         assert!(matches!(
@@ -1567,7 +1608,8 @@ mod tests {
             upstream::UserInput::Text { text, .. } if text == "hello"
         ));
 
-        let upstream::ThreadItem::DynamicToolCall { content_items, .. } = &parsed.data[0].items[1]
+        let upstream::ThreadItemPayload::DynamicToolCall { content_items, .. } =
+            &parsed.data[0].items[1].payload
         else {
             panic!("expected dynamic tool call");
         };
@@ -1630,9 +1672,9 @@ mod tests {
 
         let parsed: upstream::ThreadTurnsListResponse =
             deserialize_typed_response(&payload).expect("thread turns should deserialize");
-        let upstream::ThreadItem::CommandExecution {
+        let upstream::ThreadItemPayload::CommandExecution {
             command_actions, ..
-        } = &parsed.data[0].items[0]
+        } = &parsed.data[0].items[0].payload
         else {
             panic!("expected command execution");
         };
@@ -1738,8 +1780,8 @@ mod tests {
             .expect("legacy opencode payload should deserialize");
         let items = &parsed.thread.turns[0].items;
         assert!(matches!(
-            &items[0],
-            upstream::ThreadItem::CommandExecution {
+            &items[0].payload,
+            upstream::ThreadItemPayload::CommandExecution {
                 cwd,
                 status: upstream::CommandExecutionStatus::Failed,
                 command_actions,
@@ -1752,22 +1794,22 @@ mod tests {
                 )
         ));
         assert!(matches!(
-            &items[1],
-            upstream::ThreadItem::FileChange {
+            &items[1].payload,
+            upstream::ThreadItemPayload::FileChange {
                 status: upstream::PatchApplyStatus::Failed,
                 ..
             }
         ));
         assert!(matches!(
-            &items[2],
-            upstream::ThreadItem::McpToolCall {
+            &items[2].payload,
+            upstream::ThreadItemPayload::McpToolCall {
                 status: upstream::McpToolCallStatus::Failed,
                 ..
             }
         ));
         assert!(matches!(
-            &items[3],
-            upstream::ThreadItem::DynamicToolCall {
+            &items[3].payload,
+            upstream::ThreadItemPayload::DynamicToolCall {
                 status: upstream::DynamicToolCallStatus::InProgress,
                 content_items: Some(content_items),
                 ..
@@ -1778,8 +1820,8 @@ mod tests {
             )
         ));
         assert!(matches!(
-            &items[4],
-            upstream::ThreadItem::CollabAgentToolCall {
+            &items[4].payload,
+            upstream::ThreadItemPayload::CollabAgentToolCall {
                 status: upstream::CollabAgentToolCallStatus::InProgress,
                 agents_states,
                 ..
@@ -1792,7 +1834,9 @@ mod tests {
 
     #[test]
     fn deserialize_typed_response_resolves_read_action_paths_against_command_cwd() {
-        let command_item = ThreadItem::CommandExecution {
+        let command_item = ThreadItem::untimed(ThreadItemPayload::CommandExecution {
+            sandbox_type: None,
+            model_context: None,
             plugin_id: None,
             script_path: None,
             id: "cmd-1".into(),
@@ -1810,17 +1854,17 @@ mod tests {
             aggregated_output: None,
             exit_code: Some(0),
             duration_ms: Some(1),
-        };
+        });
         let mut payload = serde_json::to_value(command_item).expect("serialize command item");
         payload["commandActions"][0]["path"] = json!("crates/krusty-cli/src/main.rs");
 
         let parsed: ThreadItem =
             deserialize_typed_response(&payload).expect("payload should deserialize");
-        let ThreadItem::CommandExecution {
+        let ThreadItemPayload::CommandExecution {
             cwd,
             command_actions,
             ..
-        } = parsed
+        } = parsed.payload
         else {
             panic!("expected command execution item");
         };

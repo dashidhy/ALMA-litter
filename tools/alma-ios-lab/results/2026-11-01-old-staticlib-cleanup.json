@@ -1,0 +1,7 @@
+{
+  "removed": "old completed top-level staticlib",
+  "sha256": "8a4514cd9f54d5576c30bdd0fc73e173d3d483c6fa08b3295b900f936476be68",
+  "logicalBytes": 3798490104,
+  "physicalFreeGainBytes": -20480,
+  "preserved": "installed signed app, previous signed app executable, reproducible build, generated API, source/archive receipts. Active dependency artifacts are untouched; new build recreates this output."
+}

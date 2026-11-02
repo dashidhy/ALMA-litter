@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "contract": "Original Mac TAHJournalStore and store.* RPC; no substitute journal, cutover invocation or JSCore/platform export changes.",
+  "actual_sqlite_source": "TAHSQLValue + TAHSQLiteConnection are private declarations in TAHJournalStore.swift:330-454; no TAHSQLite*.swift files exist in this checkout.",
+  "files": [
+    {
+      "destination": "TAHJournalStore.swift",
+      "source": "/Users/dashidhy/Public/projects/agent/ALMA/app/Sources/AlmaTAHAppRuntime/TAHJournalStore.swift",
+      "source_sha256": "e2eff11be950601fce8272837ac636c5be07732036cd513b343f7992b211215f",
+      "adopted_sha256": "e2eff11be950601fce8272837ac636c5be07732036cd513b343f7992b211215f",
+      "adoption": "byte-identical whole file"
+    },
+    {
+      "destination": "TAHJournalRPC.swift",
+      "source": "/Users/dashidhy/Public/projects/agent/ALMA/app/Sources/AlmaTAHAppRuntime/TAHJournalRPC.swift",
+      "source_sha256": "08b32098f0cf4f2877dc77dc19376cd411c291fef3042919cc20335dc59b5b6d",
+      "adopted_sha256": "08b32098f0cf4f2877dc77dc19376cd411c291fef3042919cc20335dc59b5b6d",
+      "adoption": "byte-identical whole file"
+    },
+    {
+      "destination": "TAHRuntimeWire.swift",
+      "source": "/Users/dashidhy/Public/projects/agent/ALMA/app/Sources/AlmaTAHAppRuntime/TAHRuntimeWire.swift",
+      "source_sha256": "148601cfae190d902833e1ee88654c6da3dc35ad51b5675221b045d5167a48f4",
+      "adopted_sha256": "148601cfae190d902833e1ee88654c6da3dc35ad51b5675221b045d5167a48f4",
+      "adoption": "byte-identical whole file"
+    },
+    {
+      "destination": "TAHRuntimeResources.swift",
+      "source": "/Users/dashidhy/Public/projects/agent/ALMA/app/Sources/AlmaTAHAppRuntime/TAHRuntimeResources.swift",
+      "source_sha256": "a0d63a4837eb5e97b2c8100e108240166d24384f61e9e88da7b6849540bbed66",
+      "source_lines": [
+        186,
+        196
+      ],
+      "selected_bytes_sha256": "9dcbf27c03b1605296d4980a389611cec9c38cb53b34af3cda14587eb5c4755f",
+      "adopted_sha256": "64962420cf4800948f7cef18a159e048ef376807c3d46189f4e45ea9d7d7189e",
+      "adoption": "digest/isDigest/canonicalPath bodies copied verbatim; only imports and enclosing resource shell selected"
+    }
+  ],
+  "portability_edits": [
+    "TAHJournalStore.swift, TAHJournalRPC.swift, TAHRuntimeWire.swift: zero changes.",
+    "TAHRuntimeResources.swift: extract exact journal-only helpers into original type namespace; omit Mac SecStaticCode/XPC/Node inventory dependencies, not journal validation."
+  ],
+  "integration": [
+    "Provide canonical app-owned directory with 0700 permissions; original store validates ownership, no symlinks and 0600 database files.",
+    "Link system sqlite3; Foundation, CryptoKit and Darwin are Apple system modules.",
+    "Keep store actor-confined; handleRPC remains internal like Mac, so invoke in same app/module or add separately-reviewed visibility at main integration.",
+    "TAHRuntimeValue/Error are defined in adopted TAHRuntimeWire.swift; consume these types in the JSCore host rather than declaring competing names.",
+    "TAHRuntimeResources here provides journal helpers only; main owns all runtime resource/export policy.",
+    "Cutover methods are retained byte-identically but this adoption and smoke never call them.",
+    "RPC store.begin requires publicationRevision as an explicit null for non-publications, not an omitted key; retain original strict key validation."
+  ],
+  "verification": {
+    "status": "passed isolated macOS arm64 real-SQLite smoke",
+    "result": "host-smoke-result.json",
+    "result_sha256": "173ec663ddbf46b831b4bfcd01d6c6ca06fbbd7ff863418c2d3c78c722431277",
+    "reproduce": "python3 apps/ios/Sources/AlmaTAH/Persistence/host-smoke.py",
+    "smoke_script_sha256": "1a13cc85c93592d2ac67c863cf1cd9dba25da6aef47499b7e60eeba4aea139e6",
+    "compile": "Swift language mode 6; strict-concurrency=complete; system SQLite; no diagnostics.",
+    "coverage": [
+      "RPC begin/putChunk/pendingIsComplete",
+      "strict transcript commit/read",
+      "RPC publication commit/head/read",
+      "pending cleared",
+      "close/reopen bytes and digests",
+      "same-ID idempotent replay without duplicate events"
+    ],
+    "counts": {
+      "materialBytes": 88898,
+      "publicationCount": 2,
+      "events": 3,
+      "cutoverRecords": 0
+    },
+    "fixture_correction": "Initial smoke encoded optional publicationRevision via Codable, omitting nil; original store.begin correctly rejected invalid_request. Fixture now sends explicit publicationRevision:null exactly like app-runtime/journal.ts. No production-source change was needed.",
+    "limitations": [
+      "macOS host only, no iOS/device compile or execution",
+      "UI not compiled or runtime-tested",
+      "No app target/JSCore/provider integration",
+      "No production data, cutover calls, model, network or phone operations"
+    ]
+  }
+}

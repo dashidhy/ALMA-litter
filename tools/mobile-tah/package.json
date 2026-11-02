@@ -1,0 +1,13 @@
+{
+  "name": "alma-mobile-tah-build",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "build": "node build_bundle.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

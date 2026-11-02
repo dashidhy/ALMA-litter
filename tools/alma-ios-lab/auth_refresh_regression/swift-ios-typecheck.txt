@@ -1,0 +1,1 @@
+PASS: complete production auth/provider Swift files type-check for iOS, Swift 5 targeted; binding/logger signatures substituted; no code executed.

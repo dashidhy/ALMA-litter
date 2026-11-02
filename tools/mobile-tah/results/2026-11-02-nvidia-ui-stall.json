@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-02",
+  "status": "diagnosed_not_fixed",
+  "userReport": "Discrete Progressing rotation, event updates and full-log scrolling stall on phone itself; not Device Hub only",
+  "activeTaskPreserved": true,
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "processPID": 36303,
+  "imageUUID": "190F5F11-260E-3A93-BBEB-04C3CFBA6404",
+  "runtimeImageBase": "0x102570000",
+  "fps": {
+    "sampleCount": 33,
+    "min": 2,
+    "max": 7,
+    "median": 5,
+    "mean": 4.696969696969697,
+    "scope": "Core Animation display FPS while app showed continuous spinner; not per-element frame counter"
+  },
+  "processSnapshot": [
+    {
+      "pid": 36303,
+      "name": "AlmaTAHTauri",
+      "cpuUsage": 75.54750660248365,
+      "physFootprint": 71535008,
+      "timestamp": "2026-11-01T17:44:39.483737+00:00"
+    },
+    {
+      "pid": 36304,
+      "name": "com.apple.WebKit.WebContent",
+      "cpuUsage": 0.9561892899286369,
+      "physFootprint": 116132016,
+      "timestamp": "2026-11-01T17:44:40.267920+00:00"
+    },
+    {
+      "pid": 36305,
+      "name": "com.apple.WebKit.GPU",
+      "cpuUsage": 0.3035582236041132,
+      "physFootprint": 22726592,
+      "timestamp": "2026-11-01T17:44:41.048347+00:00"
+    }
+  ],
+  "appFilteredStacks": {
+    "count": 150,
+    "mainThreadID": 8213699,
+    "mainStackCount": 33,
+    "javaScriptHostReceiveStacks": 21,
+    "projectionStacks": 7,
+    "caution": "Core-profile call stacks are not uniform CPU samples; counts must not be reported as CPU percentages"
+  },
+  "symbols": {
+    "method": "Loaded app image base from vm-regions; matched UUID to installed-build executable; nm lookup and Swift demangling",
+    "hotAppPaths": [
+      "AlmaTAHJavaScriptHost.receive -> JS callback execution on @MainActor",
+      "TAHMobileController.schedulePolling -> rebuild -> project -> AppRaw.allows -> date parsing"
+    ]
+  },
+  "unconfirmed": [
+    "Exact JS function inside JSCore",
+    "Before/after performance of any proposed fix"
+  ],
+  "toolLimits": [
+    "xctrace Time Profiler could not locate the running name or PID; no usable Instruments trace produced",
+    "System library symbols for this exact OS were unavailable; no symbol package downloaded"
+  ],
+  "tests": {
+    "spinnerContinuity": 3,
+    "confirmed": [
+      "Same spinner node across native snapshots",
+      "Same spinner node across latest-three event changes",
+      "Same spinner node across elapsed-time ticks"
+    ],
+    "notConfirmed": "Browser animation FPS from DOM tests"
+  },
+  "nextWork": [
+    "Move trusted JSCore execution onto a dedicated serial worker preserving Framework/Adapter/Backend boundaries",
+    "Coalesce redundant native refreshes and avoid rereading unchanged history/catalog",
+    "Cache parsed expiry rather than rebuilding date formatters for each projection",
+    "Re-run physical FPS/scroll checks after current task and after guarded implementation"
+  ],
+  "runtimeChanges": false,
+  "installedUpdate": false,
+  "modelCallsStarted": 0
+}

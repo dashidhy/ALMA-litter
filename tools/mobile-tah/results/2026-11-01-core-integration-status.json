@@ -1,0 +1,24 @@
+{
+  "branch": "dev/ios",
+  "codexVersion": "0.166.0",
+  "corePhoneCases": [
+    "2026-11-01-phone-core-synthetic.json",
+    "2026-11-01-phone-core-nist.json"
+  ],
+  "modelFreeReplayPassed": true,
+  "typescriptTypecheckPassed": true,
+  "finalXcodeBuildSucceeded": true,
+  "finalInstallSucceeded": true,
+  "ordinaryOpenScreenshot": "../.cache/phone-final.png",
+  "committed": false,
+  "sourceSHA256": {
+    "apps/ios/Sources/AlmaTAH/Runtime/AlmaTAHJavaScriptHost.swift": "277b42ab42511537413d21f15837cf0f7039790f19fb95f51e9a46e033ba1ea5",
+    "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift": "7b733bbe1418a2ad970c61cb3cf9197f809d798b4d46aa7a2a88c386e02d9b94",
+    "shared/rust-bridge/codex-mobile-client/src/mobile_tah_host.rs": "abf5cfdda81d078eac422a9cfd70216247a253dffb89bd822c05a3533ff11866",
+    "shared/rust-bridge/codex-mobile-client/src/provider_backend.rs": "1f57ee51aea144df376939c3b22146e9c4d34dda5e21d059d35dde974a33c834",
+    "shared/rust-bridge/codex-mobile-client/src/provider_bridge.rs": "c3a9b050e8192c1c831c505f7046f6d82d3142d9bff3800dcda341d393325980",
+    "shared/rust-bridge/codex-mobile-client/src/provider_scope.rs": "8c26df02b788245805814572d625542b6ef1e268c994abc3f5cd15fff473902e",
+    "shared/rust-bridge/codex-mobile-client/src/provider_runtime_config.rs": "3f097dc45dfeb45a0ad84f86472b43b06a9203fceda95b5c7500a40ca12ce6c7"
+  },
+  "bundleSHA256": "2443c366a7e82777dc03f87c299d2f7f694918b5a04f3f2469c37531612f9e24"
+}

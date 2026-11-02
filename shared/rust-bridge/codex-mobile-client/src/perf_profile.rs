@@ -7,7 +7,7 @@ use std::sync::Mutex;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
-use codex_app_server_protocol::{ThreadItem, Turn, TurnItemsView, TurnStatus};
+use codex_app_server_protocol::{ThreadItem, ThreadItemPayload, Turn, TurnItemsView, TurnStatus};
 
 use crate::conversation::{HydrationOptions, hydrate_turns};
 use crate::conversation_uniffi::{
@@ -253,15 +253,18 @@ fn perf_profile_conversation_hydration() {
     let _profile_guard = PROFILE_LOCK.lock().unwrap();
     let turns = (0..20)
         .map(|turn| Turn {
+            root_turn_id: None,
             id: format!("turn-{turn}"),
             items: (0..100)
-                .map(|item| ThreadItem::AgentMessage {
-                    id: format!("item-{turn}-{item}"),
-                    text: "assistant response text ".repeat(40),
-                    phase: None,
-                    memory_citation: None,
-                    delivery: None,
-                    questions: None,
+                .map(|item| {
+                    ThreadItem::untimed(ThreadItemPayload::AgentMessage {
+                        id: format!("item-{turn}-{item}"),
+                        text: "assistant response text ".repeat(40),
+                        phase: None,
+                        memory_citation: None,
+                        delivery: None,
+                        questions: None,
+                    })
                 })
                 .collect(),
             items_view: TurnItemsView::Full,

@@ -1,0 +1,13 @@
+{
+  "upstream_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "copied_files": 9735,
+  "base_sha256": {
+    "codex-rs/file-system/src/lib.rs": "0d33b04bdc0d2494352cfa403df50b3e4a6e918c99e1aee0a6222e06a58f5f22",
+    "codex-rs/exec-server/src/lib.rs": "7f06203d657315390efb83b12f81cc936da6282e5b9dcfca90ea5d5ffb907728",
+    "codex-rs/apply-patch/src/lib.rs": "81eeac02181ffb6b1c8e1bdb18457372f11ef800f18675f77f0e10f3ee5dd9f2"
+  },
+  "adapter_base_sha256": "c2c5a53af999cfd6840ba9f5b81027e51bc319704c66b6bfe9ba73d9582bc1e7",
+  "core_patch_sha256": "058238749831c5b6879a325e3ed7b45978f7ffa8397f3838ee89bcca435ff0fd",
+  "adapter_patch_sha256": "4e7cc0bae13d1d5e7efb1b67bca6c5789ec661093b2395619b32acf9b648d038",
+  "status": "proposal only; applied solely to isolated source snapshot, never the actual submodule or production adapter"
+}

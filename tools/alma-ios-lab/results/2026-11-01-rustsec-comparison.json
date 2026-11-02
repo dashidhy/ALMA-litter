@@ -1,0 +1,38 @@
+{
+  "sameDatabase": true,
+  "baselineFullLockFindings": 27,
+  "currentFullLockFindings": 20,
+  "newAdvisoryPackagePairs": [],
+  "resolvedAdvisoryPackagePairs": [
+    [
+      "RUSTSEC-2026-0346",
+      "rustls"
+    ],
+    [
+      "RUSTSEC-2026-0347",
+      "rustls"
+    ],
+    [
+      "RUSTSEC-2026-0348",
+      "rustls"
+    ],
+    [
+      "RUSTSEC-2026-0349",
+      "rustls"
+    ],
+    [
+      "RUSTSEC-2026-0367",
+      "zip"
+    ],
+    [
+      "RUSTSEC-2026-0368",
+      "zip"
+    ],
+    [
+      "RUSTSEC-2026-0369",
+      "zip"
+    ]
+  ],
+  "databaseCommit": "2295466c4e9df26647fd67d8fa1c705ac2fc7f81",
+  "comparisonNote": "Baseline used --no-fetch against unchanged same database path; cargo-audit omits commit fields in no-fetch JSON. Git HEAD verified separately."
+}

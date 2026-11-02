@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "seconds": 8.831175458151847,
+  "stdout": "NATIVE_WORKSPACE_GUEST_PASS\n\n\nPOLICY_CONTROLLER_PASS\n",
+  "stderr": "workspace fixture grant: 1\n",
+  "exit": 0,
+  "scope": "actual iSH C guest Bash/Python/Node in one host-authorized private fixture; no model, no network, no unexposed host-directory probes",
+  "native_files_match": true
+}

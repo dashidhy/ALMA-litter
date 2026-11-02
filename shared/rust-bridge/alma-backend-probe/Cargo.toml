@@ -1,0 +1,21 @@
+[package]
+name = "alma-backend-probe"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+codex-exec-server = { workspace = true }
+codex-utils-path-uri = { workspace = true }
+codex-file-system = { workspace = true }
+codex-apply-patch = { workspace = true }
+codex-protocol = { workspace = true }
+bytes = { workspace = true }
+futures = { workspace = true }
+ish-embed-host = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+libc = { workspace = true }

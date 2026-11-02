@@ -1,0 +1,22 @@
+{
+  "patch_sha256": "34289155642eacaad5f5ac3c04e6b4fc2fb7a16cea099826a38552367668a9d4",
+  "private_c_binary_sha256": "46a8629cee2734113c4d5aa013df8c14f2cd09afe9bc15b489fbbf3e4410f58e",
+  "guest_report_matches_current_c_binary": true,
+  "guest_passed": true,
+  "supervisor_cross_build_exit": 0,
+  "supervisor_rust_sources_match_build_copy": true,
+  "supervisor_elf_sha256": "707fc4116020d261e2796bcdec1f96832967c5b5e86fc83f78dbeff8689bec81",
+  "supervisor_wire_versions_passed": [
+    4,
+    3,
+    2
+  ],
+  "wire_final_c_revision_verified": false,
+  "wire_limit": "Wire checks preceded the final physical-root identity/ancestry refinement; not rerun after that C-only refinement. Final C guest fixture passed.",
+  "native_c_api_test": "Passed on predecessor C revision; not rerun after physical-root refinement.",
+  "rust_host_wrapper_compiled": false,
+  "host_initial_realmount_api_implemented": false,
+  "native_workspace_shared_with_guest": false,
+  "phone_verified": false,
+  "native_openai_web_runtime_verified": false
+}

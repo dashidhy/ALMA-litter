@@ -1,0 +1,74 @@
+{
+  "command": [
+    "bash",
+    "tools/alma-ios-lab/cargo_ios.sh",
+    "check",
+    "-p",
+    "codex-mobile-client",
+    "--lib",
+    "--target",
+    "aarch64-apple-ios",
+    "--profile",
+    "ios-dev",
+    "--no-default-features",
+    "--locked",
+    "-j",
+    "2"
+  ],
+  "exit_code": 101,
+  "remaining_errors": [
+    {
+      "code": "E0432",
+      "message": "unresolved import `codex_cloud_config::cloud_config_bundle_loader`",
+      "location": "codex-mobile-client/src/session/connection.rs:588:13"
+    },
+    {
+      "code": "E0425",
+      "message": "cannot find function `set_ios_exec_hook` in module `codex_core::exec`",
+      "location": "codex-mobile-client/src/ish_exec.rs:12:27"
+    },
+    {
+      "code": "E0425",
+      "message": "cannot find function `set_ios_streaming_exec_hook` in module `codex_core::exec`",
+      "location": "codex-mobile-client/src/ish_exec.rs:13:27"
+    },
+    {
+      "code": "E0425",
+      "message": "cannot find type `IosExecOutputHandler` in module `codex_core::exec`",
+      "location": "codex-mobile-client/src/ish_exec.rs:114:34"
+    },
+    {
+      "code": "E0425",
+      "message": "cannot find function `set_mobile_exec_preflight` in module `codex_core::exec`",
+      "location": "codex-mobile-client/src/shell_preflight.rs:129:23"
+    },
+    {
+      "code": "E0599",
+      "message": "no associated function or constant named `connect_websocket_stream` found for struct `RemoteAppServerClient` in the current scope",
+      "location": "codex-mobile-client/src/session/connection.rs:1244:32"
+    }
+  ],
+  "changed_runtime_files_this_followup": [
+    "types/models.rs",
+    "types/server_requests.rs",
+    "mobile_client/thread_projection.rs",
+    "mobile_client/mod.rs",
+    "mobile_client/dynamic_tools.rs",
+    "mobile_client/event_loop.rs",
+    "ffi/client.rs",
+    "store/reconcile.rs",
+    "session/events.rs"
+  ],
+  "existing_mod_cfg_lines_preserved": true,
+  "source_sha256": {
+    "shared/rust-bridge/codex-mobile-client/src/types/models.rs": "e2200e32cf522eed0f41a4c1f6804fcdd39cc059974f422c26259eb9d901ce69",
+    "shared/rust-bridge/codex-mobile-client/src/types/server_requests.rs": "36ec87963b44c570194b6da8d49d9eb189f62e447c446308559d8192162405d5",
+    "shared/rust-bridge/codex-mobile-client/src/mobile_client/thread_projection.rs": "d8d5e5cd3439e9be4e38994cdfbe5df71f789e5b439011404b584a9df12c7b07",
+    "shared/rust-bridge/codex-mobile-client/src/mobile_client/mod.rs": "6375ccf640894795250a479285adc2a6d89bda6f581cc75d1e0f29bf18d99f99",
+    "shared/rust-bridge/codex-mobile-client/src/mobile_client/dynamic_tools.rs": "2ed8a1a0deb648817fd78daabb1359842dc9fd6b105637eb9185ae96d674f67f",
+    "shared/rust-bridge/codex-mobile-client/src/mobile_client/event_loop.rs": "6733a14894a67972ea6223f17893cfcbe3c51b97831655f905e73c35a821bacf",
+    "shared/rust-bridge/codex-mobile-client/src/ffi/client.rs": "8cc73178d5cac4fd36e272e232c009df66fc095c654db63a621d810655b69fce",
+    "shared/rust-bridge/codex-mobile-client/src/store/reconcile.rs": "6e9a4bae3aa82071bed21373115c8068a988dbbddaf010cf8f160bcfd4429d13",
+    "shared/rust-bridge/codex-mobile-client/src/session/events.rs": "71cc9fbfe2454590ac8e8ddf2fed795a3def7bc72bff5d14967b21f84ea282a4"
+  }
+}

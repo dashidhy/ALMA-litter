@@ -53,6 +53,8 @@ apps/android/app/src/main/assets/proot.version
 apps/android/.kotlin/
 
 # Logs and temp
+.cache/
+.staging/
 *.log
 *.tmp
 tmp/

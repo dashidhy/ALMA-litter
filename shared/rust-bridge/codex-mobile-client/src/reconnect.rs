@@ -296,6 +296,13 @@ pub(crate) fn compute_reconnect_plan_with_slingshot(
         return None;
     }
 
+    // Disabled remote records must not fall through to another transport.
+    if !crate::network_scope::remote_alleycat_available()
+        && server.alleycat_node_id.is_some()
+    {
+        return None;
+    }
+
     // 2. Stable Alleycat pairing wins before legacy tunnel/direct transports.
     if multi_clanker_and_quic_enabled
         && let (Some(node_id), Some(token), Some(agent_name)) = (

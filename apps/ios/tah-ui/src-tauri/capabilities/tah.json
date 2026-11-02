@@ -1,0 +1,1 @@
+{"identifier":"tah","description":"Typed TAH UI, appearance and bounded public working-log channel","windows":["main"],"permissions":["allow-tah-ui","allow-tah-theme","allow-tah-working-stream","allow-tah-working-ack","allow-tah-working-unsubscribe","core:event:allow-listen","core:event:allow-unlisten"]}

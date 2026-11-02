@@ -1,0 +1,36 @@
+# Transcript Action — Structured Notes
+
+## Task
+
+Convert the complete speech transcript into detailed, structured notes and a compact index of any ASR uncertainties that remain unresolved at the end of this revision.
+
+## Requirements
+
+Outcome requirements:
+- In the Host-designated current revision folder, create or update exactly two final result files: `structured-notes.md` and `suspicious-asr-terms.md`. Both must be non-empty UTF-8 Markdown. `structured-notes.md` must be no larger than 8 MiB, and `suspicious-asr-terms.md` must be no larger than 1 MiB. Do not create any other outcome file or subdirectory.
+- Notes language: {NOTE_PRIMARY_LANGUAGE}. In `structured-notes.md`, use this language for the title, overview, headings, narrative and inline uncertainty explanations, even when the transcript is primarily another language.
+- Interaction language: {INTERACTION_LANGUAGE}. Use this language for your user-visible progress/commentary, final completion response, and the title, headings and explanations in `suspicious-asr-terms.md`. The ASR index is user-facing review material, not part of the notes' language setting.
+- These two Host-selected languages are independent. Do not infer or switch either language from the language of the system prompt, transcript, supplemental instructions, tools, or previous replies/outcomes. When the interaction language changes between revisions, keep the notes language unchanged and regenerate the ASR index in the current interaction language. Do not expose private reasoning.
+- Preserve established original-language technical terms, acronyms, model and product names, people and organization names, code identifiers, formulas, and quotations when translating them would reduce precision.
+- For a revision later than v0, the Host has already prefilled the current revision folder with independent copies of the prior accepted results. Edit `structured-notes.md` in place and make the smallest change that fully satisfies the new revision instructions. Independently recompute and replace the complete contents of `suspicious-asr-terms.md`; do not preserve resolved items merely because they appeared in the prior revision. Do not copy, move, or modify a prior revision yourself.
+
+Structured notes requirements:
+- Start with an informative title and a concise overview.
+- Organize the content into clear sections and subsections.
+- Preserve factual claims, technical terms, names, numbers, formulas, examples, reasoning, uncertainty, caveats, and conclusions from the transcript.
+- Remove filler words and speech disfluencies, but do not invent or silently correct facts.
+- When a material source ambiguity remains, visibly mark the exact affected term, number, name, phrase, or claim in the notes instead of replacing it with only a general caveat.
+- Do not over-compress the source.
+
+ASR resolution and suspicious-term index requirements:
+- Resolve suspected ASR errors when the complete transcript context and reliable language or domain understanding establish the intended wording with sufficient confidence. Resolved suspicions must not appear in `suspicious-asr-terms.md`.
+- If and only if the Host-authorized Web capability is Approved, you may use native search and page-reading actions solely to resolve material ASR ambiguities that affect the notes.
+- The transcript remains authoritative for what the speaker said and for the notes' scope. Normalize a term only when reliable web evidence and the local transcript context converge; never add web-sourced claims or silently replace a speaker's factual claim. Preserve the exact uncertainty marker when evidence is insufficient or conflicting.
+- When a normalization materially relies on web evidence, cite the specific supporting page in Markdown, preferring an official or primary source. An ASR suspicion reliably resolved this way must not appear in `suspicious-asr-terms.md`.
+- In `suspicious-asr-terms.md`, list every ASR-suspect term, number, name, phrase, or claim that remains unresolved at the end of this revision. For each item, include the suspicious source wording, its location in `structured-notes.md`, and a brief explanation of the unresolved ambiguity.
+- Keep `suspicious-asr-terms.md` consistent with the visible ASR uncertainty markers in `structured-notes.md`: every listed item must remain visibly uncertain at its affected location in the notes, and every unresolved ASR uncertainty visibly marked in the notes must be listed in the index.
+- Keep corresponding uncertainty identifiers and source quotations consistent across the two files. Their surrounding explanations follow each file's own language setting; do not translate identifiers, filenames, URLs or quoted source terms merely to match the surrounding language.
+- Do not treat the speaker's own uncertainty, a disputed factual claim, or an ordinary caveat as an ASR suspicion unless the source wording itself may have been mistranscribed.
+- Recompute the complete unresolved-ASR list for every revision. Replace the prior index rather than appending to it, and remove every item that this revision resolves through reliable understanding or authorized web research.
+- Keep the index compact. Do not copy long transcript passages or large sections of the structured notes into it.
+- If no ASR suspicion remains unresolved, still create `suspicious-asr-terms.md` and state clearly, in the interaction language specified above, that no ASR suspicion remains.

@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-11-01",
+  "index": "https://index.crates.io/3/n/nix",
+  "latest_in_selected_lines": {
+    "0.28": "0.28.0",
+    "0.29": "0.29.0",
+    "0.30": "0.30.1",
+    "0.31": "0.31.3"
+  },
+  "official_candidate": {
+    "version": "0.31.3",
+    "sha256": "cf20d2fde8ff38632c426f1165ed7436270b44f199fc55284c38276f9db47c3d",
+    "yanked": false,
+    "fixes_ios_constants": false,
+    "source": "https://github.com/nix-rust/nix/blob/v0.31.3/src/sys/socket/mod.rs"
+  }
+}

@@ -92,6 +92,7 @@ pub(super) fn queued_follow_up_draft_from_inputs(
 pub(super) fn queued_follow_up_text_from_inputs(inputs: &[upstream::UserInput]) -> Option<String> {
     let mut text_parts: Vec<String> = Vec::new();
     let mut attachment_count = 0usize;
+    let mut unavailable_image_count = 0usize;
 
     for input in inputs {
         match input {
@@ -101,7 +102,13 @@ pub(super) fn queued_follow_up_text_from_inputs(inputs: &[upstream::UserInput]) 
                     text_parts.push(trimmed.to_string());
                 }
             }
-            upstream::UserInput::Image { .. } | upstream::UserInput::LocalImage { .. } => {
+            upstream::UserInput::Image { image, .. } => {
+                attachment_count += 1;
+                if matches!(image, upstream::ImageReference::File { .. }) {
+                    unavailable_image_count += 1;
+                }
+            }
+            upstream::UserInput::LocalImage { .. } => {
                 attachment_count += 1;
             }
             upstream::UserInput::Audio { .. } | upstream::UserInput::LocalAudio { .. } => {
@@ -111,11 +118,17 @@ pub(super) fn queued_follow_up_text_from_inputs(inputs: &[upstream::UserInput]) 
         }
     }
 
-    if !text_parts.is_empty() {
-        Some(text_parts.join("\n"))
+    let mut preview = if !text_parts.is_empty() {
+        text_parts.join("\n")
     } else {
-        attachment_summary(attachment_count)
+        attachment_summary(attachment_count)?
+    };
+    if unavailable_image_count > 0 {
+        // Keep the typed attachment for sending, but make the display limit
+        // explicit without treating a file ID as a URL or fetching it here.
+        preview.push_str("\nImage attachment preview is unavailable on mobile.");
     }
+    Some(preview)
 }
 
 #[cfg(test)]
@@ -148,21 +161,32 @@ pub(super) fn queued_follow_up_inputs_from_json_value(
         });
     }
 
-    let remote_images = message
-        .get("remoteImageUrls")
-        .or_else(|| message.get("remote_image_urls"))
-        .or_else(|| message.get("images"))
-        .or_else(|| message.get("imageUrls"))
-        .or_else(|| message.get("image_urls"))
-        .and_then(serde_json::Value::as_array)
-        .into_iter()
-        .flatten()
-        .filter_map(serde_json::Value::as_str)
-        .map(|url| upstream::UserInput::Image {
-            url: url.to_string(),
-            detail: None,
-        });
-    inputs.extend(remote_images);
+    // Prefer retained typed image inputs, which can include file IDs and
+    // detail. The URL list is only the legacy display projection.
+    if let Some(image_inputs) = message
+        .get("imageInputs")
+        .and_then(|value| serde_json::from_value::<Vec<upstream::UserInput>>(value.clone()).ok())
+    {
+        inputs.extend(image_inputs);
+    } else {
+        let remote_images = message
+            .get("remoteImageUrls")
+            .or_else(|| message.get("remote_image_urls"))
+            .or_else(|| message.get("images"))
+            .or_else(|| message.get("imageUrls"))
+            .or_else(|| message.get("image_urls"))
+            .and_then(serde_json::Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(serde_json::Value::as_str)
+            .map(|url| upstream::UserInput::Image {
+                image: upstream::ImageReference::Inline {
+                    url: url.to_string(),
+                },
+                detail: None,
+            });
+        inputs.extend(remote_images);
+    }
 
     let local_images = message
         .get("localImages")
@@ -229,6 +253,7 @@ pub(super) fn queued_follow_up_message_json_from_inputs(
     let mut text = None;
     let mut text_elements = Vec::new();
     let mut remote_image_urls = Vec::new();
+    let mut image_inputs = Vec::new();
     let mut local_images = Vec::new();
     let mut audio_inputs = Vec::new();
     let mut mention_bindings = Vec::new();
@@ -246,8 +271,16 @@ pub(super) fn queued_follow_up_message_json_from_inputs(
                 }
                 text_elements = current_elements.clone();
             }
-            upstream::UserInput::Image { url, .. } => {
-                remote_image_urls.push(url.clone());
+            upstream::UserInput::Image { image, .. } => {
+                // Preserve both reference kinds and optional detail. File IDs
+                // cannot be displayed by the legacy remoteImageUrls surface.
+                image_inputs.push(serde_json::to_value(input).ok()?);
+                match image {
+                    upstream::ImageReference::Inline { url } => {
+                        remote_image_urls.push(url.clone());
+                    }
+                    upstream::ImageReference::File { .. } => {}
+                }
             }
             upstream::UserInput::LocalImage { path, .. } => {
                 let placeholder = format!("[Image #{}]", local_images.len() + 1);
@@ -276,7 +309,7 @@ pub(super) fn queued_follow_up_message_json_from_inputs(
 
     if text.is_none()
         && text_elements.is_empty()
-        && remote_image_urls.is_empty()
+        && image_inputs.is_empty()
         && local_images.is_empty()
         && audio_inputs.is_empty()
         && mention_bindings.is_empty()
@@ -285,7 +318,7 @@ pub(super) fn queued_follow_up_message_json_from_inputs(
         return None;
     }
 
-    Some(serde_json::json!({
+    let mut message = serde_json::json!({
         "text": text.unwrap_or_default(),
         "textElements": text_elements,
         "remoteImageUrls": remote_image_urls,
@@ -293,7 +326,11 @@ pub(super) fn queued_follow_up_message_json_from_inputs(
         "audioInputs": audio_inputs,
         "mentionBindings": mention_bindings,
         "skillBindings": skill_bindings,
-    }))
+    });
+    if !image_inputs.is_empty() {
+        message["imageInputs"] = serde_json::Value::Array(image_inputs);
+    }
+    Some(message)
 }
 
 #[cfg(test)]
@@ -364,6 +401,42 @@ pub(super) fn ensure_thread_is_editable(snapshot: &ThreadSnapshot) -> Result<(),
         ));
     }
     Ok(())
+}
+
+/// Resolve an inclusive fork boundary from canonical turn metadata, never from
+/// rendered item counts (one turn can contain many messages/tool items).
+pub(super) fn fork_boundary_turn_id(
+    snapshot: &ThreadSnapshot,
+    selected_turn_index: usize,
+) -> Result<String, RpcError> {
+    let item = snapshot
+        .items
+        .iter()
+        .filter(|item| {
+            matches!(
+                item.content,
+                crate::conversation_uniffi::HydratedConversationItemContent::User(_)
+            )
+        })
+        .nth(selected_turn_index)
+        .ok_or_else(|| {
+            RpcError::Deserialization(format!("unknown user turn index {selected_turn_index}"))
+        })?;
+    let turn_id = item
+        .source_turn_id
+        .as_deref()
+        .filter(|id| !id.trim().is_empty())
+        .ok_or_else(|| {
+            RpcError::Deserialization(
+                "cannot fork this message: its original turn ID is unavailable".to_string(),
+            )
+        })?;
+    if snapshot.active_turn_id.as_deref() == Some(turn_id) {
+        return Err(RpcError::Deserialization(
+            "cannot fork through a turn that is still in progress".to_string(),
+        ));
+    }
+    Ok(turn_id.to_string())
 }
 
 pub(super) fn rollback_depth_for_turn(
@@ -785,5 +858,89 @@ mod audio_compat_tests {
         let retained: Vec<upstream::UserInput> =
             serde_json::from_value(json["audioInputs"].clone()).unwrap();
         assert_eq!(retained, inputs);
+    }
+}
+
+#[cfg(test)]
+mod image_reference_tests {
+    use super::*;
+
+    #[test]
+    fn queued_inline_images_keep_legacy_urls_and_modern_references() {
+        let inputs = queued_follow_up_inputs_from_json_value(&serde_json::json!({
+            "remoteImageUrls": ["https://example.com/image.png", "data:image/png;base64,aW1hZ2U="]
+        }));
+        assert_eq!(inputs.len(), 2);
+        assert!(matches!(&inputs[0], upstream::UserInput::Image {
+            image: upstream::ImageReference::Inline { url }, detail: None
+        } if url == "https://example.com/image.png"));
+        assert_eq!(
+            queued_follow_up_text_from_inputs(&inputs).as_deref(),
+            Some("2 image attachments")
+        );
+        let message = queued_follow_up_message_json_from_inputs(&inputs).unwrap();
+        assert_eq!(message["remoteImageUrls"].as_array().unwrap().len(), 2);
+        assert_eq!(queued_follow_up_inputs_from_json_value(&message), inputs);
+    }
+
+    #[test]
+    fn queued_file_image_retains_reference_and_reports_unavailable_preview() {
+        let inputs: Vec<upstream::UserInput> = serde_json::from_value(serde_json::json!([
+            {"type": "image", "fileId": "file-123", "detail": "high"}
+        ]))
+        .unwrap();
+        let draft =
+            queued_follow_up_draft_from_inputs(&inputs, AppQueuedFollowUpKind::Message).unwrap();
+        assert_eq!(draft.inputs, inputs);
+        assert!(draft.preview.text.starts_with("1 image attachment"));
+        assert!(
+            draft
+                .preview
+                .text
+                .contains("preview is unavailable on mobile")
+        );
+        let message = draft.source_message_json.unwrap();
+        assert_eq!(message["text"], "");
+        assert_eq!(message["remoteImageUrls"], serde_json::json!([]));
+        assert_eq!(message["imageInputs"][0]["fileId"], "file-123");
+        assert_eq!(message["imageInputs"][0]["detail"], "high");
+        assert_eq!(queued_follow_up_inputs_from_json_value(&message), inputs);
+    }
+
+    #[test]
+    fn queued_mixed_images_preserve_detail_without_duplicating_inline_urls() {
+        let inputs: Vec<upstream::UserInput> = serde_json::from_value(serde_json::json!([
+            {"type": "text", "text": "Compare these", "textElements": []},
+            {"type": "image", "fileId": "file-123", "detail": "high"},
+            {"type": "image", "url": "https://example.com/image.png", "detail": "low"}
+        ]))
+        .unwrap();
+        let preview = queued_follow_up_text_from_inputs(&inputs).unwrap();
+        assert!(preview.starts_with("Compare these\n"));
+        assert!(preview.contains("preview is unavailable on mobile"));
+        let message = queued_follow_up_message_json_from_inputs(&inputs).unwrap();
+        assert_eq!(message["text"], "Compare these");
+        assert_eq!(
+            message["remoteImageUrls"],
+            serde_json::json!(["https://example.com/image.png"])
+        );
+        assert_eq!(queued_follow_up_inputs_from_json_value(&message), inputs);
+    }
+
+    #[test]
+    fn text_only_queue_projection_keeps_existing_shape() {
+        let inputs = vec![upstream::UserInput::Text {
+            text: "P0 text flow".into(),
+            text_elements: Vec::new(),
+        }];
+        assert_eq!(
+            queued_follow_up_text_from_inputs(&inputs).as_deref(),
+            Some("P0 text flow")
+        );
+        let message = queued_follow_up_message_json_from_inputs(&inputs).unwrap();
+        assert!(message.get("imageInputs").is_none());
+        assert_eq!(queued_follow_up_inputs_from_json_value(&message), inputs);
+        assert!(queued_follow_up_text_from_inputs(&[]).is_none());
+        assert!(queued_follow_up_message_json_from_inputs(&[]).is_none());
     }
 }

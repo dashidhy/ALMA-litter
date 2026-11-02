@@ -1,0 +1,24 @@
+{
+  "version": "0.45.0",
+  "archive_sha256": "569dfbdd2efd771b24ec9bb57f956e04d4fbfc72f62b2f11961723f9b3f4b020",
+  "source_lock_sha256": "802191a0069229737037312e465f74aa48d0b7a6008e165f6ccb25a98884fb29",
+  "patch_sha256": "844bcc548f3eee6eb452837d5cbc336665acf3e54dc0a21cfcdfc19f07b15a4e",
+  "files": {
+    "src/os/darwin/mod.rs": {
+      "before": "97c0fd7442d96013ed06612e3dbcbcad4b6862ac010c1968b46ca71120730e31",
+      "after": "2e0c49c1b7b795e8c703c0f3e8dc040c5377ec9cd5af75530ea89b7200696fd0"
+    },
+    "src/os/darwin/ipv6_addr_flags.rs": {
+      "before": "957d92b417fe481a08a0142aca26d3cb4b5f7e252fb3f47addc42bbbe023efd7",
+      "after": "d77d97c1469f49ba092dbf3096db46437e8e5635994606909e4ec7e6cb20efbb"
+    },
+    "src/interface/ipv6_addr_flags.rs": {
+      "before": "a05f6f4d2a288a29a765fcf80518b0c48b56fc38e250e1d1b67ea549d87534b2",
+      "after": "69ed17f263e65f161af9c267d7dbde37a772e99b6de3c9b02614571651bbc85e"
+    },
+    "src/interface/interface.rs": {
+      "before": "5c6acc4b4762e1be6e046657f3f8274e6f92cb2c43584ec699e99b73672ab8b3",
+      "after": "424657520c9a0111378178db1a8146e1afe5b5fc6174111ca63ed39107940711"
+    }
+  }
+}

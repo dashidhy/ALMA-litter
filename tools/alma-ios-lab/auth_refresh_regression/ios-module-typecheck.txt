@@ -1,0 +1,46 @@
+warning: constant `CALLBACK_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:16:7
+   |
+16 | const CALLBACK_BUDGET: Duration = Duration::from_secs(7);
+   |       ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `RESPONSE_BUDGET` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:17:7
+   |
+17 | const RESPONSE_BUDGET: Duration = Duration::from_secs(9);
+   |       ^^^^^^^^^^^^^^^
+
+warning: constant `NATIVE_BUDGET_MS` is never used
+  --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:18:7
+   |
+18 | const NATIVE_BUDGET_MS: u32 = 6_000;
+   |       ^^^^^^^^^^^^^^^^
+
+warning: methods `refresh` and `dispatch` are never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:87:14
+    |
+ 79 | impl AuthRefreshDispatcher {
+    | -------------------------- methods in this implementation
+...
+ 87 |     async fn refresh(
+    |              ^^^^^^^
+...
+143 |     pub(crate) async fn dispatch<R, F>(
+    |                         ^^^^^^^^
+
+warning: function `rpc_error` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:165:15
+    |
+165 | pub(crate) fn rpc_error(error: ChatgptAuthRefreshError) -> JSONRPCErrorError {
+    |               ^^^^^^^^^
+
+warning: enum `AuthRefreshDeliveryError` is never used
+   --> /Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs:174:17
+    |
+174 | pub(crate) enum AuthRefreshDeliveryError {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: 6 warnings emitted
+

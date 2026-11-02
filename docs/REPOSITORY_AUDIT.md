@@ -59,6 +59,63 @@ bindings, and both mobile runtimes are verified.
 
 ## P0 — dependency security
 
+### ALMA prototype close-out review, 2026-11-02
+
+The phone-owned foreground TAH milestone is recorded in
+[the milestone summary](ios/2026-11-02-milestone.md). It does not clear the
+dependency/security findings below or qualify the default/Android/remote lanes.
+Source review found two additional **P2 exception-recovery items**, deliberately
+tracked separately from the accepted normal path:
+
+- **Refresh-to-next-bootstrap credential synchronization:**
+  `mobile_tah_host.rs`'s `RefreshHandler` forwards refreshed credentials to the
+  requesting runtime, but the native credential map used by a later bootstrap
+  can retain the original token snapshot. Reacquire account-bound current
+  credentials before bootstrap and update that map after an accepted refresh.
+  Verify an expired-token → refresh → next-attempt sequence, including managed
+  config, logout/account replacement and late responses. Current phone sign-in
+  and functional runs do not validate real token-expiry recovery.
+- **Inspection startup failure cleanup:** `inspect` allocates a scope before
+  configuration/startup. An early `start` error can return before the cleanup
+  block, leaving an inaccessible scope holding the serial factory permit.
+  Release safely unstarted scopes and their native lease/auth records on this
+  path; quarantine uncertain started runtimes instead of pretending they drained.
+  Verify injected config/start failures followed by a successful new inspection
+  in the same App. This is a source finding, not a reproduced phone incident.
+
+The build-input bootstrap gap found in the same review is addressed by the
+explicit preparation/check-only helper and its build-input guide. Raw device
+reports, credentials, caches and generated binaries remain local, while reviewed
+source, patch stacks, input locks and sanitized acceptance summaries are retained.
+
+### ALMA local qualification, 2026-11-01
+
+The `dev/ios` ALMA lane pins Codex 0.166.0, uses an upstream-pinned age
+compatibility fix and rustix 1.1.6, and excludes unused remote Iroh/pairing/CLI
+capabilities with `--no-default-features`. Default/Android/remote builds have
+not been accepted by this qualification. The user's globally installed Codex
+has not been upgraded.
+
+RustSec was rerun with official cargo-audit 0.22.2 and advisory database commit
+`2295466c4e9df26647fd67d8fa1c705ac2fc7f81`. The full lock reports **20 findings
+across 19 advisory IDs**; 12 findings refer to packages in the local iOS normal
+dependency graph. This is graph membership, not a claim of native exploitability
+(for example, one zstd-sys advisory concerns WebAssembly).
+
+Against the unchanged same database, the fork's original lock reports 27 findings;
+the current lock has no newly introduced advisory/package pairs and removes seven
+rustls/zip pairs. Remaining tracks include crypto-bigint/ctutils, Hickory, RSA,
+WebPKI roots/verification, and zstd. Compatible patch upgrades and the larger API
+migrations still require evaluation before release. These findings are **not
+suppressed**, and successful local tool or App builds are not security sign-off.
+
+Exact tool/archive/database/lock hashes, full results, graph membership and the
+baseline comparison are under `tools/alma-ios-lab/results/2026-11-01-rustsec-*.json`.
+The dated upstream audit below is retained as historical evidence, not reused as
+the current result.
+
+### Upstream audit, 2026-09-21
+
 RustSec was rerun on 2026-09-21 against both candidate lockfiles after updating
 Codex to 0.155.1 and applying compatible h2 0.4.16 and rustls 0.23.45 security
 patches. Five advisories remain in the shared mobile lock and four in the

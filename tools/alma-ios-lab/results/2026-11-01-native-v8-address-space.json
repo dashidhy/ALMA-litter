@@ -1,0 +1,86 @@
+{
+  "elapsedSeconds": 0.07058670837432146,
+  "footprintBytes": 18614016,
+  "availableMemoryBytes": 3202611456,
+  "thermalState": 0,
+  "peakFootprintBytes": 19285784,
+  "phase": "completed",
+  "scope": "Plain native iOS V8 fixed scripts only; no account, recording, Code Mode integration or memory-sandbox qualification",
+  "summary": {
+    "allExpectationsMatched": true,
+    "scope": "plain iOS V8, fixed scripts only; no memory sandbox, Code Mode integration, account or recording data",
+    "virtualReservationObservations": [
+      {
+        "errno": 12,
+        "requestedBytes": 1099511627776,
+        "reserved": false
+      },
+      {
+        "errno": 12,
+        "requestedBytes": 2199023255552,
+        "reserved": false
+      }
+    ],
+    "seconds": 0.026781542,
+    "type": "finished",
+    "cases": 6
+  },
+  "reason": "Results saved",
+  "freeDiskBytes": 52428800000,
+  "cases": [
+    {
+      "passed": true,
+      "id": "initialize",
+      "jitRequested": false,
+      "seconds": 0.008891,
+      "type": "case",
+      "peakAppFootprintBytes": 14206672,
+      "memorySandboxRequested": false,
+      "v8Version": "15.2.124.1-rusty"
+    },
+    {
+      "peakAppFootprintBytes": 18892568,
+      "id": "arithmetic",
+      "passed": true,
+      "seconds": 0.004707,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 19285784,
+      "id": "unicode-json",
+      "passed": true,
+      "seconds": 0.001895084,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18597632,
+      "id": "set-global",
+      "passed": true,
+      "seconds": 0.00042125,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18597632,
+      "id": "fresh-context",
+      "passed": true,
+      "seconds": 0.000323917,
+      "type": "case"
+    },
+    {
+      "peakAppFootprintBytes": 18614016,
+      "id": "wasm-disabled",
+      "passed": true,
+      "seconds": 0.000322875,
+      "type": "case"
+    }
+  ],
+  "runID": "d470d475-b5e0-45d1-9304-5d43ed081246",
+  "collection": {
+    "runID": "d470d475-b5e0-45d1-9304-5d43ed081246",
+    "pid": 35215,
+    "processEnded": true,
+    "lastPhase": "completed",
+    "passed": true
+  },
+  "scopeNote": "BasicJS pass + reservation observations; NOTV8memorysandbox norCodeMode qualification"
+}

@@ -1,0 +1,149 @@
+diff --git a/codex-rs/core/src/shell.rs b/codex-rs/core/src/shell.rs
+--- a/codex-rs/core/src/shell.rs
++++ b/codex-rs/core/src/shell.rs
+@@ -75,6 +75,25 @@
+             shell_type,
+             shell_path: PathBuf::from(shell_info.path),
+         })
++    }
++}
++
++impl Shell {
++    /// Resolve a guest shell entirely from metadata or an explicit guest path.
++    /// Detection is lexical only: never probe or substitute a host executable.
++    pub(crate) fn for_embedded_exec(
++        reported: Option<Self>,
++        requested_path: Option<String>,
++    ) -> anyhow::Result<Self> {
++        let reported = reported.ok_or_else(|| anyhow::anyhow!(
++            "embedded environment did not report a supported shell"
++        ))?;
++        let Some(path) = requested_path else {
++            return Ok(reported);
++        };
++        let shell_type = codex_shell_command::shell_detect::detect_shell_type(&path)
++            .ok_or_else(|| anyhow::anyhow!("unsupported embedded shell path `{path}`"))?;
++        Ok(Self { shell_type, shell_path: PathBuf::from(path) })
+     }
+ }
+ 
+diff --git a/codex-rs/core/src/shell_tests.rs b/codex-rs/core/src/shell_tests.rs
+--- a/codex-rs/core/src/shell_tests.rs
++++ b/codex-rs/core/src/shell_tests.rs
+@@ -249,3 +249,49 @@
+ 
+     assert!(shell_path.ends_with("pwsh.exe") || shell_path.ends_with("powershell.exe"));
+ }
++
++// Embedded shell contract: these tests never execute a host shell.
++#[test]
++fn embedded_default_uses_reported_guest_bash_without_probing() {
++    for path in ["/bin/bash", "/__alma_guest_only__/bin/bash"] {
++        let reported = Shell::from_environment_shell_info(ShellInfo {
++            name: "bash".into(), path: path.into(),
++        }).unwrap();
++        let shell = Shell::for_embedded_exec(Some(reported), None).unwrap();
++        assert_eq!(shell.derive_exec_args("items=(one two); echo ${items[1]}", false),
++            [path, "-c", "items=(one two); echo ${items[1]}"]);
++    }
++}
++
++#[test]
++fn embedded_explicit_shell_paths_are_preserved_without_host_resolution() {
++    for (path, expected_type) in [("/bin/sh", ShellType::Sh), ("/bin/zsh", ShellType::Zsh),
++        ("/__alma_guest_only__/bin/bash", ShellType::Bash), ("sh", ShellType::Sh)] {
++        let reported = Shell::from_environment_shell_info(ShellInfo {
++            name: "bash".into(), path: "/bin/bash".into(),
++        }).unwrap();
++        let shell = Shell::for_embedded_exec(Some(reported), Some(path.into())).unwrap();
++        assert_eq!(shell.shell_type, expected_type);
++        assert_eq!(shell.derive_exec_args("printf '%s' hello", false), [path, "-c", "printf '%s' hello"]);
++    }
++}
++
++#[test]
++fn embedded_missing_or_unknown_shell_never_falls_back_to_host() {
++    assert!(Shell::for_embedded_exec(None, None).is_err());
++    assert!(Shell::for_embedded_exec(None, Some("/bin/sh".into())).is_err());
++    let reported = Shell::from_environment_shell_info(ShellInfo {
++        name: "bash".into(), path: "/bin/bash".into(),
++    }).unwrap();
++    assert!(Shell::for_embedded_exec(Some(reported), Some("/guest/unknown-shell".into())).is_err());
++}
++
++#[test]
++fn embedded_default_does_not_rewrite_explicit_wrappers_inside_script() {
++    let reported = Shell::from_environment_shell_info(ShellInfo {
++        name: "bash".into(), path: "/bin/bash".into(),
++    }).unwrap();
++    let shell = Shell::for_embedded_exec(Some(reported), None).unwrap();
++    let script = "/bin/sh -c 'echo sh'; /bin/zsh -c 'echo zsh'";
++    assert_eq!(shell.derive_exec_args(script, false), ["/bin/bash", "-c", script]);
++}
+diff --git a/codex-rs/core/src/tools/handlers/unified_exec/preparation.rs b/codex-rs/core/src/tools/handlers/unified_exec/preparation.rs
+--- a/codex-rs/core/src/tools/handlers/unified_exec/preparation.rs
++++ b/codex-rs/core/src/tools/handlers/unified_exec/preparation.rs
+@@ -213,16 +213,20 @@
+             sandbox_permissions,
+             ..
+         } = self;
+-        // Remote environments may use a different OS and must build commands with their native
+-        // shell; fall back to the session shell when the environment did not report one.
+-        let shell = turn_environment
+-            .shell
+-            .clone()
+-            .map(Arc::new)
+-            .unwrap_or_else(|| session.user_shell());
++        // Embedded guests use their reported default or the exact explicit guest
++        // shell path. Consume the override before get_command's host resolver.
++        let shell = if turn_environment.environment.is_embedded() {
++            Arc::new(crate::shell::Shell::for_embedded_exec(
++                turn_environment.shell.clone(),
++                args.shell.take(),
++            ).map_err(|error| FunctionCallError::RespondToModel(error.to_string()))?)
++        } else {
++            turn_environment.shell.clone().map(Arc::new)
++                .unwrap_or_else(|| session.user_shell())
++        };
+         // TODO(anp): Resolve requested shells in remote environments instead of restricting
+         // commands to the reported default shell.
+-        if turn_environment.environment.uses_exec_backend()
++        if turn_environment.environment.is_remote()
+             && let Some(requested_shell) = args.shell.take()
+         {
+             let Some(remote_shell) = turn_environment.shell.as_ref() else {
+diff --git a/codex-rs/exec-server/src/environment/embedded.rs b/codex-rs/exec-server/src/environment/embedded.rs
+--- a/codex-rs/exec-server/src/environment/embedded.rs
++++ b/codex-rs/exec-server/src/environment/embedded.rs
+@@ -27,6 +27,9 @@
+             return Err(ExecServerError::Protocol(
+                 "embedded executor capability extensions are not supported".into(),
+             ));
++        }
++        if !matches!(info.shell.name.as_str(), "bash" | "sh" | "zsh" | "powershell" | "cmd") {
++            return Err(ExecServerError::Protocol("unsupported embedded shell name".into()));
+         }
+         if info.cwd.is_none() || info.shell.path.is_empty() || info.platform_os.is_none() {
+             return Err(ExecServerError::Protocol(
+@@ -93,9 +96,18 @@
+     use super::*;
+ 
+     fn info() -> EnvironmentInfo {
+-        let mut info = EnvironmentInfo::local();
+-        info.capabilities = EnvironmentCapabilities::default();
+-        info
++        EnvironmentInfo {
++            shell: crate::ShellInfo { name: "bash".into(), path: "/bin/bash".into() },
++            executor_version: "0.166.0".into(),
++            provider_id: None,
++            cwd: Some(codex_utils_path_uri::PathUri::parse("file:///workspace/attempt").unwrap()),
++            user_home_dir: None,
++            platform_os: Some("linux".into()),
++            prepend_path_dirs: Vec::new(),
++            temporary_directories: None,
++            temp_dir: None,
++            capabilities: EnvironmentCapabilities::default(),
++        }
+     }
+ 
+     #[tokio::test]

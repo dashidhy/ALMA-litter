@@ -1,0 +1,7 @@
+{
+  "bundle": "com.alma.litter.agent-probe",
+  "profileDigest": "b5a4ad9bb8005ee18ba13c736858ea1be1865baaa7d5c676a046b2b0c6667788",
+  "binarySHA256": "0ed642f62aade3819422c33d4e6caeef10956c25d6ad4c24c7037a67395a229a",
+  "extendedVirtualAddressing": true,
+  "increasedMemoryLimit": false
+}

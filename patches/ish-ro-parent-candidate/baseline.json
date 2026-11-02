@@ -1,0 +1,12 @@
+{
+  "base": ".build/vendor/litter-ish-owned",
+  "file": "kernel/workspace_policy.c",
+  "sha256": "ae957f399f9d1424680bc4c78d97f93995dd8959fa1e6fae15c0bc41d772b16a",
+  "patched_sha256": "285196cfa13ced7f310243bd3b28d8dd12304772b08d4d02bdf5576b7ca9ff70",
+  "prerequisites": [
+    "ish-lifecycle/owned-session-jobs.patch",
+    "ish-workspace-policy/workspace-policy.patch",
+    "ish-native-workspace/native-workspace.patch"
+  ],
+  "patch_sha256": "b8677685e4be66ad0fade96962dcafbba3297e1b4062351fc0c0062fe92c87be"
+}

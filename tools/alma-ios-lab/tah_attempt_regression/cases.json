@@ -1,0 +1,49 @@
+{
+  "capture_candidates_exercised": false,
+  "cases": [
+    {
+      "error": null,
+      "name": "valid_raw_exact_import",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "valid_actor_exact_import",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "wrong_attempt_and_material_hash",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "extra_missing_duplicate_files",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "escaped_path_and_noncanonical_write_root",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "reused_attempt_id_preserves_first_view",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "malformed_manifest_no_output_io",
+      "status": "passed"
+    },
+    {
+      "error": null,
+      "name": "prompt_channel_mismatch",
+      "status": "passed"
+    }
+  ],
+  "diagnostic": null,
+  "no_io_definition": "Rejected input creates no workspace/output tree; reading the inbound manifest is required and not forbidden",
+  "passed": true,
+  "scope": "Actual unchanged Rust prepare and ScopedFiles modules; original TS builder/projector bytes; no phone/model/auth/network"
+}

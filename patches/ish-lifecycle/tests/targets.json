@@ -1,0 +1,20 @@
+[
+  "embed/ffi.c",
+  "embed/ffi.h",
+  "embed/host/src/instance.rs",
+  "embed/host/src/lib.rs",
+  "embed/host/src/session.rs",
+  "embed/protocol/src/lib.rs",
+  "embed/supervisor/src/jobs.rs",
+  "embed/supervisor/src/main.rs",
+  "embed/supervisor/src/session.rs",
+  "embed/supervisor/src/spawn.rs",
+  "kernel/exec.c",
+  "kernel/misc.c",
+  "kernel/session_job.c",
+  "kernel/session_job.h",
+  "kernel/task.c",
+  "kernel/task.h",
+  "main.c",
+  "meson.build"
+]

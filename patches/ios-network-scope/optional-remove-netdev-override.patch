@@ -1,0 +1,11 @@
+--- a/shared/rust-bridge/Cargo.toml
++++ b/shared/rust-bridge/Cargo.toml
+@@ -94,8 +94,6 @@
+ codegen-units = 16
+ 
+ [patch.crates-io]
+-# iOS has no private Darwin IPv6 flag ioctl; preserve address enumeration with explicit unknown flags.
+-netdev = { version = "=0.45.0", path = "../../.build/vendor/netdev-0.45.0" }
+ # Upstream age crypto migration: ML-KEM 0.3 / KEM 0.3, compatible with Russh/Clatter.
+ age = { git = "https://github.com/str4d/rage", rev = "b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f" }
+ 

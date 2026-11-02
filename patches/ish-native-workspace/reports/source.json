@@ -1,0 +1,15 @@
+{
+  "changed": [
+    "embed/ffi.c",
+    "embed/ffi.h",
+    "embed/host/src/instance.rs",
+    "fs/generic.c",
+    "fs/mount.c",
+    "fs/real.c",
+    "kernel/fs.h",
+    "kernel/workspace_policy.c",
+    "kernel/workspace_policy.h"
+  ],
+  "patchSHA256": "44da47a27f0cbe7226bbf8fbcf5fe4ee6420827bb1abbfd9490c4f7ec267c15a",
+  "prerequisite": "ish-workspace-policy/workspace-policy.patch"
+}

@@ -1,0 +1,503 @@
+{
+  "schema_version": 1,
+  "status": "READ_ONLY_FEASIBILITY_HANDOFF_NO_WORKER_IMPLEMENTED",
+  "date": "2026-11-01",
+  "repository": "/Users/dashidhy/Public/projects/agent/ALMA-litter",
+  "branch": "dev/ios",
+  "codex_revision": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "scope": {
+    "only_written_file": "tools/alma-ios-lab/results/code-mode-node-feasibility.json",
+    "no_device_auth_model_network_download_calls": true,
+    "no_main_source_vendor_bridge_or_profile_edits": true,
+    "provider_injection_owner": "main; deliberately not duplicated"
+  },
+  "conclusion": {
+    "assessment": "A narrow text CodeModeSessionProvider over restricted iSH Node is plausible, not implemented or qualified. It is a cell-runtime adapter, not an agent loop. Most semantics need new adapter code; there is no complete official JS runtime to load unchanged.",
+    "do_not_override_metadata": "Keep model code_mode_only/use_responses_lite metadata and fail-closed selection. DisabledCodeModeSessionProvider intentionally reports code-mode host is disabled. Do not relabel models Direct to hide missing execution.",
+    "reusable_js": "The only .js file found under code-mode-runtime/src is runtime/settled.js: as_settled and stream_settled. Reuse its exact bytes in each fresh cell realm.",
+    "qualification_gate": "Keep provider unavailable until actual packaged Node22 supports the chosen module/termination primitives and bounded text conformance passes under its restricted grant. A host Node26 helper test does not establish this."
+  },
+  "public_api": {
+    "provider": "CodeModeSessionProvider: availability() -> Result<(),String>; create_session() -> future Result<Arc<dyn CodeModeSession>,String>; optional create_session_with_limits/options; sample_process_metrics defaults Unsupported.",
+    "session": "CodeModeSession: output_truncation(); execute(ExecuteRequest, Arc<dyn CodeModeSessionDelegate>, Option<CancellationToken>) -> StartedCell; wait(WaitRequest, preempt) -> WaitOutcome; terminate(TerminateRequest) -> WaitOutcome; shutdown() -> Result<(),String>. All session/provider traits Send+Sync.",
+    "started": "StartedCell exposes cell_id immediately and owns a separate initial_response future; use from_result_receiver or from_future. Do not conflate admission with initial observation.",
+    "delegate": "invoke_tool(CodeModeNestedToolCall, CancellationToken) -> Result<JsonValue,String>; notify(call_id, cell_id, text, CancellationToken) -> Result<(),String>; cell_closed(&CellId). Retain the supplied delegate per cell across yields until terminal cleanup.",
+    "execute_fields": [
+      "tool_call_id",
+      "enabled_tools: Vec<ToolDefinition>",
+      "source",
+      "yield_time_ms: Option<u64>",
+      "max_output_tokens: Option<usize>"
+    ],
+    "wait_fields": [
+      "cell_id",
+      "yield_time_ms: u64",
+      "max_output_tokens: Option<usize>"
+    ],
+    "terminate_fields": [
+      "cell_id",
+      "max_output_tokens: Option<usize>"
+    ],
+    "limits": [
+      "max_yield_time_ms: Option<u64>",
+      "max_heap_size_bytes: Option<usize>"
+    ],
+    "output": "RuntimeResponse::{Yielded,Terminated,Result}; all include cell_id/content_items/optional host duration; Result adds error_text and result_buffered_for. WaitOutcome distinguishes LiveCell/MissingCell.",
+    "minimal_options": "Use Client output truncation (the default): return raw ordered content and separate error metadata; Core owns observation token budget. Reject Server mode and non-default heap limits until correctly supported. Core currently calls create_session(). Do not equate Node old-space limit with the exact V8 max_heap_size_bytes contract.",
+    "anchors": [
+      "provider_session_delegate",
+      "requests_responses",
+      "core_default_session"
+    ]
+  },
+  "mandatory_semantics": [
+    {
+      "area": "realm and source",
+      "requirements": "Fresh cell isolate/realm with ECMAScript module semantics and top-level await, not async-function wrapping. No ambient Node/process/require/fs/network/console globals. Reject both static and dynamic imports. Remove Atomics, SharedArrayBuffer, WebAssembly. A fresh cell does not inherit lexical bindings; only explicit stored JSON persists. Node vm is an API surface mechanism, not the security boundary.",
+      "anchors": [
+        "globals",
+        "module_execution",
+        "imports_denied",
+        "global_and_output_tests"
+      ]
+    },
+    {
+      "area": "text and errors",
+      "requirements": "text uses JS String conversion for undefined/null/boolean/number/BigInt/string; otherwise JSON stringify with String fallback only when no exception. Helpers return undefined. Preserve content ordering, error_text separately, serialization failures and stack formatting. Guard reserved serde JSON object keys and parser depth/size before crossing to Rust. Error getters can execute JS or exit; error formatting also needs containment.",
+      "anchors": [
+        "text_serialization",
+        "json_serialization_guards",
+        "error_formatting",
+        "global_and_output_tests"
+      ]
+    },
+    {
+      "area": "nested tools",
+      "requirements": "Build tools and ALL_TOOLS from the current ExecuteRequest, using official normalized names and original ToolName/kind (Function/Freeform). First argument is serialized JSON; no argument/undefined remains None, distinct from null. Generate per-cell runtime_tool_call_id and retain correlation. Calls return promises; dispatch independent calls concurrently through this cell delegate. Delegate Err rejects with the error string. Do not implement shell or Web directly in the JS worker. Native side validates current cell and enabled tool identity/kind; never trust worker-chosen privileges.",
+      "anchors": [
+        "tool_definitions",
+        "tool_metadata_normalization",
+        "helpers",
+        "module_execution"
+      ]
+    },
+    {
+      "area": "async completion",
+      "requirements": "Await main module evaluation promise and microtasks, but pending timers or unawaited nested promises do not keep the cell alive. A never-settling awaited promise remains a live cell. On normal completion, drain notifications, cancel outstanding tools and join their callbacks before terminal delivery. Explicit output is required: the module return value is not printed automatically.",
+      "anchors": [
+        "module_execution",
+        "callback_drain",
+        "service_contract_tests"
+      ]
+    },
+    {
+      "area": "yield and observations",
+      "requirements": "Default exec/wait observation 10000ms; official service adds 1000ms grace at requested >=10000ms, then applies optional session max_yield_time_ms. yield_control emits an observation-yield request and returns undefined; await yield_control() does not pause cell execution. Preempt yields only the foreground observation; it does not cancel the cell or nested tools. Yielded output is drained once, subsequent wait returns only new output. One observer per cell; reject a competing observer rather than replace it.",
+      "anchors": [
+        "service",
+        "yield_tests",
+        "helpers",
+        "service_contract_tests"
+      ]
+    },
+    {
+      "area": "session storage",
+      "requirements": "Snapshot committed session JSON at admission; store updates the cell-local snapshot and a write set, load returns deserialized copy/undefined when absent. Commit the write set on natural completion (including JS error and successful exit) after callback cleanup, in the session completion critical section. Do not commit a terminated cell, including a completion queued behind the storage lock. Concurrent cells keep their admission snapshots; disjoint writes merge on commit. Never alias sessions. store(undefined) throws and preserves prior value.",
+      "anchors": [
+        "store_snapshot_and_commit",
+        "completion_ordering",
+        "store_tests",
+        "termination_store_race_test"
+      ]
+    },
+    {
+      "area": "timers and settled helpers",
+      "requirements": "Match numeric timer IDs, delay coercion/truncation/nonpositive normalization, clear behavior, callback errors and teardown. Timer handles do not keep completed cells alive. Reuse settled.js unchanged: Map keys and object identity, settlement ordering, values/thenables/duplicate promises, rejected inputs, sequential async emit callbacks and iterator close all matter.",
+      "anchors": [
+        "timers",
+        "settled_js",
+        "settled_tests"
+      ]
+    },
+    {
+      "area": "notify",
+      "requirements": "notify serializes like text; blank/whitespace text throws. Send with originating tool_call_id and cell_id to delegate.notify using cancellation token; it returns undefined to JS. Drain notifications on normal completion; cancel+join on termination/shutdown. It is not ordinary buffered text.",
+      "anchors": [
+        "helpers",
+        "callback_drain",
+        "service_contract_tests"
+      ]
+    },
+    {
+      "area": "exit",
+      "requirements": "exit is immediate, successful, uncatchable whole-cell termination: catch/finally/queued microtasks/sibling promises must not run. Preserve only earlier output and stores and commit them as normal completion. Throwing a sentinel exception is wrong. A native exit binding in a per-cell Node Worker is a candidate to investigate, not established parity.",
+      "anchors": [
+        "helpers",
+        "exit_tests"
+      ]
+    },
+    {
+      "area": "termination and teardown",
+      "requirements": "Stop CPU-bound JS from outside its execution thread. Explicit terminate cancels and joins pending delegate work before acknowledgment; reject repeated termination while cleanup is pending. Natural completion already observed wins over later termination. cell_closed is terminal delegate cleanup, not an observation. Shutdown rejects admission, stops all cells, and confirms cleanup; missing cell returns MissingCell(Result with exec cell <id> not found). Never report successful cleanup from a closed pipe alone.",
+      "anchors": [
+        "service_contract_tests",
+        "shutdown_tests",
+        "missing_cell",
+        "termination_store_race_test"
+      ]
+    },
+    {
+      "area": "resource ownership and drops",
+      "requirements": "Use admission guards, independently owned cell records and monotonic IDs/generations so dropped start futures, transport EOF, session drop and runtime shutdown cannot orphan work or route old results to reused IDs. Dropping an observation must not accidentally become preemption or explicit termination; match the selected provider transport behavior and reject ambiguous replay. Keep result buffering duration distinct from execution/observation duration.",
+      "anchors": [
+        "provider_session_delegate",
+        "host_messages",
+        "store_snapshot_and_commit"
+      ]
+    },
+    {
+      "area": "bounded output",
+      "requirements": "Bound source/frame/output bytes, retained items, pending callbacks, cells and storage in both Rust and JS. Client mode ignores request token budget in host; Core formats/truncates. A hard transport/output cap must produce an explicit resource failure and cleanup, not silent successful truncation. Server mode has additional exact token formatting, overflow notices and 1MiB retained payload semantics; omit that capability in MVP.",
+      "anchors": [
+        "provider_session_delegate",
+        "host_capabilities",
+        "host_codec"
+      ]
+    },
+    {
+      "area": "media surface",
+      "requirements": "Official globals also include image/audio/generatedImage and typed media content. They implement data-URL/MCP-block normalization and detail overrides. A text-only qualification worker may explicitly reject these with a clear unsupported error; that is incomplete official helper coverage, not full Code Mode compatibility. Before general production availability, implement or truthfully constrain advertised media expectations.",
+      "anchors": [
+        "globals",
+        "host_wire_values",
+        "global_and_output_tests"
+      ]
+    }
+  ],
+  "reuse": {
+    "unchanged_js": [
+      "runtime/settled.js only"
+    ],
+    "unchanged_rust_candidates": [
+      "codex-code-mode public traits/reexports",
+      "codex-code-mode-protocol DTOs, enabled_tool_metadata, identifier normalization, parse_exec_source where already performed by Core",
+      "host message/payload types and FramedReader/FramedWriter codec if choosing official V1 wire shape",
+      "existing Core nested tool delegate, permissions, output formatting, model metadata selectors"
+    ],
+    "not_reusable_as_js": [
+      "globals.rs",
+      "callbacks.rs",
+      "value.rs",
+      "timers.rs",
+      "module_loader.rs",
+      "cell_actor/session_runtime/service state machines: V8/Rust implementations, conformance references rather than a JS package"
+    ],
+    "transport_limit": "Existing ProcessOwnedCodeModeSessionProvider launches a native executable by PathBuf; its connection implementation is private. It cannot simply be handed an IshSession stream via a public constructor. New bridge provider/session must own iSH transport; do not patch native spawning or pretend remote."
+  },
+  "proposed_bounded_mvp": {
+    "ownership": "One CodeModeSession per Codex thread, with a guest Node coordinator and fresh independent cell execution contexts/Workers. The Rust provider owns authoritative cell/delegate/observation/storage/lease state. A proposed alternative is a separate owned iSH Node process per cell if Worker lifecycle is unsupported; it needs independent startup/performance qualification.",
+    "execution_primitive": "Candidate: Node --jitless --experimental-vm-modules, SourceTextModule per cell, deny-all import hooks, and an outer controllable Worker so synchronous JS cannot block the coordinator. This is a proposal; target Node22 support, thread creation under policy and exact exit/drain semantics remain unverified. Do not substitute new Function/AsyncFunction and claim module parity.",
+    "wire": "Prefer existing V1 JSON shapes framed by four-byte little-endian payload length over separate binary stdin/stdout. Reuse Rust DTO serialization and codec; no line parsing, no stdout logging. Keep strings/numbers/optional fields exactly as existing wire types specify; account for 64-bit IDs/times exceeding JS safe integers (bound checked values or lossless handling).",
+    "messages": [
+      "connection/hello -> connection/ready or rejected; advertise only capabilities actually implemented",
+      "session/open -> session/ready",
+      "session/execute -> execution/started, then separate execute/initialResponse",
+      "session/wait -> wait/completed; operation/yield releases observation only",
+      "session/terminate -> final wait/completed only after confirmed cell/callback cleanup",
+      "session/shutdown -> session/closed only after all cells and owned process cleanup",
+      "delegate/request tool/invoke and notification/send -> correlated delegate/response",
+      "delegate/cancel and cell/closed; operation/cancel must follow official request cancellation semantics, not alias every cancellation to successful termination"
+    ],
+    "rust_flow": "Reader loop must continue servicing output, responses and all callbacks while exec/wait is pending. Spawn callback futures outside registry locks and outside any workspace permit. Validate every session/cell/generation/tool mapping. Never hold a transport or observation lock while awaiting delegate.invoke_tool.",
+    "initial_policy": "Private scratch grant for worker/coordinator, read-only runtime/helper roots, explicit cwd/env, DenyDirect. No candidate/input/workspace roots, no auth/model credentials. Install grant atomically before spawn_with_grant; retain until owned cleanup. Use a dedicated preparation/lease route that does not acquire WorkspacePolicySemaphore. Nested exec obtains its normal workspace gate only inside the native delegate path; worker waiting for it holds no workspace gate. Native OpenAI/Web networking remains on its existing trusted path.",
+    "budgets_proposal_not_upstream_defaults": {
+      "sessions": 1,
+      "live_cells_per_session": 4,
+      "pending_delegate_calls_per_cell": 32,
+      "source_bytes": 262144,
+      "frame_bytes": 1048576,
+      "retained_output_bytes_per_cell": 1048576,
+      "retained_output_items_per_cell": 4096,
+      "stored_json_bytes_per_session": 1048576,
+      "failure_policy": "Reject admission or fail affected cell explicitly and confirm cleanup; exact phone budgets to be qualified, not implied enforcement today."
+    },
+    "not_in_mvp": [
+      "gRPC/remote host support",
+      "server output truncation",
+      "execute_to_pending/wait_to_pending extra in-process APIs (not required CodeModeSession trait methods)",
+      "exact per-cell heap-byte limits",
+      "media helper parity",
+      "dynamic Node imports/npm/fs/network exposure",
+      "AppServer provider injection (main-owned)"
+    ],
+    "handoff_gate": "Implementation is not started. First prove target primitive/lifecycle locally with ordinary private fixtures, then implement text contract and run synthetic delegates; only main may wire/enable and perform phone/model qualification."
+  },
+  "unknowns_and_blockers": [
+    "No target Node22 or iSH tests performed. Host has Node v26.10.0; no downloads or target dependency builds requested.",
+    "SourceTextModule availability/flags, Worker threads, microtask pumping, timer semantics and external Worker termination under iSH restrictions need actual target tests.",
+    "Exact uncatchable exit plus reliable delivery of prior output/store write-set before Worker exit is the hardest compatibility gate. process.exit in a Worker is only a candidate; prove catch/finally/microtasks/getter cases and message drain. No throwing-stub substitute.",
+    "A vm context is not a security boundary. Read-only runtime/private scratch/direct-network-deny grants must remain the enforced OS-facing boundary even if Node internals become reachable. Native delegate validation must never accept grant or mount requests from the worker.",
+    "Existing IshSession retained-output and stdin lifetime limits may be unsuitable for a long-lived framed coordinator (the previous exec adapter had 1MiB lifetime stdin/output limits). A dedicated bounded streaming/ack transport or correctly owned short-lived cell processes is needed; never silently reuse overflowed retention or restart/replay a cell with possible side effects.",
+    "The proposed 1MiB worker frame ceiling is intentionally smaller than official codec MAX_FRAME_BYTES=64MiB. Large tool results need explicit failure; no claim of full large-media compatibility.",
+    "Store/result commit races, natural completion vs terminate and dropped-start cleanup need reference tests against the new provider, not solely JS snippets.",
+    "Heap/OOM containment and whole-app RSS on phone remain unknown. Node old-space flags/Worker resourceLimits do not alone establish exact total heap/memory quotas.",
+    "Some Node/V8 version or ICU-dependent formatting may differ; classify exact source-contract failures rather than silently claiming version parity.",
+    "No protocol capability negotiates text-only helpers; general production availability must not conceal deferred image/audio/generatedImage support behind a success result."
+  ],
+  "validation": {
+    "source_inspection": "Actual pinned submodule source and existing tests read; anchors carry SHA-256 to detect drift. Source test names are acceptance references, not claims those Rust suites were executed.",
+    "executed": {
+      "kind": "in-memory helper-only conformance smoke",
+      "runtime": "host /opt/homebrew/bin/node v26.10.0",
+      "flags": [
+        "--jitless",
+        "--experimental-vm-modules",
+        "--input-type=module"
+      ],
+      "filesystem_writes": "none by test",
+      "network": "none",
+      "timeout": "5-second process watchdog; 1-second VM evaluation timeout per fixture",
+      "method": "Read exact settled.js and extract the six exact JS source snippets from official tests/settled.rs. Fresh vm context/SourceTextModule, text sink and timers; compare serialized outputs with official expected values. No worker implementation.",
+      "passed": [
+        "preserves_settlement_order_before_and_during_iteration",
+        "accepts_iterables_values_thenables_and_duplicate_promises",
+        "preserves_map_keys_and_completes_empty_inputs",
+        "awaits_each_callback_including_rejected_inputs",
+        "propagates_callback_errors_and_closes_early_iterations",
+        "preserves_identity_of_keys_values_and_rejections"
+      ],
+      "count": 6
+    },
+    "not_executed": [
+      "Rust Code Mode test suites",
+      "Node22 guest/phone",
+      "Worker termination/exit",
+      "native provider compile",
+      "nested real exec or Web",
+      "model/auth/network calls",
+      "end-to-end session protocol"
+    ],
+    "next_bounded_conformance": [
+      "Fresh cells/session store isolation, JSON conversion/errors and tool name/kind mapping",
+      "Sequential and Promise.all nested tools, tool rejection, deferred metadata, notify drain",
+      "Yield/time/preempt continue execution, incremental output, duplicate observer and missing-cell handling",
+      "Normal completion cancels unawaited tools, explicit terminate joins tools, shutdown CPU-bound loop",
+      "Official exit_stops_the_whole_cell_and_preserves_only_prior_writes matrix",
+      "Store commit blocked by terminate; completion-before-terminate and dropped admission/transport cleanup",
+      "Ordinary private runtime/scratch worker grant plus a nested fixture exec that takes the workspace gate: prove no deadlock",
+      "Frame fragmentation/coalescing/EOF/oversize, output pressure and retained stream gaps without plaintext logs"
+    ]
+  },
+  "source_anchors": {
+    "provider_session_delegate": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/session.rs",
+      "line": 19,
+      "end_line": 273,
+      "sha256": "f1b18c63c37d5b080529d82652300861adbb99779a11270dcaeee546ca4c3a34"
+    },
+    "requests_responses": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/runtime.rs",
+      "line": 15,
+      "end_line": 154,
+      "sha256": "54334b5f75b542e85b2c9d4a493ed64acc6e5f70c7d709f84222ca3f7fb55ca0"
+    },
+    "tool_definitions": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/description.rs",
+      "line": 134,
+      "end_line": 178,
+      "sha256": "4bba813dac9bd7e9e3088bc144052b50cec7b9843070a89afef0b79653fcab94"
+    },
+    "tool_metadata_normalization": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/description.rs",
+      "line": 381,
+      "end_line": 430,
+      "sha256": "4bba813dac9bd7e9e3088bc144052b50cec7b9843070a89afef0b79653fcab94"
+    },
+    "host_messages": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/host/message.rs",
+      "line": 129,
+      "end_line": 242,
+      "sha256": "830c4fd089c9bc26230ab444bdf8a2c225d43977d4b5ce1216523dd6656c0065"
+    },
+    "host_wire_values": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/host/payload.rs",
+      "line": 301,
+      "end_line": 529,
+      "sha256": "8edb5d32afb53e542c1ba12e184e06ae8b370ace1110ae1db89906f6cf7770f0"
+    },
+    "host_codec": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/host/codec.rs",
+      "line": 11,
+      "end_line": 169,
+      "sha256": "76b37ff1d32c3214b3457235cf87670015024173383713ebb255439d2d444d3c"
+    },
+    "host_capabilities": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-protocol/src/host/mod.rs",
+      "line": 15,
+      "end_line": 25,
+      "sha256": "c86054dcefc45e9f2b1e5e494c19cfaf97499ead9f13d06dcdb2a803e7dce5d8"
+    },
+    "existing_process_provider": {
+      "path": "shared/third_party/codex/codex-rs/code-mode/src/remote_session.rs",
+      "line": 38,
+      "end_line": 113,
+      "sha256": "4791d05831f6260c7b2dd46c7c592c067e683d57de7b5e4d265f1695a6c4e400"
+    },
+    "public_exports": {
+      "path": "shared/third_party/codex/codex-rs/code-mode/src/lib.rs",
+      "line": 1,
+      "end_line": 8,
+      "sha256": "672628d0254daded50e508875039d7dcdb95d4d850209ae3ac3f95161b0e470d"
+    },
+    "globals": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/globals.rs",
+      "line": 15,
+      "end_line": 58,
+      "sha256": "1935246240c8f43937f56e14e156a7971b3e1a6d28e9091f9b4b795365c6c56c"
+    },
+    "module_execution": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/module_loader.rs",
+      "line": 8,
+      "end_line": 117,
+      "sha256": "01cb7f7b6016c92e84e3329ecc73704c7180eadaa5e0d6f7afcc3d53de9f6137"
+    },
+    "imports_denied": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/module_loader.rs",
+      "line": 142,
+      "end_line": 213,
+      "sha256": "01cb7f7b6016c92e84e3329ecc73704c7180eadaa5e0d6f7afcc3d53de9f6137"
+    },
+    "helpers": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/callbacks.rs",
+      "line": 14,
+      "end_line": 366,
+      "sha256": "d576e88135a44973fe2b4738b6806eb5bd04f3c999fc18113701f47a56f69042"
+    },
+    "text_serialization": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/value.rs",
+      "line": 19,
+      "end_line": 45,
+      "sha256": "7c8a5b67ae04bb4bd444ac676924889d558b47c3a379d32c0bf75c4fbf238f13"
+    },
+    "json_serialization_guards": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/value.rs",
+      "line": 297,
+      "end_line": 342,
+      "sha256": "7c8a5b67ae04bb4bd444ac676924889d558b47c3a379d32c0bf75c4fbf238f13"
+    },
+    "error_formatting": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/value.rs",
+      "line": 354,
+      "end_line": 385,
+      "sha256": "7c8a5b67ae04bb4bd444ac676924889d558b47c3a379d32c0bf75c4fbf238f13"
+    },
+    "timers": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/timers.rs",
+      "line": 15,
+      "end_line": 127,
+      "sha256": "b6bd3d3d72ca37658cad6e7ccafcd9bd6c7b3d7ec2b24da7bdfe92f45dceee9e"
+    },
+    "settled_js": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/runtime/settled.js",
+      "line": 1,
+      "end_line": 67,
+      "sha256": "6b0d0b56aecf2101ca0d7f50b71d733430f703deb7bf3b71b54364c60cce4f65"
+    },
+    "settled_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/tests/settled.rs",
+      "line": 55,
+      "end_line": 219,
+      "sha256": "093fc672b92fede2fe917db9377bf727ce4878a17298763aeb827ed67e22d739"
+    },
+    "service": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service.rs",
+      "line": 30,
+      "end_line": 215,
+      "sha256": "6ab08f1240b522de5e4c8879023dee7a6ee0daf13bba9f1a0f380f0bc8483a87"
+    },
+    "missing_cell": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service.rs",
+      "line": 422,
+      "end_line": 433,
+      "sha256": "6ab08f1240b522de5e4c8879023dee7a6ee0daf13bba9f1a0f380f0bc8483a87"
+    },
+    "store_snapshot_and_commit": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/session_runtime/mod.rs",
+      "line": 47,
+      "end_line": 301,
+      "sha256": "184791e3f1c4510559410e119b39923b22e79e7b36bd974e659f540032f16596"
+    },
+    "completion_ordering": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/cell_actor/mod.rs",
+      "line": 443,
+      "end_line": 495,
+      "sha256": "13517bb0d4faca763c9761fd58890b66c43850612c88cbc39de5568eafcd6dfc"
+    },
+    "callback_drain": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/cell_actor/callbacks.rs",
+      "line": 79,
+      "end_line": 123,
+      "sha256": "036bbe84374c54a29e13b6af628e4c1d3a21e938f5bc26678a79bef309404910"
+    },
+    "service_contract_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_contract_tests.rs",
+      "line": 189,
+      "end_line": 680,
+      "sha256": "bb30e7f4772b60d1371fe1dc283085f30fc49478e8c05fa99fb5f263ebe8fe2e"
+    },
+    "exit_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "line": 564,
+      "end_line": 711,
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977"
+    },
+    "store_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "line": 796,
+      "end_line": 1007,
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977"
+    },
+    "shutdown_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "line": 1008,
+      "end_line": 1055,
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977"
+    },
+    "global_and_output_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "line": 1366,
+      "end_line": 1724,
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977"
+    },
+    "yield_tests": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/service_tests.rs",
+      "line": 30,
+      "end_line": 461,
+      "sha256": "9ade0a57afeb58e13dd936a3417950e455e85885dd69c15a68f1c0e7b15be977"
+    },
+    "termination_store_race_test": {
+      "path": "shared/third_party/codex/codex-rs/code-mode-runtime/src/session_runtime/tests.rs",
+      "line": 97,
+      "end_line": 172,
+      "sha256": "08a4f91533338a8d389befef1adba923831a5e63bd81f4feb764bc35d804d5da"
+    },
+    "core_default_session": {
+      "path": "shared/third_party/codex/codex-rs/core/src/tools/code_mode/mod.rs",
+      "line": 233,
+      "end_line": 255,
+      "sha256": "bc631027c964f6c3e381be869611be7e1b06bd110c2eb5700ebef13baae8c778"
+    },
+    "model_tool_selector": {
+      "path": "shared/third_party/codex/codex-rs/core/src/tools/mod.rs",
+      "line": 66,
+      "end_line": 86,
+      "sha256": "758e54f675aed934433661d863439b9947a3f1fac0ed1a2b6cf1896d71751330"
+    },
+    "model_fail_closed_test": {
+      "path": "shared/third_party/codex/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "line": 229,
+      "end_line": 270,
+      "sha256": "301d554123ef29ee252375e500a9a951d43955add31a21893e1c2e8b38d45ab4"
+    }
+  }
+}

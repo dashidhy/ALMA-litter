@@ -1,0 +1,1751 @@
+{
+  "generated_at_utc": "2026-10-31T23:40:12.120572+00:00",
+  "scope": {
+    "task": "bounded source comparison, Codex 0.163.0 versus 0.166.0 tool-mode selection",
+    "only_written_file": "tools/alma-ios-lab/results/code-mode-version-comparison.json",
+    "external_requests": [],
+    "github_raw_fallback_needed": false,
+    "builds_or_test_executions": [],
+    "device_model_auth_calls": false,
+    "desktop_auth_or_runtime_catalog_read": false,
+    "excluded": "No iSH/Node CodeModeSessionProvider protocol/JS feasibility work; that remains Dewey-owned."
+  },
+  "conclusion": {
+    "selector_regression_introduced_in_0166": false,
+    "basis": "Relevant selector functions, host provider gate, warning function, and the entire model_runtime_selectors.rs suite are byte-identical in pristine 0.163.0 and 0.166.0 source archives.",
+    "feature_defaults_changed_for_code_mode_host_or_mode": false,
+    "catalog_client_version_parameter_verified": true,
+    "remote_catalog_client_version_conditioning_proven": false,
+    "explanation": "Given identical resolved model.tool_mode, flags, and host availability, these versions make the same tool-mode decision. Different Mac/phone outcomes do not establish a selector-code change or prove server-side version conditioning. Catalog inputs, selected model, routing/cache context, and host availability have not been matched between those runs.",
+    "startup_vs_thread_scope_candidate": "Verified lifecycle placement differs: Mac profile applies thread-level flags after startup provider selection; phone local profile applies startup feature overrides. This can explain success/failure with identical selectors and without remote catalog differences."
+  },
+  "reported_observations_not_reproduced": [
+    "Main reports all eight phone-visible models advertise code_mode_only.",
+    "Main reports the earlier Mac TAH 0.163 profile disables Code Mode and works.",
+    "No authenticated request or desktop runtime inspection was performed to independently reproduce either observation."
+  ],
+  "versions": {
+    "0.163.0": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_sha256": "e57f1d4f914c71c3532a12d5c14f740909fca4e7e041fa1b3db71618c88e5567",
+      "archive_root": "codex-83086188ae0614bd882818ff1aa23f3194962012",
+      "workspace_version": "0.163.0",
+      "tag_locator": "https://github.com/openai/codex/tree/rust-v0.163.0"
+    },
+    "0.166.0": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_sha256": "718c86dcd7104919f2820aa79db0fa0083b5f240aa16da704f43e4acf7b544e5",
+      "archive_root": "codex-rust-v0.166.0",
+      "workspace_version": "0.166.0",
+      "tag_locator": "https://github.com/openai/codex/tree/rust-v0.166.0"
+    }
+  },
+  "byte_comparisons": [
+    {
+      "unit": "requested_tool_mode",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/src/tools/mod.rs",
+          "start_line": 63,
+          "end_line": 73,
+          "sha256": "e7f411e9fb8fe1e5dafcee0f5a87c7d366ec5d85f9bde75c8cdc4f5ef09a89c7"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/src/tools/mod.rs",
+          "start_line": 66,
+          "end_line": 76,
+          "sha256": "e7f411e9fb8fe1e5dafcee0f5a87c7d366ec5d85f9bde75c8cdc4f5ef09a89c7"
+        }
+      }
+    },
+    {
+      "unit": "effective_tool_mode",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/src/tools/mod.rs",
+          "start_line": 75,
+          "end_line": 85,
+          "sha256": "17c1eb1cb96f66bf58a9699b9165015b05480aab91273a777340718c04eb4055"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/src/tools/mod.rs",
+          "start_line": 78,
+          "end_line": 88,
+          "sha256": "17c1eb1cb96f66bf58a9699b9165015b05480aab91273a777340718c04eb4055"
+        }
+      }
+    },
+    {
+      "unit": "take_unavailable_warning",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/src/tools/code_mode/mod.rs",
+          "start_line": 110,
+          "end_line": 124,
+          "sha256": "82ed361693406d2b328f183131052119db8b8d814833c4bd9dc4d3f5c8c63136"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/src/tools/code_mode/mod.rs",
+          "start_line": 109,
+          "end_line": 123,
+          "sha256": "82ed361693406d2b328f183131052119db8b8d814833c4bd9dc4d3f5c8c63136"
+        }
+      }
+    },
+    {
+      "unit": "remote_tool_mode_selector_overrides_feature_flags",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/tests/suite/model_runtime_selectors.rs",
+          "start_line": 166,
+          "end_line": 226,
+          "sha256": "636540347adee88640fc454680527ff2a44f54020af608842a3e0f306b6fa759"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/tests/suite/model_runtime_selectors.rs",
+          "start_line": 166,
+          "end_line": 226,
+          "sha256": "636540347adee88640fc454680527ff2a44f54020af608842a3e0f306b6fa759"
+        }
+      }
+    },
+    {
+      "unit": "remote_code_mode_only_selector_fails_closed_when_host_is_disabled",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/tests/suite/model_runtime_selectors.rs",
+          "start_line": 229,
+          "end_line": 268,
+          "sha256": "425b86c82071eeef943fb2968cd85a982e561ae4c7b067a2e6032f776e0c2953"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/tests/suite/model_runtime_selectors.rs",
+          "start_line": 229,
+          "end_line": 268,
+          "sha256": "425b86c82071eeef943fb2968cd85a982e561ae4c7b067a2e6032f776e0c2953"
+        }
+      }
+    },
+    {
+      "unit": "deserialize_optional_model_selector",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:protocol/src/openai_models.rs",
+          "start_line": 356,
+          "end_line": 365,
+          "sha256": "f8dc1b7bc0594c02b5e87e324c367d4bc3033f1ead10b375d97abae058d74b98"
+        },
+        "0.166.0": {
+          "source": "0.166.0:protocol/src/openai_models.rs",
+          "start_line": 361,
+          "end_line": 370,
+          "sha256": "f8dc1b7bc0594c02b5e87e324c367d4bc3033f1ead10b375d97abae058d74b98"
+        }
+      }
+    },
+    {
+      "unit": "client_version_to_whole",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:models-manager/src/lib.rs",
+          "start_line": 19,
+          "end_line": 26,
+          "sha256": "697b746bc33132dc253aff513d65e5286ceafac1437cb343be40a159be5a7533"
+        },
+        "0.166.0": {
+          "source": "0.166.0:models-manager/src/lib.rs",
+          "start_line": 24,
+          "end_line": 31,
+          "sha256": "697b746bc33132dc253aff513d65e5286ceafac1437cb343be40a159be5a7533"
+        }
+      }
+    },
+    {
+      "unit": "append_client_version_query",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:codex-api/src/endpoint/models.rs",
+          "start_line": 37,
+          "end_line": 40,
+          "sha256": "55de3a72dae03bb8db28aaa34042c74b9afe5e971236d972b0d33cb62a66bb41"
+        },
+        "0.166.0": {
+          "source": "0.166.0:codex-api/src/endpoint/models.rs",
+          "start_line": 37,
+          "end_line": 40,
+          "sha256": "55de3a72dae03bb8db28aaa34042c74b9afe5e971236d972b0d33cb62a66bb41"
+        }
+      }
+    },
+    {
+      "unit": "catalog_request_url",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:codex-api/src/endpoint/models.rs",
+          "start_line": 49,
+          "end_line": 67,
+          "sha256": "3bd198a3e2eb5a28203e97d2aa0a30e4cfbe34fc6e77b9a3bd8da806608ce172"
+        },
+        "0.166.0": {
+          "source": "0.166.0:codex-api/src/endpoint/models.rs",
+          "start_line": 49,
+          "end_line": 67,
+          "sha256": "3bd198a3e2eb5a28203e97d2aa0a30e4cfbe34fc6e77b9a3bd8da806608ce172"
+        }
+      }
+    },
+    {
+      "unit": "entire model_runtime_selectors.rs test suite",
+      "byte_identical": true,
+      "sources": [
+        "0.163.0:core/tests/suite/model_runtime_selectors.rs",
+        "0.166.0:core/tests/suite/model_runtime_selectors.rs"
+      ]
+    },
+    {
+      "unit": "default CodeModeHost provider selection block",
+      "byte_identical": true,
+      "versions": {
+        "0.163.0": {
+          "source": "0.163.0:core/src/thread_manager.rs",
+          "start_line": 574,
+          "end_line": 584,
+          "sha256": "c21e2e275da218eb342c4cad4b698184e5fa53bc0d14dea576c1bb7fa85a303b"
+        },
+        "0.166.0": {
+          "source": "0.166.0:core/src/thread_manager.rs",
+          "start_line": 640,
+          "end_line": 650,
+          "sha256": "c21e2e275da218eb342c4cad4b698184e5fa53bc0d14dea576c1bb7fa85a303b"
+        }
+      }
+    }
+  ],
+  "feature_defaults": {
+    "0.163.0": {
+      "CodeMode": {
+        "default_enabled": false,
+        "evidence": {
+          "source": "0.163.0:features/src/lib.rs",
+          "start_line": 1159,
+          "end_line": 1164,
+          "sha256": "65795871cdaf036c80e88b9b2041fe88c2d46e279754428d3fadf96461f5f185"
+        }
+      },
+      "CodeModeOnly": {
+        "default_enabled": false,
+        "evidence": {
+          "source": "0.163.0:features/src/lib.rs",
+          "start_line": 1213,
+          "end_line": 1218,
+          "sha256": "23d4fab30de814c10697345133304869a0e0c127f498cee64b37d639cf2d6625"
+        }
+      },
+      "CodeModeHost": {
+        "default_enabled": true,
+        "evidence": {
+          "source": "0.163.0:features/src/lib.rs",
+          "start_line": 1177,
+          "end_line": 1182,
+          "sha256": "3bfdf245cb00cd9685b33f6fb228a51da8325f76d1792d4fd1d269bcd358daba"
+        }
+      }
+    },
+    "0.166.0": {
+      "CodeMode": {
+        "default_enabled": false,
+        "evidence": {
+          "source": "0.166.0:features/src/lib.rs",
+          "start_line": 1240,
+          "end_line": 1245,
+          "sha256": "65795871cdaf036c80e88b9b2041fe88c2d46e279754428d3fadf96461f5f185"
+        }
+      },
+      "CodeModeOnly": {
+        "default_enabled": false,
+        "evidence": {
+          "source": "0.166.0:features/src/lib.rs",
+          "start_line": 1294,
+          "end_line": 1299,
+          "sha256": "23d4fab30de814c10697345133304869a0e0c127f498cee64b37d639cf2d6625"
+        }
+      },
+      "CodeModeHost": {
+        "default_enabled": true,
+        "evidence": {
+          "source": "0.166.0:features/src/lib.rs",
+          "start_line": 1258,
+          "end_line": 1263,
+          "sha256": "3bfdf245cb00cd9685b33f6fb228a51da8325f76d1792d4fd1d269bcd358daba"
+        }
+      }
+    }
+  },
+  "behavior_in_both_versions": [
+    {
+      "model_tool_mode": "direct",
+      "requested": "Direct regardless of CodeMode/CodeModeOnly feature flags",
+      "effective": "Direct"
+    },
+    {
+      "model_tool_mode": "code_mode",
+      "requested": "CodeMode regardless of flags",
+      "effective": "Direct only when code_mode_available is false and disable_in_process_fallback is false; otherwise CodeMode"
+    },
+    {
+      "model_tool_mode": "code_mode_only",
+      "requested": "CodeModeOnly regardless of flags",
+      "effective": "CodeModeOnly even when host is unavailable; never falls back to Direct"
+    },
+    {
+      "model_tool_mode": "absent, null, or unrecognized selector",
+      "requested": "CodeModeOnly if that feature is enabled; otherwise CodeMode if enabled; otherwise Direct",
+      "effective": "Same availability/fallback adjustment as above"
+    }
+  ],
+  "verified_facts": [
+    {
+      "id": "selector_precedence",
+      "fact": "Recognized remote/resolved model metadata wins via model_info.tool_mode.unwrap_or_else(...); disabled feature flags are only fallback inputs when selector metadata is absent/unrecognized.",
+      "evidence_units": [
+        "requested_tool_mode",
+        "deserialize_optional_model_selector"
+      ]
+    },
+    {
+      "id": "fail_closed_scope",
+      "fact": "The host-disabled CodeModeOnly test retains code-mode exec/wait tools and excludes direct shell/shell_command/exec_command. It asserts a fail-closed warning. This is not proof that every plain assistant reply fails: the same official test completes a mocked text response without a code-mode tool execution.",
+      "evidence_units": [
+        "remote_code_mode_only_selector_fails_closed_when_host_is_disabled"
+      ],
+      "source_refs": [
+        "0.163.0:core/tests/suite/model_runtime_selectors.rs",
+        "0.166.0:core/tests/suite/model_runtime_selectors.rs"
+      ]
+    },
+    {
+      "id": "host_selection",
+      "fact": "The default provider path selects the process host when CodeModeHost is enabled OR disable_in_process_fallback is true; otherwise it selects DisabledCodeModeSessionProvider. The disabled provider reports unavailable and returns an error on session creation.",
+      "source_refs": [
+        "0.163.0:core/src/thread_manager.rs",
+        "0.163.0:code-mode/src/remote_session.rs",
+        "0.166.0:core/src/thread_manager.rs",
+        "0.166.0:code-mode/src/remote_session.rs"
+      ]
+    },
+    {
+      "id": "profile",
+      "fact": "The inspected ALMA profile includes code_mode, code_mode_host and code_mode_only in its disabled set and builds false feature entries from that set. This source is not proof of a particular historical turn's effective metadata/configuration.",
+      "source_refs": [
+        "alma-native-profile"
+      ]
+    },
+    {
+      "id": "client_version_query",
+      "fact": "Both releases construct a whole package version and append client_version to default and explicit model-catalog URLs. Expected official-build values are 0.163.0 and 0.166.0. This exposes version to the backend; it does not reveal the backend selection policy.",
+      "evidence_units": [
+        "client_version_to_whole",
+        "append_client_version_query",
+        "catalog_request_url"
+      ]
+    },
+    {
+      "id": "catalog_plumbing_change",
+      "fact": "0.166 adds bounded originator-specific catalog managers/caches and header overrides for codex_work_cca, codex_work_web, codex_work_desktop, codex_work_mobile and chatgpt_cca. The matching module/for_originator hooks are absent in inspected 0.163. This is a real client change, not evidence that either compared ALMA run selected such a partition.",
+      "source_refs": [
+        "0.166.0:models-manager/src/originator.rs",
+        "0.166.0:models-manager/src/manager.rs",
+        "0.166.0:model-provider/src/models_endpoint.rs",
+        "0.163.0:models-manager/src/manager.rs",
+        "0.163.0:model-provider/src/models_endpoint.rs"
+      ]
+    },
+    {
+      "id": "bundled_metadata",
+      "fact": "Both official bundled catalogs already contain many code_mode_only entries. 0.166 adds gpt-6.1-terra with that selector; shared model selectors do not change. gpt-5.5 has no tool_mode selector in both. These static bundles are not the authenticated phone or Mac catalog response.",
+      "source_refs": [
+        "0.163.0:models-manager/models.json",
+        "0.166.0:models-manager/models.json"
+      ]
+    },
+    {
+      "id": "fallback_model",
+      "fact": "Both model_info_from_slug fallback implementations initialize tool_mode to None (line 145). A no-selector/direct model can therefore work with these feature flags disabled; this does not establish which model/metadata the historical Mac run used.",
+      "source_refs": [
+        "0.163.0:models-manager/src/model_info.rs",
+        "0.166.0:models-manager/src/model_info.rs"
+      ]
+    }
+  ],
+  "bundled_catalog_metadata": {
+    "0.163.0": {
+      "source": "0.163.0:models-manager/models.json",
+      "rows": [
+        {
+          "slug": "gpt-6-astra",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6.1-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6-luna",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-terra",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-luna",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-daybreak-blue-latest",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        },
+        {
+          "slug": "gpt-daybreak-red-latest",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        },
+        {
+          "slug": "gpt-5.5",
+          "tool_mode": null,
+          "visibility": "list"
+        },
+        {
+          "slug": "codex-auto-review",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        }
+      ],
+      "entry_count": 11,
+      "visibility_list_count": 8,
+      "selector_counts": {
+        "code_mode_only": 10,
+        "<omitted>": 1
+      }
+    },
+    "0.166.0": {
+      "source": "0.166.0:models-manager/models.json",
+      "rows": [
+        {
+          "slug": "gpt-6-astra",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6.1-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6.1-terra",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-6-luna",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-sol",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-terra",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-5.6-luna",
+          "tool_mode": "code_mode_only",
+          "visibility": "list"
+        },
+        {
+          "slug": "gpt-daybreak-blue-latest",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        },
+        {
+          "slug": "gpt-daybreak-red-latest",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        },
+        {
+          "slug": "gpt-5.5",
+          "tool_mode": null,
+          "visibility": "list"
+        },
+        {
+          "slug": "codex-auto-review",
+          "tool_mode": "code_mode_only",
+          "visibility": "hide"
+        }
+      ],
+      "entry_count": 12,
+      "visibility_list_count": 9,
+      "selector_counts": {
+        "code_mode_only": 11,
+        "<omitted>": 1
+      }
+    }
+  },
+  "bundled_catalog_selector_delta": {
+    "added_slugs": [
+      "gpt-6.1-terra"
+    ],
+    "removed_slugs": [],
+    "common_slug_selector_changes": []
+  },
+  "small_runtime_metadata_review": {
+    "v8_dependency_locks": {
+      "0.163.0": {
+        "name": "v8",
+        "version": "150.4.0",
+        "source": "registry+https://github.com/rust-lang/crates.io-index",
+        "checksum": "42a978ff11f15b24e5c05a7123cf2b68f41e763546699781a924ef4e2cf43a49",
+        "dependencies": [
+          "bindgen",
+          "bitflags 2.13.1",
+          "fslock",
+          "gzip-header",
+          "home",
+          "miniz_oxide",
+          "paste",
+          "temporal_capi",
+          "which 6.0.3"
+        ]
+      },
+      "0.166.0": {
+        "name": "v8",
+        "version": "152.2.0",
+        "source": "git+https://github.com/seanh-oai/rusty_v8.git?rev=350c5a859a9b3c84ab8701b3ad51e3b7699b30c0#350c5a859a9b3c84ab8701b3ad51e3b7699b30c0",
+        "dependencies": [
+          "bindgen",
+          "bitflags 2.13.1",
+          "fslock",
+          "gzip-header",
+          "home",
+          "miniz_oxide",
+          "paste",
+          "temporal_capi",
+          "which 6.0.3"
+        ]
+      }
+    },
+    "v8_150_4_0_archive_sha256": "42a978ff11f15b24e5c05a7123cf2b68f41e763546699781a924ef4e2cf43a49",
+    "checksum_matches_official_codex_0163_lock": true,
+    "documented_ios_path": {
+      "status": "positively documented in the cached, checksum-verified v8 150.4.0 package",
+      "readme_source": "v8-150.4.0:README.md",
+      "readme_lines": [
+        148,
+        157
+      ],
+      "facts": [
+        "README describes cross-compilation from an arm64 macOS host for iOS simulator and device.",
+        "Device target is documented as jitless.",
+        "build.rs explicitly selects iOS/device-versus-simulator settings, disables WebAssembly, and disables device JIT tiers."
+      ],
+      "build_source": "v8-150.4.0:build.rs",
+      "build_lines": [
+        543,
+        569
+      ]
+    },
+    "codex_runtime_metadata": {
+      "source_refs": [
+        "0.163.0:code-mode-runtime/Cargo.toml",
+        "0.163.0:code-mode-runtime/src/v8_init.rs",
+        "0.166.0:code-mode-runtime/Cargo.toml",
+        "0.166.0:code-mode-runtime/src/v8_init.rs"
+      ],
+      "facts": [
+        "Both code-mode-runtime manifests request v8_enable_sandbox.",
+        "Both v8_init implementations include an explicit disabled-JIT mode using --jitless; default lazy initialization uses Enabled.",
+        "0.166 changes the ICU data setter from set_common_data_77 to set_common_data_78 and changes runtime dependencies; those are not changes to the compared selector logic."
+      ],
+      "end_to_end_ios_support_established": false
+    },
+    "limits": [
+      "No V8 downloads, builds, or execution were performed.",
+      "0.166 pins a different v8 152.2.0 fork/revision; its iOS build/runtime compatibility was not established by the older cached crate documentation.",
+      "No prebuilt-iOS artifact availability, sandbox-feature compatibility, resource suitability, or whole codex-code-mode-runtime iOS success is asserted.",
+      "Do not conclude rusty_v8 categorically lacks iOS support from this evidence."
+    ]
+  },
+  "unknowns": [
+    "Whether the remote catalog actually returns different tool_mode values conditional on client_version for these accounts/models.",
+    "The historical Mac turn's selected model, resolved tool_mode, cache source/freshness, effective flags and actual provider availability.",
+    "Whether request originator/provider routing, auth identity/entitlement, rollout timing, or a local catalog override differed between the Mac and phone runs.",
+    "Why the phone exposed exactly eight rows; bundled visibility metadata is not an authenticated availability response.",
+    "End-to-end iOS support/performance of the exact 0.166 pinned code-mode-runtime/V8 combination.",
+    "Whether an iSH+Node provider satisfies CodeModeSessionProvider semantics; deliberately left to Dewey."
+  ],
+  "handoff": "Selector precedence remains unchanged between official 0.163 and 0.166. Do not infer Mac Code Mode was unused from thread flags: startup provider selection and packaged host availability are the stronger source-backed candidate. Owned ALMA identity alignment plus a confirmed post-initialize derived-catalog refresh is a valid separate controlled experiment, but neither client-header nor client-version conditioning by the server is proven. No fake Direct metadata, downgrade, credential access, live requests, or Node/DNode implementation work was performed.",
+  "sources": {
+    "0.163.0:core/src/tools/mod.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/tools/mod.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/core/src/tools/mod.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "838a9ac1e45fa30fb1baea0eba32b46f220ccf5ad66af5fa0abaa3401a611b6f",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/src/tools/mod.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/core/src/tools/mod.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:core/src/tools/code_mode/mod.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/tools/code_mode/mod.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/core/src/tools/code_mode/mod.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "3bc73b9a929d72b598aa3a6682eb531cfa31ea161de2e9dc628b96b9bcca2219",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:core/src/thread_manager.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/thread_manager.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/core/src/thread_manager.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "6888f63946839c28d375e1514d1fe938db728aed6a7ffd694daf41b90aeed3fb",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/src/thread_manager.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/core/src/thread_manager.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:core/tests/suite/model_runtime_selectors.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "301d554123ef29ee252375e500a9a951d43955add31a21893e1c2e8b38d45ab4",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:features/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/features/src/lib.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/features/src/lib.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "5317e79cb2f5a72044b15ef9c506e9906c295f5a4e43cc1f1f05b87455824542",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/features/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/features/src/lib.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:protocol/src/openai_models.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/protocol/src/openai_models.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/protocol/src/openai_models.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "4b080aeaf5c158104e27d8277f3bc03ee3ad55b55a41c30a788d831fb2e2a99f",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/protocol/src/openai_models.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/protocol/src/openai_models.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:models-manager/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/models-manager/src/lib.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/models-manager/src/lib.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "b31b6e8fdaebedbbf07999b27c02201020e8d876ae293ac05a8fe4bf051244d3",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/models-manager/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/models-manager/src/lib.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:models-manager/src/manager.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/models-manager/src/manager.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/models-manager/src/manager.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "6c1cd0663a27011a05cde5a50a31c6b8cdb1d156e5bc15409bbc062022cdf814",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/models-manager/src/manager.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/models-manager/src/manager.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:models-manager/src/model_info.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/models-manager/src/model_info.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/models-manager/src/model_info.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "fc0835fbab3ee497df0e28364cfb2e537ed25c8ac7ad4516cb940702d6fbd51b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/models-manager/src/model_info.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/models-manager/src/model_info.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:models-manager/models.json": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/models-manager/models.json",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/models-manager/models.json",
+      "cached_source_matches_archive": true,
+      "sha256": "943ca7fe1d19ed019054158303f0dbbd80b3bef43b3aa425a71aa7cb3fb52c2b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/models-manager/models.json",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/models-manager/models.json",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:model-provider/src/models_endpoint.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/model-provider/src/models_endpoint.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/model-provider/src/models_endpoint.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "5c75c00677dc412a83cade77528fe1cbaba00c13a3f138957c59a9d3a5aa9581",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:codex-api/src/endpoint/models.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/codex-api/src/endpoint/models.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/codex-api/src/endpoint/models.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "b63ebf34bf4ae0490419a4cd976a0e935701d65f3e2be60f000d5fa6b692ad79",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:code-mode/src/remote_session.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/code-mode/src/remote_session.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/code-mode/src/remote_session.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "72a6dbd170132bafd26f0affa0c1c2e347a8c3d8550b1065d1c88e99f0f415a2",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/code-mode/src/remote_session.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/code-mode/src/remote_session.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:code-mode-runtime/Cargo.toml": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/code-mode-runtime/Cargo.toml",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/code-mode-runtime/Cargo.toml",
+      "cached_source_matches_archive": true,
+      "sha256": "593ded78596279c8e6ce85f2d9708d549c44b3fe693cbbab9341aeb57e3ea923",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:code-mode-runtime/src/v8_init.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "79500e3312a744562b199c8e3983641195b40b7f3b4e88d4f21e2d177b8b635a",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:Cargo.toml": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/Cargo.toml",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/Cargo.toml",
+      "cached_source_matches_archive": true,
+      "sha256": "b017f28f91f7506b730c247ffb3dab5250d9848514c194331fd774836d480f0b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/Cargo.toml",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/Cargo.toml",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.163.0:Cargo.lock": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/Cargo.lock",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/source/codex-rs/Cargo.lock",
+      "cached_source_matches_archive": true,
+      "sha256": "17cdd862471774ba7aef836aaf0a0a3ed76bd23e503b1fc7278c89d1f2719d03",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/Cargo.lock",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/Cargo.lock",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:core/src/tools/mod.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/core/src/tools/mod.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/core/src/tools/mod.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "758e54f675aed934433661d863439b9947a3f1fac0ed1a2b6cf1896d71751330",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/src/tools/mod.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/core/src/tools/mod.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:core/src/tools/code_mode/mod.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "bc631027c964f6c3e381be869611be7e1b06bd110c2eb5700ebef13baae8c778",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/core/src/tools/code_mode/mod.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:core/src/thread_manager.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/core/src/thread_manager.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/core/src/thread_manager.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "649c77f487598381a2d1a371b67a78b6d0c89582642aa9e4b2d122a7287a27fe",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/src/thread_manager.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/core/src/thread_manager.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:core/tests/suite/model_runtime_selectors.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "301d554123ef29ee252375e500a9a951d43955add31a21893e1c2e8b38d45ab4",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/core/tests/suite/model_runtime_selectors.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:features/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/features/src/lib.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/features/src/lib.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "092fa6e9bd6b53d4a63aec2130fdfb90b74b28f222135ff34c499b58a53dc963",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/features/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/features/src/lib.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:protocol/src/openai_models.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/protocol/src/openai_models.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/protocol/src/openai_models.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "8b890e963b8ac33a856c78ceb0e7814e4bb6880dcea06f86ed58c31e8da7ec24",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/protocol/src/openai_models.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/protocol/src/openai_models.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:models-manager/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/models-manager/src/lib.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/models-manager/src/lib.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "5b1515f312025a5c3ba28e6d01db3daee069a11f5f322469390317cf285ea390",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/models-manager/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/models-manager/src/lib.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:models-manager/src/manager.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/models-manager/src/manager.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/models-manager/src/manager.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "6948598d7994a107b69dd937e97feb3f268b1fcfa500c4313839382ea76b3128",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/models-manager/src/manager.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/models-manager/src/manager.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:models-manager/src/model_info.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/models-manager/src/model_info.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/models-manager/src/model_info.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "fc0835fbab3ee497df0e28364cfb2e537ed25c8ac7ad4516cb940702d6fbd51b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/models-manager/src/model_info.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/models-manager/src/model_info.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:models-manager/models.json": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/models-manager/models.json",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/models-manager/models.json",
+      "cached_source_matches_archive": true,
+      "sha256": "1384625c0b6b3e67d3c60da29becea2b017f2c283fc1e2d05b8edafb4698eb10",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/models-manager/models.json",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/models-manager/models.json",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:models-manager/src/originator.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/models-manager/src/originator.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/models-manager/src/originator.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "093688076094b3e4bc64859a4d63334e1bcf464233609a7badcfac58da158cf5",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/models-manager/src/originator.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/models-manager/src/originator.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:model-provider/src/models_endpoint.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "8e6ec9a0ef6aa00285ad28943d367a277217c016e595c1917a3a6136b98b4def",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/model-provider/src/models_endpoint.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:codex-api/src/endpoint/models.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "accf041a6bae9c4dcd88ad6ffd1ea17c3c6e4d6785d42cbadb0767d5b0d1ffd6",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/codex-api/src/endpoint/models.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:code-mode/src/remote_session.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode/src/remote_session.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/code-mode/src/remote_session.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "4791d05831f6260c7b2dd46c7c592c067e683d57de7b5e4d265f1695a6c4e400",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode/src/remote_session.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/code-mode/src/remote_session.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:code-mode-runtime/Cargo.toml": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "cached_source_matches_archive": true,
+      "sha256": "075eb58a5975625461eaef95731a83b39bb1a38b2f9bffb2916f6af769e41b4b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/code-mode-runtime/Cargo.toml",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:code-mode-runtime/src/v8_init.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "cached_source_matches_archive": true,
+      "sha256": "d923e9be4ac679c0f3b09e3c0f84bf381eb2a0de81a8a88838aea64ac6d34ff7",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/code-mode-runtime/src/v8_init.rs",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:Cargo.toml": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/Cargo.toml",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/Cargo.toml",
+      "cached_source_matches_archive": true,
+      "sha256": "4f9c16fb73cc8487e40dcbfca545f69e7595e6806e1a59b81ea8045b15364e49",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/Cargo.toml",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/Cargo.toml",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "0.166.0:Cargo.lock": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/Cargo.lock",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-rust-v0.166.0/codex-rs/Cargo.lock",
+      "cached_source_matches_archive": true,
+      "sha256": "22bd51f50864ce40f6686f3350c0547fdd50a8213240f54435ed394f68bf08e6",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/Cargo.lock",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/Cargo.lock",
+      "evidence_origin": "local pristine source archive; URLs are source locators, not fetched in this task"
+    },
+    "v8-150.4.0:README.md": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/registry/cache/index.crates.io-1949cf8c6b5b557f/v8-150.4.0.crate",
+      "archive_member": "v8-150.4.0/README.md",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v8-150.4.0/README.md",
+      "sha256": "cd2db59c2abc151827d59de17128be20a243ba5c32a652b69a6e1ea8d39a0177",
+      "cached_source_matches_archive": true,
+      "url": "https://github.com/denoland/rusty_v8/blob/v150.4.0/README.md",
+      "raw_url": "https://raw.githubusercontent.com/denoland/rusty_v8/v150.4.0/README.md",
+      "evidence_origin": "cached published crate archive, SHA256 matches v8 checksum in official Codex 0.163.0 Cargo.lock; URL not fetched"
+    },
+    "v8-150.4.0:build.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/registry/cache/index.crates.io-1949cf8c6b5b557f/v8-150.4.0.crate",
+      "archive_member": "v8-150.4.0/build.rs",
+      "cached_source_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/tauri-toolchain/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v8-150.4.0/build.rs",
+      "sha256": "cd979d31a70f3d5a2d240019a52de2412a803690f8d3b441bf8254c548588c31",
+      "cached_source_matches_archive": true,
+      "url": "https://github.com/denoland/rusty_v8/blob/v150.4.0/build.rs",
+      "raw_url": "https://raw.githubusercontent.com/denoland/rusty_v8/v150.4.0/build.rs",
+      "evidence_origin": "cached published crate archive, SHA256 matches v8 checksum in official Codex 0.163.0 Cargo.lock; URL not fetched"
+    },
+    "alma-native-profile": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/native-profile.ts",
+      "sha256": "c0d07307db1949c7b7bddfaec535ab728f7d839ef5b320dac9e50ddbfd3ebe8c",
+      "url": null,
+      "official_upstream": false,
+      "line_ranges": [
+        [
+          22,
+          35
+        ],
+        [
+          127,
+          137
+        ]
+      ],
+      "evidence_origin": "project source only; no desktop settings/auth/catalog files inspected"
+    },
+    "0.163.0:login/src/auth/default_client.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/login/src/auth/default_client.rs",
+      "sha256": "174e02e439013bf75cccdcfd36b9c23e31d9ee84835a0cc0b1f9d7a33391a064",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/login/src/auth/default_client.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/login/src/auth/default_client.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:http-client/src/client.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/http-client/src/client.rs",
+      "sha256": "a11dd7b8ef9a207bc2d967daf39bd899f09cb1847314e29a4398af230bcfc25e",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/http-client/src/client.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/http-client/src/client.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:http-client/src/client_builder.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/http-client/src/client_builder.rs",
+      "sha256": "dce0278248477c6fe23d3c5415a57e65e4c83a7fe6d554136ff9517636bd44a6",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/http-client/src/client_builder.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/http-client/src/client_builder.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:model-provider/src/models_identity.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/model-provider/src/models_identity.rs",
+      "sha256": "83776d5eed3e3a4fdad8c9b0690fecfbe15123b91286ad80eb2d14fa7a0c43a7",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/model-provider/src/models_identity.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/model-provider/src/models_identity.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:model-provider-info/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/model-provider-info/src/lib.rs",
+      "sha256": "93ce6cd0a65477dff89545b8b48853455da0654c4bcc5a1092596d88d9dfe25c",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/model-provider-info/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/model-provider-info/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/in_process.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/in_process.rs",
+      "sha256": "f676d9a932866a6aee763013648a163356468a2ab052b773f2b208c37bc7f651",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/in_process.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/in_process.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/lib.rs",
+      "sha256": "e00b242cde1234ae62cbc420ceefe86a23b93d34115ead6cc02bad454970aa9b",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/message_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/message_processor.rs",
+      "sha256": "96d57b0cb554802211460637993c2e57e27440b1052ca5f12ac79e1bbaf54449",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/message_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/message_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/models_refresh_worker.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/models_refresh_worker.rs",
+      "sha256": "645ed9c9915eb74dfa33434f55d686489a3cd6b6f9cb303f9944cdf80e8f1da3",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/models_refresh_worker.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/models_refresh_worker.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/request_processors/initialize_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "sha256": "4535560b07ab10d1538acd461560a55c1bdf0c9b4049e72775d6b770421f117f",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/request_processors/catalog_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "sha256": "c6da0f910aeb88616a9aeaf6568bffe50f5cf8ed506eca4a23aa377bd7baa336",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:core/src/session/session.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/core/src/session/session.rs",
+      "sha256": "e6f4b9f069343031a87bd2a862701f461d1aa9728272196f8a7376b610234806",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/core/src/session/session.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/core/src/session/session.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:app-server/src/request_processors/thread_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "sha256": "f98fdad7df37ad720e63b75488ffab99ae88f7de4578b280ab957a09f0a98153",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.163.0:install-context/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA/.build/codex-upgrade.zztUfZ/codex-source-0.163.0.tar.gz",
+      "archive_member": "codex-83086188ae0614bd882818ff1aa23f3194962012/codex-rs/install-context/src/lib.rs",
+      "sha256": "e94bbec809dcde281afc73459d98737433eb7e22eebadcdefdc148ffb05e04ff",
+      "url": "https://github.com/openai/codex/blob/rust-v0.163.0/codex-rs/install-context/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.163.0/codex-rs/install-context/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:login/src/auth/default_client.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/login/src/auth/default_client.rs",
+      "sha256": "acfc0eba844d9ba02c9830c66a19ab920b51d8f3a516b95ccf5066f94ef53fcd",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/login/src/auth/default_client.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/login/src/auth/default_client.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:http-client/src/client.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/http-client/src/client.rs",
+      "sha256": "2c82732dd91fdcc1110f1794a048a345b1b4961692a6ecd7848f60f4bfd3c3da",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/http-client/src/client.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/http-client/src/client.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:http-client/src/client_builder.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/http-client/src/client_builder.rs",
+      "sha256": "6c6bc802474dbf44477afea07e3f5fc88f7279aa2e4e3bb2f817ee0e640f6a01",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/http-client/src/client_builder.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/http-client/src/client_builder.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:model-provider/src/models_identity.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/model-provider/src/models_identity.rs",
+      "sha256": "edb760a77c163c77baabd241c315149707a6c2d4881ef2cd59ca544a6ed2ea13",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/model-provider/src/models_identity.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/model-provider/src/models_identity.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:model-provider-info/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/model-provider-info/src/lib.rs",
+      "sha256": "ea822c232e47fc88251cf20060da91ca0c1195b2d2853c5b3fa4bfcdd4cc0184",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/model-provider-info/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/model-provider-info/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/in_process.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/in_process.rs",
+      "sha256": "8a64137ba4cb99112d51da630a7928da0460cf1ef982dc4a40b3b6811fb507af",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/in_process.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/in_process.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/lib.rs",
+      "sha256": "a44b0266619d6adda0c1e7135d5be18e6581cff44307e78097efecc5195f8b6c",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/message_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/message_processor.rs",
+      "sha256": "6d81a0b5bab7172bf9ab24a6e8e05375f5623f0a8ac6d6da97c4ed184ad1085f",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/message_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/message_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/models_refresh_worker.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/models_refresh_worker.rs",
+      "sha256": "645ed9c9915eb74dfa33434f55d686489a3cd6b6f9cb303f9944cdf80e8f1da3",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/models_refresh_worker.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/models_refresh_worker.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/request_processors/initialize_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "sha256": "8350444d71a45b45bd53274910dfe247674041d655f8b4dc76a328253adc2f66",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/request_processors/initialize_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/request_processors/catalog_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "sha256": "a0beba234ce4e90dbd11d6f290bb91a35ce1975be4fddf18473de8f0b630a5d8",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:core/src/session/session.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/core/src/session/session.rs",
+      "sha256": "5744a8ae7ea56424735be322a2b3437221f1be9208c8632fc44d1e06da0d0710",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/core/src/session/session.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/core/src/session/session.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:app-server/src/request_processors/thread_processor.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "sha256": "c03d31e07c8831c7cf153e6429f4ab908d1035b21ba593e701d5a3767121b5a8",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/app-server/src/request_processors/thread_processor.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "0.166.0:install-context/src/lib.rs": {
+      "archive_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/.cache/codex-0.166.0.tar.gz",
+      "archive_member": "codex-rust-v0.166.0/codex-rs/install-context/src/lib.rs",
+      "sha256": "d6e5b59ea003a8f035cde7b8092f17033290963f5e13d94fa6b449483581b3a5",
+      "url": "https://github.com/openai/codex/blob/rust-v0.166.0/codex-rs/install-context/src/lib.rs",
+      "raw_url": "https://raw.githubusercontent.com/openai/codex/rust-v0.166.0/codex-rs/install-context/src/lib.rs",
+      "evidence_origin": "local official source archive; URL locator not fetched"
+    },
+    "followup:mac:guest-adapter.ts": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/guest-adapter.ts",
+      "sha256": "0cad30bf2b7fdffc34ccfb965f85cb9feee4b4c05981f549778758cb8a3df3f1",
+      "evidence_origin": "project implementation source only; no runtime credential/user files read",
+      "url": null
+    },
+    "followup:mac:process-facade.ts": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/process-facade.ts",
+      "sha256": "8728c819693e7d7f4806476859d5324ead587275c03784900947c9c5c8089020",
+      "evidence_origin": "project implementation source only; no runtime credential/user files read",
+      "url": null
+    },
+    "followup:mac:auth-material.ts": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/adapter/src/auth-material.ts",
+      "sha256": "4cbb42038f2468589d2ea1a1b509db69d5f5c4de9bc58d9f9ee9aac3c3b1de69",
+      "evidence_origin": "project implementation source only; no runtime credential/user files read",
+      "url": null
+    },
+    "followup:mac:appliance.lock.json": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/appliance.lock.json",
+      "sha256": "2ba3f2026746ef62ca2c5ad666c40ee5d99a581d39c9e2b131e8bb5161e8a974",
+      "evidence_origin": "project implementation source only; no runtime credential/user files read",
+      "url": null
+    },
+    "followup:mac:build.sh": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/providers/codex/appliance/Scripts/build.sh",
+      "sha256": "a4bdd257b01a757dd7e552fcdb8d03786481fcfb39ce99724e35703655367e98",
+      "evidence_origin": "project implementation source only; no runtime credential/user files read",
+      "url": null
+    },
+    "followup:shared/rust-bridge/codex-mobile-client/src/session/connection.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+      "sha256": "47ae72c0a936057436b47d83ec075a3d1a9f456abdb258138f9f7c6e8ccdf100",
+      "evidence_origin": "current mobile integration source, read only",
+      "url": null
+    },
+    "followup:shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs",
+      "sha256": "3b4183201fc17a7ffbb73215b8d9b193a67b2d0482843cf45bab9fd1121f083f",
+      "evidence_origin": "current startup profile source, read only",
+      "url": null
+    },
+    "followup:shared/third_party/codex/codex-rs/app-server/src/in_process.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/app-server/src/in_process.rs",
+      "sha256": "adb589436b39ba208de71aa80cc0d0acfc524317282ea618ca0ac686b04d79bf",
+      "evidence_origin": "current working source; may contain parent-owned patches",
+      "url": null
+    },
+    "followup:shared/third_party/codex/codex-rs/app-server/src/message_processor.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/app-server/src/message_processor.rs",
+      "sha256": "6d81a0b5bab7172bf9ab24a6e8e05375f5623f0a8ac6d6da97c4ed184ad1085f",
+      "evidence_origin": "current working source; may contain parent-owned patches",
+      "url": null
+    },
+    "followup:shared/third_party/codex/codex-rs/model-provider/src/models_endpoint.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/model-provider/src/models_endpoint.rs",
+      "sha256": "8e6ec9a0ef6aa00285ad28943d367a277217c016e595c1917a3a6136b98b4def",
+      "evidence_origin": "current working source; may contain parent-owned patches",
+      "url": null
+    },
+    "followup:shared/third_party/codex/codex-rs/login/src/auth/default_client.rs": {
+      "local_path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/third_party/codex/codex-rs/login/src/auth/default_client.rs",
+      "sha256": "acfc0eba844d9ba02c9830c66a19ab920b51d8f3a516b95ccf5066f94ef53fcd",
+      "evidence_origin": "current working source; may contain parent-owned patches",
+      "url": null
+    }
+  },
+  "initialization_identity_followup": {
+    "updated_at_utc": "2026-11-01T00:08:34.020883+00:00",
+    "method": "read-only source tracing; no HTTP/model requests, runtime auth, user data, cache inspection or cache mutation",
+    "identities": {
+      "mac_guest": {
+        "name": "@alma/tah-codex-guest",
+        "title": "ALMA TAH Codex Guest",
+        "version": "1.0.0",
+        "source": "followup:mac:guest-adapter.ts",
+        "lines": [
+          146,
+          152
+        ]
+      },
+      "phone_source_snapshot": {
+        "name": "Litter",
+        "title": null,
+        "version": "1.0",
+        "source": "followup:shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+        "lines": [
+          760,
+          766
+        ]
+      },
+      "local_catalog_partition": "Both custom names are unrecognized by ModelCatalogOriginator and retain the default manager/cache partition. This does not imply identical HTTP originator headers."
+    },
+    "header_capture": [
+      {
+        "fact": "originator() with no override environment variable and no explicitly stored originator returns codex_cli_rs without storing it. A later initialize can still set Litter or the ALMA name. With an override environment variable, originator() can store that override. set_default_originator is first-write-wins; recreating an in-process connection does not clear the process-global value.",
+        "evidence": [
+          {
+            "function": "originator",
+            "byte_identical": true,
+            "versions": {
+              "0.163.0": {
+                "sha256": "735270a7ed92e551cff104863227e235ce35828e9a26f55b961b1d4a70609166",
+                "start_line": 100,
+                "end_line": 119,
+                "source": "0.163.0:login/src/auth/default_client.rs"
+              },
+              "0.166.0": {
+                "sha256": "735270a7ed92e551cff104863227e235ce35828e9a26f55b961b1d4a70609166",
+                "start_line": 100,
+                "end_line": 119,
+                "source": "0.166.0:login/src/auth/default_client.rs"
+              }
+            }
+          },
+          {
+            "function": "set_default_originator",
+            "byte_identical": true,
+            "versions": {
+              "0.163.0": {
+                "sha256": "14b6af3bc365dd67051b52d4800e44d4bf51640e0ef9dc00de13ccc3d36ddfa9",
+                "start_line": 85,
+                "end_line": 98,
+                "source": "0.163.0:login/src/auth/default_client.rs"
+              },
+              "0.166.0": {
+                "sha256": "14b6af3bc365dd67051b52d4800e44d4bf51640e0ef9dc00de13ccc3d36ddfa9",
+                "start_line": 85,
+                "end_line": 98,
+                "source": "0.166.0:login/src/auth/default_client.rs"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "fact": "initialize validates clientInfo.name, stores connection identity, sets default originator for originating clients, and updates User-Agent suffix to name; version. Only codex_app_server_daemon and codex-backend are excluded. title is ignored for this process-header construction. Both Litter and @alma/tah-codex-guest are ordinary valid originating names.",
+        "source": "0.166.0:app-server/src/request_processors/initialize_processor.rs",
+        "lines": [
+          19,
+          190
+        ]
+      },
+      {
+        "fact": "default_headers() reads current originator and get_codex_user_agent(); default_http_client_builder() captures that map. HttpClientBuilder/TransportClient retain it, and execute applies the stored map only when a request has not already set the header. Existing clients do not retroactively reread the global originator.",
+        "sources": [
+          "0.166.0:login/src/auth/default_client.rs",
+          "0.166.0:http-client/src/client.rs",
+          "0.166.0:http-client/src/client_builder.rs"
+        ],
+        "line_ranges": {
+          "login": [
+            421,
+            424,
+            462,
+            477
+          ],
+          "client": [
+            127,
+            149,
+            169,
+            176
+          ]
+        }
+      },
+      {
+        "fact": "The standard catalog endpoint retains a transport builder, not a preconstructed HTTP client. Each actual fetch builds a new route-aware transport and ModelsClient; create_client_for_route_async builds default headers at that time. This per-fetch construction is present in both 0.163 and 0.166. Explicit provider/request originator headers can override client defaults.",
+        "sources": [
+          "0.163.0:model-provider/src/models_endpoint.rs",
+          "0.166.0:model-provider/src/models_endpoint.rs",
+          "0.166.0:model-provider-info/src/lib.rs"
+        ],
+        "lines_0166": [
+          239,
+          255,
+          366,
+          396
+        ]
+      },
+      {
+        "fact": "Matching initialize clientInfo.version changes the UA suffix, not the build/package-version UA prefix or models client_version query. The Mac-hosted Linux guest and native iOS client also differ in OS/platform information.",
+        "sources": [
+          "0.166.0:login/src/auth/default_client.rs",
+          "0.166.0:models-manager/src/lib.rs",
+          "followup:mac:appliance.lock.json"
+        ]
+      }
+    ],
+    "initialization_order": {
+      "in_process": "start constructs the runtime/MessageProcessor, then sends typed Initialize and Initialized before returning. It is not a bypass of normal initialize handling.",
+      "stdio": "The external app-server likewise creates MessageProcessor before serving Initialize; the ALMA guest then explicitly sends Initialize/Initialized. Both use the same initialize processor.",
+      "early_fetch_race": "MessageProcessor::new spawns ModelsRefreshWorker; the worker immediately asks for Online catalog refresh before its 270-second sleep, without an initialize barrier. Depending on auth/cache/network scheduling, a fetch can build its HTTP headers before initialize sets the process identity. This is a possible race, not evidence that a particular phone request used codex_cli_rs.",
+      "process_lifetime": "A fresh stdio child resets identity globals. Multiple embedded starts in one app process share the first stored originator; closing a client alone is not equivalent to restarting the process.",
+      "sources": [
+        "0.166.0:app-server/src/in_process.rs",
+        "0.166.0:app-server/src/lib.rs",
+        "0.166.0:app-server/src/message_processor.rs",
+        "0.166.0:app-server/src/models_refresh_worker.rs"
+      ],
+      "current_patched_source_refs": {
+        "app-server/src/in_process.rs": "followup:shared/third_party/codex/codex-rs/app-server/src/in_process.rs",
+        "app-server/src/message_processor.rs": "followup:shared/third_party/codex/codex-rs/app-server/src/message_processor.rs",
+        "model-provider/src/models_endpoint.rs": "followup:shared/third_party/codex/codex-rs/model-provider/src/models_endpoint.rs",
+        "login/src/auth/default_client.rs": "followup:shared/third_party/codex/codex-rs/login/src/auth/default_client.rs"
+      }
+    },
+    "derived_cache_implication": {
+      "fact": "model/list requests OnlineIfUncached; a UI catalog refresh can reuse a valid derived cache instead of issuing HTTP. models_identity hashes provider routing, explicit provider headers and auth identity, not the default HTTP originator/UA injected later by the client builder. Changing only initialize identity therefore need not invalidate this default-partition cache.",
+      "source_refs": [
+        "0.166.0:app-server/src/request_processors/catalog_processor.rs",
+        "0.166.0:model-provider/src/models_identity.rs",
+        "0.166.0:model-provider-info/src/lib.rs",
+        "0.166.0:models-manager/src/manager.rs"
+      ],
+      "derived_default_filename": "models_cache.json",
+      "performed_cache_reads_or_deletes": false
+    },
+    "owned_identity_alignment_experiment": {
+      "valid": true,
+      "rationale": "Using the actual owned ALMA guest identity is legitimate alignment, not impersonation of a privileged first-party/Codex client. It can control the originator and UA suffix without fabricating model metadata.",
+      "controls": [
+        "Use a fresh app process so an earlier stored Litter originator cannot win.",
+        "Ensure identity is committed before any catalog transport is built, or confirm a post-initialize actual fetch rather than an early startup fetch.",
+        "Refresh/invalidate only derived catalog state (in-memory and owned on-disk cache as needed); a model/list label alone does not prove a new HTTP request. Preserve auth and user data.",
+        "Compare only noncredential request identity/catalog metadata; do not log Authorization/cookies/tokens.",
+        "Keep real server tool_mode values and fail-closed behavior; no fake Direct metadata and no version downgrade."
+      ],
+      "not_proven": "No guarantee the server varies catalog contents by identity or version. The code has not established that it does.",
+      "priority": "The independently verified startup-provider scope mismatch below is now a more concrete candidate explanation; alignment should not be treated as proof that catalog conditioning caused the difference."
+    },
+    "byte_comparisons": [
+      {
+        "function": "originator",
+        "byte_identical": true,
+        "versions": {
+          "0.163.0": {
+            "sha256": "735270a7ed92e551cff104863227e235ce35828e9a26f55b961b1d4a70609166",
+            "start_line": 100,
+            "end_line": 119,
+            "source": "0.163.0:login/src/auth/default_client.rs"
+          },
+          "0.166.0": {
+            "sha256": "735270a7ed92e551cff104863227e235ce35828e9a26f55b961b1d4a70609166",
+            "start_line": 100,
+            "end_line": 119,
+            "source": "0.166.0:login/src/auth/default_client.rs"
+          }
+        }
+      },
+      {
+        "function": "set_default_originator",
+        "byte_identical": true,
+        "versions": {
+          "0.163.0": {
+            "sha256": "14b6af3bc365dd67051b52d4800e44d4bf51640e0ef9dc00de13ccc3d36ddfa9",
+            "start_line": 85,
+            "end_line": 98,
+            "source": "0.163.0:login/src/auth/default_client.rs"
+          },
+          "0.166.0": {
+            "sha256": "14b6af3bc365dd67051b52d4800e44d4bf51640e0ef9dc00de13ccc3d36ddfa9",
+            "start_line": 85,
+            "end_line": 98,
+            "source": "0.166.0:login/src/auth/default_client.rs"
+          }
+        }
+      },
+      {
+        "function": "default_headers",
+        "byte_identical": true,
+        "versions": {
+          "0.163.0": {
+            "sha256": "d718d4efa2ee348b9fe58ecb7a35d56394d44bb33b3a54e9ee18f057d7875f76",
+            "start_line": 456,
+            "end_line": 469,
+            "source": "0.163.0:login/src/auth/default_client.rs"
+          },
+          "0.166.0": {
+            "sha256": "d718d4efa2ee348b9fe58ecb7a35d56394d44bb33b3a54e9ee18f057d7875f76",
+            "start_line": 461,
+            "end_line": 474,
+            "source": "0.166.0:login/src/auth/default_client.rs"
+          }
+        }
+      },
+      {
+        "function": "default_http_client_builder",
+        "byte_identical": true,
+        "versions": {
+          "0.163.0": {
+            "sha256": "d28fae6ccef0d2d561d8e7492d4a90ffb030315e6a75a64dada85403ae3fd6a4",
+            "start_line": 416,
+            "end_line": 420,
+            "source": "0.163.0:login/src/auth/default_client.rs"
+          },
+          "0.166.0": {
+            "sha256": "d28fae6ccef0d2d561d8e7492d4a90ffb030315e6a75a64dada85403ae3fd6a4",
+            "start_line": 421,
+            "end_line": 425,
+            "source": "0.166.0:login/src/auth/default_client.rs"
+          }
+        }
+      }
+    ],
+    "unknowns": [
+      "Actual HTTP headers/timing used by the historical Mac run or phone request were not captured.",
+      "Environment/first-originator state at runtime is unknown; source-level clientInfo does not by itself prove the on-wire header.",
+      "Server catalog conditioning remains unknown."
+    ]
+  },
+  "startup_provider_scope_followup": {
+    "updated_at_utc": "2026-11-01T00:08:34.021060+00:00",
+    "verified_facts": [
+      {
+        "fact": "Official 0.163.0 CodeModeHost defaults true (CodeMode and CodeModeOnly default false); 0.166 has the same defaults.",
+        "evidence": {
+          "0.163.0": {
+            "CodeMode": {
+              "default_enabled": false,
+              "evidence": {
+                "source": "0.163.0:features/src/lib.rs",
+                "start_line": 1159,
+                "end_line": 1164,
+                "sha256": "65795871cdaf036c80e88b9b2041fe88c2d46e279754428d3fadf96461f5f185"
+              }
+            },
+            "CodeModeOnly": {
+              "default_enabled": false,
+              "evidence": {
+                "source": "0.163.0:features/src/lib.rs",
+                "start_line": 1213,
+                "end_line": 1218,
+                "sha256": "23d4fab30de814c10697345133304869a0e0c127f498cee64b37d639cf2d6625"
+              }
+            },
+            "CodeModeHost": {
+              "default_enabled": true,
+              "evidence": {
+                "source": "0.163.0:features/src/lib.rs",
+                "start_line": 1177,
+                "end_line": 1182,
+                "sha256": "3bfdf245cb00cd9685b33f6fb228a51da8325f76d1792d4fd1d269bcd358daba"
+              }
+            }
+          },
+          "0.166.0": {
+            "CodeMode": {
+              "default_enabled": false,
+              "evidence": {
+                "source": "0.166.0:features/src/lib.rs",
+                "start_line": 1240,
+                "end_line": 1245,
+                "sha256": "65795871cdaf036c80e88b9b2041fe88c2d46e279754428d3fadf96461f5f185"
+              }
+            },
+            "CodeModeOnly": {
+              "default_enabled": false,
+              "evidence": {
+                "source": "0.166.0:features/src/lib.rs",
+                "start_line": 1294,
+                "end_line": 1299,
+                "sha256": "23d4fab30de814c10697345133304869a0e0c127f498cee64b37d639cf2d6625"
+              }
+            },
+            "CodeModeHost": {
+              "default_enabled": true,
+              "evidence": {
+                "source": "0.166.0:features/src/lib.rs",
+                "start_line": 1258,
+                "end_line": 1263,
+                "sha256": "3bfdf245cb00cd9685b33f6fb228a51da8325f76d1792d4fd1d269bcd358daba"
+              }
+            }
+          }
+        }
+      },
+      {
+        "fact": "0.163 MessageProcessor constructs ThreadManager once from startup config. ThreadManager::new chooses ProcessOwnedCodeModeSessionProvider when startup CodeModeHost is enabled (or disable_in_process_fallback requests it), resolves the host program and stores the provider in shared manager state.",
+        "sources": [
+          "0.163.0:app-server/src/message_processor.rs",
+          "0.163.0:core/src/thread_manager.rs"
+        ],
+        "line_ranges": {
+          "message_processor": [
+            337,
+            379
+          ],
+          "thread_manager": [
+            538,
+            600
+          ]
+        }
+      },
+      {
+        "fact": "The ordinary thread/start path loads request config overrides for that thread and starts it through the existing manager. SessionSpawnArgs clones self.code_mode_session_provider; Session creates CodeModeService with that passed provider. The ordinary thread-level features.code_mode_host=false does not replace or disable the startup-selected provider.",
+        "sources": [
+          "0.163.0:app-server/src/request_processors/thread_processor.rs",
+          "0.163.0:core/src/thread_manager.rs",
+          "0.163.0:core/src/session/session.rs"
+        ],
+        "line_ranges": {
+          "thread_processor": [
+            1337,
+            1358,
+            1484,
+            1524
+          ],
+          "thread_manager": [
+            2327,
+            2342
+          ],
+          "session": [
+            1813,
+            1818
+          ]
+        }
+      },
+      {
+        "fact": "Explicit with_code_mode_session_provider can replace the manager provider only before manager state is shared (Arc::get_mut). There is also a test-only host-program setter. These are not ordinary thread feature overrides. The same provider-clone architecture is present in 0.166.",
+        "sources": [
+          "0.163.0:core/src/thread_manager.rs",
+          "0.166.0:core/src/thread_manager.rs",
+          "0.166.0:core/src/session/session.rs"
+        ],
+        "lines_0163": [
+          652,
+          689
+        ],
+        "clone_line_0166": 2560
+      },
+      {
+        "fact": "ALMA process-facade.start supplies app-server --stdio --strict-config, not Code Mode feature CLI arguments. It supplies an explicit small environment dictionary with no originator/CodeMode override keys. guest-adapter applies profile.threadConfig at thread/start after initialize/account/model-list.",
+        "sources": [
+          "followup:mac:process-facade.ts",
+          "followup:mac:guest-adapter.ts"
+        ],
+        "line_ranges": {
+          "process": [
+            77,
+            100
+          ],
+          "guest": [
+            146,
+            183
+          ]
+        }
+      },
+      {
+        "fact": "The inspected auth-material implementation requires a fresh controller home and materializes only its auth.json path; it does not write config.toml. This is implementation-source inspection only, not credential inspection or execution.",
+        "source": "followup:mac:auth-material.ts",
+        "lines": [
+          26,
+          94
+        ]
+      },
+      {
+        "fact": "The ALMA 0.163 Linux-arm64 appliance lock requires codex-code-mode-host, and build.sh marks the packaged host executable. InstallContext can resolve it beside the packaged Codex executable; the process provider availability check tests host_program.is_file().",
+        "sources": [
+          "followup:mac:appliance.lock.json",
+          "followup:mac:build.sh",
+          "0.163.0:install-context/src/lib.rs",
+          "0.163.0:code-mode/src/remote_session.rs"
+        ],
+        "line_ranges": {
+          "lock": [
+            20,
+            33
+          ],
+          "build": [
+            199,
+            207
+          ],
+          "install_context": [
+            175,
+            205
+          ],
+          "remote_session": [
+            62,
+            73
+          ]
+        }
+      },
+      {
+        "fact": "The inspected phone ALMA-local source supplies disabled features, including code_mode_host, as CLI/startup overrides before building config and starting the in-process server. That placement differs from the Mac thread-only profile. Explicit embedder provider injection can independently change availability; its implementation is outside this review.",
+        "sources": [
+          "followup:shared/rust-bridge/codex-mobile-client/src/session/connection.rs",
+          "followup:shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs"
+        ],
+        "line_ranges": {
+          "connection": [
+            693,
+            720
+          ],
+          "profile": [
+            29,
+            35,
+            178,
+            184
+          ]
+        }
+      }
+    ],
+    "qualified_inference": {
+      "strength": "strong source-backed candidate, not a historical runtime trace",
+      "explanation": "If no other managed/startup config disables the default and the packaged host is present at its resolved location, the Mac guest constructs an enabled process Code Mode provider before profile.threadConfig disables flags for the thread. The provider remains available; an explicit CodeModeOnly model selector can use it despite those thread flags. A phone startup that actually selects an unavailable/disabled provider can fail closed with the same model metadata. No catalog difference is required for this explanation.",
+      "not_established": [
+        "Whether a specific historical Mac turn actually created a Code Mode host process or executed a code-mode call.",
+        "The exact effective startup config/managed overrides and resolved host availability for that historical run."
+      ],
+      "correction": "Earlier claims that Code Mode was unused on Mac based only on thread-level disabled flags were not established and should not be relied on."
+    }
+  },
+  "exact_v8_revision_followup": {
+    "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/results/code-mode-v8-ios-feasibility.json",
+    "plain_ios_prebuilt_published": true,
+    "required_sandbox_ptrcomp_ios_variant_listed": false,
+    "scope": "Exact pinned fork metadata and official tag assets; no binary/download/build/device qualification."
+  }
+}

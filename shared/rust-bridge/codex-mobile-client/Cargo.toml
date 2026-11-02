@@ -7,18 +7,24 @@ license-file = "../../../LICENSE"
 
 [lib]
 name = "codex_mobile_client"
-crate-type = ["lib", "cdylib"]
+# Consumers embed the rlib. Platform packaging explicitly selects staticlib
+# (iOS) or cdylib (Android/host binding extraction), avoiding an unnecessary iOS
+# dylib link before the real app supplies its deployment target/frameworks.
+crate-type = ["lib"]
 
 [dependencies]
 uniffi = { version = "0.31.0", features = ["tokio"] }
-iroh = "1.0.3"
+iroh = { version = "1.0.3", optional = true }
 codex-app-server = { workspace = true }
 codex-app-server-client = { workspace = true }
 codex-app-server-protocol = { workspace = true }
-codex-slingshot = { path = "../codex-slingshot" }
+codex-slingshot = { path = "../codex-slingshot", default-features = false }
 codex-protocol = { workspace = true }
 codex-core = { workspace = true }
 codex-exec-server = { workspace = true }
+codex-file-system = { workspace = true }
+codex-utils-path-uri = { workspace = true }
+bytes = { workspace = true }
 codex-login = { workspace = true }
 codex-shell-command = { workspace = true }
 codex-config = { workspace = true }
@@ -34,6 +40,7 @@ tokio = { workspace = true }
 async-trait = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+sha2 = { workspace = true }
 tokio-tungstenite = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
@@ -52,7 +59,14 @@ linkify = "0.10"
 unicode-segmentation = "1"
 
 [features]
+default = ["remote-alleycat", "remote-pairing", "remote-cli"]
+remote-alleycat = ["dep:iroh", "remote-cli"]
+remote-pairing = []
+remote-cli = ["codex-slingshot/json-line-transport"]
 rpc-trace = []
+# Qualification only: native JIT-disabled V8, without the desktop memory sandbox.
+# Not enabled by normal app builds or on Android/desktop.
+alma-code-mode-probe = ["dep:codex-code-mode-runtime", "dep:codex-code-mode-protocol"]
 
 [dev-dependencies]
 tempfile = "3"
@@ -61,10 +75,14 @@ tempfile = "3"
 uniffi = { version = "0.31.0", features = ["build"] }
 
 [target.'cfg(all(target_os = "ios", not(target_abi = "macabi")))'.dependencies]
+codex-code-mode-protocol = { workspace = true, optional = true }
+codex-code-mode-runtime = { workspace = true, optional = true }
 codex-apply-patch = { workspace = true }
-# iSH backend. Tracks the iSH repo's `main` branch — `cargo update -p
-# ish-embed-host` pulls the latest.
-ish-embed-host = { git = "https://github.com/dnakov/litter-ish.git", branch = "main" }
+# iSH backend pinned to the exact revision validated by the ALMA phone probes.
+ish-embed-host = { git = "https://github.com/dnakov/litter-ish.git", rev = "4f783cd957b83de3019d6a843408d5bb3ff902c7" }
+
+[target.'cfg(unix)'.dependencies]
+libc = { workspace = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 jni = "0.21"

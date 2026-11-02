@@ -1,0 +1,41 @@
+--- Mac/receipts.ts
++++ Mobile/receipts.ts
+@@ -1,7 +1,7 @@
+-import type { CodexNativeProfileV1 } from "./native-profile.js";
+-import { codexFailure } from "./failure.js";
+-
+-export const CODEX_APP_SERVER_VERSION = "0.163.0" as const;
++import type { CodexNativeProfileV1 } from "../../upstream/providers/codex/adapter/src/native-profile.js";
++import { codexFailure } from "../../upstream/providers/codex/adapter/src/failure.js";
++
++export const CODEX_APP_SERVER_VERSION = "0.166.0" as const;
+ 
+ export interface CodexModelPageV1 {
+   readonly models: readonly Record<string, unknown>[];
+@@ -21,7 +21,7 @@
+   if (
+     receipt.codexHome !== controllerHome
+     || receipt.platformFamily !== "unix"
+-    || receipt.platformOs !== "linux"
++    || receipt.platformOs !== "ios"
+     || typeof receipt.userAgent !== "string"
+     || !new RegExp(`(?:^|[/ ])${escapeRegex(CODEX_APP_SERVER_VERSION)}(?:$|[ (;])`, "u")
+       .test(receipt.userAgent)
+@@ -30,7 +30,7 @@
+       "configuration",
+       "codex_runtime_identity_mismatch",
+       false,
+-      "The running Codex app-server does not match the pinned Linux appliance.",
++      "The running Codex app-server does not match the pinned iOS runtime.",
+     );
+   }
+ }
+@@ -128,7 +128,7 @@
+     || receipt.modelProvider !== "openai"
+     || activeProfile?.id !== profile.permissionProfileID
+     || (activeProfile.extends !== null && activeProfile.extends !== undefined)
+-    || !sameLegacyProjection(receipt.sandbox, profile.writableRoots)
++    || !sameLegacyProjection(receipt.sandbox, (profile as CodexNativeProfileV1 & { runtimeWritableRoots?: readonly string[] }).runtimeWritableRoots ?? profile.writableRoots)
+     || !Array.isArray(receipt.instructionSources)
+     || receipt.instructionSources.length !== 0
+     || !sameExactStringArray(receipt.runtimeWorkspaceRoots, profile.runtimeWorkspaceRoots)

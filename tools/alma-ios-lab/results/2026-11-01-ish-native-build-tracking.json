@@ -1,0 +1,13 @@
+{
+  "sourceSHA256": "285196cfa13ced7f310243bd3b28d8dd12304772b08d4d02bdf5576b7ca9ff70",
+  "buildScriptSHA256": "db9e3bb1ab9e591e93181db104fdacad9b4107b9612eada8b9bd310c3eb70c78",
+  "buildOutput": "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/build/ish-embed-host-1f10fce7cdb9cb69/output",
+  "nativeObjectEvidence": [],
+  "finding": "previous script watched FFI/supervisor, not native source tree; current script tracks native inputs and caps Ninja jobs",
+  "roleStartupPreflightAdded": true,
+  "phoneActorRetest": "pending new signed build",
+  "linkedKernelObjectSHA256": "aab276a786a5edfa695125bfec26d04a28ee6bde37d2e9ff2683887a37f6b244",
+  "matchesFreshIosObject": true,
+  "objectMtime": 1793509487.779726,
+  "sourceMtime": 1793505491.157432
+}

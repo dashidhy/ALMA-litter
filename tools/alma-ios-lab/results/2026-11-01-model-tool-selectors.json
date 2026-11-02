@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-01",
+  "clientVersion": "0.166.0",
+  "fetchedAt": "2026-10-31T23:24:42.209243Z",
+  "source": "actual phone model catalog, identity/auth fields omitted",
+  "visibleModels": [
+    {
+      "slug": "gpt-6.1-sol",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-6-astra",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-6.1-terra",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-6-sol",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-6-luna",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-5.6-sol",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-5.6-terra",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    },
+    {
+      "slug": "gpt-5.6-luna",
+      "tool_mode": "code_mode_only",
+      "shell_type": "unified_exec",
+      "use_responses_lite": true
+    }
+  ],
+  "upstreamSelector": "core/src/tools/mod.rs requested_tool_mode; model_runtime_selectors.rs tests prove selectors override feature flags and code_mode_only fails closed when host unavailable",
+  "action": "No selector metadata changed; evaluating explicit embedded runtime provider"
+}

@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tah-working-unsubscribe"
+description = "Enables the tah_working_unsubscribe command without any pre-configured scope."
+commands.allow = ["tah_working_unsubscribe"]
+
+[[permission]]
+identifier = "deny-tah-working-unsubscribe"
+description = "Denies the tah_working_unsubscribe command without any pre-configured scope."
+commands.deny = ["tah_working_unsubscribe"]

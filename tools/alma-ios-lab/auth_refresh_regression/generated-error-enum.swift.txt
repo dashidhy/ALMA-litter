@@ -1,0 +1,20 @@
+public enum ChatgptAuthRefreshError: Swift.Error, Equatable, Hashable, Foundation.LocalizedError {
+
+    
+    
+    case Unavailable
+    case TimedOut
+    case AccountChanged
+    case RefreshFailed
+    case UnsupportedServer
+
+    
+
+    
+
+    
+    public var errorDescription: String? {
+        String(reflecting: self)
+    }
+    
+}

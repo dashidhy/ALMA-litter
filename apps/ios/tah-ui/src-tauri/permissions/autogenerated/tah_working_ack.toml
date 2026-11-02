@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-tah-working-ack"
+description = "Enables the tah_working_ack command without any pre-configured scope."
+commands.allow = ["tah_working_ack"]
+
+[[permission]]
+identifier = "deny-tah-working-ack"
+description = "Denies the tah_working_ack command without any pre-configured scope."
+commands.deny = ["tah_working_ack"]

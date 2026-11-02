@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-11-01",
+  "netdev_index": "https://index.crates.io/ne/td/netdev",
+  "netwatch_index": "https://index.crates.io/ne/tw/netwatch",
+  "official_fix": "https://github.com/shellrow/netdev/pull/195",
+  "fixed_release": "0.47.0",
+  "fixed_release_sha256": "98a4d13f8061600697d721c5fd45262aba533a7d4a7670e7c64fd02d68e4a9fb",
+  "latest_compatible_netdev": "0.45.1",
+  "latest_compatible_sha256": "096c44b66a9b09b99b4dd36b1c295ff3a492039ccecaf55466bd6ddcdba59968",
+  "compatible_release_has_fix": false,
+  "netwatch_0.19.1_netdev": "^0.45.0",
+  "netwatch_0.19.3_apple_netdev": "^0.46.1",
+  "netwatch_0.20.0_netdev": "^0.46.3",
+  "decision": "Backport the platform gate to selected netdev 0.45.0; expose explicit Unsupported/error query status while preserving legacy metadata alignment."
+}

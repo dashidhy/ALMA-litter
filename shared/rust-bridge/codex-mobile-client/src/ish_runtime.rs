@@ -8,11 +8,12 @@
 //! 4. Install small runtime directories and pass the iSH environment on every
 //!    command (`LANG`, `TMPDIR`, `CODEX_HOME`, …).
 //! 5. Snapshot host DNS into `/etc/resolv.conf` inside the fakefs.
-//! 6. Mount `<documents>/Apps/` at `/mnt/apps/` via iSH's `realfs` driver.
-//! 7. Register the `codex_core` exec hook (`ish_exec::install()`).
+//! 6. The full profile retains its Documents/Apps mount; ALMA registers task views separately.
+//! 7. Publish the owned-job instance for explicit Codex environment registration.
 //!
 //! After `bootstrap`, `run(cmd, cwd)` dispatches command strings through the
-//! persistent `/bin/sh` the same way `codex_ish_run` did in Obj-C.
+//! supervisor with a fresh shell. These terminal/diagnostic calls are separate
+//! from Codex0.166's policy-checked ExecBackend path.
 
 use std::collections::HashMap;
 use std::ffi::{CStr, c_char, c_int, c_uint};
@@ -20,7 +21,7 @@ use std::fs;
 use std::io;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
-use std::sync::OnceLock;
+use std::sync::{Arc, OnceLock};
 
 use ish_embed_host::IshInstance;
 
@@ -50,23 +51,45 @@ impl From<ish_embed_host::IshError> for IshBootstrapError {
     }
 }
 
-static INSTANCE: OnceLock<IshInstance> = OnceLock::new();
+static INSTANCE: OnceLock<Arc<IshInstance>> = OnceLock::new();
+#[cfg(feature = "alma-code-mode-probe")]
+static MOBILE_MOUNT: OnceLock<PathBuf> = OnceLock::new();
+
+/// The mobile TAH host owns a single sealed mount; per-attempt views are granted
+/// by ProviderScopeFactory. Does not register a global Codex execution context.
+#[cfg(feature = "alma-code-mode-probe")]
+pub(crate) fn bootstrap_mobile_tah(bundle_fs: &Path, support: &Path, workspace: &Path)
+    -> Result<Arc<IshInstance>, IshBootstrapError> {
+    if !crate::network_scope::alma_local() { return Err(IshBootstrapError::Ish("local build required".into())); }
+    let canonical = workspace.canonicalize()?;
+    if let Some(instance) = INSTANCE.get() {
+        if MOBILE_MOUNT.get() == Some(&canonical) { return Ok(instance.clone()); }
+        return Err(IshBootstrapError::AlreadyBootstrapped);
+    }
+    let dest = support.join("fs");
+    extract_rootfs_if_needed(bundle_fs, &dest)?;
+    let instance = Arc::new(IshInstance::boot_workspace_policy_with_workspace(
+        &dest.join("data"), Some(Path::new("/workspace")), &canonical)?);
+    MOBILE_MOUNT.set(canonical).map_err(|_| IshBootstrapError::AlreadyBootstrapped)?;
+    INSTANCE.set(instance.clone()).map_err(|_| IshBootstrapError::AlreadyBootstrapped)?;
+    Ok(instance)
+}
 
 /// Wait up to `timeout` for `bootstrap` to finish on another thread. Returns
 /// the live instance once it's published, or `None` if the timeout elapses.
 /// Used by the terminal session opener so a UI tap that races the on-launch
 /// bootstrap doesn't surface a misleading "iSH has not been bootstrapped"
 /// error to the user.
-pub(crate) async fn instance_or_wait(timeout: std::time::Duration) -> Option<&'static IshInstance> {
+pub(crate) async fn instance_or_wait(timeout: std::time::Duration) -> Option<Arc<IshInstance>> {
     if let Some(instance) = INSTANCE.get() {
-        return Some(instance);
+        return Some(Arc::clone(instance));
     }
     let deadline = std::time::Instant::now() + timeout;
     let poll = std::time::Duration::from_millis(100);
     while std::time::Instant::now() < deadline {
         tokio::time::sleep(poll).await;
         if let Some(instance) = INSTANCE.get() {
-            return Some(instance);
+            return Some(Arc::clone(instance));
         }
     }
     None
@@ -104,15 +127,28 @@ pub fn bootstrap(
     }
 
     let data_path = dest.join("data");
+    if crate::network_scope::alma_local() {
+        let is_tah=std::env::args().any(|arg|arg=="--run-tah-attempt");
+        if is_tah && !cfg!(feature="alma-code-mode-probe") {
+            return Err(IshBootstrapError::Ish("TAH qualification feature is not enabled".into()));
+        }
+        let instance=if is_tah {
+            crate::alma_workspace::bootstrap_attempt(&data_path,application_support_dir,documents_dir)?
+        } else {
+            crate::alma_workspace::bootstrap(&data_path, application_support_dir)?
+        };
+        INSTANCE.set(instance).map_err(|_|IshBootstrapError::AlreadyBootstrapped)?;
+        return Ok(());
+    }
     eprintln!(
         "[ish] booting kernel with rootfs='{}' workdir='/root'",
         data_path.display()
     );
-    let instance = IshInstance::boot(&data_path, Some(Path::new("/root")))?;
+    let instance = IshInstance::boot_owned(&data_path, Some(Path::new("/root")))?;
     eprintln!("[ish] kernel booted");
 
     INSTANCE
-        .set(instance)
+        .set(Arc::new(instance))
         .map_err(|_| IshBootstrapError::AlreadyBootstrapped)?;
 
     // Now that INSTANCE is published, the post-init setup goes through the
@@ -120,9 +156,15 @@ pub fn bootstrap(
     // ordering guarantees as regular command dispatch.
     runtime_setup();
     write_resolv_conf();
+    // ALMA's model workspace must be registered explicitly, not the broad
+    // legacy Documents/Apps view. Full Litter retains its existing user surface.
+    #[cfg(feature = "remote-cli")]
     mount_apps_dir(documents_dir);
+    #[cfg(not(feature = "remote-cli"))]
+    let _ = documents_dir;
 
-    crate::ish_exec::install();
+    // Codex0.166 execution is registered through EnvironmentManager; there is
+    // no global synchronous exec hook or native LOCAL_FS patch shortcut.
 
     Ok(())
 }
@@ -195,6 +237,7 @@ pub(crate) fn runtime_env() -> HashMap<String, String> {
         ("LANG".to_string(), "C.UTF-8".to_string()),
         ("LC_ALL".to_string(), "C.UTF-8".to_string()),
         ("TMPDIR".to_string(), "/tmp".to_string()),
+        ("SHELL".to_string(), "/bin/bash".to_string()),
         // No tty under the exec hook: force pagers to dump and exit so
         // commands like `git log` do not block waiting for interaction.
         ("PAGER".to_string(), "cat".to_string()),

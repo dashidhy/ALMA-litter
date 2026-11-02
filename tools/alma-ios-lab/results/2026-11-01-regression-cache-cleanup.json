@@ -1,0 +1,13 @@
+{
+  "removedCompletedRegressionCaches": [
+    "thread_item_regression/.build/target",
+    "auth_refresh_regression/.build/rust/target/debug/build",
+    "auth_refresh_regression/.build/rust/target/debug/deps",
+    "auth_refresh_regression/.build/rust/target/debug/incremental",
+    "auth_refresh_regression/.build/rust/target/debug/.fingerprint",
+    "auth_refresh_regression/.build/rust/target/debug/examples"
+  ],
+  "generatorPreserved": true,
+  "physicalFreeGainBytes": 315392,
+  "activeCrossCompilationUntouched": true
+}

@@ -1,0 +1,146 @@
+{
+  "phase": "tools",
+  "results": [
+    {
+      "id": "tools-versions",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.15653487504459918,
+      "stopReason": null,
+      "peakSampledRSSBytes": 1703936,
+      "note": null
+    },
+    {
+      "id": "tools-python-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.4784421250224113,
+      "stopReason": null,
+      "peakSampledRSSBytes": 30310400,
+      "note": null
+    },
+    {
+      "id": "tools-python-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.3154154589865357,
+      "stopReason": null,
+      "peakSampledRSSBytes": 25886720,
+      "note": null
+    },
+    {
+      "id": "tools-node-default-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1099114581011236,
+      "stopReason": null,
+      "peakSampledRSSBytes": 65732608,
+      "note": null
+    },
+    {
+      "id": "tools-reset-note",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 3.3151547501329333,
+      "stopReason": null,
+      "peakSampledRSSBytes": 31047680,
+      "note": null
+    },
+    {
+      "id": "tools-node-jitless-text",
+      "passed": true,
+      "checks": {
+        "corpusStatsMatch": true
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1034652921371162,
+      "stopReason": null,
+      "peakSampledRSSBytes": 66355200,
+      "note": null
+    },
+    {
+      "id": "tools-node-process",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 1.1107256249524653,
+      "stopReason": null,
+      "peakSampledRSSBytes": 71368704,
+      "note": null
+    },
+    {
+      "id": "tools-bash-script",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.16335179191082716,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "tools-sh-bash-array",
+      "passed": true,
+      "checks": {},
+      "expectedExit": 2,
+      "exit": 2,
+      "seconds": 0.16734887519851327,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2277376,
+      "note": "Expected unavailable/unsupported behavior"
+    },
+    {
+      "id": "tools-readback",
+      "passed": true,
+      "checks": {
+        "exactFinalFile": true,
+        "expectedBytes": 117262
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 0.1719464580528438,
+      "stopReason": null,
+      "peakSampledRSSBytes": 2260992,
+      "note": null
+    },
+    {
+      "id": "tools-same-kernel-repeat",
+      "passed": true,
+      "checks": {
+        "exactFinalFile": true,
+        "expectedBytes": 117262
+      },
+      "expectedExit": 0,
+      "exit": 0,
+      "seconds": 12.819314291933551,
+      "stopReason": null,
+      "peakSampledRSSBytes": 77086720,
+      "note": null
+    }
+  ],
+  "corpusStats": {
+    "turns": 254,
+    "bytes": 117155,
+    "characters": 44661,
+    "sha256": "4a6a25fc2470c69a228caf02c5b692cca6b357b279eac29bb12a2adff6894801"
+  },
+  "scope": "Host iSH tool replay only; no Codex inference, no iPhone measurements",
+  "diagnosticsLocation": "/Users/dashidhy/Public/projects/agent/ALMA/frontier/mobile/codex_litter/.cache/tool-suite-full-text-v4"
+}

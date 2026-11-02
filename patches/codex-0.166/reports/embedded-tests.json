@@ -1,0 +1,36 @@
+{
+  "patch_sha256": "ffde8f1f32ac7edb0f63d7a4faa84a0179e1c92db43d6180e043de045a6d8e00",
+  "target_commit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+  "scope": "isolated logic tests with boundary fixtures; not full Codex type checking",
+  "compiler": "repo-local stable rustc 1.99.0",
+  "tests": [
+    {
+      "command": "python3 patches/codex-0.166/tests/run_event_log_tests.py",
+      "passed": 4,
+      "failed": 0,
+      "log_sha256": "1a0d6981a1e3db0d72c24180d6751ee61b3b1889c0de34cdf691262443e7d390",
+      "output": "\nrunning 4 tests\ntest tests::event_history_replay_is_bounded_by_retained_bytes ... ok\ntest tests::bounded_producer_reports_lag_and_replays_recent_events ... ok\ntest tests::bounded_producer_rejects_oversized_events_without_losing_lifecycle ... ok\ntest tests::empty_event_receiver_stays_open ... ok\n\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n   Compiling embedded-event-log-check v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/.cache/event-log-harness)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s\n     Running unittests src/lib.rs (target/debug/deps/embedded_event_log_check-4a27d02017769faf)\n",
+      "harness_lock_sha256": "b3295be3579cf87239019c33e823a41b86aba830a337617458302c43fd2579e1"
+    },
+    {
+      "command": "python3 patches/codex-0.166/tests/run_capture_tests.py",
+      "passed": 11,
+      "failed": 0,
+      "log_sha256": "9a59783df9bc8e220bdbd7afa28e9608d343103f00160ad5232783b1edd64ad0",
+      "output": "\nrunning 11 tests\ntest exec::embedded::tests::incomplete_managed_network_context_is_rejected_before_start ... ok\ntest exec::embedded::tests::process_failure_confirms_termination_before_returning_error ... ok\ntest exec::embedded::tests::already_cancelled_request_does_not_start_a_process ... ok\ntest exec::embedded::tests::cancellation_after_spawn_is_not_reported_as_timeout ... ok\ntest exec::embedded::tests::dropping_capture_schedules_process_cleanup ... ok\ntest exec::embedded::tests::executor_exit_codes_are_not_narrowed_to_native_wait_status ... ok\ntest exec::embedded::tests::drains_closed_pages_and_preserves_streams_and_exit_status ... ok\ntest exec::embedded::tests::output_cap_and_executor_sandbox_denial_are_preserved ... ok\ntest exec::embedded::tests::full_buffer_deadline_stays_active_after_exit_with_open_output ... ok\ntest exec::embedded::tests::timeout_confirms_termination_and_reports_timeout ... ok\ntest exec::embedded::tests::stalled_stream_consumer_is_bounded_even_for_full_buffer ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s\n\n   Compiling embedded-event-log-check v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/.cache/event-log-harness)\n   Compiling embedded-capture-check v0.0.0 (/Users/dashidhy/Public/projects/agent/ALMA-litter/patches/codex-0.166/.cache/capture-harness)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.87s\n     Running unittests src/lib.rs (target/debug/deps/embedded_capture_check-21a9c10cf9e3ccdf)\n",
+      "harness_lock_sha256": "5375e678b782c5d79f8bc6252006d090ecb811a2c0adaacc3cb0d604beeeb11b"
+    }
+  ],
+  "source_hashes": {
+    "core/src/exec.rs": "958236cca26b5ea668d8ca4fd1da65f28f3f84ff414d6a275ea783043d35f18b",
+    "core/src/exec/embedded.rs": "3b61e9bb2f2fb6c8b521b92c61323e8b77c52492e020912fee26b737cb62b384",
+    "core/src/exec/embedded_tests.rs": "381d804e455787783075c0b016438c061489983976bc505bc860836a083b734b",
+    "exec-server/src/process.rs": "1554b5da9641c62a136017c808893c5ee41bee528584e9c1165f820f7038c323"
+  },
+  "not_run": [
+    "actual upstream constructor tests",
+    "actual upstream unified routing test",
+    "full Rust compilation",
+    "iSH adapter/device tests"
+  ]
+}

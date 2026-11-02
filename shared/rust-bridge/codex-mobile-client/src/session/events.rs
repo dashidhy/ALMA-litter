@@ -61,6 +61,8 @@ pub(crate) enum UiEvent {
     TurnCompleted {
         key: ThreadKey,
         turn_id: String,
+        /// Preserve the authoritative outcome; absence of an error is not success.
+        status: codex_app_server_protocol::TurnStatus,
         error: Option<String>,
     },
     TurnDiffUpdated {
@@ -264,6 +266,7 @@ impl EventProcessor {
         self.emit(UiEvent::TurnCompleted {
             key,
             turn_id,
+            status: codex_app_server_protocol::TurnStatus::Interrupted,
             error: None,
         });
     }
@@ -347,6 +350,7 @@ impl EventProcessor {
                 self.emit(UiEvent::TurnCompleted {
                     key,
                     turn_id: n.turn.id.clone(),
+                    status: n.turn.status.clone(),
                     error,
                 });
             }
@@ -443,15 +447,10 @@ impl EventProcessor {
                     delta: n.delta.clone(),
                 });
             }
-            ServerNotification::DynamicToolCallArgumentsDelta(n) => {
-                let key = Self::make_key(server_id, &n.thread_id);
-                self.emit(UiEvent::DynamicToolCallArgumentsDelta {
-                    key,
-                    item_id: n.item_id.clone(),
-                    call_id: n.call_id.clone(),
-                    delta: n.delta.clone(),
-                });
-            }
+            // Codex 0.166 no longer emits dynamic-tool argument deltas.
+            // ItemStarted/ItemCompleted carry the authoritative payload; keep
+            // the internal delta event for legacy producers without inventing
+            // a replacement upstream notification.
             ServerNotification::FileChangeOutputDelta(n) => {
                 let key = Self::make_key(server_id, &n.thread_id);
                 self.emit(UiEvent::CommandOutputDelta {
@@ -1290,6 +1289,7 @@ mod tests {
 
     fn make_turn(id: &str) -> proto::Turn {
         proto::Turn {
+            root_turn_id: None,
             id: id.to_string(),
             items: Vec::new(),
             items_view: proto::TurnItemsView::Full,
@@ -1302,14 +1302,14 @@ mod tests {
     }
 
     fn make_item(id: &str) -> proto::ThreadItem {
-        proto::ThreadItem::AgentMessage {
+        proto::ThreadItem::untimed(proto::ThreadItemPayload::AgentMessage {
             delivery: None,
             questions: None,
             id: id.to_string(),
             text: String::new(),
             phase: None,
             memory_citation: None,
-        }
+        })
     }
 
     fn upstream_item_id(item: &proto::ThreadItem) -> &str {
@@ -1444,14 +1444,61 @@ mod tests {
             UiEvent::TurnCompleted {
                 key,
                 turn_id,
+                status,
                 error,
             } => {
                 assert_eq!(key.thread_id, "thr_2");
                 assert_eq!(turn_id, "turn_2");
+                assert_eq!(status, proto::TurnStatus::Completed);
                 assert!(error.is_none());
             }
             other => panic!("expected TurnCompleted, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn turn_completed_preserves_upstream_status_and_error() {
+        for status in [
+            proto::TurnStatus::Completed,
+            proto::TurnStatus::Interrupted,
+            proto::TurnStatus::Failed,
+            proto::TurnStatus::InProgress,
+        ] {
+            for message in [None, Some("upstream failure")] {
+                let mut turn = make_turn("turn_2");
+                turn.status = status.clone();
+                turn.error = message.map(|message| proto::TurnError {
+                    message: message.to_string(),
+                    codex_error_info: None,
+                    additional_details: None,
+                    misalignment: None,
+                });
+                let notification = ServerNotification::TurnCompleted(proto::TurnCompletedNotification {
+                    thread_id: "thr_2".to_string(),
+                    turn,
+                });
+                match process_and_recv("srv1", &notification).unwrap() {
+                    UiEvent::TurnCompleted { key, turn_id, status: actual, error } => {
+                        assert_eq!(key.server_id, "srv1");
+                        assert_eq!(key.thread_id, "thr_2");
+                        assert_eq!(turn_id, "turn_2");
+                        assert_eq!(actual, status);
+                        assert_eq!(error.as_deref(), message);
+                    }
+                    other => panic!("expected TurnCompleted, got {other:?}"),
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn local_interrupt_is_interrupted_without_error() {
+        let proc = EventProcessor::new();
+        let mut rx = proc.subscribe();
+        proc.emit_local_turn_interrupted(EventProcessor::make_key("srv1", "thr_2"), "turn_2".into());
+        assert!(matches!(rx.try_recv().unwrap(), UiEvent::TurnCompleted {
+            key, turn_id, status: proto::TurnStatus::Interrupted, error: None,
+        } if key.server_id == "srv1" && key.thread_id == "thr_2" && turn_id == "turn_2"));
     }
 
     #[test]
@@ -1504,11 +1551,16 @@ mod tests {
 
     #[test]
     fn item_started() {
+        let item = proto::ThreadItem {
+            started_at_ms: Some(1234),
+            completed_at_ms: None,
+            ..make_item("item_1")
+        };
         let notification = ServerNotification::ItemStarted(proto::ItemStartedNotification {
             thread_id: "thr_1".to_string(),
             turn_id: "turn_1".to_string(),
-            item: make_item("item_1"),
-            started_at_ms: 0,
+            item: item.clone(),
+            started_at_ms: 1234,
         });
         let evt = process_and_recv("srv1", &notification).expect("should emit");
         match evt {
@@ -1517,6 +1569,7 @@ mod tests {
                 assert_eq!(notification.thread_id, "thr_1");
                 assert_eq!(notification.turn_id, "turn_1");
                 assert_eq!(upstream_item_id(&notification.item), "item_1");
+                assert_eq!(notification.item, item);
             }
             other => panic!("expected ItemStarted, got {other:?}"),
         }
@@ -1524,11 +1577,16 @@ mod tests {
 
     #[test]
     fn item_completed() {
+        let item = proto::ThreadItem {
+            started_at_ms: Some(1234),
+            completed_at_ms: Some(2345),
+            ..make_item("item_2")
+        };
         let notification = ServerNotification::ItemCompleted(proto::ItemCompletedNotification {
             thread_id: "thr_1".to_string(),
             turn_id: "turn_1".to_string(),
-            item: make_item("item_2"),
-            completed_at_ms: 0,
+            item: item.clone(),
+            completed_at_ms: 2345,
         });
         let evt = process_and_recv("srv1", &notification).expect("should emit");
         match evt {
@@ -1537,6 +1595,7 @@ mod tests {
                 assert_eq!(notification.thread_id, "thr_1");
                 assert_eq!(notification.turn_id, "turn_1");
                 assert_eq!(upstream_item_id(&notification.item), "item_2");
+                assert_eq!(notification.item, item);
             }
             other => panic!("expected ItemCompleted, got {other:?}"),
         }

@@ -1,0 +1,16 @@
+{
+  "runID": "c3f033e4-3b7f-485b-b619-5f3bdb238ad2",
+  "device": "iPhone 12 Pro / A14",
+  "casesPassed": 9,
+  "casesTotal": 9,
+  "runtimeSeconds": 0.172570042,
+  "harnessSeconds": 0.20444666664116085,
+  "sampledPeakFootprintBytes": 19531592,
+  "processEnded": true,
+  "extendedVirtualAddressing": true,
+  "increasedMemoryLimit": false,
+  "jit": false,
+  "v8MemorySandbox": false,
+  "scope": "Official Code Mode fixed synthetic fixtures; plain V8 without memory sandbox; no account, recording or real model/network",
+  "artifacts": "tools/alma-ios-lab/official_code_mode_phone_probe/results/c3f033e4-3b7f-485b-b619-5f3bdb238ad2"
+}

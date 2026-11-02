@@ -1,0 +1,127 @@
+{
+  "scope": "Actual packaged Node22 in Mac iSH; primitives only, no provider/protocol/phone/auth/model/network qualification",
+  "inputs": {
+    "native_ish_sha256": "76a8e1b6e0823b6e2ef84d03488b828b025fc29e9272f2d7f2c0410b61d4bd06",
+    "source_rootfs_tree_sha256": "10edd4903a4572ce3c5ce215e172d6f0db2f0170655e803a4dce0a3332e40b76",
+    "official_settled_sha256": "6b0d0b56aecf2101ca0d7f50b71d733430f703deb7bf3b71b54364c60cce4f65",
+    "official_settled_tests_sha256": "093fc672b92fede2fe917db9377bf727ce4878a17298763aeb827ed67e22d739"
+  },
+  "node_package": "354d49ec25295e6c",
+  "read_roots": [
+    "/bin",
+    "/sbin",
+    "/usr",
+    "/lib",
+    "/etc",
+    "/workspace/input"
+  ],
+  "write_roots": [
+    "/workspace/tmp"
+  ],
+  "direct_network_policy": "DenyDirect (host registration network=0); no network tests",
+  "workspace_gate": "none; /workspace is only this private test fixture, not model workspace",
+  "host_cpu_limits_seconds": {
+    "soft": 20,
+    "hard": 24
+  },
+  "host_core_dump_limit_bytes": 0,
+  "bootstrap": {
+    "host_seconds": 0.0203,
+    "host_watchdog_seconds": 10,
+    "watchdog_fired": false,
+    "host_exit": 0,
+    "host_process_group_gone": true,
+    "stdout": "",
+    "stderr": ""
+  },
+  "runs": [
+    {
+      "host_seconds": 4.0019,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"baseline\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 1, \"stdout\": \"\", \"stderr\": \"----- Native stack trace -----\\n\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\nV8_SIGABRT: pc=0xed158afc sp=ffffd840 fp=ffffd840 lr=ed158c94\n",
+      "group": "baseline",
+      "controller": {
+        "group": "baseline",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 1,
+        "stdout": "",
+        "stderr": "----- Native stack trace -----\n\n",
+        "live_after_cleanup": 0
+      },
+      "passed": false
+    },
+    {
+      "host_seconds": 3.9928,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"flags\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 1, \"stdout\": \"\", \"stderr\": \"----- Native stack trace -----\\n\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\nV8_SIGABRT: pc=0xed158afc sp=ffffd820 fp=ffffd820 lr=ed158c94\n",
+      "group": "flags",
+      "controller": {
+        "group": "flags",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 1,
+        "stdout": "",
+        "stderr": "----- Native stack trace -----\n\n",
+        "live_after_cleanup": 0
+      },
+      "passed": false
+    },
+    {
+      "host_seconds": 3.98,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"vm\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 1, \"stdout\": \"\", \"stderr\": \"----- Native stack trace -----\\n\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\nV8_SIGABRT: pc=0xed158afc sp=ffffd7a0 fp=ffffd7a0 lr=ed158c94\n",
+      "group": "vm",
+      "controller": {
+        "group": "vm",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 1,
+        "stdout": "",
+        "stderr": "----- Native stack trace -----\n\n",
+        "live_after_cleanup": 0
+      },
+      "passed": false
+    },
+    {
+      "host_seconds": 3.8869,
+      "host_watchdog_seconds": 30,
+      "watchdog_fired": false,
+      "host_exit": 0,
+      "host_process_group_gone": true,
+      "stdout": "{\"group\": \"worker-load\", \"job\": 1, \"cleanup_confirmed\": true, \"child_exit\": 1, \"stdout\": \"\", \"stderr\": \"----- Native stack trace -----\\n\\n\", \"live_after_cleanup\": 0}\n",
+      "stderr": "workspace fixture grant: 1\nV8_SIGABRT: pc=0xed158afc sp=ffffd7b0 fp=ffffd7b0 lr=ed158c94\n",
+      "group": "worker-load",
+      "controller": {
+        "group": "worker-load",
+        "job": 1,
+        "cleanup_confirmed": true,
+        "child_exit": 1,
+        "stdout": "",
+        "stderr": "----- Native stack trace -----\n\n",
+        "live_after_cleanup": 0
+      },
+      "passed": false
+    }
+  ],
+  "read_only_inputs_unchanged": true,
+  "all_requested_groups_passed": false,
+  "passed_case_count": 0,
+  "test_source_sha256": {
+    "run.py": "92620d323fae2c43184d7ec54fc7423767aaf0895b6521c495d43dd3fba474cd",
+    "controller.py": "6f53c871cf4b1369c2edb7a4465028af08f06db759474139f1dc5f6f2e1907f8",
+    "primitives.cjs": "35ee15b3c9f42aa7faf6d8e704b452da565f8408397ebe86984cc649327927e1"
+  }
+}

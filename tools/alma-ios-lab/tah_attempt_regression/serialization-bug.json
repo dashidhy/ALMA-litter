@@ -1,0 +1,58 @@
+{
+  "status": "CONFIRMED_ORIGINAL_CONTRACT_SERIALIZATION_BLOCKER",
+  "production_source": "/Users/dashidhy/Public/projects/agent/ALMA-litter/shared/rust-bridge/codex-mobile-client/src/tah_attempt.rs",
+  "production_source_sha256": "c1dd71a0626db423159d101b248491a46a2f2347f41a1faecd1b83777f983a7e",
+  "scoped_files_sha256": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1",
+  "source_unchanged_during_run": true,
+  "original_ts_generation": "passed",
+  "host_harness": "compiled and executed; test returns failure",
+  "case_counts": {
+    "passed": 1,
+    "failed": 2,
+    "blocked": 5
+  },
+  "field_mapping": [
+    {
+      "original": "attemptID",
+      "rust_camelCase": "attemptId"
+    },
+    {
+      "original": "providerID",
+      "rust_camelCase": "providerId"
+    },
+    {
+      "original": "inference.modelID",
+      "rust_camelCase": "inference.modelId"
+    },
+    {
+      "original": "inference.reasoningEffortID",
+      "rust_camelCase": "inference.reasoningEffortId"
+    }
+  ],
+  "diagnostic": {
+    "error": null,
+    "normalized_id_spelling_accepted": true,
+    "scope": "noncanonical diagnostic only; NOT original Mac contract acceptance"
+  },
+  "minimal_proposed_fix": "Main may add explicit serde rename attributes for these ID fields; preserve original Mac JSON bytes and keep strict unknown-field rejection. No production edits by this harness.",
+  "outer_envelope_note": "Harness uses current Rust outer camelCase; draft controller payload uppercase JSON/SHA fields require an agreed final transport mapping. This is separate from the confirmed embedded FrozenAttempt mismatch.",
+  "unverified": [
+    "Five dependent negative groups",
+    "capture_candidates runtime",
+    "Extra Guardian and candidate-seeded V1/V2",
+    "full mobile build/device/model/workflow"
+  ],
+  "new_cache_bytes": 251445446,
+  "host_run_seconds": [
+    {
+      "name": "generate",
+      "seconds": 0.6292,
+      "exit": 0
+    },
+    {
+      "name": "rust-tests",
+      "seconds": 17.8456,
+      "exit": 101
+    }
+  ]
+}

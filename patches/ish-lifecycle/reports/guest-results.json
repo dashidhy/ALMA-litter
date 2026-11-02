@@ -1,0 +1,11 @@
+{
+  "patch_sha256": "1892642f9c916969a19944fb5780f5e98aa5b821bcfb6e7f5c652bf786846bb7",
+  "passed": true,
+  "host_exit": 0,
+  "timed_out": false,
+  "seconds": 14.576538458000869,
+  "stdout": "ISH_JOB_FIXTURE_PASS:[\"stdio_and_exit\", {\"nested_setsided_cancel_seconds\": 0.015644999919459224, \"live_before\": 2}, \"leader_exit_and_eof_not_completion\", \"sibling_job_survives\", \"controller_authority_not_inherited\", \"cancel_during_finite_spawn_loop\"]\n",
+  "stderr": "",
+  "binary_sha256": "2d7d4297dcbd6a5d87aa6686ea8c3bdf89cb16713a8f959b22e24c8d98e5ad21",
+  "scope": "real patched iSH C kernel/ARM64 interpreter with Python control fixture; not Rust supervisor/host or phone acceptance"
+}

@@ -1,0 +1,281 @@
+{
+  "recorded_at_utc": "2026-11-01T03:25:58.703366+00:00",
+  "status": "Fail-closed host skeleton, not a complete transport or parity proof. No phone/model/auth/network/build actions. Only this new directory written.",
+  "implementation": {
+    "controller_lines": 215,
+    "original_runtime_reuse": [
+      "TahWorkflowCoordinatorV1",
+      "DurableTahPersistence (original state replay and publication validation)",
+      "createStructuredNotesActionDefinitionV1 and original attempt builders invoked by coordinator",
+      "projectNativePromptChannelsV1",
+      "parseFrozenAttempt and original canonical path ordering",
+      "NormalizedEventLedgerV1",
+      "catalogSchema and authorizationCheckSucceeded"
+    ],
+    "not_reimplemented": [
+      "publisher",
+      "Guardian acceptance",
+      "structural critic",
+      "revision seeding",
+      "instruction ledger renderer",
+      "repair semantics"
+    ],
+    "default_phone_port": "throws; no simulated result",
+    "default_journal": "throws; no synthetic commit receipt"
+  },
+  "entrypoint_finding": {
+    "qualification_app_runtime_entry": "Model-free SuperBox/persistence fixture that calls serveAppRuntime and uses fixture provider/model and different outputs. Read as a reference only; importing/running it is unsuitable for six real phone attempts.",
+    "serviceAttemptPort": "Original App adapter borrows desktop credentials using AuthService.withCredential and exports a credential envelope into SuperBox. Not reused; no desktop credential access is needed or allowed.",
+    "injection_point": "TahFrameworkAttemptPortV1.run(BuiltAttemptV1, onEvent?, signal?) -> Promise<TahAttemptResultV1>; replace transport here while leaving the original coordinator and durable publisher intact.",
+    "persistence_point": "Required original JournalPort.read/append with actual atomic durable storage/version semantics, supplied by main. Original DurableTahPersistence replays its validators; this skeleton supplies no storage implementation."
+  },
+  "draft_wire_alignment": {
+    "not_frozen": true,
+    "outbound_fields": [
+      "attemptJSON: JSON.stringify(original validated FrozenAttemptV1), UTF-8 exact bytes",
+      "attemptSHA256: lowercase SHA256 of those exact UTF-8 bytes",
+      "inputFiles: canonical relativePath/base64 pairs for every material and file seed, no extras"
+    ],
+    "validation": "Original parseFrozenAttempt validates contract/paths/role. Each input must match original byteLength/sha256; directory seeds stay in attemptJSON only. Phone must repeat all checks before installing immutable views.",
+    "inbound_file": "Documents/inbound-attempt.json outside model-visible workspace; not written by this skeleton.",
+    "app_invocation": "Main-owned --run-tah-attempt, one real attempt per fresh App process. No devicectl/pymobiledevice3 implementation or launch here.",
+    "do_not_send_to_model": [
+      "PhoneRequest host binding and run context",
+      "credentials/account ID/email",
+      "host journal or receipt evidence"
+    ]
+  },
+  "phone_admission_fields_required": {
+    "identity": "Real accountFingerprint = SHA256(actual same-App OAuth accountID), observed before releasing each model turn and bound to the final receipt; never raw accountID/email/token. Compare against initial expected fingerprint. Token refresh is not by itself an account change. A fingerprint is identifying metadata, not a credential or cryptographic proof of phone origin.",
+    "catalog": "Actual model IDs/effort handles and selection receipts; map to original catalogSchema without invented/default placeholders. Preserve exact requested/accepted model and effort, null native-default semantics, no fallback and no fake CodeModeOnly metadata.",
+    "authorization": "A real current completed successful inspection, not synthesized state=valid. Original authorizationCheckSucceeded requires valid/idle, not inspecting, no replacement, succeeded inspection, finishedAt and zero failures. Original inspectionFailures additionally requires nonempty catalog and usable account usage. Fingerprint+catalog alone does not establish that App admission receipt.",
+    "profile": "Trusted host profileDigest over the frozen qualification policy/config plus source/asset identity; not an arbitrary constant supplied as proof. Scope/attempt/material/seed digests must bind to actual installed views.",
+    "attempt": "Host run/challenge identity, fresh attemptID, exact attemptSHA256, actual threadID/turnID, final selected model/effort and authoritative completed status. Reject stale/replayed/cross-attempt outputs.",
+    "process": "Host records launch PID plus unique process/launch identity (PID alone can be reused), and independently observes that exact process has exited. Phone JSON exited=true is insufficient; no next attempt starts while cleanup is uncertain.",
+    "events": "Real normalized lifecycle events reconciled with canonical Rust messages and actual authoritative turn completion. Original NormalizedEventLedgerV1 checks sequence, lifecycle and final-text equality. It does not authenticate a fabricated event stream.",
+    "files": "Exact snapshot manifest and bytes with lengths/digests, regular-file/no-link scope validation, no extra paths, immutable inputs/history verification, and confirmed final snapshot after execution stopped. Guardian candidate set must be empty. Host quarantine precedes framework admission.",
+    "result": "Only trusted external admitReaped may return TahAttemptResultV1 {terminal,candidateManifest,candidateFiles}. Do not invent accepted/publication receipts in phone JSON. Original framework decides Guardian/critic acceptance and original persistence creates real commit receipts."
+  },
+  "bounded_sequence": {
+    "nominal": [
+      "RawGuardian",
+      "Actor V0",
+      "ExtraGuardian1",
+      "Actor V1",
+      "ExtraGuardian2",
+      "Actor V2"
+    ],
+    "six_attempt_cap": "An unexpected role (including structural repair) is refused in this fixed six-attempt lane; original framework handles the stopped attempt and never publishes a rejected candidate. This is explicitly narrower than the fixture pack's optional nine-attempt repair lane.",
+    "per_attempt": "External runFresh must enforce immutable per-role views and OS teardown. Before each submission inspect expected account/catalog/profile; recheck inside fresh process and receipt admission.",
+    "failure": "Any run/admission exception locks further work. No auto-relaunch or infrastructure retry. Aborting/timing out does not itself prove OS exit.",
+    "host_lifetime": "One live host invocation across fresh phone processes; host crash resume and App raw-safety cache are unimplemented. Existing journal can persist original transitions but this entry does not invent a resume algorithm."
+  },
+  "blocking_fields_or_ports": [
+    "Trusted phone inspect/runFresh/admitReaped implementations are absent and throw by default.",
+    "Current proposed accountFingerprint+catalog payload still lacks original App successful-inspection/usable-usage evidence. Do not fabricate an AuthSnapshot; either supply actual evidence or explicitly design/document a narrower qualification admission contract separately.",
+    "Durable JournalPort with atomic append/version/recovery is required; no placeholder success is allowed.",
+    "Exact process-identity/PID-gone evidence and digest-bound immutable scope/candidate receipts must be specified in the final main-owned wire.",
+    "Actual Guardian gpt-5.6-luna/low and selected Actor availability must pass; code does not substitute the phone default."
+  ],
+  "validation": {
+    "tests": 5,
+    "passed": 5,
+    "duration_ms": 286,
+    "command": "node /Users/dashidhy/Public/projects/agent/ALMA/app/TAH/node_modules/vitest/vitest.mjs run --config /Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/tah_phone_controller/vitest.config.ts",
+    "actual_scope": "Original source functions loaded by existing local Vitest. Synthetic fixture projection, exact bytes/hash/map, V0 empty-seed/ledger, missing V1 seed rejection, closed Guardian parser rejection, dummy identity/catalog checks, and unwired-port failure. No fake successful workflow or phone receipt tested.",
+    "typescript_compiler_check": false,
+    "build": false,
+    "phone_or_model_execution": false
+  },
+  "source_evidence": [
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/qualification/app-runtime-entry.ts",
+      "sha256": "df8db30a409696e85f01b28d9c98f4ddec2f2ae101905d519f7ed7bc23401ab9",
+      "line_ranges": [
+        [
+          1,
+          15
+        ],
+        [
+          49,
+          77
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/attempt-port.ts",
+      "sha256": "95f7c5a164bee6cd06a6a8b973b7e69f737d7a2c1a63a76242dacd430344dc18",
+      "line_ranges": [
+        [
+          22,
+          56
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/workflow.ts",
+      "sha256": "120fdc4a4aa891bade9bd819c9aeba2a364a9727f4daa860d7c3c485863bf7b3",
+      "line_ranges": [
+        [
+          49,
+          57
+        ],
+        [
+          350,
+          412
+        ],
+        [
+          413,
+          430
+        ],
+        [
+          603,
+          675
+        ],
+        [
+          797,
+          844
+        ],
+        [
+          1097,
+          1130
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/durable-persistence.ts",
+      "sha256": "db56e8ba8542e01ef7db7bda358d1c6db5b80193b81d79d6294010cfdd070933",
+      "line_ranges": [
+        [
+          22,
+          55
+        ],
+        [
+          102,
+          145
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/journal.ts",
+      "sha256": "3eaaa185647338fb13956faae157f4424762dc9c39ae046079dbabc0d09af3f0",
+      "line_ranges": [
+        [
+          24,
+          43
+        ],
+        [
+          49,
+          105
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/auth-prototype/inspection.ts",
+      "sha256": "8d996bb7702683f4b44ebf0f4c1753dda37acaa211dd6d8c73b1bfab3f21a91b",
+      "line_ranges": [
+        [
+          13,
+          32
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/auth-prototype/service.ts",
+      "sha256": "64cc31a3f326f5138f4a5a19b11c591c1394b1e587b78a19a0b3acde19a71aef",
+      "line_ranges": [
+        [
+          169,
+          198
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/auth-prototype/protocol.ts",
+      "sha256": "68a6080f24a1dac9645f7494a7253617a106fbf540c155f2295d3c432338f534",
+      "line_ranges": [
+        [
+          15,
+          37
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/framework/attempt-builders.ts",
+      "sha256": "ee925cfa85f2c94b5c9c407ed5fa729ccbee87d13aac233fd690f156b7035f18",
+      "line_ranges": [
+        [
+          83,
+          155
+        ],
+        [
+          168,
+          245
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/contract/events.ts",
+      "sha256": "700e0f947cca692208b7fbec54b7b028228f15b1d56fdfc3fb7a23f8054a29c8",
+      "line_ranges": [
+        [
+          104,
+          133
+        ],
+        [
+          192,
+          236
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/raw-safety.ts",
+      "sha256": "7c5439a0a981b32554e442cf34b164f2e889b06b0211dbcb0c36af30803a3d45",
+      "line_ranges": [
+        [
+          15,
+          20
+        ],
+        [
+          41,
+          56
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/app-runtime/actions.ts",
+      "sha256": "6a9f33faaa55f40dbe25472229e927ba8a42e95751b6471dbb5d5cac63fcfa20",
+      "line_ranges": [
+        [
+          510,
+          539
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/src/guest/adapter-kit/prompt-envelope.ts",
+      "sha256": "6eec53245df8ac59f3fad5c41b4905b0be640851c4ed475fd99eced3cd6729b6",
+      "line_ranges": [
+        [
+          20,
+          41
+        ]
+      ]
+    },
+    {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA/app/TAH/tests/framework/workflow.test.ts",
+      "sha256": "a3a706d73118f8a7533c0e2653f35ec0305bc9bdfbb40bd9b5db51f85ba2954f",
+      "line_ranges": [
+        [
+          244,
+          263
+        ],
+        [
+          332,
+          351
+        ]
+      ]
+    }
+  ],
+  "handoff": "Implement the two trusted ports, freeze wire after resolving blocking fields, then explicitly invoke runQualification(actorInference, phonePort, journalPort, signal). Read README.md. No automatic phone work on import."
+}

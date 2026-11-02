@@ -163,7 +163,10 @@ fn user_input_into_upstream(value: AppUserInput) -> Result<upstream::UserInput, 
                 .map(text_element_into_upstream)
                 .collect::<Result<Vec<_>, _>>()?,
         },
-        AppUserInput::Image { url } => upstream::UserInput::Image { url, detail: None },
+        AppUserInput::Image { url } => upstream::UserInput::Image {
+            image: upstream::ImageReference::Inline { url },
+            detail: None,
+        },
         AppUserInput::LocalImage { path } => upstream::UserInput::LocalImage {
             path: path_buf_from_mobile(path),
             detail: None,
@@ -197,7 +200,9 @@ fn review_delivery_into_upstream(
     match value.as_deref() {
         None => Ok(None),
         Some("inline") => Ok(Some(upstream::ReviewDelivery::Inline)),
-        Some("detached") => Ok(Some(upstream::ReviewDelivery::Detached)),
+        Some("detached") => Err(RpcClientError::Serialization(
+            "detached review is unsupported by this server protocol; start a separate thread and request an inline review".to_string(),
+        )),
         Some(other) => Err(RpcClientError::Serialization(format!(
             "invalid review delivery: {other}"
         ))),
@@ -554,6 +559,8 @@ pub struct AppThreadGoalSetRequest {
 impl From<AppThreadGoalSetRequest> for upstream::ThreadGoalSetParams {
     fn from(value: AppThreadGoalSetRequest) -> Self {
         Self {
+            // This mobile request is an explicit user action, not automatic goal work.
+            origin: Some(upstream::ThreadGoalMutationOrigin::User),
             thread_id: value.thread_id,
             objective: value.objective,
             status: value.status.map(Into::into),
@@ -576,6 +583,8 @@ pub struct AppThreadGoalClearRequest {
 impl From<AppThreadGoalClearRequest> for upstream::ThreadGoalClearParams {
     fn from(value: AppThreadGoalClearRequest) -> Self {
         Self {
+            // This mobile request is an explicit user action, not automatic goal work.
+            origin: Some(upstream::ThreadGoalMutationOrigin::User),
             thread_id: value.thread_id,
         }
     }
@@ -612,6 +621,8 @@ pub struct AppListThreadsRequest {
 impl From<AppListThreadsRequest> for upstream::ThreadListParams {
     fn from(value: AppListThreadsRequest) -> Self {
         Self {
+            attached_to_thread_id: None,
+            excluded_thread_ids: None,
             cursor: value.cursor,
             limit: value.limit,
             sort_key: value.sort_key.map(Into::into),
@@ -800,7 +811,24 @@ impl TryFrom<AppStartRealtimeSessionRequest> for upstream::ThreadRealtimeStartPa
     type Error = RpcClientError;
 
     fn try_from(value: AppStartRealtimeSessionRequest) -> Result<Self, Self::Error> {
+        if value.client_controlled_handoff {
+            return Err(RpcClientError::Serialization(
+                "client-controlled realtime handoff is unsupported by this server protocol"
+                    .to_string(),
+            ));
+        }
+        if value
+            .dynamic_tools
+            .as_ref()
+            .is_some_and(|tools| !tools.is_empty())
+        {
+            return Err(RpcClientError::Serialization(
+                "custom realtime dynamic tools are unsupported by this server protocol".to_string(),
+            ));
+        }
         Ok(Self {
+            backend_reasoning_status: false,
+            voice_session_id: None,
             thread_id: value.thread_id,
             prompt: Some(Some(value.prompt)),
             realtime_session_id: value.session_id,
@@ -810,7 +838,6 @@ impl TryFrom<AppStartRealtimeSessionRequest> for upstream::ThreadRealtimeStartPa
                 .into(),
             transport: value.transport.map(Into::into),
             voice: value.voice.map(Into::into),
-            client_controlled_handoff: value.client_controlled_handoff,
             client_managed_handoffs: None,
             delegation_ack_filler: None,
             flush_transcript_tail_on_session_end: None,
@@ -824,15 +851,6 @@ impl TryFrom<AppStartRealtimeSessionRequest> for upstream::ThreadRealtimeStartPa
             realtime_start_instructions: None,
             realtime_end_instructions: None,
             version: None,
-            dynamic_tools: value
-                .dynamic_tools
-                .map(|tools| {
-                    tools
-                        .into_iter()
-                        .map(dynamic_tool_spec_into_upstream)
-                        .collect::<Result<Vec<_>, _>>()
-                })
-                .transpose()?,
         })
     }
 }
@@ -858,27 +876,10 @@ pub struct AppResolveRealtimeHandoffRequest {
     pub tool_call_output: String,
 }
 
-impl From<AppResolveRealtimeHandoffRequest> for upstream::ThreadRealtimeResolveHandoffParams {
-    fn from(value: AppResolveRealtimeHandoffRequest) -> Self {
-        Self {
-            thread_id: value.thread_id,
-            tool_call_output: value.tool_call_output,
-        }
-    }
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, uniffi::Record)]
 #[serde(rename_all = "camelCase")]
 pub struct AppFinalizeRealtimeHandoffRequest {
     pub thread_id: String,
-}
-
-impl From<AppFinalizeRealtimeHandoffRequest> for upstream::ThreadRealtimeFinalizeHandoffParams {
-    fn from(value: AppFinalizeRealtimeHandoffRequest) -> Self {
-        Self {
-            thread_id: value.thread_id,
-        }
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -1232,5 +1233,169 @@ mod tests {
                 r"C:\Users\npace".to_string()
             ))
         );
+    }
+}
+
+#[cfg(test)]
+mod image_reference_tests {
+    use super::*;
+
+    #[test]
+    fn outgoing_mobile_image_uses_inline_reference_and_unchanged_wire_url() {
+        for url in [
+            "https://example.com/image.png",
+            "data:image/png;base64,aW1hZ2U=",
+        ] {
+            let input = user_input_into_upstream(AppUserInput::Image { url: url.into() }).unwrap();
+            assert!(matches!(&input, upstream::UserInput::Image {
+                image: upstream::ImageReference::Inline { url: actual }, detail: None
+            } if actual == url));
+            let wire = serde_json::to_value(&input).unwrap();
+            assert_eq!(wire["type"], "image");
+            assert_eq!(wire["url"], url);
+            assert!(wire.get("fileId").is_none());
+            assert_eq!(
+                serde_json::from_value::<upstream::UserInput>(wire).unwrap(),
+                input
+            );
+        }
+    }
+
+    #[test]
+    fn outgoing_non_image_inputs_keep_text_spans_and_paths() {
+        let text = user_input_into_upstream(AppUserInput::Text {
+            text: "hello".into(),
+            text_elements: vec![super::super::AppTextElement {
+                byte_range: super::super::AppByteRange { start: 0, end: 5 },
+            }],
+        })
+        .unwrap();
+        let wire = serde_json::to_value(text).unwrap();
+        assert_eq!(wire["text"], "hello");
+        assert_eq!(
+            wire["text_elements"][0]["byteRange"],
+            serde_json::json!({"start": 0, "end": 5})
+        );
+        let local = user_input_into_upstream(AppUserInput::LocalImage {
+            path: AbsolutePath {
+                value: "/tmp/image.png".into(),
+            },
+        })
+        .unwrap();
+        assert!(
+            matches!(local, upstream::UserInput::LocalImage { path, detail: None }
+            if path == PathBuf::from("/tmp/image.png"))
+        );
+        let skill = user_input_into_upstream(AppUserInput::Skill {
+            name: "repo".into(),
+            path: AbsolutePath {
+                value: "/tmp/SKILL.md".into(),
+            },
+        })
+        .unwrap();
+        assert!(matches!(skill, upstream::UserInput::Skill { name, path }
+            if name == "repo" && path == PathBuf::from("/tmp/SKILL.md")));
+        let mention = user_input_into_upstream(AppUserInput::Mention {
+            name: "file".into(),
+            path: "repo/src/main.rs".into(),
+        })
+        .unwrap();
+        assert!(
+            matches!(mention, upstream::UserInput::Mention { name, path }
+            if name == "file" && path == "repo/src/main.rs")
+        );
+    }
+}
+
+#[cfg(test)]
+mod protocol_alignment_tests {
+    use super::*;
+
+    fn basic_realtime_request() -> AppStartRealtimeSessionRequest {
+        AppStartRealtimeSessionRequest {
+            thread_id: "thread".into(),
+            prompt: "prompt".into(),
+            session_id: Some("session".into()),
+            output_modality: None,
+            transport: None,
+            voice: None,
+            client_controlled_handoff: false,
+            dynamic_tools: None,
+        }
+    }
+
+    #[test]
+    fn realtime_rejects_removed_options_before_request_construction() {
+        let mut handoff = basic_realtime_request();
+        handoff.client_controlled_handoff = true;
+        assert!(
+            upstream::ThreadRealtimeStartParams::try_from(handoff)
+                .unwrap_err()
+                .to_string()
+                .contains("handoff is unsupported")
+        );
+        let mut tools = basic_realtime_request();
+        tools.dynamic_tools = Some(vec![AppDynamicToolSpec {
+            name: "custom".into(),
+            description: "custom".into(),
+            input_schema_json: "{}".into(),
+            defer_loading: false,
+        }]);
+        assert!(
+            upstream::ThreadRealtimeStartParams::try_from(tools)
+                .unwrap_err()
+                .to_string()
+                .contains("tools are unsupported")
+        );
+    }
+
+    #[test]
+    fn ordinary_realtime_keeps_supported_settings() {
+        let mut request = basic_realtime_request();
+        request.voice = Some(crate::types::models::AppRealtimeVoice::Aube);
+        request.dynamic_tools = Some(Vec::new());
+        let params = upstream::ThreadRealtimeStartParams::try_from(request).unwrap();
+        assert_eq!(params.thread_id, "thread");
+        assert_eq!(params.prompt, Some(Some("prompt".into())));
+        assert_eq!(params.realtime_session_id.as_deref(), Some("session"));
+        assert_eq!(
+            params.voice,
+            Some(codex_protocol::protocol::RealtimeVoice::Aube)
+        );
+        assert_eq!(params.client_managed_handoffs, None);
+        assert_eq!(params.voice_session_id, None);
+        assert!(!params.backend_reasoning_status);
+    }
+
+    #[test]
+    fn removed_detached_review_is_not_changed_to_inline() {
+        assert_eq!(
+            review_delivery_into_upstream(Some("inline".into())).unwrap(),
+            Some(upstream::ReviewDelivery::Inline)
+        );
+        assert!(
+            review_delivery_into_upstream(Some("detached".into()))
+                .unwrap_err()
+                .to_string()
+                .contains("detached review is unsupported")
+        );
+    }
+
+    #[test]
+    fn explicit_mobile_goal_changes_have_user_origin() {
+        let set: upstream::ThreadGoalSetParams = AppThreadGoalSetRequest {
+            thread_id: "thread".into(),
+            objective: Some("goal".into()),
+            status: None,
+            token_budget: Some(100),
+        }
+        .into();
+        assert_eq!(set.origin, Some(upstream::ThreadGoalMutationOrigin::User));
+        assert_eq!(set.token_budget, Some(Some(100)));
+        let clear: upstream::ThreadGoalClearParams = AppThreadGoalClearRequest {
+            thread_id: "thread".into(),
+        }
+        .into();
+        assert_eq!(clear.origin, Some(upstream::ThreadGoalMutationOrigin::User));
     }
 }

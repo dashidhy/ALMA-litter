@@ -1,0 +1,259 @@
+{
+  "litter": "366aefdd616f16b9efb6c888be6cfd916bda47d6",
+  "codex": "be2951ea34f0d295ed0becf97079f92fa5f6950e",
+  "codexArchiveSHA256": "cd5a884836b53422052989479c6662f06e2ee8bb768c1a86a5ff7326b887d4d6",
+  "scope": "host source-extracted probes; no iOS app or account invocation",
+  "patches": [
+    {
+      "name": "mobile-crypto-compat.patch",
+      "sha256": "28611fb28ea68f1b4a41f49ba91a94291cb04a176b38e0eaa00c4d70a3cdd206",
+      "clean": true,
+      "files": [
+        "codex-rs/Cargo.toml"
+      ]
+    },
+    {
+      "name": "ios-exec-hook.patch",
+      "sha256": "5764f39805836878d0ed52c6d84b93b94ba6862792e583d1e483790f097b3048",
+      "clean": true,
+      "files": [
+        "codex-rs/core/src/exec.rs",
+        "codex-rs/core/src/unified_exec/async_watcher.rs",
+        "codex-rs/core/src/unified_exec/process_manager.rs"
+      ]
+    },
+    {
+      "name": "thread-read-permissions.patch",
+      "sha256": "d08fcaed776b4b31ec64399c227d5e889585b19e06130b78181d69432a939428",
+      "clean": true,
+      "files": [
+        "codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+        "codex-rs/app-server/src/request_processors/thread_processor.rs"
+      ]
+    },
+    {
+      "name": "thread-list-fork-lineage.patch",
+      "sha256": "42d99e5305e82071b1c7bca055953a955efb37eadb07dc7d7116d71714015867",
+      "clean": true,
+      "files": [
+        "codex-rs/rollout/src/list.rs",
+        "codex-rs/rollout/src/recorder.rs",
+        "codex-rs/rollout/src/recorder_tests.rs",
+        "codex-rs/rollout/src/tests.rs",
+        "codex-rs/thread-store/src/local/helpers.rs",
+        "codex-rs/thread-store/src/local/list_threads.rs"
+      ]
+    },
+    {
+      "name": "mobile-shell-snapshot-timeout.patch",
+      "sha256": "130c34f4a7daddff33d1014ec7fb5349fcd335114a0007039f3ba5304208a64e",
+      "clean": true,
+      "files": [
+        "codex-rs/core/src/shell_snapshot.rs"
+      ]
+    },
+    {
+      "name": "remote-app-server-websocket-cap.patch",
+      "sha256": "7be587bdff2bfeadc1b0e76f598dd9ca2dbc5999730de35e09b30860566687e6",
+      "clean": true,
+      "files": [
+        "codex-rs/app-server-client/src/lib.rs",
+        "codex-rs/app-server-client/src/remote.rs"
+      ]
+    },
+    {
+      "name": "absolute-path-cross-platform.patch",
+      "sha256": "1e1636366585a8cf9d13e3e1b4f3c3582876c28602e396f2c2e3d3fe666034eb",
+      "clean": true,
+      "files": [
+        "codex-rs/utils/absolute-path/src/lib.rs"
+      ]
+    },
+    {
+      "name": "android-installation-id-lock.patch",
+      "sha256": "4673d630c9fdfffef9524c2b422951610080aa2e2954b43a2da273cc6c43099d",
+      "clean": true,
+      "files": [
+        "codex-rs/core/src/installation_id.rs"
+      ]
+    },
+    {
+      "name": "dynamic-tool-call-arguments-delta.patch",
+      "sha256": "107211d9ace0b5586e9a1d104f38b9c26a2836ac4a73002289bed592d3244b53",
+      "clean": true,
+      "files": [
+        "codex-rs/app-server-protocol/src/protocol/common.rs",
+        "codex-rs/app-server-protocol/src/protocol/event_mapping.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/item.rs",
+        "codex-rs/app-server/src/bespoke_event_handling.rs",
+        "codex-rs/codex-api/src/sse/responses.rs",
+        "codex-rs/protocol/src/protocol.rs",
+        "codex-rs/rollout-trace/src/protocol_event.rs",
+        "codex-rs/rollout/src/policy.rs",
+        "codex-rs/tui/src/app/app_server_event_targets.rs",
+        "codex-rs/core/src/session/turn.rs",
+        "codex-rs/tui/src/chatwidget/protocol.rs",
+        "codex-rs/app-server/src/notification_media.rs"
+      ]
+    },
+    {
+      "name": "approval-timestamps-serde-default.patch",
+      "sha256": "9ce41abd30cb9faf1688b4df3863df64745b29fe191995211385b6bcdafd60f1",
+      "clean": true,
+      "files": [
+        "codex-rs/app-server-protocol/src/protocol/v2/item.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs"
+      ]
+    },
+    {
+      "name": "realtime-webrtc-env-apikey.patch",
+      "sha256": "934526d2cd3ac4426b0c954dc5a3916edcd26444485e6434d3ccedc344fbae3e",
+      "clean": true,
+      "files": [
+        "codex-rs/core/src/client.rs",
+        "codex-rs/core/src/realtime_conversation.rs",
+        "codex-rs/core/src/realtime_conversation_tests.rs"
+      ]
+    },
+    {
+      "name": "realtime-handoff-server-hint.patch",
+      "sha256": "fe8ce61f083ecbfeeb2ae4dab87a8487eab2a2d50d2b6e856830692ffc20e683",
+      "clean": true,
+      "files": [
+        "codex-rs/app-server/src/bespoke_event_handling.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_v1.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_v2.rs",
+        "codex-rs/protocol/src/protocol.rs",
+        "codex-rs/core/src/realtime_conversation_tests.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_frameless_bidi_tests.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_frameless_bidi.rs"
+      ]
+    },
+    {
+      "name": "realtime-dynamic-tools.patch",
+      "sha256": "1350b5b7015679afcc71d27f74b8d4d213a2d045108c8d1c0bf2dee90e0aad1e",
+      "clean": true,
+      "files": [
+        "codex-rs/protocol/src/protocol.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/methods_common.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/methods_v2.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/methods.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_v2.rs",
+        "codex-rs/core/src/realtime_conversation.rs",
+        "codex-rs/core/src/session/handlers.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/realtime.rs",
+        "codex-rs/app-server/src/request_processors/turn_processor.rs",
+        "codex-rs/app-server/src/bespoke_event_handling.rs",
+        "codex-rs/codex-api/tests/realtime_websocket_e2e.rs",
+        "codex-rs/codex-api/src/endpoint/realtime_call.rs"
+      ]
+    },
+    {
+      "name": "realtime-client-controlled-handoff.patch",
+      "sha256": "03e7722098b565bb625ac597f990ed00c4800797b93e3a487a9999d5106b6f1d",
+      "clean": true,
+      "files": [
+        "codex-rs/protocol/src/protocol.rs",
+        "codex-rs/app-server-protocol/src/protocol/v2/realtime.rs",
+        "codex-rs/app-server-protocol/src/protocol/common.rs",
+        "codex-rs/app-server/src/message_processor.rs",
+        "codex-rs/app-server/src/request_processors.rs",
+        "codex-rs/app-server/src/request_processors/turn_processor.rs",
+        "codex-rs/core/src/realtime_conversation.rs",
+        "codex-rs/core/src/session/handlers.rs",
+        "codex-rs/app-server/tests/suite/v2/experimental_api.rs",
+        "codex-rs/app-server/tests/suite/v2/realtime_conversation.rs",
+        "codex-rs/tui/src/app_server_session/realtime.rs",
+        "codex-rs/core/tests/suite/compact_remote.rs",
+        "codex-rs/core/tests/suite/realtime_sideband_endpoint.rs",
+        "codex-rs/core/tests/suite/realtime_misalignment.rs",
+        "codex-rs/core/tests/suite/realtime_conversation.rs",
+        "codex-rs/core/tests/suite/turn_input_submission.rs",
+        "codex-rs/core/tests/suite/realtime_initial_items.rs"
+      ]
+    }
+  ],
+  "allPatchesApplyStrictly": true,
+  "changedFiles": [
+    "codex-rs/Cargo.toml",
+    "codex-rs/app-server-client/src/lib.rs",
+    "codex-rs/app-server-client/src/remote.rs",
+    "codex-rs/app-server-protocol/src/protocol/common.rs",
+    "codex-rs/app-server-protocol/src/protocol/event_mapping.rs",
+    "codex-rs/app-server-protocol/src/protocol/v2/item.rs",
+    "codex-rs/app-server-protocol/src/protocol/v2/permissions.rs",
+    "codex-rs/app-server-protocol/src/protocol/v2/realtime.rs",
+    "codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+    "codex-rs/app-server/src/bespoke_event_handling.rs",
+    "codex-rs/app-server/src/message_processor.rs",
+    "codex-rs/app-server/src/notification_media.rs",
+    "codex-rs/app-server/src/request_processors.rs",
+    "codex-rs/app-server/src/request_processors/thread_processor.rs",
+    "codex-rs/app-server/src/request_processors/turn_processor.rs",
+    "codex-rs/app-server/tests/suite/v2/experimental_api.rs",
+    "codex-rs/app-server/tests/suite/v2/realtime_conversation.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_call.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/methods.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/methods_common.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/methods_v2.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_frameless_bidi.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_frameless_bidi_tests.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_v1.rs",
+    "codex-rs/codex-api/src/endpoint/realtime_websocket/protocol_v2.rs",
+    "codex-rs/codex-api/src/sse/responses.rs",
+    "codex-rs/codex-api/tests/realtime_websocket_e2e.rs",
+    "codex-rs/core/src/client.rs",
+    "codex-rs/core/src/exec.rs",
+    "codex-rs/core/src/installation_id.rs",
+    "codex-rs/core/src/realtime_conversation.rs",
+    "codex-rs/core/src/realtime_conversation_tests.rs",
+    "codex-rs/core/src/session/handlers.rs",
+    "codex-rs/core/src/session/turn.rs",
+    "codex-rs/core/src/shell_snapshot.rs",
+    "codex-rs/core/src/unified_exec/async_watcher.rs",
+    "codex-rs/core/src/unified_exec/process_manager.rs",
+    "codex-rs/core/tests/suite/compact_remote.rs",
+    "codex-rs/core/tests/suite/realtime_conversation.rs",
+    "codex-rs/core/tests/suite/realtime_initial_items.rs",
+    "codex-rs/core/tests/suite/realtime_misalignment.rs",
+    "codex-rs/core/tests/suite/realtime_sideband_endpoint.rs",
+    "codex-rs/core/tests/suite/turn_input_submission.rs",
+    "codex-rs/protocol/src/protocol.rs",
+    "codex-rs/rollout-trace/src/protocol_event.rs",
+    "codex-rs/rollout/src/list.rs",
+    "codex-rs/rollout/src/policy.rs",
+    "codex-rs/rollout/src/recorder.rs",
+    "codex-rs/rollout/src/recorder_tests.rs",
+    "codex-rs/rollout/src/tests.rs",
+    "codex-rs/thread-store/src/local/helpers.rs",
+    "codex-rs/thread-store/src/local/list_threads.rs",
+    "codex-rs/tui/src/app/app_server_event_targets.rs",
+    "codex-rs/tui/src/app_server_session/realtime.rs",
+    "codex-rs/tui/src/chatwidget/protocol.rs",
+    "codex-rs/utils/absolute-path/src/lib.rs"
+  ],
+  "baselineFilesVerified": true,
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "swiftc": "Apple Swift version 6.4.2 (swiftlang-6.4.2.1.9 clang-2100.4.1.1)\nTarget: arm64-apple-macosx27.0.0",
+  "utf8Preview": {
+    "sourceSHA256": "7ebb840044f7c9a0c7a32fb7e81c2f25ed714614ac28e985ea023038fbd01fcb",
+    "duplicateSites": 2,
+    "outcomes": {
+      "ascii": "ok",
+      "han": "panic",
+      "mixed_emoji": "panic"
+    },
+    "limitation": "Exec-hook postprocessing snippet; no guest process executed"
+  },
+  "refreshAccountGuard": {
+    "sourceSHA256": "084f1596d9bdca780f7a86309c91766ab14ce083a297e7300d8475ca64ba4b3d",
+    "outcomes": {
+      "same_account": "accepted",
+      "changed_after_matching_stored": "accepted",
+      "changed_after_nonmatching_stored": "rejected"
+    },
+    "limitation": "Pure guard logic with dummy account IDs; no OAuth or credentials used"
+  }
+}

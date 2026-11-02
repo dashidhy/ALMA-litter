@@ -1,6 +1,19 @@
 use crate::MobileClient;
 
 #[cfg(any(all(target_os = "ios", not(target_abi = "macabi")), test))]
+const ALMA_LOCAL_RUNTIME_INSTRUCTIONS: &str = r#"You are running inside ALMA's local Codex runtime on iOS.
+
+The shell uses Bash in an embedded Alpine Linux environment. Bash, Python 3,
+Node.js, sed and the BusyBox utilities are already installed. Use guest paths:
+- `/workspace/input` contains read-only source materials.
+- `/workspace/output` contains writable candidate results and is the working directory.
+- `/workspace/tmp` is writable scratch space; the home is `/workspace/tmp/home`.
+Native file tools and shell commands refer to the same workspace files.
+Tool libraries and source materials cannot be modified. Package installation and
+direct shell/Python/Node network access are unavailable. Use the official Web
+tool when the task grants Web access. Do not use iOS host filesystem paths."#;
+
+#[cfg(any(all(target_os = "ios", not(target_abi = "macabi")), test))]
 const IOS_LOCAL_RUNTIME_SENTINEL: &str =
     "You are running inside Litter's local Codex runtime on iOS.";
 
@@ -60,6 +73,9 @@ fn should_apply_local_runtime_instructions(_client: &MobileClient, _server_id: &
 
 #[cfg(any(all(target_os = "ios", not(target_abi = "macabi")), test))]
 fn platform_local_runtime_instructions() -> Option<(&'static str, &'static str)> {
+    if crate::network_scope::alma_local() {
+        return Some(("You are running inside ALMA's local Codex runtime on iOS.", ALMA_LOCAL_RUNTIME_INSTRUCTIONS));
+    }
     Some((
         IOS_LOCAL_RUNTIME_SENTINEL,
         IOS_LOCAL_RUNTIME_DEVELOPER_INSTRUCTIONS,

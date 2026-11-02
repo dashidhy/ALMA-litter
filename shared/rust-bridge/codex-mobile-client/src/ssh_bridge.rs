@@ -330,6 +330,9 @@ pub async fn connect_runtime_resources_via_ssh(
     transport: SshBridgeTransport,
     prefer_ipv6: bool,
 ) -> Result<(Vec<RuntimeRemoteSessionResource>, Vec<AgentRuntimeInfo>), SshBridgeError> {
+    if !crate::network_scope::remote_cli_available() {
+        return Err(SshBridgeError::Transport(crate::network_scope::REMOTE_CLI_UNSUPPORTED.into()));
+    }
     let state_root = state_root.as_ref().to_path_buf();
     info!(
         "ssh bridge runtime connect start state_root={} runtimes={:?} transport={transport:?} prefer_ipv6={prefer_ipv6}",

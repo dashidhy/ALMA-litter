@@ -1,0 +1,21 @@
+{
+  "sourceSHA256": "0cad30bf2b7fdffc34ccfb965f85cb9feee4b4c05981f549778758cb8a3df3f1",
+  "adaptedSHA256": "5e738e9c3d2e8ad95a04bcea7252fb5fe90010ba08025e9b02e0380088581cc8",
+  "seams": [
+    "import location",
+    "native opaque auth lifecycle (async)",
+    "in-process transport has no remote-control service/status notification; unexpected enablement still rejected",
+    "required injected App Server facade",
+    "iOS 0.166 initialize receipt verification",
+    "explicit iOS native profile resolver",
+    "in-process quiescence receipt instead of fabricated process exit"
+  ],
+  "unchanged": [
+    "request ordering",
+    "prompt projection",
+    "model/effort receipt checks",
+    "native event normalization",
+    "terminal resolution",
+    "cancellation order"
+  ]
+}

@@ -1,0 +1,63 @@
+--- a/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs
++++ b/shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs
+@@ -100,7 +100,60 @@
+     }
+ }
+ 
++impl FileSystemMutationPreflight for ScopedExecutorFileSystem {
++    fn preflight_mutations(
++        &self,
++        mutations: &[FileSystemMutation],
++        sandbox: Option<&FileSystemSandboxContext>,
++    ) -> io::Result<()> {
++        // First authorize every source and destination without descriptor I/O.
++        // Keep all existing per-operation checks; this is not a transaction.
++        let mut parent_checks = Vec::new();
++        for mutation in mutations {
++            let (path, create_parents) = match mutation {
++                FileSystemMutation::WriteFile { path, create_parents } => (path, *create_parents),
++                FileSystemMutation::RemoveFile { path } => (path, false),
++            };
++            let resolved = self.resolve(path, sandbox, true)?;
++            require_leaf(&resolved)?;
++            if create_parents {
++                parent_checks.push(resolved);
++            }
++        }
++        for resolved in parent_checks {
++            // Match the recursive retry's parent policy. If creation is denied,
++            // an already-existing, read-authorized directory still permits a
++            // normal file write. Do not reject that previously supported case.
++            let creation_allowed = (|| -> io::Result<()> {
++                let mut parent = resolved.mount.root.clone();
++                let components: Vec<_> = resolved.relative.split('/').collect();
++                for component in &components[..components.len() - 1] {
++                    parent = parent.join_descendant(component)
++                        .map_err(|_| invalid("invalid virtual parent"))?;
++                    authorize_policy(&parent, sandbox, true)?;
++                }
++                Ok(())
++            })();
++            if let Err(denied_creation) = creation_allowed {
++                let (parent, _) = resolved.relative.rsplit_once('/')
++                    .ok_or_else(|| invalid("invalid virtual parent"))?;
++                let parent_uri = resolved.mount.root.join_descendant(parent)
++                    .map_err(|_| invalid("invalid virtual parent"))?;
++                let parent = self.resolve(&parent_uri, sandbox, false)?;
++                if !metadata(&parent).is_ok_and(|value| value.is_dir()) {
++                    return Err(denied_creation);
++                }
++            }
++        }
++        Ok(())
++    }
++}
++
+ impl ExecutorFileSystem for ScopedExecutorFileSystem {
++    fn mutation_preflight(&self) -> Option<&dyn FileSystemMutationPreflight> {
++        Some(self)
++    }
++
+     fn watch_missing(&self, _: Vec<PathUri>, _: Option<PathUri>)
+         -> ExecutorFileSystemFuture<'_, Option<tokio::sync::oneshot::Receiver<()>>> {
+         Box::pin(async { Err(unsupported("filesystem watches are unsupported")) })
