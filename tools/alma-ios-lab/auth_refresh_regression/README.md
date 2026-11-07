@@ -1,4 +1,15 @@
-# M4 native ChatGPT refresh: implementation and handoff
+# Native account-refresh regression
+
+The maintained source is `ALMA-codex/ios/native/src/auth_refresh.rs` in the sibling
+fork. The retained runner now reads that source and the fork's pinned Codex
+release. Current TAH build and acceptance status is in the
+[mobile TAH guide](../../mobile-tah/README.md).
+
+## Historical 0.166 implementation record
+
+The observations, source paths and integration status below describe the earlier
+implementation stage. They are not a fresh qualification of the current package;
+consult the dated milestone record for checks actually rerun during cleanup.
 
 M1 is finalized separately in `../thread_item_regression/README.md`: the main's
 full local-profile Rust library check passed in 15.21s with 31 warnings. No

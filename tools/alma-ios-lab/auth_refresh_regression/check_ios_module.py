@@ -5,7 +5,7 @@ import sys,subprocess,os,json,hashlib
 HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[2]
 sys.path.insert(0,str(HERE.parent/'thread_item_regression'));from run import TOOLCHAIN, block
 out=HERE/'.build/ios';out.mkdir(parents=True,exist_ok=True)
-source=ROOT/'shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs'
+source=ROOT.parent/'ALMA-codex/ios/native/src/auth_refresh.rs'
 client=(ROOT/'shared/rust-bridge/codex-mobile-client/src/ffi/client.rs').read_text()
 methods='\n'.join(block(client,client.index('pub fn '+name+'(')) for name in ['set_chatgpt_auth_refresh_provider','clear_chatgpt_auth_refresh_provider'])
 (out/'lib.rs').write_text('uniffi::setup_scaffolding!();\nuse std::sync::Arc;\n#[path='+json.dumps(str(source))+'] pub mod auth_refresh;\n#[derive(uniffi::Object)] pub struct RegistrationProbe;\n#[uniffi::export] impl RegistrationProbe {\n'+methods+'\n}\n')

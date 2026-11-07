@@ -1,0 +1,1650 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUTC": "2026-11-07T14:13:23.614593+00:00",
+  "status": "both_return_recovery_trials_passed",
+  "appVersion": "0.4.2 (15)",
+  "providerVersion": "Codex 0.167.0",
+  "device": "iPhone 12 Pro / iOS27.2",
+  "configuration": {
+    "model": "gpt-6-astra",
+    "reasoningEffort": "xhigh",
+    "language": "zh-CN",
+    "webEnabled": true,
+    "input": "Full NVIDIA 254-turn transcript,121541 UTF8bytes",
+    "existingRawGuardianApprovalReused": true
+  },
+  "scope": "Two independent new V0 actions from normal UI. Same task completes after Home return or physical unlock/return. Not a continuous background-execution guarantee.",
+  "home": {
+    "passed": true,
+    "actionID": "9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+    "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+    "minimumObservedAwaySeconds": 324.547795,
+    "wallSeconds": 1242.816,
+    "toolCount": 42,
+    "toolFailures": 1,
+    "modelRetryActivities": 1,
+    "canonicalChecksPassed": 25,
+    "review": {
+      "schemaVersion": 1,
+      "reviewedAtUTC": "2026-11-07T13:47:47.840946+00:00",
+      "status": "home_return_recovery_verified",
+      "passed": true,
+      "functionalPassed": true,
+      "lifecycleRecoveryPassed": true,
+      "continuousBackgroundExecutionEstablished": false,
+      "physicalLockTrial": false,
+      "powerMeasured": false,
+      "appContext": {
+        "app": "0.4.2 (15)",
+        "codex": "0.167.0",
+        "source": "plan.json and main-provided installed-candidate context; journal audit does not independently verify signed binary hash"
+      },
+      "actionID": "9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+      "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+      "configuration": {
+        "providerID": "codex",
+        "inference": {
+          "modelID": "gpt-6-astra",
+          "reasoningEffortID": "xhigh"
+        },
+        "actionLanguage": "zh-CN",
+        "interactionLanguage": "zh-CN",
+        "webEnabled": true
+      },
+      "checks": {
+        "canonicalValidationPassed": true,
+        "canonicalFieldsMatchSavedValidation": true,
+        "savedAnalyzerIdentityMatches": true,
+        "latestObservationMatchesCanonical": true,
+        "HomeAndSharingStopRecorded": true,
+        "returnCommandSucceededWithoutTaskArguments": true,
+        "sameActionSeenAfterReturn": true,
+        "samePIDAndExecutableAcrossReceipts": true,
+        "noPasscodeLockObservedInHomeLane": true,
+        "beforeReturnStillSameRunningV0": true,
+        "firstAfterReturnSnapshotStillRunning": true,
+        "conservativeHomeObservationAtLeastFiveMinutes": true,
+        "completionAfterPostReturnEvidence": true,
+        "allFailureAndRetryRecordsAccountedFor": true,
+        "continuedToSuccessfulToolsAfterFailure": true,
+        "allSourcesUnchanged": true
+      },
+      "failedChecks": [],
+      "canonicalValidation": {
+        "schemaVersion": 1,
+        "analyzedAtUTC": "2026-11-07T13:47:47.547088+00:00",
+        "actionID": "9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+        "checks": {
+          "sqliteIntegrity": true,
+          "baselineEventsUnchanged": true,
+          "allEventHashesLengthsHeadersValid": true,
+          "baselineRunningV0": true,
+          "sameCycleWithoutResubmission": true,
+          "sameFrozenConfiguration": true,
+          "expectedConfiguration": true,
+          "noBaselinePublication": true,
+          "noExtraProposalsOrPublications": true,
+          "expectedNVIDIAInput": true,
+          "proposalMatchesFrozenAttempt": true,
+          "nonnegativeWallTime": true,
+          "workingLogHashLengthValid": true,
+          "workingLogNotLimited": true,
+          "toolLifecyclesSettled": true,
+          "terminalTimeRecordedAndOrdered": true,
+          "oneProposalOnePublication": true,
+          "twoExpectedFiles": true,
+          "fileHashesLengthsUTF8Valid": true,
+          "candidateDigestAndRoot": true,
+          "criticAndActorReceipt": true,
+          "publicationMatchesCompletedOperation": true,
+          "completeWorkingLogPresent": true,
+          "acceptedV0AndNoPendingWrites": true,
+          "originalEvidenceUnchanged": true
+        },
+        "functionalPassed": true,
+        "lifecycleRecoveryPassed": null,
+        "continuousBackgroundExecutionEstablished": false,
+        "powerMeasured": false,
+        "evidence": {
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3": {
+            "bytes": 10465280,
+            "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3-wal": {
+            "bytes": 4313672,
+            "sha256": "e3e1e07fa02fe60942db4abc9da9c393a2a00b6382b44f697c88aa53fab290b7"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3-shm": {
+            "bytes": 32768,
+            "sha256": "85b204ae83bd3a818ba4aebda8684bf895e28ef9679481d0c433f916789165b9"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3": {
+            "bytes": 10915840,
+            "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-wal": {
+            "bytes": 4313672,
+            "sha256": "d68911c5a20098ded67576d890f901b8e29967078b6e20a0cf5d41dd7c490a92"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-shm": {
+            "bytes": 32768,
+            "sha256": "79abf4807167bad4afcbc7477dcd8fb0e339cf1f970c6f1a126e05b65a5d45b7"
+          }
+        },
+        "scope": "Canonical single-V0 state/integrity only. Correlate with separately saved Home/lock/return observations. No device binary/version, continuous execution, power or exhaustive factual claim.",
+        "history": {
+          "baselineEvents": 566,
+          "currentEvents": 568,
+          "unchangedEvents": 566,
+          "changedOperationIDs": [],
+          "columnsCompared": [
+            "event_rowid",
+            "operation_id",
+            "stream_id",
+            "version",
+            "kind",
+            "header",
+            "payload",
+            "sha256"
+          ]
+        },
+        "phase": "completed",
+        "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+        "latestOperation": {
+          "event_rowid": 568,
+          "operation_id": "2ded8083-8680-417a-8bcd-128bc8987a52",
+          "stream_id": "operation/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+          "version": 2,
+          "kind": "document",
+          "sha256": "9cfca145dedecb9c2f609dae3102532c98db5f78b8af4a4908c0f919dd58dcb4"
+        },
+        "operationError": null,
+        "configuration": {
+          "providerID": "codex",
+          "inference": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "actionLanguage": "zh-CN",
+          "interactionLanguage": "zh-CN",
+          "webEnabled": true
+        },
+        "expectedConfiguration": {
+          "providerID": "codex",
+          "inference": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "actionLanguage": "zh-CN",
+          "interactionLanguage": "zh-CN",
+          "webEnabled": true
+        },
+        "journalObservation": {
+          "publicationCount": 1,
+          "proposalCount": 1,
+          "pendingRows": 0,
+          "note": "A persistent running row can remain unchanged during active work or suspension; it does not distinguish them."
+        },
+        "transcript": {
+          "transcriptID": "3a2275d7-32af-45e9-9fbc-3821c2d5ce22",
+          "byteLength": 121541,
+          "sha256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7"
+        },
+        "timing": {
+          "startedAt": "2026-11-07T13:20:56.194Z",
+          "endedAt": "2026-11-07T13:41:39.010Z",
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-07T13:20:56.194Z"
+            },
+            {
+              "id": "2",
+              "phase": "actor",
+              "at": "2026-11-07T13:20:56.289Z"
+            },
+            {
+              "id": "3",
+              "phase": "critic",
+              "at": "2026-11-07T13:41:38.906Z"
+            },
+            {
+              "id": "4",
+              "phase": "completed",
+              "at": "2026-11-07T13:41:39.010Z"
+            }
+          ],
+          "wallSeconds": 1242.816
+        },
+        "workingLog": {
+          "bytes": 18690,
+          "sha256": "5830f78ed14225e829a7bc6413bcdbad7a0b31b7f9d5a2298ee00bdd254a3762",
+          "limited": false,
+          "toolCount": 42,
+          "toolStatuses": {
+            "completed": 41,
+            "failed": 1
+          },
+          "toolFailures": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-37",
+              "title": "Tool activity",
+              "detail": "Command: /bin/bash -c 'rg --files outbox/revision_v0 command -v node command -v ruby command -v perl' — failed (exit 1)",
+              "kind": "tool",
+              "titleCode": "tool.native_surplus",
+              "status": "failed"
+            }
+          ],
+          "providerNotices": [],
+          "retryActivities": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "cd310f36-3917-4176-b585-0e868a1248b8:activity:retrying",
+              "title": "Retrying",
+              "titleCode": "activity.retrying",
+              "detail": "Codex is retrying the model request",
+              "kind": "activity",
+              "status": "completed"
+            }
+          ],
+          "webToolCount": 24,
+          "note": "Retained event counts only. Retry activities are counted separately from notices; Web labels do not establish independent Fetch counts."
+        },
+        "publication": {
+          "event": {
+            "event_rowid": 567,
+            "operation_id": "c5d46554-c445-471e-98f1-06c3a2bd43be",
+            "stream_id": "action/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+            "version": 2,
+            "kind": "publication",
+            "sha256": "646080772af857a67ab11b4989cd41382af0c71fc22eb4d2f220957d384f67e7"
+          },
+          "commitID": "publication/2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+          "candidateDigest": "1e51f2512850653a2bfe51e6ffdfc4ec2eb49d47c561de1d55b250c82e024eb0",
+          "files": [
+            {
+              "path": "structured-notes.md",
+              "bytes": 50400,
+              "sha256": "58d5b1310838c53524228bf9161707cdf0122a1c0ef1b469fab8ecad21e2bf8b",
+              "manifestValid": true,
+              "strictUTF8": true
+            },
+            {
+              "path": "suspicious-asr-terms.md",
+              "bytes": 5565,
+              "sha256": "16b485db9ac28c1db17d9838aa6168961c16d3280eb2112a15ac75b33cf64998",
+              "manifestValid": true,
+              "strictUTF8": true
+            }
+          ],
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "1e51f2512850653a2bfe51e6ffdfc4ec2eb49d47c561de1d55b250c82e024eb0",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1
+        },
+        "terminalFailure": null,
+        "failedChecks": [],
+        "status": "completed_validated",
+        "limitations": [
+          "Correlate startedAt/endedAt with separate Home/physical-lock/return receipts before calling this return recovery.",
+          "No continuous background/locked execution, exact suspension duration, PID continuity, or causal timeout attribution is established.",
+          "Recovered tool failures and retry activities are reported, not automatically treated as terminal failure.",
+          "No installed App/provider binary identity, full note factual audit, UI readback equality or power measurement is established by journal data alone."
+        ]
+      },
+      "baseline": "home-submitted/tah.sqlite3",
+      "terminal": "home-after-return-16/tah.sqlite3",
+      "history": {
+        "baselineEvents": 566,
+        "currentEvents": 568,
+        "unchangedEvents": 566,
+        "changedOperationIDs": [],
+        "columnsCompared": [
+          "event_rowid",
+          "operation_id",
+          "stream_id",
+          "version",
+          "kind",
+          "header",
+          "payload",
+          "sha256"
+        ]
+      },
+      "publication": {
+        "event": {
+          "event_rowid": 567,
+          "operation_id": "c5d46554-c445-471e-98f1-06c3a2bd43be",
+          "stream_id": "action/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+          "version": 2,
+          "kind": "publication",
+          "sha256": "646080772af857a67ab11b4989cd41382af0c71fc22eb4d2f220957d384f67e7"
+        },
+        "commitID": "publication/2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+        "candidateDigest": "1e51f2512850653a2bfe51e6ffdfc4ec2eb49d47c561de1d55b250c82e024eb0",
+        "files": [
+          {
+            "path": "structured-notes.md",
+            "bytes": 50400,
+            "sha256": "58d5b1310838c53524228bf9161707cdf0122a1c0ef1b469fab8ecad21e2bf8b",
+            "manifestValid": true,
+            "strictUTF8": true
+          },
+          {
+            "path": "suspicious-asr-terms.md",
+            "bytes": 5565,
+            "sha256": "16b485db9ac28c1db17d9838aa6168961c16d3280eb2112a15ac75b33cf64998",
+            "manifestValid": true,
+            "strictUTF8": true
+          }
+        ],
+        "critic": {
+          "schemaVersion": 1,
+          "contractID": "structured_notes/v2",
+          "candidateDigest": "1e51f2512850653a2bfe51e6ffdfc4ec2eb49d47c561de1d55b250c82e024eb0",
+          "decision": "PASS",
+          "issues": []
+        },
+        "actorRounds": 1
+      },
+      "processEvidence": {
+        "beforeAndAfter": {
+          "background": {
+            "source": "home-process-background.json",
+            "commandOutcome": "success",
+            "process": {
+              "executable": "file:///private/var/containers/Bundle/Application/F3E142E9-2168-4682-A3E6-8F6BC084A118/AlmaTAHTauri.app/AlmaTAHTauri",
+              "processIdentifier": 2886
+            }
+          },
+          "afterReturn": {
+            "source": "home-process-after-return.json",
+            "commandOutcome": "success",
+            "process": {
+              "executable": "file:///private/var/containers/Bundle/Application/F3E142E9-2168-4682-A3E6-8F6BC084A118/AlmaTAHTauri.app/AlmaTAHTauri",
+              "processIdentifier": 2886
+            }
+          }
+        },
+        "returnCommand": {
+          "source": "home-return.json",
+          "process": {
+            "auditToken": [
+              4294967295,
+              501,
+              501,
+              501,
+              501,
+              2886,
+              0,
+              7537
+            ],
+            "executable": "file:///private/var/containers/Bundle/Application/F3E142E9-2168-4682-A3E6-8F6BC084A118/AlmaTAHTauri.app/AlmaTAHTauri",
+            "processIdentifier": 2886
+          },
+          "launchOptions": {
+            "activatedWhenStarted": true,
+            "arguments": [],
+            "environmentVariables": {
+              "TERM": "dumb"
+            },
+            "platformSpecificOptions": {},
+            "startStopped": false,
+            "terminateExistingInstances": false,
+            "user": {
+              "active": true
+            }
+          }
+        },
+        "samePID": 2886,
+        "interpretation": "Same PID/executable observed in background, return command and after return, without terminateExistingInstances. This supports returning to the existing process; it does not establish continuous scheduling/execution between observations."
+      },
+      "timing": {
+        "startedAtUTC": "2026-11-07T13:20:56.194Z",
+        "completedAtUTC": "2026-11-07T13:41:39.010Z",
+        "totalWallSeconds": 1242.816,
+        "conservativeHomeObservationStartUTC": "2026-11-07T13:22:59.823891+00:00",
+        "HomeTimingMeaning": "Conservative timer starts after CUA observed Home and Stop Screen Sharing/View Screen; actual Home transition occurred earlier. First Home click did not transition, second did.",
+        "midObservation": {
+          "atUTC": "2026-11-07T13:25:28.471584+00:00",
+          "phase": "running",
+          "error": null,
+          "events": 566
+        },
+        "beforeReturnObservation": {
+          "atUTC": "2026-11-07T13:28:24.371686+00:00",
+          "phase": "running",
+          "error": null,
+          "events": 566
+        },
+        "conservativeHomeToBeforeReturnObservationSeconds": 324.547795,
+        "returnCommandExactTimestampUTC": null,
+        "firstPostReturnSnapshotAnalysisAtUTC": "2026-11-07T13:29:56.300840+00:00",
+        "afterReturnUI": {
+          "recordedAtUTC": "2026-11-07T13:31:58.468104+00:00",
+          "sameActionVisible": true,
+          "stage": "Creating notes",
+          "completedWebToolsVisible": true,
+          "screenSharingBrieflyResumedForReadOnlyObservation": true,
+          "screenSharingStoppedAgain": true
+        },
+        "completionAfterUIObservationSeconds": 580.541896,
+        "conditionalReturnWindow": {
+          "earliestBoundaryUTC": "2026-11-07T13:28:24.371686+00:00",
+          "latestBoundaryUTC": "2026-11-07T13:29:56.300840+00:00",
+          "completionAfterReturnSecondsMinimum": 702.70916,
+          "completionAfterReturnSecondsMaximum": 794.638314,
+          "assumption": "The saved before-return observation, successful return command, and first post-return snapshot were collected in their documented order. These bound a return window, not an exact foreground activation time."
+        },
+        "finalSnapshotObservedAtUTC": "2026-11-07T13:42:10.650375+00:00",
+        "finalSnapshotObservationLagSeconds": 31.640375,
+        "snapshotStates": {
+          "home-mid": {
+            "rowID": 565,
+            "phase": "running",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "events": 566,
+            "error": null
+          },
+          "home-before-return": {
+            "rowID": 565,
+            "phase": "running",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "events": 566,
+            "error": null
+          },
+          "home-after-return-00": {
+            "rowID": 565,
+            "phase": "running",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "events": 566,
+            "error": null
+          },
+          "home-after-return-16": {
+            "rowID": 568,
+            "phase": "completed",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "events": 568,
+            "error": null
+          }
+        }
+      },
+      "executionEvidence": {
+        "toolCount": 42,
+        "toolStatuses": {
+          "completed": 41,
+          "failed": 1
+        },
+        "webToolCount": 24,
+        "toolFailures": [
+          {
+            "role": "actor",
+            "round": 0,
+            "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-37",
+            "title": "Tool activity",
+            "detail": "Command: /bin/bash -c 'rg --files outbox/revision_v0 command -v node command -v ruby command -v perl' — failed (exit 1)",
+            "kind": "tool",
+            "titleCode": "tool.native_surplus",
+            "status": "failed"
+          }
+        ],
+        "retryActivities": [
+          {
+            "role": "actor",
+            "round": 0,
+            "id": "cd310f36-3917-4176-b585-0e868a1248b8:activity:retrying",
+            "title": "Retrying",
+            "titleCode": "activity.retrying",
+            "detail": "Codex is retrying the model request",
+            "kind": "activity",
+            "status": "completed"
+          }
+        ],
+        "providerNotices": [],
+        "failureFollowup": [
+          {
+            "failedEvent": {
+              "role": "actor",
+              "round": 0,
+              "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-37",
+              "title": "Tool activity",
+              "detail": "Command: /bin/bash -c 'rg --files outbox/revision_v0 command -v node command -v ruby command -v perl' — failed (exit 1)",
+              "kind": "tool",
+              "titleCode": "tool.native_surplus",
+              "status": "failed"
+            },
+            "completedToolsAfterFailure": [
+              {
+                "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-38",
+                "titleCode": "tool.text_edit",
+                "status": "completed",
+                "detailPrefix": "Edit files: outbox/revision_v0/structured-notes.md — completed"
+              },
+              {
+                "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-39",
+                "titleCode": "tool.text_edit",
+                "status": "completed",
+                "detailPrefix": "Edit files: outbox/revision_v0/structured-notes.md — completed"
+              },
+              {
+                "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-40",
+                "titleCode": "tool.text_edit",
+                "status": "completed",
+                "detailPrefix": "Edit files: outbox/revision_v0/suspicious-asr-terms.md — completed"
+              },
+              {
+                "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-41",
+                "titleCode": "tool.native_surplus",
+                "status": "completed",
+                "detailPrefix": "Command: /bin/bash -c \"node <<'NODE' const fs = require('fs'); const dir = 'outbox/revision_v0'; const names = fs.readdirSync(dir); const note = fs.readFileSync(dir + '/structured-"
+              },
+              {
+                "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-42",
+                "titleCode": "tool.native_surplus",
+                "status": "completed",
+                "detailPrefix": "Command: /bin/bash -c \"node <<'NODE' const fs=require('fs'); const raw=fs.readFileSync('inbox/raw-transcript.md','utf8'); const notes=fs.readFileSync('outbox/revision_v0/structured"
+              }
+            ]
+          }
+        ],
+        "explicitFailureInformation": "One retained command tool record says failed (exit 1). Its normalized command display is preserved verbatim; no captured stderr or more specific underlying reason is present.",
+        "explicitRetryInformation": "One retained activity.retrying says only \"Codex is retrying the model request\". It contains no HTTP status, SDK error class, transport reason, retry-attempt number or timestamp.",
+        "causeEstablished": false,
+        "interpretation": "Do not infer missing executables, command construction error, connection timeout, network/VPN failure or background suspension as the cause. The generic model retry and the command exit 1 are separate observations, not an established causal chain. Event order shows subsequent tools completed; final publication/Critic PASS demonstrates recovery of this attempt."
+      },
+      "evidenceFiles": {
+        "plan.json": {
+          "bytes": 831,
+          "sha256": "52e42617ef35db284c760dc8246e3713d69985519bef5093cec841ae817619d5"
+        },
+        "home-after-return-16-validation.json": {
+          "bytes": 8719,
+          "sha256": "819e492e5f692b404e4245367c126d11b2b6c7245010364b3f19a19e25591cae"
+        },
+        "home-latest.json": {
+          "bytes": 1040,
+          "sha256": "9457f1a14652acfbfb0347c50fe33b4daf730fe75a9de85d53f133734b43d216"
+        },
+        "home-before-return-observation.json": {
+          "bytes": 106,
+          "sha256": "12cacdf3778ac00915887e89508f61c83f39bf8b568efe8647aa101ac27428d3"
+        },
+        "home-mid-observation.json": {
+          "bytes": 106,
+          "sha256": "447e629021a879fdb88e9d157ef74cfe6287cfbcab356b4d5065689f47e8853d"
+        },
+        "home-return.json": {
+          "bytes": 1328,
+          "sha256": "80bc883759eb6a016280a192edc972d21dc587fcd8f54ca28acc3c2fda80730e"
+        },
+        "home-marks.json": {
+          "bytes": 1056,
+          "sha256": "f113c32798c02b718fee6c62a1d5043a69661b2ab91cb516739bc2e09bf21e04"
+        },
+        "home-process-background.json": {
+          "bytes": 895,
+          "sha256": "b563fb37c33c0d149980b59c3e967d807f81448b2d3d027a76e36c76c3014f3b"
+        },
+        "home-process-after-return.json": {
+          "bytes": 897,
+          "sha256": "3a14c63ac172a24857446839b094060250f782680652945808b0af7322440244"
+        },
+        "home-return-lock-check.json": {
+          "bytes": 690,
+          "sha256": "458b741eb8cc5d96b290c467b80184fdaf33a3690bfbf2eae55364b5687d25dd"
+        },
+        "home-initial-lock.json": {
+          "bytes": 685,
+          "sha256": "0e455aa11b934627493c510394350c49054eadc27f16535c9f93ed74e5c1597b"
+        },
+        "home-mid-lock.json": {
+          "bytes": 681,
+          "sha256": "8a44e7dec02b6938e9a44f17f9b1ca9ce6a75310c4e5a18595fae45b0a48e79e"
+        },
+        "home-after-return-00-validation.json": {
+          "bytes": 5200,
+          "sha256": "a08d5926b5df3c28e2b73d9520f417d8c701a66bc984238d74ca0f7a209f5b29"
+        },
+        "validate_lifecycle.py": {
+          "bytes": 20048,
+          "sha256": "1712b6e0da3f7b8a7210370c3bd249b0c11d4f81065f9b4cf10c95062950497b"
+        }
+      },
+      "extraSnapshotEvidence": {
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-mid/tah.sqlite3": {
+          "bytes": 10465280,
+          "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-mid/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e3e1e07fa02fe60942db4abc9da9c393a2a00b6382b44f697c88aa53fab290b7"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-mid/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "85b204ae83bd3a818ba4aebda8684bf895e28ef9679481d0c433f916789165b9"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-before-return/tah.sqlite3": {
+          "bytes": 10465280,
+          "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-before-return/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e3e1e07fa02fe60942db4abc9da9c393a2a00b6382b44f697c88aa53fab290b7"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-before-return/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "85b204ae83bd3a818ba4aebda8684bf895e28ef9679481d0c433f916789165b9"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-00/tah.sqlite3": {
+          "bytes": 10465280,
+          "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-00/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e3e1e07fa02fe60942db4abc9da9c393a2a00b6382b44f697c88aa53fab290b7"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-00/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "cc12f0d496078353ade4fabb015a516a36ab8caeaca7ba1ba7bab71c0982eaac"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "d68911c5a20098ded67576d890f901b8e29967078b6e20a0cf5d41dd7c490a92"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "79abf4807167bad4afcbc7477dcd8fb0e339cf1f970c6f1a126e05b65a5d45b7"
+        }
+      },
+      "limitations": [
+        "The Home transition occurred before the conservative observation timer; exact transition time is not recorded. The first unsuccessful Home click is excluded.",
+        "home-return.json has no embedded wall-clock timestamp. No file modification time was substituted for the exact return/activation time.",
+        "Unchanged running journal rows during background and shortly after return do not distinguish suspension, network waiting or uncommitted execution.",
+        "There is no precise per-tool or retry timestamp in the retained working log, so neither is assigned to the background interval.",
+        "Same PID observations and a non-terminating return command support process reuse, not uninterrupted CPU execution or a measured suspension duration.",
+        "This establishes one current-candidate Home-return recovery scenario only. Physical-lock recovery is a separate new V0; no power or full output factual audit is claimed.",
+        "Readback of the final two files through normal phone UI is not independently repeated here; canonical bytes, UTF-8, hashes, candidate digest and Critic are verified offline."
+      ],
+      "actionsPerformed": "Read-only local files and private DB/WAL copies; wrote only new home-result.json. No phone operation, source change, build or network request."
+    },
+    "files": [
+      {
+        "path": "structured-notes.md",
+        "bytes": 50400,
+        "sha256": "58d5b1310838c53524228bf9161707cdf0122a1c0ef1b469fab8ecad21e2bf8b",
+        "manifestValid": true,
+        "strictUTF8": true
+      },
+      {
+        "path": "suspicious-asr-terms.md",
+        "bytes": 5565,
+        "sha256": "16b485db9ac28c1db17d9838aa6168961c16d3280eb2112a15ac75b33cf64998",
+        "manifestValid": true,
+        "strictUTF8": true
+      }
+    ]
+  },
+  "lock": {
+    "passed": true,
+    "actionID": "66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+    "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+    "minimumSystemObservedLockSeconds": 317,
+    "wallSeconds": 1264.03,
+    "firstSystemUnlockedObservationToCompletionSeconds": 71.855,
+    "exactUnlockTimeKnown": false,
+    "toolCount": 39,
+    "toolFailures": 0,
+    "modelRetryActivities": 1,
+    "canonicalChecksPassed": 25,
+    "review": {
+      "schemaVersion": 1,
+      "reviewedAtUTC": "2026-11-07T14:11:32.402391+00:00",
+      "status": "physical_lock_return_recovery_verified",
+      "passed": true,
+      "functionalPassed": true,
+      "lifecycleRecoveryPassed": true,
+      "continuousBackgroundExecutionEstablished": false,
+      "powerMeasured": false,
+      "appContext": {
+        "app": "0.4.2 (15)",
+        "codex": "0.167.0",
+        "source": "Current trial plan and main-provided installed candidate; no separate binary/signature re-attestation in this offline journal review."
+      },
+      "actionID": "66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+      "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+      "actualTerminalSnapshot": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01",
+      "configuration": {
+        "providerID": "codex",
+        "inference": {
+          "modelID": "gpt-6-astra",
+          "reasoningEffortID": "xhigh"
+        },
+        "actionLanguage": "zh-CN",
+        "interactionLanguage": "zh-CN",
+        "webEnabled": true
+      },
+      "transcript": {
+        "transcriptID": "3a2275d7-32af-45e9-9fbc-3821c2d5ce22",
+        "byteLength": 121541,
+        "sha256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7"
+      },
+      "checks": {
+        "latestPointsToActualCompletedSnapshot": true,
+        "lockCanonicalValidationPassed": true,
+        "lockMatchesSavedValidation": true,
+        "homeCanonicalValidationStillPassed": true,
+        "homeMatchesPriorResult": true,
+        "separateNewActionsAndCycles": true,
+        "sameFullNVIDIAInputAndConfiguration": true,
+        "userConfirmedPhysicalLockAndForegroundReturn": true,
+        "lockMarksMatchAction": true,
+        "noProfilerAndSharingStoppedRecorded": true,
+        "systemLockStateSequenceMatchesMarks": true,
+        "samePID2886AcrossBothTrials": true,
+        "homePreScenario563To568Preserved": true,
+        "lockPreScenario568To573Preserved": true,
+        "lockPostSubmission571To573Preserved": true,
+        "homeOnlyExpectedFiveNewEvents": true,
+        "lockOnlyExpectedFiveNewEvents": true,
+        "sameFrozenProfileIdentity": true,
+        "lockedAndFirstUnlockedSnapshotsStillRunning": true,
+        "observedLockSpanAtLeastFiveMinutes": true,
+        "completionAfterObservedUnlock": true,
+        "recordedTools39NoFailuresOneRetry": true,
+        "allReadEvidenceUnchanged": true
+      },
+      "failedChecks": [],
+      "canonicalValidation": {
+        "schemaVersion": 1,
+        "analyzedAtUTC": "2026-11-07T14:11:31.395189+00:00",
+        "actionID": "66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+        "checks": {
+          "sqliteIntegrity": true,
+          "baselineEventsUnchanged": true,
+          "allEventHashesLengthsHeadersValid": true,
+          "baselineRunningV0": true,
+          "sameCycleWithoutResubmission": true,
+          "sameFrozenConfiguration": true,
+          "expectedConfiguration": true,
+          "noBaselinePublication": true,
+          "noExtraProposalsOrPublications": true,
+          "expectedNVIDIAInput": true,
+          "proposalMatchesFrozenAttempt": true,
+          "nonnegativeWallTime": true,
+          "workingLogHashLengthValid": true,
+          "workingLogNotLimited": true,
+          "toolLifecyclesSettled": true,
+          "terminalTimeRecordedAndOrdered": true,
+          "oneProposalOnePublication": true,
+          "twoExpectedFiles": true,
+          "fileHashesLengthsUTF8Valid": true,
+          "candidateDigestAndRoot": true,
+          "criticAndActorReceipt": true,
+          "publicationMatchesCompletedOperation": true,
+          "completeWorkingLogPresent": true,
+          "acceptedV0AndNoPendingWrites": true,
+          "originalEvidenceUnchanged": true
+        },
+        "functionalPassed": true,
+        "lifecycleRecoveryPassed": null,
+        "continuousBackgroundExecutionEstablished": false,
+        "powerMeasured": false,
+        "evidence": {
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3": {
+            "bytes": 10915840,
+            "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3-wal": {
+            "bytes": 4313672,
+            "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3-shm": {
+            "bytes": 32768,
+            "sha256": "03998c52b6d171fe134b88bbaf7eafb59bd8cd28d2fef144a9354fefaa6a12c1"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3": {
+            "bytes": 10915840,
+            "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3-wal": {
+            "bytes": 4313672,
+            "sha256": "d22599b274ab6f099d035902ab63a28e02c0263d1ab1a5ed15b2e3c64b44e096"
+          },
+          "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3-shm": {
+            "bytes": 32768,
+            "sha256": "2d7983cd0662c1d83897cb635afab858bee6265aab2ceb9b29af23e412dbcaf5"
+          }
+        },
+        "scope": "Canonical single-V0 state/integrity only. Correlate with separately saved Home/lock/return observations. No device binary/version, continuous execution, power or exhaustive factual claim.",
+        "history": {
+          "baselineEvents": 571,
+          "currentEvents": 573,
+          "unchangedEvents": 571,
+          "changedOperationIDs": [],
+          "columnsCompared": [
+            "event_rowid",
+            "operation_id",
+            "stream_id",
+            "version",
+            "kind",
+            "header",
+            "payload",
+            "sha256"
+          ]
+        },
+        "phase": "completed",
+        "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+        "latestOperation": {
+          "event_rowid": 573,
+          "operation_id": "44c4f949-c98c-42c9-9647-1e495dac467c",
+          "stream_id": "operation/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+          "version": 2,
+          "kind": "document",
+          "sha256": "1cdba08a0ab37383228ee57d39c3c2fbfc65c4a46616c44f1c5b87575a6a9120"
+        },
+        "operationError": null,
+        "configuration": {
+          "providerID": "codex",
+          "inference": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "actionLanguage": "zh-CN",
+          "interactionLanguage": "zh-CN",
+          "webEnabled": true
+        },
+        "expectedConfiguration": {
+          "providerID": "codex",
+          "inference": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "actionLanguage": "zh-CN",
+          "interactionLanguage": "zh-CN",
+          "webEnabled": true
+        },
+        "journalObservation": {
+          "publicationCount": 1,
+          "proposalCount": 1,
+          "pendingRows": 0,
+          "note": "A persistent running row can remain unchanged during active work or suspension; it does not distinguish them."
+        },
+        "transcript": {
+          "transcriptID": "3a2275d7-32af-45e9-9fbc-3821c2d5ce22",
+          "byteLength": 121541,
+          "sha256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7"
+        },
+        "timing": {
+          "startedAt": "2026-11-07T13:44:53.825Z",
+          "endedAt": "2026-11-07T14:05:57.855Z",
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-07T13:44:53.825Z"
+            },
+            {
+              "id": "2",
+              "phase": "actor",
+              "at": "2026-11-07T13:44:53.916Z"
+            },
+            {
+              "id": "3",
+              "phase": "critic",
+              "at": "2026-11-07T14:05:57.751Z"
+            },
+            {
+              "id": "4",
+              "phase": "completed",
+              "at": "2026-11-07T14:05:57.855Z"
+            }
+          ],
+          "wallSeconds": 1264.03
+        },
+        "workingLog": {
+          "bytes": 18312,
+          "sha256": "a285bb0572b424e45a9964b5c1dde37cea323028d18248eea21d0906315a688d",
+          "limited": false,
+          "toolCount": 39,
+          "toolStatuses": {
+            "completed": 39
+          },
+          "toolFailures": [],
+          "providerNotices": [],
+          "retryActivities": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "7c73e882-919c-4b40-8926-0384ef7c35bb:activity:retrying",
+              "title": "Retrying",
+              "titleCode": "activity.retrying",
+              "detail": "Codex is retrying the model request",
+              "kind": "activity",
+              "status": "completed"
+            }
+          ],
+          "webToolCount": 17,
+          "note": "Retained event counts only. Retry activities are counted separately from notices; Web labels do not establish independent Fetch counts."
+        },
+        "publication": {
+          "event": {
+            "event_rowid": 572,
+            "operation_id": "1dba213f-ee5f-428e-ae9e-6d42567db2f6",
+            "stream_id": "action/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+            "version": 2,
+            "kind": "publication",
+            "sha256": "009ee20101faa7d97f0993d24a13e4429e73a09dc589d8dc7c61853c7a6716b8"
+          },
+          "commitID": "publication/96d42dda-a1bf-41dd-85ba-07a83379e336",
+          "candidateDigest": "c9a04af2f5e0899aba3fdbc7f7c01b4ae89cd1c4002b2b6dac7158fabec69922",
+          "files": [
+            {
+              "path": "structured-notes.md",
+              "bytes": 58292,
+              "sha256": "cb7c010a8a3f33bebc23a7be619903afb9ea60950ed0a2d8ad5e7a8e7273e4d3",
+              "manifestValid": true,
+              "strictUTF8": true
+            },
+            {
+              "path": "suspicious-asr-terms.md",
+              "bytes": 3754,
+              "sha256": "f40ab9fe5b96f35f2a2befc3d98317302f926a1099568d21f7731b71001b01d4",
+              "manifestValid": true,
+              "strictUTF8": true
+            }
+          ],
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "c9a04af2f5e0899aba3fdbc7f7c01b4ae89cd1c4002b2b6dac7158fabec69922",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1
+        },
+        "terminalFailure": null,
+        "failedChecks": [],
+        "status": "completed_validated",
+        "limitations": [
+          "Correlate startedAt/endedAt with separate Home/physical-lock/return receipts before calling this return recovery.",
+          "No continuous background/locked execution, exact suspension duration, PID continuity, or causal timeout attribution is established.",
+          "Recovered tool failures and retry activities are reported, not automatically treated as terminal failure.",
+          "No installed App/provider binary identity, full note factual audit, UI readback equality or power measurement is established by journal data alone."
+        ]
+      },
+      "publication": {
+        "event": {
+          "event_rowid": 572,
+          "operation_id": "1dba213f-ee5f-428e-ae9e-6d42567db2f6",
+          "stream_id": "action/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+          "version": 2,
+          "kind": "publication",
+          "sha256": "009ee20101faa7d97f0993d24a13e4429e73a09dc589d8dc7c61853c7a6716b8"
+        },
+        "commitID": "publication/96d42dda-a1bf-41dd-85ba-07a83379e336",
+        "candidateDigest": "c9a04af2f5e0899aba3fdbc7f7c01b4ae89cd1c4002b2b6dac7158fabec69922",
+        "files": [
+          {
+            "path": "structured-notes.md",
+            "bytes": 58292,
+            "sha256": "cb7c010a8a3f33bebc23a7be619903afb9ea60950ed0a2d8ad5e7a8e7273e4d3",
+            "manifestValid": true,
+            "strictUTF8": true
+          },
+          {
+            "path": "suspicious-asr-terms.md",
+            "bytes": 3754,
+            "sha256": "f40ab9fe5b96f35f2a2befc3d98317302f926a1099568d21f7731b71001b01d4",
+            "manifestValid": true,
+            "strictUTF8": true
+          }
+        ],
+        "critic": {
+          "schemaVersion": 1,
+          "contractID": "structured_notes/v2",
+          "candidateDigest": "c9a04af2f5e0899aba3fdbc7f7c01b4ae89cd1c4002b2b6dac7158fabec69922",
+          "decision": "PASS",
+          "issues": []
+        },
+        "actorRounds": 1
+      },
+      "timing": {
+        "startedAtUTC": "2026-11-07T13:44:53.825Z",
+        "completedAtUTC": "2026-11-07T14:05:57.855Z",
+        "totalWallSeconds": 1264.03,
+        "userConfirmedPhysicalLock": true,
+        "firstSystemLockedObservationUTC": "2026-11-07T13:57:45+00:00",
+        "lastSystemLockedObservationUTC": "2026-11-07T14:03:02+00:00",
+        "systemLockObservationSpanSeconds": 317.0,
+        "unlockRequestRecordedAtUTC": "2026-11-07T14:03:59.029990+00:00",
+        "userConfirmedUnlockedAndForeground": true,
+        "firstSystemUnlockedObservationUTC": "2026-11-07T14:04:46+00:00",
+        "actualPhysicalLockAtUTC": null,
+        "actualUnlockAtUTC": null,
+        "actualForegroundReturnAtUTC": null,
+        "completionAfterFirstObservedUnlockedSeconds": 71.855,
+        "conditionalUnlockWindow": {
+          "afterLastLockedObservationUTC": "2026-11-07T14:03:02+00:00",
+          "byFirstUnlockedObservationUTC": "2026-11-07T14:04:46+00:00",
+          "completionAfterActualUnlockSecondsMinimum": 71.855,
+          "completionAfterActualUnlockSecondsMaximum": 175.855,
+          "assumption": "A single transition between the last locked and first unlocked observations. These are sampled UTC observation boundaries, not an exact button press or foreground activation timestamp."
+        },
+        "firstObservedLockAfterV0StartSeconds": 771.175,
+        "terminalObservedAtUTC": "2026-11-07T14:06:09.935901+00:00",
+        "terminalObservationLagSeconds": 12.080901,
+        "timestampProvenance": "System observation UTCs are recorded in lock-marks.json; lockState command receipts do not embed these timestamps. Validation analyzedAt timestamps describe offline analysis, not exact device transitions.",
+        "snapshotStates": {
+          "home-submitted": {
+            "eventCount": 566,
+            "operationRowID": 565,
+            "phase": "running",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "home-after-return-16": {
+            "eventCount": 568,
+            "operationRowID": 568,
+            "phase": "completed",
+            "cycleID": "2b3d20d4-6b9d-443f-bd47-61e218e35ec7",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-submitted": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-confirmed-journal": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-mid-journal": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-before-return-journal": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-return-journal": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-after-return-00": {
+            "eventCount": 571,
+            "operationRowID": 570,
+            "phase": "running",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          },
+          "lock-after-return-01": {
+            "eventCount": 573,
+            "operationRowID": 573,
+            "phase": "completed",
+            "cycleID": "96d42dda-a1bf-41dd-85ba-07a83379e336",
+            "revisionIndex": 0,
+            "error": null
+          }
+        }
+      },
+      "lockStateEvidence": {
+        "initial": {
+          "file": "lock-initial-state.json",
+          "commandOutcome": "success",
+          "passcodeRequired": false,
+          "embeddedTimestamp": null
+        },
+        "awaiting02": {
+          "file": "lock-awaiting-state-02.json",
+          "commandOutcome": "success",
+          "passcodeRequired": false,
+          "embeddedTimestamp": null
+        },
+        "awaiting03": {
+          "file": "lock-awaiting-state-03.json",
+          "commandOutcome": "success",
+          "passcodeRequired": false,
+          "embeddedTimestamp": null
+        },
+        "confirmed": {
+          "file": "lock-confirmed-state.json",
+          "commandOutcome": "success",
+          "passcodeRequired": true,
+          "embeddedTimestamp": null
+        },
+        "mid": {
+          "file": "lock-mid-state.json",
+          "commandOutcome": "success",
+          "passcodeRequired": true,
+          "embeddedTimestamp": null
+        },
+        "beforeReturn": {
+          "file": "lock-before-return-state.json",
+          "commandOutcome": "success",
+          "passcodeRequired": true,
+          "embeddedTimestamp": null
+        },
+        "returned": {
+          "file": "lock-return-state.json",
+          "commandOutcome": "success",
+          "passcodeRequired": false,
+          "embeddedTimestamp": null
+        }
+      },
+      "processEvidence": {
+        "pid": 2886,
+        "receipts": {
+          "beforeLock": {
+            "file": "lock-process-before.json",
+            "commandOutcome": "success",
+            "process": {
+              "executable": "file:///private/var/containers/Bundle/Application/F3E142E9-2168-4682-A3E6-8F6BC084A118/AlmaTAHTauri.app/AlmaTAHTauri",
+              "processIdentifier": 2886
+            }
+          },
+          "afterReturn": {
+            "file": "lock-process-after-return.json",
+            "commandOutcome": "success",
+            "process": {
+              "executable": "file:///private/var/containers/Bundle/Application/F3E142E9-2168-4682-A3E6-8F6BC084A118/AlmaTAHTauri.app/AlmaTAHTauri",
+              "processIdentifier": 2886
+            }
+          }
+        },
+        "sameExecutableAsHomeTrial": true,
+        "scope": "Same PID/executable observed before and after this lock scenario and in the Home scenario; not evidence of uninterrupted scheduling or continuous execution."
+      },
+      "executionEvidence": {
+        "toolCount": 39,
+        "toolStatuses": {
+          "completed": 39
+        },
+        "toolFailures": [],
+        "webToolCount": 17,
+        "providerNotices": [],
+        "retryActivities": [
+          {
+            "role": "actor",
+            "round": 0,
+            "id": "7c73e882-919c-4b40-8926-0384ef7c35bb:activity:retrying",
+            "title": "Retrying",
+            "titleCode": "activity.retrying",
+            "detail": "Codex is retrying the model request",
+            "kind": "activity",
+            "status": "completed"
+          }
+        ],
+        "retryReasonEstablished": false,
+        "retryCause": "Retained text is only \"Codex is retrying the model request\". No reason code, SDK error type, HTTP status, attempt number or per-event timestamp is preserved; no attribution to lock, network or upgrade.",
+        "scope": "Counts apply to complete retained working logs, not unlogged provider internals. Web labels are not independent Fetch evidence."
+      },
+      "bothTrialsComparison": {
+        "sameFullNVIDIA": true,
+        "transcriptBytes": 121541,
+        "transcriptSHA256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7",
+        "sameConfiguration": {
+          "providerID": "codex",
+          "inference": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "actionLanguage": "zh-CN",
+          "interactionLanguage": "zh-CN",
+          "webEnabled": true
+        },
+        "sameFrozenProfileIdentity": true,
+        "separateActions": {
+          "home": "9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+          "lock": "66e2eed8-4534-4adf-8a64-81023a3d2fe9"
+        },
+        "home": {
+          "recoveryPassed": true,
+          "wallSeconds": 1242.816,
+          "toolCount": 42,
+          "toolFailures": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "cd310f36-3917-4176-b585-0e868a1248b8:codex-tool-37",
+              "title": "Tool activity",
+              "detail": "Command: /bin/bash -c 'rg --files outbox/revision_v0 command -v node command -v ruby command -v perl' — failed (exit 1)",
+              "kind": "tool",
+              "titleCode": "tool.native_surplus",
+              "status": "failed"
+            }
+          ],
+          "retryActivities": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "cd310f36-3917-4176-b585-0e868a1248b8:activity:retrying",
+              "title": "Retrying",
+              "titleCode": "activity.retrying",
+              "detail": "Codex is retrying the model request",
+              "kind": "activity",
+              "status": "completed"
+            }
+          ],
+          "historyBeforeScenario": {
+            "baseline": "baseline-journal/tah.sqlite3",
+            "current": "home-after-return-16/tah.sqlite3",
+            "baselineEvents": 563,
+            "currentEvents": 568,
+            "eventsUnchanged": 563,
+            "differences": [],
+            "newEvents": [
+              {
+                "rowID": 564,
+                "streamID": "meta/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+                "kind": "document",
+                "operationID": "77b7ad19-9d9a-4d6e-b0b3-6a39a4bc0083"
+              },
+              {
+                "rowID": 565,
+                "streamID": "operation/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+                "kind": "document",
+                "operationID": "6266ce08-d69f-49ad-8018-3465828e4c1a"
+              },
+              {
+                "rowID": 566,
+                "streamID": "action/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+                "kind": "proposal",
+                "operationID": "85a9e83f-ea9c-42a0-a483-52a9ba42c121"
+              },
+              {
+                "rowID": 567,
+                "streamID": "action/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+                "kind": "publication",
+                "operationID": "c5d46554-c445-471e-98f1-06c3a2bd43be"
+              },
+              {
+                "rowID": 568,
+                "streamID": "operation/9ebb2674-23bf-4604-89b5-08c6ae9e74c7",
+                "kind": "document",
+                "operationID": "2ded8083-8680-417a-8bcd-128bc8987a52"
+              }
+            ]
+          },
+          "postSubmissionBaselineEvents": 566
+        },
+        "physicalLock": {
+          "recoveryPassed": true,
+          "wallSeconds": 1264.03,
+          "toolCount": 39,
+          "toolFailures": [],
+          "retryActivities": [
+            {
+              "role": "actor",
+              "round": 0,
+              "id": "7c73e882-919c-4b40-8926-0384ef7c35bb:activity:retrying",
+              "title": "Retrying",
+              "titleCode": "activity.retrying",
+              "detail": "Codex is retrying the model request",
+              "kind": "activity",
+              "status": "completed"
+            }
+          ],
+          "historyBeforeScenario": {
+            "baseline": "home-after-return-16/tah.sqlite3",
+            "current": "lock-after-return-01/tah.sqlite3",
+            "baselineEvents": 568,
+            "currentEvents": 573,
+            "eventsUnchanged": 568,
+            "differences": [],
+            "newEvents": [
+              {
+                "rowID": 569,
+                "streamID": "meta/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "document",
+                "operationID": "827cf79f-6933-4708-8762-1b8991fd2f31"
+              },
+              {
+                "rowID": 570,
+                "streamID": "operation/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "document",
+                "operationID": "3941d4dc-0673-489d-bb80-7272610575ae"
+              },
+              {
+                "rowID": 571,
+                "streamID": "action/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "proposal",
+                "operationID": "22d8a7fd-e96e-421d-817a-4b5877947dd4"
+              },
+              {
+                "rowID": 572,
+                "streamID": "action/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "publication",
+                "operationID": "1dba213f-ee5f-428e-ae9e-6d42567db2f6"
+              },
+              {
+                "rowID": 573,
+                "streamID": "operation/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "document",
+                "operationID": "44c4f949-c98c-42c9-9647-1e495dac467c"
+              }
+            ]
+          },
+          "historyAfterSubmission": {
+            "baseline": "lock-submitted/tah.sqlite3",
+            "current": "lock-after-return-01/tah.sqlite3",
+            "baselineEvents": 571,
+            "currentEvents": 573,
+            "eventsUnchanged": 571,
+            "differences": [],
+            "newEvents": [
+              {
+                "rowID": 572,
+                "streamID": "action/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "publication",
+                "operationID": "1dba213f-ee5f-428e-ae9e-6d42567db2f6"
+              },
+              {
+                "rowID": 573,
+                "streamID": "operation/66e2eed8-4534-4adf-8a64-81023a3d2fe9",
+                "kind": "document",
+                "operationID": "44c4f949-c98c-42c9-9647-1e495dac467c"
+              }
+            ]
+          }
+        },
+        "historyCountExplanation": "Home pre-scenario 563 -> submitted 566 -> completed 568. Lock pre-scenario 568 -> submitted 571 -> completed 573. Each new V0 adds metadata, running operation and proposal, followed by publication and terminal document; all older rows remain byte-identical. The 566/571 canonical-validator baselines and 563/568 scenario baselines are distinct valid scopes."
+      },
+      "evidenceFiles": {
+        "plan.json": {
+          "bytes": 831,
+          "sha256": "52e42617ef35db284c760dc8246e3713d69985519bef5093cec841ae817619d5"
+        },
+        "lock-latest.json": {
+          "bytes": 1039,
+          "sha256": "aa62f350385fb7cef9810cdb76fb1b4ae739321ef6cad71837c950432cb73843"
+        },
+        "lock-marks.json": {
+          "bytes": 1575,
+          "sha256": "b2838a9e32743df828bad07c4617bcbfc92a3e16ade9dc5417fe71306ae23422"
+        },
+        "lock-after-return-01-validation.json": {
+          "bytes": 8293,
+          "sha256": "0a0126c5a5f7a4355236f7666458f08f69486d2abbff2c622c0ade3e0ee4b084"
+        },
+        "lock-initial-state.json": {
+          "bytes": 686,
+          "sha256": "7ccff1130bfe3af06f4055fbe667cab137489b48f32858afc4b0eda1cf2dbab2"
+        },
+        "lock-awaiting-state-02.json": {
+          "bytes": 690,
+          "sha256": "e287d62a5eac3e14ae051e860d56df333ea0ae5a1f11fc12f5e0d78ab064de55"
+        },
+        "lock-awaiting-state-03.json": {
+          "bytes": 690,
+          "sha256": "3a408d9d25ce065326a3aa8fc6ff4fa10bc99321a8d1d406c1a90e042b1e59af"
+        },
+        "lock-confirmed-state.json": {
+          "bytes": 687,
+          "sha256": "245bd607c03a042a239c194c1ca7c85578c4597ccb60b05d5a4739b723e4dfe6"
+        },
+        "lock-mid-state.json": {
+          "bytes": 681,
+          "sha256": "631b6c055478aed65a8448d12d2a8d824bfc1e834aa6c97d2abd78b475d339ba"
+        },
+        "lock-before-return-state.json": {
+          "bytes": 691,
+          "sha256": "0461fe9b1aef999d44957e13c2a142cd43966bfa8a0f2f8bd260b25d05ad4ff9"
+        },
+        "lock-return-state.json": {
+          "bytes": 685,
+          "sha256": "85832d4a7c25a0ef35662fa8c761ac528900e182816aff1e0ac419bf91d8f1f5"
+        },
+        "lock-process-before.json": {
+          "bytes": 891,
+          "sha256": "29e62aa72227f1caf7ecb2a11b98e6b1e7387b267be16964a9a90a6bf260f668"
+        },
+        "lock-process-after-return.json": {
+          "bytes": 897,
+          "sha256": "c075a07792546a5b2d8af0dfe202d5b1b10753ae963a8c8d5cc4dd4c7b4742ef"
+        },
+        "lock-confirmed-validation.json": {
+          "bytes": 5206,
+          "sha256": "cbb37328c0573ac3ff3316ab0ea5faf82029d89b8f11bf6f0ab7b01f2522d1fd"
+        },
+        "lock-mid-validation.json": {
+          "bytes": 5188,
+          "sha256": "3982516a578c4d935791462322ac135184df13c1dc63bd6e8bc36f8b44e0bcd5"
+        },
+        "lock-before-return-validation.json": {
+          "bytes": 5218,
+          "sha256": "d25a78b8cf13d338170e4ad090148ba2215a76177b5851e12da1bca68e29bfb3"
+        },
+        "lock-return-validation.json": {
+          "bytes": 5197,
+          "sha256": "3fb99317081e407f8b18eff193033557f2777b2801094d2a83a61c82c919a13d"
+        },
+        "lock-after-return-00-validation.json": {
+          "bytes": 5200,
+          "sha256": "0d5ed7e7d339207d9bed4cae56732812576ad50ca00d59a29f55b21590c7bb6d"
+        },
+        "home-result.json": {
+          "bytes": 27441,
+          "sha256": "b4fcbfe41a298ae34899c0c5583465d282f8b02a7e591f116c8986da94e772b3"
+        },
+        "validate_lifecycle.py": {
+          "bytes": 20048,
+          "sha256": "1712b6e0da3f7b8a7210370c3bd249b0c11d4f81065f9b4cf10c95062950497b"
+        }
+      },
+      "snapshotEvidenceFiles": {
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/baseline-journal/tah.sqlite3": {
+          "bytes": 10465280,
+          "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/baseline-journal/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "bd8a90cb3515c0bc57fd7d02fb17a8fcf570d7ee85a57b705597e6c57e643ebf"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/baseline-journal/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "ac242c20e4f858eb664e85ec1f07e9558de0b15c40f8d0b723d92f62f0b03cfc"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3": {
+          "bytes": 10465280,
+          "sha256": "0b5813fa4adab6e6241c2d360d480c3a2876f766526995b83eaa23bed1692451"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e3e1e07fa02fe60942db4abc9da9c393a2a00b6382b44f697c88aa53fab290b7"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-submitted/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "85b204ae83bd3a818ba4aebda8684bf895e28ef9679481d0c433f916789165b9"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "d68911c5a20098ded67576d890f901b8e29967078b6e20a0cf5d41dd7c490a92"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/home-after-return-16/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "79abf4807167bad4afcbc7477dcd8fb0e339cf1f970c6f1a126e05b65a5d45b7"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-submitted/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "03998c52b6d171fe134b88bbaf7eafb59bd8cd28d2fef144a9354fefaa6a12c1"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-confirmed-journal/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-confirmed-journal/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-confirmed-journal/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "c0eded4f38e5db8bc16fc810b806d5555be8ea755af1ebf523a7697b4ac3b047"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-mid-journal/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-mid-journal/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-mid-journal/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "c0eded4f38e5db8bc16fc810b806d5555be8ea755af1ebf523a7697b4ac3b047"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-before-return-journal/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-before-return-journal/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-before-return-journal/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "c0eded4f38e5db8bc16fc810b806d5555be8ea755af1ebf523a7697b4ac3b047"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-return-journal/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-return-journal/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-return-journal/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "c0eded4f38e5db8bc16fc810b806d5555be8ea755af1ebf523a7697b4ac3b047"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-00/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-00/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "e80b997d0104e8bd3501cace8dadae0736f26279380fea4fa7887c0884572641"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-00/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "c0eded4f38e5db8bc16fc810b806d5555be8ea755af1ebf523a7697b4ac3b047"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3": {
+          "bytes": 10915840,
+          "sha256": "84d775eb749febc31ff16cf7daaf3212448bc98bbdf4c792da182d15d66c3a22"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3-wal": {
+          "bytes": 4313672,
+          "sha256": "d22599b274ab6f099d035902ab63a28e02c0263d1ab1a5ed15b2e3c64b44e096"
+        },
+        "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107/lock-after-return-01/tah.sqlite3-shm": {
+          "bytes": 32768,
+          "sha256": "2d7983cd0662c1d83897cb635afab858bee6265aab2ceb9b29af23e412dbcaf5"
+        }
+      },
+      "limitations": [
+        "Actual physical lock and unlock times remain unknown; first observed locked/unlocked times must not be substituted as exact transition instants.",
+        "The 317-second sampled lock observation span supports the intended approximately five-minute lock scenario but does not prove continuous execution or quantify OS suspension.",
+        "Before unlock and shortly after unlock the journal still had running. This cannot distinguish suspension, network waits, buffered work or uncommitted output.",
+        "The 71.855 seconds from first observed unlocked to completion is an observation-to-completion interval, not exact recovery latency.",
+        "Total wall time includes preceding foreground/user-wait time, lock interval and resumed work; it is not CPU time or a controlled comparison with the Home run.",
+        "Current 0.4.2(15)/Codex0.167 has separate evidence for one Home-return recovery and one physical-lock-return recovery. Neither is a general or continuous-background-execution guarantee.",
+        "No power, unlogged retry causality, complete factual audit, or repeated normal-UI output readback is established by this offline audit."
+      ],
+      "actionsPerformed": "Read local snapshots/receipts with private DB+WAL copies; wrote only new lock-result.json. No phone control, network request, source/main-report change or build."
+    },
+    "files": [
+      {
+        "path": "structured-notes.md",
+        "bytes": 58292,
+        "sha256": "cb7c010a8a3f33bebc23a7be619903afb9ea60950ed0a2d8ad5e7a8e7273e4d3",
+        "manifestValid": true,
+        "strictUTF8": true
+      },
+      {
+        "path": "suspicious-asr-terms.md",
+        "bytes": 3754,
+        "sha256": "f40ab9fe5b96f35f2a2befc3d98317302f926a1099568d21f7731b71001b01d4",
+        "manifestValid": true,
+        "strictUTF8": true
+      }
+    ]
+  },
+  "handoff": {
+    "checkedAtUTC": "2026-11-07T14:11:38.521944+00:00",
+    "counts": [
+      563,
+      568,
+      571,
+      573
+    ],
+    "allPriorEventsPreserved": true,
+    "sqliteIntegrityPassed": true,
+    "snapshots": [
+      "baseline-journal/tah.sqlite3",
+      "home-after-return-16/tah.sqlite3",
+      "lock-submitted/tah.sqlite3",
+      "lock-after-return-01/tah.sqlite3"
+    ],
+    "finalUICompletedObserved": true,
+    "screenSharingStopped": true,
+    "keyboardCaptureDisabled": true,
+    "allObserversFinished": true,
+    "noNewBuildOrInstall": true,
+    "powerOrMemoryProfilersUsed": false,
+    "freeGiB": 53.68
+  },
+  "limitations": [
+    "Task progressed for different amounts of time before Home versus physical lock; remaining times are not comparable performance measurements.",
+    "No guarantee of uninterrupted background execution or recovery after process termination/swipe-away.",
+    "Model retry records lack underlying cause and precise timestamps; no attribution to lock,VPN or network.",
+    "Canonical outputs and history validated; no exhaustive factual audit.",
+    "No power/memory profiling,new build,install or runtime-source changes."
+  ],
+  "evidenceDirectory": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-lifecycle-20261107",
+  "retention": "Retain roughly415MiB of read-only snapshots and review records; no new build artifacts were generated."
+}

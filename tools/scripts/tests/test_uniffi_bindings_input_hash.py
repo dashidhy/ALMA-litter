@@ -35,6 +35,9 @@ class BindingInputHashTests(unittest.TestCase):
             "ALMA-kimi-code/ios/native/Cargo.toml",
             "ALMA-kimi-code/ios/native/src/kimi_backend.rs",
             "ALMA-kimi-code/ios/native/src/kimi_assets.rs",
+            "ALMA-ZCode/ios/native/Cargo.toml",
+            "ALMA-ZCode/ios/native/src/lib.rs",
+            "ALMA-ZCode/ios/native/src/http.rs",
         ]
         for relative in self.inputs:
             path = self.root / relative
@@ -72,11 +75,13 @@ class BindingInputHashTests(unittest.TestCase):
 
     def test_added_and_removed_fork_source_invalidates_hash(self):
         baseline = self.digest()
-        path = self.root / "ALMA-codex/ios/native/src/new_module.rs"
-        path.write_text("new module\n")
-        self.assertNotEqual(self.digest(), baseline)
-        path.unlink()
-        self.assertEqual(self.digest(), baseline)
+        for provider in ["ALMA-codex", "ALMA-kimi-code", "ALMA-ZCode"]:
+            with self.subTest(provider=provider):
+                path = self.root / provider / "ios/native/src/new_module.rs"
+                path.write_text("new module\n")
+                self.assertNotEqual(self.digest(), baseline)
+                path.unlink()
+                self.assertEqual(self.digest(), baseline)
 
     def test_newer_than_uses_fork_sources(self):
         stamp = self.root / "bindings.stamp"
@@ -94,12 +99,18 @@ class BindingInputHashTests(unittest.TestCase):
                 os.utime(path, (100, 100))
 
     def test_missing_fork_fails_in_both_modes(self):
-        shutil.rmtree(self.root / "ALMA-kimi-code/ios/native/src")
-        for args in [(), ("--newer-than", self.root / "missing.stamp")]:
-            with self.subTest(args=args):
-                result = self.run_script(*args)
-                self.assertNotEqual(result.returncode, 0)
-                self.assertEqual(result.stdout, "")
+        for provider in ["ALMA-codex", "ALMA-kimi-code", "ALMA-ZCode"]:
+            source = self.root / provider / "ios/native/src"
+            backup = self.root / (provider + "-src-backup")
+            source.rename(backup)
+            try:
+                for args in [(), ("--newer-than", self.root / "missing.stamp")]:
+                    with self.subTest(provider=provider, args=args):
+                        result = self.run_script(*args)
+                        self.assertNotEqual(result.returncode, 0)
+                        self.assertEqual(result.stdout, "")
+            finally:
+                backup.rename(source)
 
 
 if __name__ == "__main__":

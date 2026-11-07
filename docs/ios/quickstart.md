@@ -1,5 +1,8 @@
 # iOS Quickstart
 
+This guide builds the main Litter application. For the phone-owned Alma TAH
+Tauri prototype, use the [TAH integration and build guide](../../tools/mobile-tah/README.md).
+
 ## Prerequisites
 
 - Xcode.app

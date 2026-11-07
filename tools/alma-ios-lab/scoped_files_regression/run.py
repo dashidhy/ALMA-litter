@@ -9,7 +9,7 @@ import tomllib
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-SOURCE = ROOT / "shared/rust-bridge/codex-mobile-client/src/scoped_files.rs"
+SOURCE = ROOT.parent / "ALMA-codex/ios/native/src/scoped_files.rs"
 BUILD = HERE / ".build"
 TOOLCHAIN = ROOT.parent / "ALMA/.build/tauri-toolchain"
 

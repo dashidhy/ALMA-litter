@@ -205,9 +205,13 @@
     "reason": "Charging/full; previous0.4.1 power remains approximate non-blocking reference."
   },
   "lifecycle": {
-    "retestedOnUpgrade": false,
+    "retestedOnUpgrade": true,
     "baselineReport": "docs/ios/2026-11-07-lifecycle-power.md",
-    "continuousBackgroundExecutionEstablished": false
+    "continuousBackgroundExecutionEstablished": false,
+    "codexHomeReturnPassed": true,
+    "codexPhysicalLockReturnPassed": true,
+    "currentVersionReport": "docs/ios/2026-11-07-codex-0167-lifecycle.md",
+    "currentVersionResult": "tools/mobile-tah/results/2026-11-07-codex-0167-lifecycle.json"
   },
   "dataIntegrity": {
     "preUpgradeEvents": 481,
@@ -269,5 +273,69 @@
     "Current TAH text/file/Web use case, not full desktop CLI equivalence.",
     "No exhaustive factual audit of NVIDIA notes.",
     "Kimi initial connection failure and ZCode strict semantic finding remain recorded."
-  ]
+  ],
+  "sourceCheckpoints": {
+    "scope": "Local checkpoints on isolated candidate branches; original development worktrees not reset/merged and no remote push. Accepted baseline work is included for reproducibility.",
+    "repositories": [
+      {
+        "repository": "ALMA-codex",
+        "worktree": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace/ALMA-codex",
+        "branch": "codex/ios-0.167",
+        "before": "086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a",
+        "commit": "313149d34cea1f47bae8996bc878b720bb0f6031",
+        "clean": true,
+        "pushed": false
+      },
+      {
+        "repository": "ALMA-kimi-code",
+        "worktree": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace/ALMA-kimi-code",
+        "branch": "codex/ios-0.167-host",
+        "before": "34d523c1289d191eb52962a57b87ac94cd95dc86",
+        "commit": "f5f40a8c72eace1e5af5ebf08699daf1da459e2f",
+        "clean": true,
+        "pushed": false
+      },
+      {
+        "repository": "ALMA-ZCode",
+        "worktree": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace/ALMA-ZCode",
+        "branch": "codex/ios-0.167-host",
+        "before": "0284cf990d32f46833be3cb976335fb2ccc6356e",
+        "commit": "f4dac0ba8aea32de880166c9b0fdc37cbe2bd173",
+        "clean": true,
+        "pushed": false
+      },
+      {
+        "repository": "ALMA-litter",
+        "worktree": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace/ALMA-litter",
+        "branch": "codex/ios-0.167-integration",
+        "before": "fe4446839293be37c26e68ee1cb3a79a2471aac1",
+        "commit": "32e65b4198a4699b26c25fafbe375c1d8abe665a",
+        "clean": true,
+        "pushed": false
+      }
+    ]
+  },
+  "testedSourceTreeMatchesCheckpoints": true,
+  "originalWorktreePolicy": "No runtime edits, branch resets, merges or remote pushes to original checkouts; reports/pointers added in ALMA-litter.",
+  "phoneHandoff": {
+    "atUTC": "2026-11-07T09:26:42.753920+00:00",
+    "appVersion": "0.4.2 (15)",
+    "normalLaunchWithoutQualificationArguments": true,
+    "normalLaunchReceipt": "phone/normal-relaunch.json",
+    "selectedProvider": "codex",
+    "existingAuthorizationRestored": true,
+    "newLoginRequested": false,
+    "visibleAction": "Structured Notes / NVIDIA / 2026-11-07T07:18:25 / completed",
+    "visibleModel": "GPT-6-Astra / xhigh",
+    "screenSharingStopped": true,
+    "captureKeyboardDisabled": true,
+    "historicalEventsUnchanged": 563,
+    "sqliteIntegrity": [
+      "ok",
+      "ok"
+    ],
+    "immediateMacFreeGiB": 53.59,
+    "powerSamplingRunning": false,
+    "phoneTaskRunning": false
+  }
 }

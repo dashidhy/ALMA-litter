@@ -1,4 +1,15 @@
-# Actual Codex 0.166 scoped ExecutorFileSystem adapter — not runtime-wired
+# Scoped executor filesystem regression
+
+The maintained source is `ALMA-codex/ios/native/src/scoped_executor_fs.rs` in the sibling
+fork. The retained runner now reads that source and the fork's pinned Codex
+release. Current TAH build and acceptance status is in the
+[mobile TAH guide](../../mobile-tah/README.md).
+
+## Historical 0.166 implementation record
+
+The observations, source paths and integration status below describe the earlier
+implementation stage. They are not a fresh qualification of the current package;
+consult the dated milestone record for checks actually rerun during cleanup.
 
 Follow-up: main has since wired these modules/dependencies and reported a passing
 full mobile iOS check. The [actual apply-patch consumer regression](apply_patch_evidence.md)

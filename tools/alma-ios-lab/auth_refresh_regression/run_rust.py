@@ -5,8 +5,8 @@ import os,sys,json,subprocess,hashlib
 HERE=Path(__file__).resolve().parent; ROOT=HERE.parents[2]; BUILD=HERE/'.build/rust'; BUILD.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(HERE.parent/'thread_item_regression'))
 from run import declaration
-SRC=ROOT/'shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs'
-UP=ROOT/'shared/third_party/codex/codex-rs/app-server-protocol/src'
+SRC=ROOT.parent/'ALMA-codex/ios/native/src/auth_refresh.rs'
+UP=ROOT.parent/'ALMA-codex/codex-rs/app-server-protocol/src'
 account=(UP/'protocol/v2/account.rs').read_text();rpc=(UP/'rpc.rs').read_text()
 wire='use serde::{Serialize,Deserialize}; use serde_json::Value as JsonValue;\n'
 for n in ['ChatgptAuthTokensRefreshParams','ChatgptAuthTokensRefreshReason','ChatgptAuthTokensRefreshResponse']:

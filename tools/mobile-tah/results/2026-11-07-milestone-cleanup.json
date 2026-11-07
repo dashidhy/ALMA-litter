@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "atUTC": "2026-11-07T15:15:45.991049+00:00",
+  "scope": "Three-provider TAH milestone cleanup and localdev/ios integration; no push,mainMacsource change,phone install or new model task",
+  "versions": {
+    "app": "0.4.2(15)",
+    "codex": "0.167.0",
+    "kimi": "2.4.1",
+    "zcode": "3.17.2"
+  },
+  "productionImplementationsUnchangedFromQualifiedCandidates": true,
+  "sourceRemovals": [
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/alma_code_mode.rs",
+      "bytes": 2083,
+      "sha256": "90e6baf68429ff4f2d0966207758720bca96d93c852e935df754c22805d5966d",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/provider_backend.rs",
+      "bytes": 20625,
+      "sha256": "1f57ee51aea144df376939c3b22146e9c4d34dda5e21d059d35dde974a33c834",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/provider_scope.rs",
+      "bytes": 39079,
+      "sha256": "f1aa627911eb70d1ebfe5da805f6e31cfd9b84ced861668bbc49484efd92fc34",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/provider_bridge.rs",
+      "bytes": 19145,
+      "sha256": "c3a9b050e8192c1c831c505f7046f6d82d3142d9bff3800dcda341d393325980",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/provider_runtime_config.rs",
+      "bytes": 23126,
+      "sha256": "3f097dc45dfeb45a0ad84f86472b43b06a9203fceda95b5c7500a40ca12ce6c7",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/embedded_runtime.rs",
+      "bytes": 3407,
+      "sha256": "a107537b7f6c7dad3bd93d423232b3fd3d664da5b01d5566faa77dd9c6dbec25",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/ish_types.rs",
+      "bytes": 1621,
+      "sha256": "49b537d81aeeaa6965572edbcda8cdb53580be1082c177ea09997ba75c1c88d9",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/kimi_assets.rs",
+      "bytes": 9888,
+      "sha256": "9ad55d2135a5e911232dc5beabf836d4effc22925ce5e87dc785a925f9ba7d37",
+      "reason": "Uncompiled same-name provider copy; lib.rs selects fork module"
+    },
+    {
+      "path": "tools/kimi-mobile-probe/run.py",
+      "bytes": 6030,
+      "sha256": "0d02a7edd2b4408ac8eb6f002dc581f026a9624842c34e0d16e36714ee93232a",
+      "reason": "Retired standalone C-host research entry; current package uses owned Rust backend"
+    },
+    {
+      "path": "tools/kimi-mobile-probe/probe.mjs",
+      "bytes": 12892,
+      "sha256": "bdadac258fc7df7347eb6ab569285ef59f673549b410eb8eef08e4f2c74fb56d",
+      "reason": "Retired standalone C-host research entry; current package uses owned Rust backend"
+    },
+    {
+      "path": "tools/kimi-mobile-probe/live-host.mjs",
+      "bytes": 7888,
+      "sha256": "a609d44c607aabe5568b4457ac97ce7f5c80114497a0398e4efea27294adcc6b",
+      "reason": "Retired standalone C-host research entry; current package uses owned Rust backend"
+    },
+    {
+      "path": "tools/kimi-mobile-probe/pipe-fetch.mjs",
+      "bytes": 3277,
+      "sha256": "4e2d66ea1789442d252c3588557ebfec8a0c00c9199d4ac23220e8c118b57aa6",
+      "reason": "Retired standalone C-host research entry; current package uses owned Rust backend"
+    },
+    {
+      "path": "tools/kimi-mobile-probe/pipe-fetch.test.mjs",
+      "bytes": 7720,
+      "sha256": "d62a8ebc0697f4e4f6281d57ee9fe79788093b19a6c382b6201ff7c49aad307a",
+      "reason": "Retired standalone C-host research entry; current package uses owned Rust backend"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/auth_refresh.rs",
+      "bytes": 6228,
+      "sha256": "34a30a1df4fb83cabaaa5966601f6599f47f4aebcb7dada629202017e4c6765f",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/execution_fence.rs",
+      "bytes": 1260,
+      "sha256": "8e83a083b5696173eeee52adc8a21b6a6076dae1bcf8ada7ecc00cdab6f2fbd3",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs",
+      "bytes": 14005,
+      "sha256": "c98b341b931e72363f9501d29b78897245eb2ab4305e62aa3eebc79a23f9a2e6",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/ish_exec_backend.rs",
+      "bytes": 24731,
+      "sha256": "875bc58a184bf55652fb4e3a0dbb72ae71bc3d7935210376c6254b6e476f102a",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/scoped_files.rs",
+      "bytes": 13547,
+      "sha256": "0bcf1741c38a3ea06b7410dd4ef752fd3fe499d87f07d130f71372f7515192c1",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/scoped_executor_fs.rs",
+      "bytes": 20829,
+      "sha256": "7b86e2eda88a3818be0fe0a11ed99bf445095806c1f1ee7e62947e4605198e53",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/kimi_backend.rs",
+      "bytes": 32315,
+      "sha256": "572f3abd3e04748c084bbecee8603d98ce1ecbf24192b711b851c078b5dbd231",
+      "reason": "Regressions now consume maintained fork sources"
+    },
+    {
+      "path": "tools/alma-ios-lab/scoped_executor_regression/prepare_preflight_proposal.py",
+      "bytes": 10122,
+      "sha256": "de933dbc330ec092e0cfe3ff72e8842044c071316bd8246fe4ddd43338ee40ae",
+      "reason": "Retired pre-migration patch proposal generator; no current caller"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/README.md",
+      "bytes": 3681,
+      "sha256": "2bc5e6a0019b8bcfe7d057634e1d79e6b9f21452f39f644e6fc97ee5c29f0861",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/owned_process_tests.rs",
+      "bytes": 12646,
+      "sha256": "0844f00b84f922dd87232d542dc88c68fe65f25ec5f9c75d00a2117017318045",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/run.py",
+      "bytes": 5704,
+      "sha256": "3c547cd8cb8b0eb419b451ae58d0a866e528c570f7f299fd45ace0871fd3b494",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/scope.rs",
+      "bytes": 3614,
+      "sha256": "1d88b41e922c625cbaac973ef230a79744eeb4eb2000c61150c82aaa72ce0d65",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/tests.rs",
+      "bytes": 13753,
+      "sha256": "0c45a0723d1dee4f54843b6617bf31f6986f960d2beb60ba618ff50928ad31ec",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/transport_tests.rs",
+      "bytes": 13874,
+      "sha256": "98849093195756cd3f24f7ba2632d65a6daf2c57f8c254d382c97dddf54b4bf1",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    },
+    {
+      "path": "tools/alma-ios-lab/kimi_backend_regression/web-codec-fixtures.json",
+      "bytes": 1345,
+      "sha256": "0ed103e99413bbb48656c3b9faa61f26a1bd2a062e288d17eff42ae12c407091",
+      "reason": "Superseded by ALMA-kimi-code/ios/tests/native; current59-test maintained harness passed"
+    }
+  ],
+  "buildCleanup": {
+    "startedAtUTC": "2026-11-07T14:41:19.329131+00:00",
+    "freeBeforeBytes": 57233231872,
+    "removed": [
+      {
+        "path": "shared/rust-bridge/target",
+        "bytesByDu": 18595827712
+      },
+      {
+        "path": "tools/mobile-tah/.cache/rollback-20261107",
+        "bytesByDu": 781250560
+      },
+      {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData",
+        "bytesByDu": 64770048
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-0cza_ihn",
+        "bytesByDu": 35618816
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-5b9yi6xr",
+        "bytesByDu": 35508224
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-66kg2q1_",
+        "bytesByDu": 35373056
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-6o30tda_",
+        "bytesByDu": 35110912
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-79112adb",
+        "bytesByDu": 35500032
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-8bzd3be7",
+        "bytesByDu": 35155968
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-8rlrvkbw",
+        "bytesByDu": 35110912
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-ab-preflight-m21umnbk",
+        "bytesByDu": 4096
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-hidi5200",
+        "bytesByDu": 35115008
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-i66go9oh",
+        "bytesByDu": 35110912
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-j8owwfzw",
+        "bytesByDu": 35586048
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-l2s4o53f",
+        "bytesByDu": 35614720
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-slohkz5g",
+        "bytesByDu": 35495936
+      },
+      {
+        "path": "tools/mobile-tah/.cache/jscore-rpc-bench-uthcmw_p",
+        "bytesByDu": 35110912
+      }
+    ],
+    "retained": [
+      "0.4.2(15) signed candidate plus qualified native library and source worktrees",
+      "0.4.1(14) signed rollback",
+      "Required Kimi compile-cache/SDK and ZCode runtime generations",
+      "All phone qualification and power/lifecycle evidence"
+    ],
+    "timeMachineTouched": false,
+    "completedAtUTC": "2026-11-07T14:41:22.949018+00:00",
+    "freeAfterBytes": 57229332480,
+    "removedFootprintBytes": 19901263872
+  },
+  "extraCleanup": {
+    "removedLegacyHarness": "tools/alma-ios-lab/kimi_backend_regression",
+    "bytesByDu": 291225600,
+    "maintainedReplacement": "../ALMA-kimi-code/ios/tests/native/run.py",
+    "replacementTestsPassed": 59
+  },
+  "sourceVerification": {
+    "codexMigration": 18,
+    "codexProtocol": 11,
+    "kimiAdapter": 131,
+    "kimiNative": 59,
+    "executorContract": 24,
+    "scopedFilesHost": 15,
+    "scopedFilesIOSModuleCompile": true,
+    "frontendTests": 194,
+    "frontendTypecheck": true,
+    "appSourceLock": true,
+    "appTypecheckAndBundle": true,
+    "providerLazyLoading": 3,
+    "coreReplayRevisions": 3,
+    "multiProviderReplayRevisions": 6,
+    "lifecycleClassifier": true,
+    "zcodeTypecheck": true,
+    "zcodeLintErrors": 0,
+    "zcodeLintWarnings": 86,
+    "zcodeArchitectureViolations": 0,
+    "bindingsInputHashTests": 5
+  },
+  "knownTestSetupFindings": [
+    "Missing TAH_RUNTIME on first Kimi adapter invocation; explicit input resolved and131tests passed.",
+    "Missing CARGO path on first native invocation; selected existing toolchain and59tests passed.",
+    "Existing rust-objcopy/libLLVM strip warnings; tests executed and passed; shared toolchain not changed.",
+    "Binding input test fixture lacked the ZCode repository: four of five tests initially failed. Added third-provider fixture and per-provider add/remove/missing checks; all five passed. Production script unchanged."
+  ],
+  "cleanSourceCheck": {
+    "passed": true,
+    "atUTC": "2026-11-07T15:11:40.873862+00:00",
+    "checks": [
+      {
+        "check": "codex-source",
+        "exitCode": 0,
+        "log": "clean-codex-source.log"
+      },
+      {
+        "check": "kimi-source",
+        "exitCode": 0,
+        "log": "clean-kimi-source.log"
+      },
+      {
+        "check": "app-source",
+        "exitCode": 0,
+        "log": "clean-app-source.log"
+      },
+      {
+        "check": "provider-sources",
+        "exitCode": 0,
+        "log": "clean-provider-sources.log"
+      },
+      {
+        "check": "app-typecheck",
+        "exitCode": 0,
+        "log": "clean-app-typecheck.log"
+      },
+      {
+        "check": "trusted-bundle",
+        "exitCode": 0,
+        "log": "clean-trusted-bundle.log"
+      },
+      {
+        "check": "provider-lazy-loading",
+        "exitCode": 0,
+        "log": "clean-provider-lazy-loading.log"
+      },
+      {
+        "check": "frontend-typecheck",
+        "exitCode": 0,
+        "log": "clean-frontend-typecheck.log"
+      },
+      {
+        "check": "frontend-build",
+        "exitCode": 0,
+        "log": "clean-frontend-build.log"
+      }
+    ],
+    "sourceWorktreeCommits": [
+      {
+        "repository": "ALMA-codex",
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-codex",
+        "commit": "2f2f9536a261d2b4e03feb42e6e1a1d97f188eb4"
+      },
+      {
+        "repository": "ALMA-kimi-code",
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-kimi-code",
+        "commit": "9a2eb4242292be952a59608bf4a7a30a31a668f7"
+      },
+      {
+        "repository": "ALMA-ZCode",
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-ZCode",
+        "commit": "dd2144d3a9250e6ef03c43de4164b0fa9976befd"
+      },
+      {
+        "repository": "ALMA-litter",
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-litter",
+        "commit": "694ad242c128f0269ca9ad0d810f72086a27c167"
+      }
+    ],
+    "trustedJavaScriptByteIdenticalToPhoneQualifiedCandidate": {
+      "alma-tah.js": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+      "alma-provider-codex.js": "2ee4325260a7b422ee0cb0bff9cf81ff0ebbe891498b77e30b7ef7bd500dbb23",
+      "alma-provider-kimi.js": "d6d8e22e77d8a0469eb1d5fa1c801320c65e5aa3d1a1c96c819da50943585b73",
+      "alma-provider-zcode.js": "b53731cf08f54a2866b31601488c5bade4a635008c143a4ba9e963aef4766a9f"
+    },
+    "frontendDistMatchesQualifiedBuild": true,
+    "frontendDistFiles": 3,
+    "sourceWorktreesAfterChecks": {
+      "ALMA-codex": {
+        "trackedSourceClean": true,
+        "explicitDependencyCacheLinks": []
+      },
+      "ALMA-kimi-code": {
+        "trackedSourceClean": true,
+        "explicitDependencyCacheLinks": []
+      },
+      "ALMA-ZCode": {
+        "trackedSourceClean": true,
+        "explicitDependencyCacheLinks": [
+          "ios/node_modules"
+        ]
+      },
+      "ALMA-litter": {
+        "trackedSourceClean": true,
+        "explicitDependencyCacheLinks": [
+          "tools/mobile-tah/node_modules",
+          "apps/ios/tah-ui/node_modules"
+        ]
+      }
+    },
+    "sharedDependencyInputs": [
+      "App npm dependencies matching committed locks",
+      "ZCode ios workspace dependency cache matching the same release"
+    ],
+    "setupFindings": [
+      "Initial app-typecheck omitted prepared ZCode workspace types. Supplied locked dependency cache; retry passed.",
+      "Source-clean guard initially rejected explicit dependency symlinks. Tracked files verified unchanged; only the three exact checked links allowed."
+    ],
+    "scope": "Clean Git source checkouts with explicit existing dependency caches; source locks, JS typecheck/build/lazy loading and frontend build passed. Not a zero-cache install or full native rebuild."
+  },
+  "immediateFreeGiB": 52.76,
+  "retainedCandidateVerification": {
+    "status": "mac-qualified-phone-candidate",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/candidate/AlmaTAHTauri.app",
+    "appVersion": "0.4.2",
+    "appBuild": "15",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "514611fa86cf1346f83a78d73a15ec333df99a73d2be92f7c975ced991fd990e",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "8f754d9ac8b5c5673223d0bf7490740b7a80c8d76a0fb56880bed9a40e88c219",
+    "nativeSourcesMatchCurrent": true,
+    "nativeArchiveSHA256": "e82b19231cca5ce74b8f3b6dec3251f6e5acab67966a4b3f1a6dbaef3f1d4d31",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "4332d5c066672c79f5991d6c09aeaf242eaef73ea10ebc13a07ee41ccb666ad3",
+        "files": 140
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": true
+  },
+  "verificationCleanup": {
+    "atUTC": "2026-11-07T15:14:10.649065+00:00",
+    "removed": [
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-codex",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-kimi-code",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-ZCode",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/milestone-cleanup/clean-repro/ALMA-litter",
+      {
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/backend_regression/.cache/target",
+        "bytesByDu": 153255936
+      },
+      {
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/scoped_files_regression/.build/target",
+        "bytesByDu": 73015296
+      },
+      {
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-kimi-code/ios/tests/native/.cache/target",
+        "bytesByDu": 301707264
+      },
+      {
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/app",
+        "bytesByDu": 487424
+      },
+      {
+        "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/tauri-app",
+        "bytesByDu": 73728
+      }
+    ],
+    "retainedQualifiedWorktreesUntouched": true,
+    "timeMachineTouched": false,
+    "immediateFreeGiB": 52.76
+  },
+  "providerCommits": {
+    "ALMA-codex": "2f2f9536a261d2b4e03feb42e6e1a1d97f188eb4",
+    "ALMA-kimi-code": "9a2eb4242292be952a59608bf4a7a30a31a668f7",
+    "ALMA-ZCode": "dd2144d3a9250e6ef03c43de4164b0fa9976befd"
+  },
+  "status": "cleanup_and_source_reproduction_verified",
+  "notes": [
+    "Clean App verification used a temporary staged-source snapshot; only final documentation/report metadata changed afterward.",
+    "Qualified source worktrees and native archive retained for the exact frozen phone package.",
+    "This cleanup does not relabel or rebuild the installed phone package."
+  ],
+  "removedDirectoryFootprintBytes": 20721029120,
+  "removedDirectoryFootprintGiB": 19.3
+}

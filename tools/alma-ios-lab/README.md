@@ -1,4 +1,16 @@
-# Litter 接入前审查：以 Codex 0.166.0 为目标
+# iOS 移植实验与历史审查
+
+当前三 Provider 的手机 TAH 构建、源码所有权和验收入口是
+[tools/mobile-tah](../mobile-tah/README.md)。维护中的实现来自 sibling
+`ALMA-codex`、`ALMA-kimi-code`、`ALMA-ZCode`，不会再从本实验目录或旧
+Codex submodule 的未提交补丁构建产品后端。Kimi 原生回归统一使用
+`ALMA-kimi-code/ios/tests/native/run.py`，重复的本地 harness 已退役。
+
+下文保留2026-11-01及更早实验的原始结论；其中“当前”“尚未验收”均指
+当时状态，不能代替现行指南和带版本的真机报告。保留的回归/准备工具仍需
+各自明确的依赖输入；历史探针不作为当前手机包的功能验收入口。
+
+## 历史：以 Codex 0.166.0 为目标的接入前审查
 
 **实施位置已迁移：ALMA-litter / dev/ios。用户已确认实施清单，当前正在实现与验证。**
 旧ALMA目录只保留跳转说明，重复review clone已删除。不要将下文历史审查轮的未测试说明

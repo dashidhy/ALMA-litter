@@ -1,4 +1,15 @@
-# Native descriptor-relative scoped files: unintegrated primitive
+# Scoped file primitive regression
+
+The maintained source is `ALMA-codex/ios/native/src/scoped_files.rs` in the sibling
+fork. The retained runner now reads that source and the fork's pinned Codex
+release. Current TAH build and acceptance status is in the
+[mobile TAH guide](../../mobile-tah/README.md).
+
+## Historical 0.166 implementation record
+
+The observations, source paths and integration status below describe the earlier
+implementation stage. They are not a fresh qualification of the current package;
+consult the dated milestone record for checks actually rerun during cleanup.
 
 The implementation is
 `shared/rust-bridge/codex-mobile-client/src/scoped_files.rs`. It is not declared

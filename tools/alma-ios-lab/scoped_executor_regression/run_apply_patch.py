@@ -12,8 +12,8 @@ import time
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-SRC = ROOT / "shared/rust-bridge/codex-mobile-client/src"
-UP = ROOT / "shared/third_party/codex/codex-rs"
+SRC = ROOT.parent / "ALMA-codex/ios/native/src"
+UP = ROOT.parent / "ALMA-codex/codex-rs"
 BUILD = HERE / ".build"
 TOOLCHAIN = ROOT.parent / "ALMA/.build/tauri-toolchain"
 

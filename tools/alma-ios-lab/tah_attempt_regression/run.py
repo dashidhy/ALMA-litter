@@ -10,7 +10,8 @@ MAC=ALMA/'app/TAH'
 TOOLCHAIN=ALMA/'.build/tauri-toolchain'
 CACHE=HERE/'.cache'
 LIMIT=1024**3
-SOURCES={name:REPO/'shared/rust-bridge/codex-mobile-client/src'/name for name in ['tah_attempt.rs','scoped_files.rs']}
+SOURCES={'tah_attempt.rs': REPO/'shared/rust-bridge/codex-mobile-client/src/tah_attempt.rs',
+         'scoped_files.rs': REPO.parent/'ALMA-codex/ios/native/src/scoped_files.rs'}
 
 
 def sha(path):

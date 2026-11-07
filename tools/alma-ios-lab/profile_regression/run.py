@@ -17,8 +17,8 @@ import time
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-UP = ROOT / "shared/third_party/codex/codex-rs"
-SOURCE = ROOT / "shared/rust-bridge/codex-mobile-client/src/alma_local_profile.rs"
+UP = ROOT.parent / "ALMA-codex/codex-rs"
+SOURCE = ROOT.parent / "ALMA-codex/ios/native/src/alma_local_profile.rs"
 BUILD = HERE / ".build"
 
 
