@@ -1,5 +1,24 @@
 # Repository Guidelines
 
+## Alma mobile build storage
+
+- This MacBook is the user's only build machine. Check immediate free space
+  before and during native/Xcode builds; run large builds serially. Use the
+  existing 12 GiB start / 8 GiB stop guards as minimums, not storage targets.
+- Reuse a retained archive only after its source/provenance checks pass. Do not
+  rebuild Rust for a JavaScript/runtime-resource-only change.
+- After qualification, promptly remove obsolete per-run runtime/rootfs copies,
+  superseded archives, incremental outputs and Xcode intermediates owned by this
+  task. Keep source, locks, reproducible build inputs, reports and the current
+  qualified candidate plus a deliberately chosen rollback. Never remove another
+  session's active outputs or delete all caches indiscriminately.
+- Report retained build footprint and immediate free space at handoff. Do not
+  delete or thin Time Machine snapshots; the user explicitly excluded them.
+- Device Hub is allowed for agent testing. Before handing the phone to the user
+  for typing/login/OTP, stop Screen Sharing and verify the `View Screen` state.
+  Merely disabling Capture Keyboard is insufficient. Resume sharing only after
+  the user finishes. This is a handoff rule, not a ban on Device Hub.
+
 Companion docs: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) is the ownership map,
 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) is the build/release guide, and
 [`docs/REPOSITORY_AUDIT.md`](docs/REPOSITORY_AUDIT.md) is the open risk register

@@ -45,6 +45,7 @@ const ROOTFS_ARCH_FILE: &str = "data/etc/apk/arch";
 const ROOTFS_ALPINE_RELEASE_FILE: &str = "data/etc/alpine-release";
 const ROOTFS_ROOT_HOME_DIR: &str = "data/root";
 
+#[cfg(not(feature = "alma-code-mode-probe"))]
 impl From<ish_embed_host::IshError> for IshBootstrapError {
     fn from(err: ish_embed_host::IshError) -> Self {
         IshBootstrapError::Ish(err.to_string())

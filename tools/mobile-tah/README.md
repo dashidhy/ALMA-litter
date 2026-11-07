@@ -1,21 +1,123 @@
 # Phone-owned TAH integration
 
-Work is on `dev/ios`, scoped to ALMA-litter. The Mac ALMA repository is read-only.
+The consolidated **0.4.1 (14)** candidate was built and signed on Mac on
+2026-11-07 and has now passed phone foreground qualification, including full
+NVIDIA V0/V1/V2 on both Kimi and ZCode. It contains the
+ZCode Mac-long-qualified non-streaming runtime plus the subsequent native proxy
+patch. Codex remains 0.166.0, Kimi Code 2.4.1 and ZCode 3.17.2. The retained
+package is `.cache/candidates/0.4.1-14/AlmaTAHTauri.app`; its `verification.json`
+checks signature, exact runtime manifests, expected app version/build and the
+native archive/source identity at build time. Later source-only observer changes
+are not installed in this candidate. The full build receipt is
+[`results/2026-11-07-zcode-consolidated-build.json`](results/2026-11-07-zcode-consolidated-build.json).
+Use explicit `ALMA_ZCODE_RUNTIME` from `ALMA-ZCode/ios/.cache/mac-long-candidate.json`
+when rebuilding this candidate; the earlier short-task runtime pointer remains
+unchanged. The selected signed rollback is `.cache/rollback-20261107/AlmaTAHTauri.app`.
+See [release upgrade assessment](../../docs/ios/2026-11-07-provider-release-assessment.md)
+for the separate Codex 0.167 / Kimi 2.5.2 evaluation; neither was upgraded.
+
+Current foreground, unplugged-power and lifecycle evidence is tracked in
+[the phone qualification report](../../docs/ios/2026-11-07-phone-requalification.md)
+and [the lifecycle/power report](../../docs/ios/2026-11-07-lifecycle-power.md).
+Power is approximate reference data, not a blocking precision measurement.
+Recovery after foreground return does not establish sustained background execution.
+
+This application integration lane composes the app-owned TAH framework with
+the release-pinned provider sources in sibling `ALMA-codex` and
+`ALMA-kimi-code` and `ALMA-ZCode` repositories. Build 0.3.6 (12) is the previous
+Codex/Kimi long-task baseline. The earlier 0.4.0 (13) composition has Kimi cached
+V0/V1/V2 and ZCode V0–V3 short-task phone evidence in `results/2026-11-05-*.json`;
+see [current composition](../../docs/ios/2026-11-05-provider-composition.md).
+
+## NVIDIA long-task and unplugged-energy qualification
+
+Build with `prepare_tauri_app.py --long-fixture PATH/mobile-qualification-nvidia.json`.
+The ignored fixture must contain the existing full 254-turn NVIDIA transcript
+(end 02:05:24), the same three deltas for both providers, zh-CN and Web enabled.
+Its raw UTF-8 identity is recorded in the composition spec. The committed source
+does not contain the user's transcript. Use the regular provider runtimes, not
+the SDK-load measurement overlay.
+
+After installing, restore/select the intended provider through the ordinary UI,
+stop Device Hub sharing, get the user's unplug confirmation, and verify a cool
+idle baseline. Then run:
+
+```sh
+python3 tools/mobile-tah/supervise_long_phone.py --provider kimi --output tools/mobile-tah/.cache/LONG_RUN/kimi
+```
+
+Use a fresh directory for each run. The recorder launches the App with
+`--mobile-tah-long-qualification`; Mac only reads progress. The phone runs Raw,
+V0, Extra/V1 and Extra/V2, with a 30-second initial recorder wait and a 45-minute
+observer deadline per phase. Native/provider timeouts are unchanged. The App
+records battery, charging, thermal and brightness state once per minute and at
+stage changes. Power Profiler plus Thermal State records device energy; CPU
+profiling and screen sharing stay off. The collector stops when the phone report
+ends, then exports the power data. The full trace includes initial/final idle;
+clip it to the actual task intervals before comparing providers.
+
+Repeat for ZCode after cooling. V0 alone is partial: validate all publications,
+prior-file immutability, V1's append-only key points, V2's exact heading change,
+unchanged ASR files and unplugged energy evidence. Treat rounded battery drop and
+instrument-estimated percent/hour as different measurements. Preserve failed
+reports; a driver timeout never means the Core was cancelled.
+
+If Instruments blocks, prioritize function as the user requested:
+`supervise_long_phone.py --provider zcode --no-power --output NEW_RUN_DIR`.
+This uses ordinary devicectl launch, never starts Instruments, and retains the
+phone's bounded battery/thermal samples. A malformed/incomplete trace is not
+power acceptance and must not be used to quote an hourly power rate.
+
+## Optional phone SDK-load measurement
+
+Preserve the current signed App before this measurement. Run
+`python3 tools/mobile-tah/profile_load_checks.py`, then
+`python3 tools/mobile-tah/prepare_tauri_app.py --load-profile` and the usual
+resource-only Xcode build with the verified native archive. The preparation
+copies the immutable provider resources and changes only each guest entry;
+SDK/cache hashes remain identical. Its generated receipts identify both copies.
+
+Install that diagnostic App and launch with **both**
+`--mobile-tah-qualification --mobile-tah-load-profile`. It uses the currently
+authorized provider and runs two fresh synthetic Raw Guardian tasks. The phone
+still owns the actual Framework/Adapter/backend flow. Read
+`Documents/provider-load-profile.json` and
+`Documents/mobile-tah-qualification.json` after completion. Save each provider's
+reports before relaunching, because the collector bounds/reset its process-local
+sample list. SDK import, validation/copy and native prepare/start timings are
+separate; whole workflow time includes remote inference. `prepared` means
+the cache passed validation and was enabled, not independent proof that V8
+accepted every bytecode entry on the phone.
+
+The dedicated actor removes diagnostic terminal metadata before the strict
+Adapter sees it, including the repeated close receipt. It records only bounded
+numeric values and known status labels, never prompts, content or credentials.
+The build marker disables this path in a regular App. Restore the qualified
+non-profile App afterwards, regenerate the ordinary project without
+`--load-profile`, and delete the disposable profile package/resources.
+
+The current source ownership, reproducible build commands and both providers'
+NVIDIA V0/V1 acceptance are recorded in
+[the release-fork integration report](../../docs/ios/2026-11-04-release-provider-integration.md).
+The dated sections below retain the earlier prototype qualification history.
 
 Before combining this test app with the full mobile app, read the [mobile frontend integration notes](../../docs/ios/frontend-integration-notes.md). That is the central record of reusable UI decisions, fixed pitfalls, code locations and integration checks.
 
-The current phone presentation is Tauri + React, styled after Alma Preview, with
-Markdown rendering in the WebView. The native Tauri package has been built,
-installed and checked on the phone with the existing SAM v0 data. The earlier reader/settings checks remain separate from workflow evidence. The current chat build also completed one Tauri-initiated synthetic revision v3 through the original phone-owned framework; see the chat acceptance record below.
+The phone presentation is Tauri + React, styled after Alma Preview, with
+Markdown rendering in the WebView. Earlier native Tauri packages were built,
+installed and checked on the phone with the existing SAM v0 data. A prior chat
+build also completed one Tauri-initiated synthetic revision v3 through the
+original phone-owned framework. The dated acceptance records below identify
+the qualified builds and workflows.
 
 ## Ownership
 
 - `shared/tah-runtime/upstream`: hash-locked copy of the current Mac business core.
-- `shared/tah-runtime/platform`: JSCore primitives, application composition, neutral attempt port, and Codex-specific mobile Adapter seams. The build uses only this repository's source.
+- `shared/tah-runtime/platform`: JSCore primitives, application composition and neutral attempt port. The bundler resolves provider-specific adapters from the sibling forks through `provider_sources.py`.
 - `apps/ios/Sources/AlmaTAH`: presentation DTOs/controller, the original Swift SQLite journal, trusted JSCore host and native platform connection. The SwiftUI views remain available as a fallback.
 - `apps/ios/tah-ui`: React/Markdown frontend and the Tauri Rust crate. `tah_ui(method,value)` calls the Swift gateway through C FFI; it does not expose Provider RPC to React.
 - `Sources/TauriNativeHost.swift`: constructs one controller and delegates to `TAHWebPresentationBridge`. Bootstrap, sign-in and external links stay in this native host.
-- `mobile_tah_host.rs`: trusted material/auth composition; `provider_bridge.rs`/`provider_backend.rs`: native RPC lifecycle; `provider_scope.rs`: owned execution views over one sealed iSH instance.
+- `mobile_tah_host.rs` owns trusted material/auth composition. The native facade path-includes Codex lifecycle and shared execution modules from `ALMA-codex/ios/native`, and the Kimi transport and resource installer from `ALMA-kimi-code/ios/native`.
 
 The Framework retains Raw/Extra Guardian ordering, prompts, ledgers, critic,
 acceptance and publication. Swift does not implement a competing workflow.
@@ -28,6 +130,183 @@ Changing the viewport does not change the boundary
 `TAHFramework -> ProviderAdapter -> ProviderBackend`, the prompts, the journal,
 or Guardian/critic/publication decisions.
 
+## Kimi serial tools and current app (2026-11-04)
+
+App **0.3.5 (11)** passed the full NVIDIA V0 on the iPhone with
+`k3.1-pro / max`, Chinese output, and Web enabled. Generation took 26m 7.290s,
+settled 86 tools, and published both files with Rule Critic `PASS`. All 171
+pre-test journal events remained byte-identical. Unplugged power-only windows
+at 51% brightness measured 17.3, 12.9, and 15.4%/hour during Actor, with
+`Nominal` thermal state throughout. These are separate whole-device instrument
+windows. The final window is clipped to publication time.
+[Device acceptance evidence](../../docs/ios/2026-11-04-kimi-serial-tools.md#device-acceptance)
+
+The trusted Kimi guest enables `ALMA_KIMI_SERIAL_TOOLS=1` before SDK load.
+A locked SDK source patch serializes preparation, execution, finalization, and
+result publication for each tool in the original model batch. The original
+SDK model loop and hash-locked TAH Core retain their workflow responsibilities.
+All three focused checks and the extended 105-check Kimi SDK suite passed.
+The native Kimi and owned-executor suites passed 29 and 24 checks respectively. The 16-call
+fixture peaks at one actual execution and one active tool lifecycle, and the
+12-call cancellation fixture executes only its blocking search. A fresh-source
+offline rebuild reproduced the exact locked SDK hash.
+[Serial-tool implementation and evidence](../../docs/ios/2026-11-04-kimi-serial-tools.md)
+
+## Kimi provider integration (2026-11-03)
+
+Kimi Code is implemented in the combined Tauri prototype. The pinned release is
+`@moonshot-ai/kimi-code@2.4.1`, SDK `0.22.0`, from source commit
+`2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7`. The release lock preserves the reviewed
+permission-rules and mobile serial-tools patches, build inputs, and SDK entry hash.
+
+The implementation adds provider registration/configuration, native Kimi key
+entry and Keychain storage, opaque credential handles, the mobile Kimi Adapter,
+an iSH Node guest running the real SDK Harness, and a Rust HTTP/process broker.
+The guest uses a placeholder credential. Rust admits the frozen model/Web routes
+and supplies native authentication. The original Framework owns role ordering,
+critic, acceptance, revisions, and publication.
+
+Local exports verify a real-API Raw Guardian run on 2026-11-03 from
+`09:37:27Z` to `09:38:17Z`, with a saved ALLOW assessment and completed
+close/capture/release. Action `3a92da08-200d-4585-8b65-d7b18dd989af` completed
+V0 and V1 using `kimi-for-coding / low`, interaction language `zh-CN`, action
+language `en`, and `Web=false`. UI elapsed times were 78 seconds and 2m18s.
+
+The exported `.cache/kimi-phone-v0-journal/tah.sqlite3` and
+`.cache/kimi-phone-v1-journal/tah.sqlite3` contain both accepted publications,
+completed operation states, and critic `PASS`. Read-only integrity checks passed
+with zero pending writes. V1's published notes contain the corrected total of
+12, and its ledger retains the exact submitted instruction. Diagnostics record
+V1 Guardian start at `09:46:53Z` and completion at `09:47:42Z`, followed by Actor
+start. V2 also published with critic `PASS` in 166.164 seconds from journal
+timestamps. Its WebSearch passed, while two TensorFlow FetchURL attempts failed.
+A separate official-service probe returned 403 `websearch_audit_failed` for that
+URL. The SDK's local fallback then masked the rejection as a DNS safety error.
+V3 subsequently completed the PyTorch FetchURL on the phone and published the
+updated notes with critic `PASS` in 137.177 seconds. Its External Reference names
+DeepLabV3, FCN and LRASPP and cites the fetched page. Text outside that section
+is byte-identical to V2, including the corrected total of 12. The service-only
+boundary remains active.
+
+All 127 baseline event rows match byte-for-byte across V0/V1/V2/V3 exports, which
+contain 147/151/159/163 rows with zero pending writes and clean integrity checks.
+Codex cached authorization is valid in the exported metadata, and existing NVIDIA
+V0/V1 records were opened in the UI at 18:22 Asia/Shanghai. Kimi cached reconnect
+is valid in the export checked at `10:24:41.203Z`. V3 started at 18:32 local with
+`kimi-for-coding / low` and Web enabled. The saved UI draft contains the full
+PyTorch instruction, including its final period. V3 completed at
+`10:34:25.129Z`, with Guardian 60.486 seconds and Actor 76.484 seconds. Core phone
+integration passed. Cross-provider new generation, long transcripts, background
+execution, and power consumption remain untested. The records dated
+2026-11-01 and 2026-11-02 below describe the prior Codex lane.
+[Sanitized phone results](results/2026-11-03-kimi-phone.json)
+
+The Mac owned-policy probe has passed Raw Guardian Read/Glob/Grep and Actor
+Write/Edit/read-back with synthetic HTTP, the actual Rust host crate, and the
+qualified packaged resources. Each case reached `end_turn`, guest exit 0, owned
+closure, and private-home cleanup. These runs exercise the original grants.
+
+Two runtime compatibility fixes are included in packaging. The pinned ICU data
+is embedded in `libicudata.so.74.2` for private ELF mappings, and the guest uses
+Node's callback realpath through `promisify` before SDK import. The ICU transform
+is locked by `kimi-tools/source-lock.json.icuEmbedding` and
+`rootfsBuildVersion=2`. The evidence record explains the policy failures and
+records input/output hashes, ABI checks, and the prepared toolchain versions.
+
+The guest's session and harness close attempts are now independent and sequential.
+The targeted injected-failure regression passes all six completion/cancellation
+cases, with cleanup precedence and final-answer suppression. `adopt_kimi.py`
+encodes the change in the generated adaptation. Retained final logs verify all
+12 test groups passed and the cleanup-hardened Xcode package built, installed,
+and launched. V2 and V3 publication are recorded on that build, with successful
+phone FetchURL verified in V3.
+
+The 2026-11-03 qualified Xcode project and built App use runtime manifest
+`8440bebe8469d691df56ed989551cf3453dd72413c8dafb6667146e808c38ae0`,
+with guest SHA-256 `2b68bc688d5536b47cff64fb5ee4aa12ed2226507d311dbc578117673fa15a4c`.
+The built executable's SHA-256 is
+`588b58872d847343489c86a63638c51b52d8b635b9b941a828a89c8a866ef675` and Mach-O UUID is
+`44BE0F11-26C8-35CF-87DC-1CE97C209C61`. All 878 packaged runtime files were
+verified against the built manifest. The original Mac owned-policy tool runs
+remain qualified against manifest `aace22419d604cb313d36d8115c1ad96d71707edb83a13429db9ee8335f013f6`.
+The result JSON separates these artifact sets.
+
+Implementation, exact resource identities, completed acceptance, and qualification limits are
+recorded in the dated integration report. [Kimi integration evidence](../../docs/ios/2026-11-03-kimi-integration.md)
+
+### Kimi resources and focused checks
+
+Use the prepared dependency lane described below. Resource generation consumes
+the fixed SDK closure under `tools/kimi-mobile-probe/.cache/latest-release`.
+
+```sh
+python3 tools/kimi-mobile-probe/prepare_latest.py --verify-only
+python3 tools/mobile-tah/adopt_kimi.py --check-only
+python3 tools/mobile-tah/build_tauri.py --resources-only
+python3 tools/mobile-tah/prepare_kimi_runtime.py --verify-only
+python3 tools/mobile-tah/prepare_kimi_rootfs.py --verify-only
+```
+
+`--resources-only` prepares the Kimi runtime, rootfs, and configuration. The
+normal `build_tauri.py` lane then builds the combined native archive. Use the
+archive, bindings, and Xcode sequence below to build the installed package.
+
+The focused checks use distinct execution boundaries.
+
+```sh
+node --test tools/mobile-tah/kimi_serial_checks.mjs
+node --test tools/mobile-tah/kimi_checks.mjs
+python3 tools/alma-ios-lab/kimi_backend_regression/run.py
+python3 tools/mobile-tah/run_kimi_core_replay.py
+
+python3 tools/alma-ios-lab/kimi_owned_probe/run.py build
+python3 tools/alma-ios-lab/kimi_owned_probe/run.py tools-guardian-success
+python3 tools/alma-ios-lab/kimi_owned_probe/run.py tools-actor-success
+```
+
+Core replay uses synthetic provider results in the real trusted JSCore/SQLite
+composition. The backend regression harness compiles production lifecycle code
+against isolated test boundaries.
+The owned probe exercises the actual iSH Rust host and SDK tools with synthetic
+HTTP. Its local `.cache/integrated-inputs.json` freezes the specific Tauri
+resource paths listed in the evidence record, and reruns require those prepared
+artifacts. Reports and fixtures live under `tools/alma-ios-lab/kimi_owned_probe`.
+Phone workflow acceptance is backed by the exported journals and diagnostics
+linked in the integration evidence record.
+
+### Device Hub text entry for phone qualification
+
+Use Device Hub **Edit → Send Clipboard** for reliable exact-text entry in these
+phone qualification runs. Hardware-keyboard `typeText` passes through the active
+Chinese IME and mangled the initial V1 draft. That draft was still unsubmitted.
+
+1. Focus the intended phone field and select the draft to replace, if one exists.
+2. Write the complete intended text to the Mac clipboard and wait for that operation to finish.
+3. Invoke Device Hub **Edit → Send Clipboard** as the next sequential action.
+4. Read back the actual field through the UI and compare it with the intended text, including digits and punctuation.
+5. Submit only after the displayed field matches. If it differs, replace the draft and repeat the verification.
+
+Keep clipboard writes and Send Clipboard serialized so another operation cannot
+replace clipboard contents between them. Route exact fixture text through this
+clipboard procedure instead of hardware `typeText` while the Chinese IME is active.
+
+When the **user** needs to type on the phone (login, OTP, or feedback), first use
+Device Hub → More Actions → Stop Screen Sharing and verify that View Screen is
+shown. Capture Keyboard being off does not guarantee the phone software keyboard
+is restored. Resume sharing after the user confirms completion. Device Hub stays
+available for agent-driven testing; this is an input handoff rule.
+
+This exact field content was verified before submission and is retained in the
+V1 journal ledger. Native diagnostics record the Guardian start at
+`2026-11-03T09:46:53Z` and completion at `2026-11-03T09:47:42Z`.
+
+```text
+Correct the total image count to 12. Keep all other facts unchanged.
+```
+
+The evidence record includes the exported publications and instruction.
+[V0 publication and V1 input evidence](../../docs/ios/2026-11-03-kimi-integration.md#phone-v0-publication-and-v1-input-evidence)
+
 ## Tauri build and reproduction
 
 Run these commands from the ALMA-litter repository root unless a block changes
@@ -38,8 +317,11 @@ and the fixed rootfs must already be prepared in the order documented in
 iSH overlay and `prepare_ios_build.py` wrappers/targets. There is no dependency download
 or device execution hidden in `build_tauri.py`.
 
-The scripts currently expect the rootfs at
-`tools/alma-ios-lab/.cache/runtime-rootfs/354d49ec25295e6c/fs`.
+The base rootfs is `tools/alma-ios-lab/.cache/runtime-rootfs/354d49ec25295e6c/fs`.
+The combined Codex/Kimi package uses the verified extension generated under
+`tools/mobile-tah/.cache/kimi-rootfs/<lock-sha256>/fs`, together with the sibling
+`kimi-runtimes/<manifest-sha256>/kimi-runtime` resource. The generated Tauri project
+records the exact selected paths.
 `cargo_ios.sh` uses the existing toolchain under
 `../ALMA/.build/tauri-toolchain` by default; set `ALMA_RUST_TOOLCHAIN_ROOT` to an
 equivalent prepared toolchain if it is elsewhere. This is a development-tool
@@ -51,6 +333,8 @@ location, not a runtime dependency on the Mac App.
 python3 tools/mobile-tah/prepare_sources.py --check-only
 npm ci --ignore-scripts --prefix tools/mobile-tah
 python3 tools/mobile-tah/adopt_adapter.py
+python3 tools/mobile-tah/adopt_kimi.py --check-only
+python3 tools/kimi-mobile-probe/prepare_latest.py --verify-only
 node tools/mobile-tah/build_bundle.mjs
 python3 tools/mobile-tah/prepare_app.py --config-only
 ```
@@ -121,15 +405,21 @@ python3 tools/alma-ios-lab/prepare_bindings.py \
   --report tools/mobile-tah/.cache/tauri-bindings.json
 ```
 
-`build_tauri.py` verifies the prepared native V8 environment, then invokes
+`build_tauri.py` first prepares the locked Kimi rootfs and runtime resources and
+regenerates configuration. It verifies the prepared native V8 environment, then invokes
 `cargo_ios.sh rustc --lib --offline -p alma-tah-ui --target aarch64-apple-ios
 --profile ios-dev -j 2 --crate-type staticlib`. The `--check` variant uses `cargo check`.
 Both modes write `.cache/tauri-native-build.log` and `.cache/tauri-native-build.json`;
-the wrapper enforces its disk-space floor and 40-minute build deadline.
+the wrapper enforces a 12 GiB start / 8 GiB stop disk-space floor, a 32 GiB
+target-directory limit, and a 40-minute default deadline. A cold rebuild after
+cache cleanup can use `--timeout-minutes 60`; completed dependencies are reused
+after a stopped build. Incremental compilation is disabled to prevent stale
+multi-GiB generations from accumulating. Keep the current useful dependency
+generation and remove obsolete archives and per-run copies after qualification.
 
 The application links **only** `libalma_tah_ui_lib.a` as its Rust archive. The Tauri
 crate already depends on the real `codex-mobile-client` with `alma-code-mode-probe`,
-so this archive contains Tauri and the existing Codex/iSH/V8 backend together.
+so this archive contains Tauri, Codex, the Kimi native broker, iSH, and native V8 together.
 Do not also link `libcodex_mobile_client.a`, a second Rust runtime archive, or a
 metadata-only archive into the Tauri target.
 
@@ -164,9 +454,9 @@ xcodebuild \
   -jobs 2 -allowProvisioningUpdates build
 ```
 
-`prepare_tauri_app.py` has no CLI options. It consumes the generated Apple inputs,
-combined archive, `swift-tauri` bindings, fixed rootfs, closed JSCore bundle and
-shared `mobile-config.json`. Its generated project selects Runtime/Persistence,
+`prepare_tauri_app.py` also accepts `--resources-only`. Its normal mode consumes the generated Apple inputs,
+combined archive, `swift-tauri` bindings, extended rootfs, immutable `kimi-runtime`,
+closed JSCore bundle and shared `mobile-config.json`. Its generated project selects Runtime/Persistence,
 presentation DTOs, `TauriNativeHost.swift`, and the Tauri launcher; it excludes the
 SwiftUI `@main` entry and SwiftUI view files. The target uses iOS 18+, Swift 5.9,
 the configured signing team, and the existing extended-virtual-addressing entitlement.
@@ -187,7 +477,11 @@ views under `apps/ios/Sources/AlmaTAH/Presentation`. Its existing generator is
 bindings. It is a separate frontend package, not a second app entry linked into
 Tauri. A normal launch uses UI actions; the SwiftUI host's explicit
 `--mobile-tah-qualification` flag starts the phone-owned qualification runner.
-Do not assume the Tauri entry implements that flag.
+The Tauri test entry now also implements `--mobile-tah-qualification` and uses
+`fixtures/mobile-qualification-fixture.json`. Launching once runs the complete
+phone-owned synthetic V0/V1/V2 fixture; read `Documents/mobile-tah-qualification.json`
+through devicectl. Normal launches never run the fixture. This is the preferred
+qualification lane when Device Hub interferes with the phone's software keyboard.
 
 The dev Mac installs and observes only. It must not dispatch individual roles,
 accept candidates, publish revisions, or restart the App between rounds.
@@ -760,3 +1054,22 @@ Swift checks cannot validate the C callback ABI or embedded web assets.
 
 Validation and current device acceptance status:
 [2026-11-02 Channel result](results/2026-11-02-working-channel.json).
+
+## Foreground qualification lifecycle classification
+
+The optional phone-owned qualification driver requires an active app. An inactive
+app with readable protected data (for example, Control Center) reports
+`needs_foreground`, not `needs_user_unlocked`. Reports include the observed app
+state and protected-data availability. A stopped observer does not cancel, retry,
+or prove the outcome of the underlying Core task. This driver is not a background
+execution qualification harness.
+
+Run its platform-independent regression without installing or linking an app:
+
+```sh
+python3 tools/mobile-tah/qualification_lifecycle_checks.py
+```
+
+The classification change is source-only after 0.4.1 (14); that retained device
+candidate and its original reports are unchanged. See the
+[2026-11-07 phone qualification](../../docs/ios/2026-11-07-phone-requalification.md).

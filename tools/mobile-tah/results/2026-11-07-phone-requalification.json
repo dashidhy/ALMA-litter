@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-07",
+  "appVersion": "0.4.1",
+  "build": 14,
+  "device": "iPhone 12 Pro",
+  "osVersion": "27.2",
+  "providerVersions": {
+    "codex": "0.166.0",
+    "kimi": "2.4.1",
+    "zcode": "3.17.2"
+  },
+  "evidenceDirectory": "tools/mobile-tah/.cache/phone-qualification-20261107-7v720_f7",
+  "vpnEnabled": true,
+  "freshUserAuthorizationNeeded": false,
+  "phoneTestsStopped": true,
+  "memorySamplerStopped": true,
+  "screenSharingStopped": true,
+  "powerMeasured": false,
+  "lanes": {
+    "zcodeNVIDIA": {
+      "functionalPassed": true,
+      "transcript": {
+        "bytes": 121541,
+        "sha256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7",
+        "unicodeCodepoints": 49047,
+        "turnCount": 254,
+        "firstTurn": "[00:00:05 - 00:00:33]",
+        "lastTurn": "[02:04:56 - 02:05:24]",
+        "expectedSHA256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7"
+      },
+      "checks": 55,
+      "revisionSeconds": [
+        629.77,
+        139.67,
+        145.471
+      ],
+      "tools": {
+        "toolCount": 43,
+        "toolFailures": 1,
+        "searchCalls": 5,
+        "fetchCalls": 0,
+        "webCalls": 5,
+        "toolKinds": {
+          "Bash": 17,
+          "Edit": 3,
+          "Read": 16,
+          "WebSearch": 5,
+          "Write": 2
+        },
+        "scope": "Persisted complete operation working logs for V0/V1/V2; Raw and unlogged provider internals are not counted.",
+        "observedRecoveryCount": 1,
+        "providerNoticeCount": 1,
+        "operationErrorCount": 0,
+        "explicitRecoveryEventCount": 0
+      },
+      "automatedDriverCompleted": false,
+      "continuation": "Primary assistant continued V1/V2 through normal UI after Control Center caused observer inactive-state stop; no user participation. Original reports retained."
+    },
+    "kimi-short": {
+      "functionalPassed": true,
+      "machineChecks": 62,
+      "manualFactReviewPassed": true,
+      "statistics": {
+        "driverTotalSeconds": 359.6856707916668,
+        "revisionTotalSeconds": 292.443,
+        "rawObservedSeconds": 54.498069208,
+        "rawPlusRevisionSeconds": 346.941069,
+        "stageSeconds": {
+          "actor": 198.245,
+          "completed": 0.0,
+          "critic": 0.138,
+          "extra_guardian": 93.808,
+          "preparing": 0.156,
+          "saving_safety": 0.096
+        },
+        "toolCount": 24,
+        "toolFailureCount": 0,
+        "operationErrorCount": 0,
+        "providerNoticeCount": 0,
+        "recordedWebToolCount": 0,
+        "toolKinds": {
+          "tool.text_edit": 4,
+          "tool.text_read": 16,
+          "tool.text_write": 2,
+          "tool.workspace_list": 2
+        },
+        "timingScope": "Revision wall-clock stage intervals plus sampled Raw duration; driver total additionally includes setup/readbacks/between-revision gaps. Actor includes provider/tool time."
+      },
+      "actorModels": [
+        {
+          "modelID": "kimi-for-coding",
+          "reasoningEffortID": "low"
+        },
+        {
+          "modelID": "kimi-for-coding",
+          "reasoningEffortID": "low"
+        },
+        {
+          "modelID": "kimi-for-coding",
+          "reasoningEffortID": "low"
+        }
+      ],
+      "canonicalReport": "tools/mobile-tah/.cache/phone-qualification-20261107-7v720_f7/kimi-short/short-validation.json"
+    },
+    "codex-short": {
+      "functionalPassed": true,
+      "machineChecks": 62,
+      "manualFactReviewPassed": true,
+      "statistics": {
+        "driverTotalSeconds": 123.83305616666621,
+        "revisionTotalSeconds": 94.72,
+        "rawObservedSeconds": 10.776520042,
+        "rawPlusRevisionSeconds": 105.49652,
+        "stageSeconds": {
+          "actor": 67.212,
+          "completed": 0.0,
+          "critic": 0.172,
+          "extra_guardian": 27.04,
+          "preparing": 0.156,
+          "saving_safety": 0.14
+        },
+        "toolCount": 10,
+        "toolFailureCount": 0,
+        "operationErrorCount": 0,
+        "providerNoticeCount": 0,
+        "recordedWebToolCount": 0,
+        "toolKinds": {
+          "tool.native_surplus": 8,
+          "tool.text_edit": 2
+        },
+        "timingScope": "Revision wall-clock stage intervals plus sampled Raw duration; driver total additionally includes setup/readbacks/between-revision gaps. Actor includes provider/tool time."
+      },
+      "actorModels": [
+        {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        },
+        {
+          "modelID": "gpt-6.1-sol",
+          "reasoningEffortID": "low"
+        }
+      ],
+      "canonicalReport": "tools/mobile-tah/.cache/phone-qualification-20261107-7v720_f7/codex-short/short-validation.json"
+    },
+    "zcodeWeb": {
+      "searchAndFetchPassed": true,
+      "strictAppendOnlyPassed": false,
+      "reason": "Search, fetch, publication and ASR preservation passed. Two generated notes statements about no Web access were updated after Web was enabled. The raw append-only byte check remains false; the user accepted these as reasonable consistency edits, not transcript changes or a porting defect.",
+      "report": "tools/mobile-tah/.cache/phone-qualification-20261107-7v720_f7/web-validation.json",
+      "functionalPassed": true,
+      "acceptanceReview": {
+        "date": "2026-11-07",
+        "decision": "accepted_by_user",
+        "rationale": "The two connectivity statements are generated process/context notes, not transcript content. Updating them after enabling Web is logically consistent. The earlier Chinese shorthand original text obscured that distinction. Actual model interpretation cannot be inferred from the diff.",
+        "rawByteCheckRetained": true,
+        "originalReportUnchanged": true,
+        "classifiedAsQualityOrPortingDefect": false,
+        "futureTestScope": "Distinguish preservation of transcript-derived facts from mutable process notes. If exact bytes are the intended target, explicitly name the file and frozen region."
+      }
+    }
+  },
+  "memory": {
+    "scope": "5-second target interval DVT Sysmontap App physFootprint; excludes separate WebKit processes; sampled peak, not instantaneous peak; one functional run per lane, not controlled provider benchmark",
+    "powerMeasured": false,
+    "charging": true,
+    "samples": 1030,
+    "firstSample": "2026-11-06T20:47:49.378737+00:00",
+    "lastSample": "2026-11-06T22:18:19.371399+00:00",
+    "stoppedByOwner": true,
+    "sourceSHA256": "9926c1ca144f52ccc3cacc18893de985e314b5373e2c5056d58667483a5d6015",
+    "runs": {
+      "zcodeNVIDIA": {
+        "sampleCount": 312,
+        "pids": [
+          2309
+        ],
+        "peakMiB": 635.3,
+        "firstSample": "2026-11-06T21:07:54.376185+00:00",
+        "lastSample": "2026-11-06T21:35:14.385465+00:00"
+      },
+      "kimi-short": {
+        "sampleCount": 67,
+        "pids": [
+          2352
+        ],
+        "peakMiB": 503.5,
+        "firstSample": "2026-11-06T21:50:14.344977+00:00",
+        "lastSample": "2026-11-06T21:56:04.389773+00:00",
+        "pidScope": "New launch PID 2352 only; excluded final sample of previous PID in same rounded launch second"
+      },
+      "codex-short": {
+        "sampleCount": 23,
+        "pids": [
+          2372
+        ],
+        "peakMiB": 57.5,
+        "firstSample": "2026-11-06T22:02:14.355435+00:00",
+        "lastSample": "2026-11-06T22:04:09.383796+00:00"
+      }
+    }
+  },
+  "reopen": {
+    "integrity": "ok",
+    "priorEvents": 419,
+    "allPriorEventsUnchanged": true,
+    "afterEventCount": 419
+  },
+  "deferred": [
+    {
+      "item": "Lock/background and unplugged power",
+      "reason": "User explicitly requested to wait until return",
+      "next": "Coordinate unlock/unplug and controlled lifecycle tests when user returns"
+    },
+    {
+      "item": "Cancellation via normal UI",
+      "reason": "Core cancellation exists but prototype UI/controller exposes no cancellation command; provider switching disabled while running",
+      "next": "Expose an agreed cancellation entry before a phone UI cancellation acceptance run"
+    },
+    {
+      "item": "Induced network interruption/recovery",
+      "reason": "Not exercised; changing phone network via Settings leaves foreground and mixes the deferred lifecycle scenario",
+      "next": "Perform a controlled network-loss run together with lifecycle qualification; existing VPN-on path passed"
+    }
+  ],
+  "storage": {
+    "newNativeBuildsThisRun": 0,
+    "candidateMiB": 745.2,
+    "rollbackMiB": 745.1,
+    "retainedDeviceBuildCacheGiB": 15.58,
+    "immediateFreeGiBApprox": 74,
+    "timeMachineTouched": false
+  },
+  "sourceOnlyObserverFix": {
+    "installed": false,
+    "candidateExecutableUnchanged": true,
+    "candidateExecutableSHA256": "0b69c41d39338687f2e22d0bb76f249109b8b6823217220e864474a9e1219fe2",
+    "change": "Distinguish needs_foreground from protected-data unavailable; record lifecycle evidence; no automatic resubmit/cancel/resume",
+    "macClassifierRegression": "passed",
+    "fullDriverIOSSDKTypecheck": "passed, Swift 6 strict concurrency, actual controller sources, no linking or install",
+    "sourceSHA256": "800afdad4035c795195eb6eac20985c322d0b1a1aa1ad40e7055ff648c0745a1",
+    "checkCommand": "python3 tools/mobile-tah/qualification_lifecycle_checks.py"
+  }
+}

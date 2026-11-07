@@ -1,0 +1,40 @@
+{
+  "releaseVersion": "2.4.1",
+  "sdkVersion": "0.22.0",
+  "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+  "fixtures": [
+    {
+      "sourcePath": "packages/agent-core-v2/src/app/auth/webSearch/providers/moonshot-web-search.ts",
+      "sourceSHA256": "2ab6d717b2d44a9b328dad41c6cd71b2e250caa3a72abfe597aae039468b7491",
+      "frame": {
+        "kind": "http",
+        "id": 1,
+        "url": "https://api.kimi.com/coding/v1/search",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer guest-placeholder",
+          "Content-Type": "application/json",
+          "X-Msh-Tool-Call-Id": "fixture-tool"
+        },
+        "body": "{\"text_query\":\"fixture query\"}"
+      }
+    },
+    {
+      "sourcePath": "packages/agent-core-v2/src/app/web/providers/moonshot-fetch-url.ts",
+      "sourceSHA256": "13bc341c7d845d21484894399572965cd6996fdbf3564f6860781dab9c67400c",
+      "frame": {
+        "kind": "http",
+        "id": 1,
+        "url": "https://api.kimi.com/coding/v1/fetch",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer guest-placeholder",
+          "Content-Type": "application/json",
+          "X-Msh-Tool-Call-Id": "fixture-tool",
+          "Accept": "text/markdown"
+        },
+        "body": "{\"url\":\"https://example.test/document\"}"
+      }
+    }
+  ]
+}

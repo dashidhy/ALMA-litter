@@ -126,10 +126,311 @@ async fn stdin_submission_budget_bounds_unacknowledged_queueing() {
  for _ in 0..32 {assert_eq!(p.write(vec![b'x';32768]).await.unwrap().status,WriteStatus::Accepted);}
  assert!(p.write(vec![b'x']).await.is_err());assert_eq!(i.last().writes.load(Ordering::SeqCst),32);p.terminate().await.unwrap();
 }
+
+#[tokio::test]
+async fn guest_protocol_budget_accepts_large_request_and_response_with_explicit_bounds() {
+    let (backend, _, counts) = backend(Scenario::Completed(
+        (0..64).map(|_| (Stream::Stdout, vec![b'x'; 32768])).collect()));
+    let backend = match Arc::try_unwrap(backend) { Ok(value) => value, Err(_) => panic!("unique fixture backend") }
+        .with_output_budget(4 * 1024 * 1024).unwrap();
+    let process = backend.start(params("large-output")).await.unwrap().process;
+    let mut after = 0;
+    let mut bytes = 0;
+    loop {
+        let page = process.read(Some(after), Some(65536), Some(20)).await.unwrap();
+        assert!(page.failure.is_none());
+        let empty = page.chunks.is_empty();
+        for chunk in page.chunks { after = chunk.seq; bytes += chunk.chunk.0.len(); }
+        if page.closed && empty { break; }
+        if empty { after = after.max(page.next_seq.saturating_sub(1)); }
+        tokio::task::yield_now().await;
+    }
+    assert_eq!(bytes, 2 * 1024 * 1024);
+    assert_eq!(counts.complete.load(Ordering::SeqCst), 1);
+
+    let (backend, instance, _) = self::backend(Scenario::Held);
+    let backend = match Arc::try_unwrap(backend) { Ok(value) => value, Err(_) => panic!("unique fixture backend") }
+        .with_stdin_budget(2 * 1024 * 1024).unwrap();
+    let process = backend.start(params("large-input")).await.unwrap().process;
+    for _ in 0..40 { assert!(matches!(process.write(vec![0; 32768]).await.unwrap().status, WriteStatus::Accepted)); }
+    assert_eq!(instance.last().writes.load(Ordering::SeqCst), 40);
+    process.terminate().await.unwrap();
+}
 #[tokio::test]
 async fn owned_capacity_is_bounded_before_spawning() {
  let (b,i,_)=backend(Scenario::Held);let mut processes=vec![];
  for id in 0..64 {processes.push(b.start(params(&format!("p{id}"))).await.unwrap().process);}
  assert!(b.start(params("overflow")).await.is_err());assert_eq!(i.starts.load(Ordering::SeqCst),64);
  for p in processes {p.terminate().await.unwrap();}
+}
+
+async fn next_output_page(process: &Arc<dyn ExecProcess>, after: u64, cap: usize) -> ReadResponse {
+    tokio::time::timeout(Duration::from_secs(5), async {
+        loop {
+            let page = process.read(Some(after), Some(cap), Some(20)).await.unwrap();
+            assert!(page.failure.is_none(), "unexpected process failure: {:?}", page.failure);
+            if !page.chunks.is_empty() {
+                return page;
+            }
+            assert!(!page.closed, "process closed before expected output");
+        }
+    }).await.expect("output page deadline")
+}
+
+#[tokio::test]
+async fn continuously_read_default_output_still_exhausts_cumulative_budget() {
+    // Compile the production adapter unchanged. Only the iSH transport is a
+    // double. Drain every 32 KiB before injecting more, ruling out reader lag.
+    const BUDGET: usize = 16 * 1024 * 1024;
+    const TRANSFER: usize = 32 * 1024;
+    let (backend, instance, counts) = backend(Scenario::Held);
+    let backend = Arc::try_unwrap(backend).unwrap_or_else(|_| panic!("unique fixture backend"))
+        .with_output_budget(BUDGET).unwrap();
+    let process = backend.start(params("cumulative-output")).await.unwrap().process;
+    let mut after = 0;
+    let mut delivered = 0;
+    for _ in 0..BUDGET / TRANSFER {
+        instance.last().inject(Stream::Stdout, vec![b'x'; TRANSFER]);
+        let page = next_output_page(&process, after, TRANSFER).await;
+        assert_eq!(page.chunks.iter().map(|chunk| chunk.chunk.0.len()).sum::<usize>(), TRANSFER);
+        for chunk in page.chunks {
+            assert_eq!(chunk.seq, after + 1);
+            after = chunk.seq;
+            delivered += chunk.chunk.0.len();
+        }
+    }
+    assert_eq!(delivered, BUDGET);
+    let caught_up = process.read(Some(after), None, None).await.unwrap();
+    assert!(caught_up.chunks.is_empty());
+    assert!(caught_up.failure.is_none());
+
+    instance.last().inject(Stream::Stdout, vec![b'x']);
+    let failed = settled(&process).await;
+    assert_eq!(failed.failure.as_deref(), Some("iSH output budget exceeded"));
+    assert!(!failed.sandbox_denied);
+    process.terminate().await.unwrap();
+
+    // Default readers can still replay from zero after consuming everything.
+    let mut replay_after = 0;
+    let mut replayed = 0;
+    loop {
+        let page = process.read(Some(replay_after), None, None).await.unwrap();
+        if page.chunks.is_empty() {
+            assert!(page.closed);
+            break;
+        }
+        for chunk in page.chunks {
+            replay_after = chunk.seq;
+            replayed += chunk.chunk.0.len();
+        }
+    }
+    assert_eq!(replayed, BUDGET);
+    assert_eq!(counts.complete.load(Ordering::SeqCst), 1);
+    assert_eq!(counts.quarantine.load(Ordering::SeqCst), 0);
+    assert_eq!(backend.active_process_count(), 0);
+}
+
+fn consumed_output_backend(budget: usize) -> (IshExecBackend, Arc<IshInstance>, Arc<Counts>) {
+    let (backend, instance, counts) = backend(Scenario::Held);
+    let backend = Arc::try_unwrap(backend).unwrap_or_else(|_| panic!("unique fixture backend"))
+        .with_output_budget(budget).unwrap()
+        .with_consumed_output();
+    (backend, instance, counts)
+}
+
+async fn receive_output_events(events: &mut ExecProcessEventReceiver, count: usize) {
+    tokio::time::timeout(Duration::from_secs(5), async {
+        for _ in 0..count {
+            assert!(matches!(events.recv().await.unwrap(), ExecProcessEvent::Output(_)));
+        }
+    }).await.expect("output event deadline");
+}
+
+#[tokio::test]
+async fn consumed_output_streams_thirty_two_megabytes_with_sixteen_megabyte_retention() {
+    const BUDGET: usize = 16 * 1024 * 1024;
+    const TRANSFER: usize = 32 * 1024;
+    let (backend, instance, counts) = consumed_output_backend(BUDGET);
+    let process = backend.start(params("streaming-output")).await.unwrap().process;
+    let mut after = 0;
+    let mut delivered = 0;
+    for _ in 0..2 * BUDGET / TRANSFER {
+        instance.last().inject(Stream::Stdout, vec![b'x'; TRANSFER]);
+        let page = next_output_page(&process, after, TRANSFER).await;
+        assert_eq!(page.chunks.iter().map(|chunk| chunk.chunk.0.len()).sum::<usize>(), TRANSFER);
+        for chunk in page.chunks {
+            assert_eq!(chunk.seq, after + 1);
+            after = chunk.seq;
+            delivered += chunk.chunk.0.len();
+        }
+    }
+    assert_eq!(delivered, 2 * BUDGET);
+    let acknowledged = process.read(Some(after), None, None).await.unwrap();
+    assert!(acknowledged.chunks.is_empty());
+    assert!(acknowledged.failure.is_none());
+    assert!(process.read(None, None, None).await.is_err());
+    process.terminate().await.unwrap();
+    let closed = process.read(Some(after), None, None).await.unwrap();
+    assert!(closed.closed);
+    assert!(closed.failure.is_none());
+    assert_eq!(counts.complete.load(Ordering::SeqCst), 1);
+    assert_eq!(counts.quarantine.load(Ordering::SeqCst), 0);
+    assert_eq!(backend.active_process_count(), 0);
+}
+
+#[tokio::test]
+async fn consumed_output_recycles_chunk_slots_but_preserves_cumulative_stdin_budget() {
+    let (backend, instance, _) = consumed_output_backend(1024 * 1024);
+    let process = backend.start(params("streaming-tiny-chunks")).await.unwrap().process;
+    for after in 0..5000 {
+        instance.last().inject(Stream::Stdout, vec![b'x']);
+        let page = next_output_page(&process, after, 8192).await;
+        assert_eq!(page.chunks.len(), 1);
+        assert_eq!(page.chunks[0].seq, after + 1);
+    }
+    // Reading and acknowledging output must never refund stdin submissions.
+    for _ in 0..32 {
+        assert_eq!(process.write(vec![b'x'; 32768]).await.unwrap().status, WriteStatus::Accepted);
+        let page = process.read(Some(5000), None, None).await.unwrap();
+        assert!(page.chunks.is_empty());
+        assert!(page.failure.is_none());
+    }
+    assert!(process.write(vec![b'x']).await.is_err());
+    assert_eq!(instance.last().writes.load(Ordering::SeqCst), 32);
+    process.terminate().await.unwrap();
+}
+
+#[tokio::test]
+async fn consumed_output_bounds_unacknowledged_bytes_and_tiny_chunks() {
+    const BUDGET: usize = 1024 * 1024;
+    // The first case fills the byte limit. The second fills the chunk limit
+    // using only 4096 bytes. Merely reading a page acknowledges neither page.
+    for (transfers, transfer_bytes, event_count) in [(32, 32768, 128), (4096, 1, 4096)] {
+        let (backend, instance, counts) = consumed_output_backend(BUDGET);
+        let process = backend.start(params("slow-reader")).await.unwrap().process;
+        let mut events = process.subscribe_events();
+        for _ in 0..transfers {
+            instance.last().inject(Stream::Stdout, vec![b'x'; transfer_bytes]);
+        }
+        receive_output_events(&mut events, event_count).await;
+        let first = process.read(None, None, None).await.unwrap();
+        let replay = process.read(None, None, None).await.unwrap();
+        assert_eq!(first.chunks, replay.chunks);
+        assert!(first.failure.is_none());
+        instance.last().inject(Stream::Stderr, vec![b'x']);
+        let failed = settled(&process).await;
+        assert_eq!(failed.failure.as_deref(), Some("iSH output budget exceeded"));
+        process.terminate().await.unwrap();
+        assert_eq!(counts.complete.load(Ordering::SeqCst), 1);
+        assert_eq!(backend.active_process_count(), 0);
+    }
+}
+
+#[tokio::test]
+async fn consumed_output_rejects_unread_and_rewind_cursors_without_losing_replay() {
+    let (backend, instance, _) = consumed_output_backend(1024 * 1024);
+    let process = backend.start(params("ack-cursors")).await.unwrap().process;
+    let mut events = process.subscribe_events();
+    instance.last().inject(Stream::Stdout, vec![b'x'; 32768]);
+    receive_output_events(&mut events, 4).await;
+
+    // The bytes exist, but a pushed subscriber does not authorize a read ACK.
+    assert!(process.read(Some(1), None, None).await.is_err());
+    assert!(process.read(Some(u64::MAX), None, None).await.is_err());
+    let first = process.read(None, Some(8192), None).await.unwrap();
+    assert_eq!(first.chunks.len(), 1);
+    assert_eq!(first.next_seq, 2);
+    assert!(process.read(Some(2), None, None).await.is_err());
+    assert!(process.read(Some(4), None, None).await.is_err());
+    let replay = process.read(None, Some(8192), None).await.unwrap();
+    assert_eq!(replay.chunks, first.chunks);
+
+    let second = process.read(Some(1), Some(8192), None).await.unwrap();
+    assert_eq!(second.chunks[0].seq, 2);
+    assert!(process.read(None, None, None).await.is_err());
+    let retry = process.read(Some(1), Some(8192), None).await.unwrap();
+    assert_eq!(retry.chunks, second.chunks);
+    let rest = process.read(Some(2), None, None).await.unwrap();
+    assert_eq!(rest.chunks.iter().map(|chunk| chunk.seq).collect::<Vec<_>>(), [3, 4]);
+    let empty = process.read(Some(4), None, None).await.unwrap();
+    assert!(empty.chunks.is_empty());
+    assert!(empty.failure.is_none());
+    process.terminate().await.unwrap();
+
+    // Exited and Closed consume sequence numbers, even without output bytes.
+    let closed = process.read(Some(4), None, None).await.unwrap();
+    assert!(closed.closed);
+    assert_eq!(closed.next_seq, 7);
+    let terminal_ack = process.read(Some(closed.next_seq - 1), None, None).await.unwrap();
+    assert!(terminal_ack.closed);
+    assert!(terminal_ack.chunks.is_empty());
+    assert!(process.read(Some(7), None, None).await.is_err());
+}
+
+#[tokio::test]
+async fn consumed_output_drains_closed_partial_pages_without_acknowledging_unread_bytes() {
+    let (backend, instance, _) = consumed_output_backend(1024 * 1024);
+    let process = backend.start(params("closed-pages")).await.unwrap().process;
+    instance.last().inject(Stream::Stdout, vec![b'x'; 32768]);
+    instance.last().close(0);
+    process.terminate().await.unwrap();
+
+    for after in 0..4 {
+        let page = process.read(Some(after), Some(8192), None).await.unwrap();
+        assert!(page.closed);
+        assert_eq!(page.chunks.len(), 1);
+        assert_eq!(page.chunks[0].seq, after + 1);
+        assert_eq!(page.next_seq, if after == 3 { 7 } else { after + 2 });
+    }
+    let drained = process.read(Some(6), None, None).await.unwrap();
+    assert!(drained.closed);
+    assert!(drained.chunks.is_empty());
+    assert!(drained.failure.is_none());
+}
+
+#[tokio::test]
+async fn consumed_output_cancelled_wait_preserves_next_page_and_previous_ack() {
+    let (backend, instance, _) = consumed_output_backend(1024 * 1024);
+    let process = backend.start(params("cancelled-read")).await.unwrap().process;
+    instance.last().inject(Stream::Stdout, b"first".to_vec());
+    let first = next_output_page(&process, 0, 8192).await;
+    let after = first.chunks[0].seq;
+
+    // Poll and then cancel a waiting read after it acknowledges the prior page.
+    assert!(tokio::time::timeout(Duration::from_millis(10),
+        process.read(Some(after), None, Some(60_000))).await.is_err());
+    assert!(process.read(None, None, None).await.is_err());
+    instance.last().inject(Stream::Stderr, b"second".to_vec());
+    let second = next_output_page(&process, after, 8192).await;
+    assert_eq!(second.chunks[0].seq, after + 1);
+    assert_eq!(second.chunks[0].chunk.0, b"second");
+    assert_eq!(second.chunks[0].stream, ExecOutputStream::Stderr);
+    let replay = process.read(Some(after), None, None).await.unwrap();
+    assert_eq!(replay.chunks, second.chunks);
+    process.terminate().await.unwrap();
+}
+
+#[tokio::test]
+async fn process_event_log_evicts_replay_while_continuing_live_delivery() {
+    let log = ExecProcessEventLog::bounded(4, 16).unwrap();
+    let mut live = log.subscribe();
+    for seq in 1..=32 {
+        let event = ExecProcessEvent::Output(ProcessOutputChunk {
+            seq,
+            stream: ExecOutputStream::Stdout,
+            chunk: vec![b'x'; 8].into(),
+        });
+        log.try_publish(event.clone()).unwrap();
+        assert_eq!(live.recv().await.unwrap(), event);
+    }
+    let mut replay = log.subscribe();
+    for expected in [31, 32] {
+        match replay.recv().await.unwrap() {
+            ExecProcessEvent::Output(chunk) => assert_eq!(chunk.seq, expected),
+            other => panic!("unexpected replay event {other:?}"),
+        }
+    }
+    let closed = ExecProcessEvent::Closed { seq: 33 };
+    log.try_publish(closed.clone()).unwrap();
+    assert_eq!(replay.recv().await.unwrap(), closed);
 }

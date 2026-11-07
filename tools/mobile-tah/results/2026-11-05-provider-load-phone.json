@@ -1,0 +1,189 @@
+{
+  "date": "2026-11-05",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "measurement": "Prepared-cache validation/private copy and SDK import only; no remote model time in these load spans",
+  "screenSharing": false,
+  "artifact": {
+    "status": "measurement-overlay-only",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app",
+    "appVersion": "0.4.0",
+    "appBuild": "13",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "6eca2149c3ec8d802e6fc5c1329da063072cd3a5a93ad90b603c06b95a9e8453",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "4fafcfabdc72b7a5f24d404640d070fb0133878f38fadbcf95c9a056b8b6efae",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "62d90f3a209856ab355cb3d0c3abd41baa3b5766750b9a51b942eaf6ef231c71",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "a7215b82f4c45a25ff6591ed55c4353a0dab20d1d444f4b948fc1987a5e2b7e5",
+        "files": 140
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": false,
+    "measurementOnly": true
+  },
+  "samples": {
+    "zcode": {
+      "rows": [
+        {
+          "hostMs": 10.363125009462237,
+          "provider": "zcode",
+          "operation": "prepare"
+        },
+        {
+          "hostMs": 11.235666461288929,
+          "provider": "zcode",
+          "operation": "start"
+        },
+        {
+          "operation": "nextEvent",
+          "provider": "zcode",
+          "hostMs": 4667.349541559815,
+          "cacheStatus": "prepared",
+          "totalMs": 26165.982,
+          "sdkLoadMs": 21528.020000000004,
+          "preparationMs": 4637.813
+        },
+        {
+          "hostMs": 6.338166771456599,
+          "provider": "zcode",
+          "operation": "prepare"
+        },
+        {
+          "hostMs": 11.83179160580039,
+          "provider": "zcode",
+          "operation": "start"
+        },
+        {
+          "operation": "nextEvent",
+          "provider": "zcode",
+          "hostMs": 3187.4560001306236,
+          "cacheStatus": "prepared",
+          "totalMs": 28199.532,
+          "sdkLoadMs": 23419.459,
+          "preparationMs": 4779.894
+        }
+      ],
+      "workflowSeconds": 122.49402195843868,
+      "rawTasksCompleted": 2,
+      "qualificationSHA256": "922a0b57cff004cb52234c724487358d1316d71f1b8eff3518a74a7bd5f3a116",
+      "resourceOverlay": {
+        "measurementOnly": true,
+        "provider": "zcode",
+        "sourceManifestSHA256": "305fdaca9cde0851e6ab65896be95e6af784b1265e1820292f97387d1839882a",
+        "manifestSHA256": "a7215b82f4c45a25ff6591ed55c4353a0dab20d1d444f4b948fc1987a5e2b7e5",
+        "modifiedFiles": [
+          "guest.cjs"
+        ]
+      }
+    },
+    "kimi": {
+      "rows": [
+        {
+          "hostMs": 7.283124839887023,
+          "provider": "kimi",
+          "operation": "prepare"
+        },
+        {
+          "hostMs": 8.838958339765668,
+          "provider": "kimi",
+          "operation": "start"
+        },
+        {
+          "cacheStatus": "prepared",
+          "totalMs": 16896.458,
+          "operation": "nextEvent",
+          "hostMs": 839.9304999038577,
+          "preparationMs": 6041.362,
+          "sdkLoadMs": 10855.096,
+          "provider": "kimi"
+        },
+        {
+          "hostMs": 6.0674583073705435,
+          "provider": "kimi",
+          "operation": "prepare"
+        },
+        {
+          "hostMs": 8.980208542197943,
+          "provider": "kimi",
+          "operation": "start"
+        },
+        {
+          "cacheStatus": "prepared",
+          "totalMs": 17867.468999999997,
+          "operation": "nextEvent",
+          "hostMs": 224.38483336009085,
+          "preparationMs": 6073.312,
+          "sdkLoadMs": 11794.157,
+          "provider": "kimi"
+        }
+      ],
+      "workflowSeconds": 102.10959170828573,
+      "rawTasksCompleted": 2,
+      "qualificationSHA256": "d16b999fa4e00d598b1cf2fcb6648607c9bc6858c442a0065234363979215375",
+      "resourceOverlay": {
+        "measurementOnly": true,
+        "provider": "kimi",
+        "sourceManifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "manifestSHA256": "62d90f3a209856ab355cb3d0c3abd41baa3b5766750b9a51b942eaf6ef231c71",
+        "modifiedFiles": [
+          "guest.mjs"
+        ]
+      }
+    }
+  },
+  "meansSeconds": {
+    "zcode": {
+      "preparationSeconds": 4.7089,
+      "sdkImportSeconds": 22.4737,
+      "totalSeconds": 27.1828
+    },
+    "kimi": {
+      "preparationSeconds": 6.0573,
+      "sdkImportSeconds": 11.3246,
+      "totalSeconds": 17.382
+    }
+  },
+  "limits": [
+    "Two fresh Raw Guardian processes per provider, sequential in one App process. Small sample, not a percentile or controlled thermal benchmark.",
+    "Not a phone uncached-vs-cached comparison. prepared confirms cache validation and enablement, not a phone V8 per-entry acceptance trace.",
+    "SDK import still repeats for each independent Guardian/Actor process. Compiled-code reuse does not reuse an initialized SDK/session.",
+    "Native prepare/start rows exclude earlier provider selection/asset installation. Terminal nextEvent hostMs is one wait, not whole-task time.",
+    "No phone power, background, or long-transcript measurement."
+  ],
+  "checks": {
+    "bothProviderRunsCompleted": true,
+    "twoSamplesEach": true,
+    "onlyGuestEntryChanged": true,
+    "sdkAndCacheAssetsUnchanged": true,
+    "swift6CollectorChecksPassed": true,
+    "originalTerminalRestoredBeforeAdapter": true
+  },
+  "restoredApp": {
+    "installedAndLaunched": true,
+    "profileFlag": false,
+    "executableSHA256": "b46b87cc668635290db7f960cc07bc400f1bd33a5eb01e3a484ce236c2132c6f",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "305fdaca9cde0851e6ab65896be95e6af784b1265e1820292f97387d1839882a",
+        "files": 140
+      }
+    }
+  }
+}

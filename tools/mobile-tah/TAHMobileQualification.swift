@@ -4,6 +4,17 @@ import Foundation
 import UIKit
 #endif
 
+// The foreground-only test driver must not diagnose a passcode lock from
+// applicationState: Control Center and ordinary app transitions are inactive too.
+enum TAHQualificationAvailability: String, Encodable, Sendable {
+    case ready, needs_foreground, needs_user_unlocked
+
+    static func classify(protectedDataAvailable: Bool, applicationIsActive: Bool) -> Self {
+        if !protectedDataAvailable { return .needs_user_unlocked }
+        return applicationIsActive ? .ready : .needs_foreground
+    }
+}
+
 /// Optional phone-owned runner. Main calls `await TAHMobileQualification.run(controller: app)`.
 /// Read-only bundled fixture: mobile-qualification-fixture.json
 /// {"title":"Synthetic check","transcript":"...","deltas":["","Revise...","Retitle..."]}
@@ -14,10 +25,11 @@ enum TAHMobileQualification {
     private static var started = false
 
     static func run(controller: TAHMobileController) async {
-        guard ProcessInfo.processInfo.arguments.contains("--mobile-tah-qualification"), !started else { return }
+        let long = ProcessInfo.processInfo.arguments.contains("--mobile-tah-long-qualification")
+        guard (long || ProcessInfo.processInfo.arguments.contains("--mobile-tah-qualification")), !started else { return }
         started = true // never restart or resubmit automatically in this process
         guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let runner = Runner(controller: controller, reportURL: documents.appendingPathComponent("mobile-tah-qualification.json"))
+        let runner = Runner(controller: controller, reportURL: documents.appendingPathComponent(long ? "mobile-tah-long-qualification.json" : "mobile-tah-qualification.json"), long: long)
         await runner.run()
     }
 
@@ -59,20 +71,40 @@ enum TAHMobileQualification {
         let schemaVersion = 1
         let phoneOwned = true
         let consentSource = "explicit_mobile_tah_qualification_launch_flag"
-        let phaseDeadlineSeconds = 300
+        var phaseDeadlineSeconds = 300
+        let startedAt = ISO8601DateFormatter().string(from: Date())
+        var providerID: String?
+        var modelID: String?
+        var reasoningEffortID: String?
+        var transcriptID: String?
+        var actionID: String?
         var status = "running"
         var stage = "fixture"
         var elapsedSeconds = 0.0
         var needsUserUnlocked = false
+        var needsUserForeground = false
+        var availability: TAHQualificationAvailability?
+        var applicationState: String?
+        var protectedDataAvailable: Bool?
         var workflowMayStillBeRunning = false
         var failureCode: String?
         var steps: [Step] = []
         var outcomes: [Outcome] = []
+        var energySamples: [EnergySample] = []
+    }
+    private struct EnergySample: Encodable, Sendable {
+        let elapsedSeconds: Double
+        let stage: String
+        let batteryPercent: Double?
+        let batteryState: String
+        let thermalState: String
+        let lowPowerMode: Bool
+        let brightness: Double
     }
     private enum Stop: String, Error {
         case fixture_invalid, permission_unavailable, content_consent_required
         case controller_error, unexpected_selection, unexpected_revision, material_read_failed
-        case timed_out, needs_user_unlocked, cancelled, not_admitted
+        case timed_out, needs_user_unlocked, needs_foreground, cancelled, not_admitted, provider_mismatch
     }
 
     @MainActor private final class Runner {
@@ -82,22 +114,46 @@ enum TAHMobileQualification {
         var report = Report()
         var transcriptID: String?
         var actionID: String?
+        let long: Bool
 
-        init(controller: TAHMobileController, reportURL: URL) {
+        init(controller: TAHMobileController, reportURL: URL, long: Bool = false) {
             self.controller = controller; self.reportURL = reportURL
+            self.long = long
+            if long { report.phaseDeadlineSeconds = 2700 }
         }
 
         func run() async {
+            #if canImport(UIKit)
+            let previousMonitoring = UIDevice.current.isBatteryMonitoringEnabled
+            if long { UIDevice.current.isBatteryMonitoringEnabled = true }
+            defer { if long { UIDevice.current.isBatteryMonitoringEnabled = previousMonitoring } }
+            #endif
             do {
                 try unlocked()
-                guard let url = Bundle.main.url(forResource: "mobile-qualification-fixture", withExtension: "json") else { throw Stop.fixture_invalid }
+                guard let url = Bundle.main.url(forResource: long ? "mobile-qualification-nvidia" : "mobile-qualification-fixture", withExtension: "json") else { throw Stop.fixture_invalid }
                 let fixture = try await Self.loadFixture(url)
                 guard fixture.title.count <= 512, !fixture.transcript.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                       fixture.deltas.count == 3, fixture.deltas.allSatisfy({ $0.utf8.count <= 64 * 1024 }),
                       fixture.deltas.dropFirst().allSatisfy({ !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) else { throw Stop.fixture_invalid }
 
+                if long {
+                    try await stage("awaiting_power_trace")
+                    try await Task.sleep(for: .seconds(30))
+                    try unlocked()
+                }
+
                 try await stage("authorization")
-                try await wait { !$0.isBusy && !$0.models.isEmpty }
+                try await wait { !$0.isBusy && $0.authorization.canManage }
+                if let argument = ProcessInfo.processInfo.arguments.first(where: { $0.hasPrefix("--mobile-tah-expected-provider=") }) {
+                    let expected = String(argument.dropFirst("--mobile-tah-expected-provider=".count))
+                    guard ["codex", "kimi", "zcode"].contains(expected),
+                          controller.presentation.authorization.providerID == expected else { throw Stop.provider_mismatch }
+                }
+                // 当前 AuthService 恢复已保存账号后仍要求本次进程完成
+                // inspect；缓存目录不等于授权检查成功。复用用户的同一入口。
+                controller.inspectAuthorization()
+                try await wait { !$0.isBusy && $0.authorization.state == "valid" && !$0.models.isEmpty }
+                report.providerID = controller.presentation.authorization.providerID
                 if let language=fixture.interactionLanguage {
                     guard let value=TAHUILanguage(rawValue:language) else { throw Stop.fixture_invalid }
                     controller.selectInteractionLanguage(value)
@@ -108,21 +164,46 @@ enum TAHMobileQualification {
                 controller.importTranscript(title: fixture.title, text: fixture.transcript)
                 try await wait { !$0.isBusy && $0.transcriptID != nil && $0.transcriptID != previous }
                 transcriptID = controller.presentation.transcriptID
+                report.transcriptID = transcriptID
 
                 try await stage("raw_check")
                 var draft = controller.draft; draft.consent = true
                 controller.updateDraft(draft, context: controller.presentation.editor)
                 guard controller.draft.consent else { throw Stop.content_consent_required }
+                // 新 controller 的导入确认与 raw 状态投影是异步的；选中
+                // transcript 不等于安全检查权限已就绪。等待同一个公开权限，
+                // 不抢先提交，也不新增 Core 轮询或直接调度 Guardian。
+                try await wait { !$0.isBusy && $0.permissions.checkRaw }
                 guard let transcriptID, controller.presentation.permissions.checkRaw else { throw Stop.permission_unavailable }
                 controller.checkRawSafety(transcriptID: transcriptID, consent: true,
                                           interactionLanguage: controller.presentation.interactionLanguage)
                 try await wait { !$0.isBusy && $0.permissions.createAction }
+
+                if ProcessInfo.processInfo.arguments.contains("--mobile-tah-load-profile") {
+                    // 第二份合成输入产生新的 Raw 任务进程，测复用缓存而不复用 SDK 会话。
+                    try await stage("profile_second_raw")
+                    let previous = controller.presentation.transcriptID
+                    self.transcriptID = nil // 此处是驱动主动切换；恢复后重新绑定选择守卫。
+                    controller.importTranscript(title: fixture.title + " — load sample 2", text: fixture.transcript)
+                    try await wait { !$0.isBusy && $0.transcriptID != nil && $0.transcriptID != previous }
+                    self.transcriptID = controller.presentation.transcriptID
+                    var second = controller.draft; second.consent = true
+                    controller.updateDraft(second, context: controller.presentation.editor)
+                    try await wait { !$0.isBusy && $0.permissions.checkRaw }
+                    guard let secondID = controller.presentation.transcriptID else { throw Stop.unexpected_selection }
+                    controller.checkRawSafety(transcriptID: secondID, consent: true, interactionLanguage: controller.presentation.interactionLanguage)
+                    try await wait { !$0.isBusy && $0.permissions.createAction }
+                    report.status = "completed"; report.stage = "load_profile_completed"
+                    try await record()
+                    return
+                }
 
                 try await stage("create_action")
                 controller.createStructuredNotesAction(transcriptID: transcriptID, language: controller.draft.outputLanguage,
                                                        settings: controller.draft.settings)
                 try await wait { !$0.isBusy && $0.editor != nil }
                 actionID = controller.presentation.editor?.actionID
+                report.actionID = actionID
                 guard controller.presentation.revisions.isEmpty else { throw Stop.unexpected_revision }
 
                 for revision in 0..<3 {
@@ -145,6 +226,8 @@ enum TAHMobileQualification {
                         draft=controller.draft;draft.settings.reasoningEffortID=efforts[revision]
                         controller.updateDraft(draft,context:context)
                     }
+                    report.modelID = controller.draft.settings.modelID
+                    report.reasoningEffortID = controller.draft.settings.reasoningEffortID
                     guard controller.presentation.permissions.send else { throw Stop.permission_unavailable }
                     controller.sendAction(.init(context: context, instructions: draft.instructions, settings: controller.draft.settings,
                         initialLanguage: controller.presentation.initialSettingsFrozen ? nil : controller.draft.outputLanguage,
@@ -172,9 +255,13 @@ enum TAHMobileQualification {
                 report.status = "completed"; report.stage = "completed"
             } catch {
                 let code = error as? Stop ?? (error is CancellationError ? .cancelled : .controller_error)
-                report.status = code == .needs_user_unlocked ? "needs_user_unlocked" : code == .timed_out ? "timed_out" : "failed"
+                switch code {
+                case .needs_user_unlocked, .needs_foreground, .timed_out: report.status = code.rawValue
+                default: report.status = "failed"
+                }
                 report.failureCode = code.rawValue
                 report.needsUserUnlocked = code == .needs_user_unlocked
+                report.needsUserForeground = code == .needs_foreground
                 report.workflowMayStillBeRunning = controller.presentation.isBusy
             }
             // No cancellation/retry/role dispatch here. Core may continue after a timeout or lock.
@@ -184,7 +271,23 @@ enum TAHMobileQualification {
         private func unlocked() throws {
             try Task.checkCancellation()
             #if canImport(UIKit)
-            guard UIApplication.shared.isProtectedDataAvailable, UIApplication.shared.applicationState == .active else { throw Stop.needs_user_unlocked }
+            let app = UIApplication.shared
+            let state = app.applicationState
+            switch state {
+            case .active: report.applicationState = "active"
+            case .inactive: report.applicationState = "inactive"
+            case .background: report.applicationState = "background"
+            @unknown default: report.applicationState = "unknown"
+            }
+            report.protectedDataAvailable = app.isProtectedDataAvailable
+            let availability = TAHQualificationAvailability.classify(
+                protectedDataAvailable: app.isProtectedDataAvailable, applicationIsActive: state == .active)
+            report.availability = availability
+            switch availability {
+            case .ready: break
+            case .needs_foreground: throw Stop.needs_foreground
+            case .needs_user_unlocked: throw Stop.needs_user_unlocked
+            }
             #endif
         }
         private func stage(_ name: String) async throws {
@@ -193,6 +296,7 @@ enum TAHMobileQualification {
         private func wait(_ completed: (TAHUIPresentation) -> Bool) async throws {
             let deadline = ProcessInfo.processInfo.systemUptime + Double(report.phaseDeadlineSeconds)
             var last: State?, idleSince: Double?
+            var lastRecord = ProcessInfo.processInfo.systemUptime
             while ProcessInfo.processInfo.systemUptime < deadline {
                 try unlocked()
                 let state = controller.presentation
@@ -202,7 +306,9 @@ enum TAHMobileQualification {
                 if state.material?.error != nil { throw Stop.material_read_failed }
                 if completed(state) { try await record(); return }
                 let current = snapshot()
-                if current != last { try await record(); last = current }
+                if current != last || (long && ProcessInfo.processInfo.systemUptime - lastRecord >= 60) {
+                    try await record(); last = current; lastRecord = ProcessInfo.processInfo.systemUptime
+                }
                 if state.isBusy { idleSince = nil }
                 else {
                     idleSince = idleSince ?? ProcessInfo.processInfo.systemUptime
@@ -223,6 +329,30 @@ enum TAHMobileQualification {
         private func record() async throws {
             report.elapsedSeconds = ProcessInfo.processInfo.systemUptime - start
             report.steps.append(.init(stage: report.stage, elapsedSeconds: report.elapsedSeconds, state: snapshot()))
+            #if canImport(UIKit)
+            if long, report.energySamples.last?.stage != report.stage || report.elapsedSeconds - (report.energySamples.last?.elapsedSeconds ?? -60) >= 60 {
+                let level = UIDevice.current.batteryLevel
+                let battery: String
+                switch UIDevice.current.batteryState {
+                case .unplugged: battery = "unplugged"
+                case .charging: battery = "charging"
+                case .full: battery = "full"
+                default: battery = "unknown"
+                }
+                let thermal: String
+                switch ProcessInfo.processInfo.thermalState {
+                case .nominal: thermal = "nominal"
+                case .fair: thermal = "fair"
+                case .serious: thermal = "serious"
+                case .critical: thermal = "critical"
+                @unknown default: thermal = "unknown"
+                }
+                report.energySamples.append(.init(elapsedSeconds: report.elapsedSeconds, stage: report.stage,
+                    batteryPercent: level < 0 ? nil : Double(level) * 100, batteryState: battery,
+                    thermalState: thermal, lowPowerMode: ProcessInfo.processInfo.isLowPowerModeEnabled,
+                    brightness: Double(UIScreen.main.brightness)))
+            }
+            #endif
             try await Self.write(report, to: reportURL)
         }
         nonisolated private static func loadFixture(_ url: URL) async throws -> Fixture {

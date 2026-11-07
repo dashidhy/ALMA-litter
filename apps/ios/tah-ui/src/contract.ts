@@ -72,7 +72,14 @@ export interface Permissions {
   checkRaw: boolean; createAction: boolean; edit: boolean; editConsent: boolean;
   editInteractionLanguage: boolean; send: boolean; readMaterial: boolean; loadHistory: boolean;
 }
+export interface Authorization {
+  providers: Choice[]; providerID: string | null;
+  state: 'unauthed' | 'valid' | 'invalid' | 'unsupported'; phase: string; inspecting: boolean;
+  account: string | null; noticeCode: string | null; canManage: boolean; canConfirmReplacement: boolean;
+  replacement: { id: string; kind: string; providerID: string } | null;
+}
 export interface Presentation {
+  authorization?: Authorization;
   transcripts: Choice[]; transcriptID: string | null; actions: Choice[];
   editor: EditorContext | null; models: Choice[]; efforts: Choice[]; contextWindows: ContextWindow[];
   interactionLanguage: Language; initialSettingsFrozen: boolean; canOmitInstructions: boolean;
@@ -92,6 +99,10 @@ export interface Commands {
   snapshot: Record<string, never>;
   refresh: Record<string, never>;
   inspectAuthorization: Record<string, never>;
+  selectProvider: { providerID: string };
+  authorizeProvider: Record<string, never>;
+  requestAuthorizationReplacement: { kind: 'reauth' | 'switch_account' | 'sign_out' };
+  confirmAuthorizationReplacement: { id: string; confirmed: boolean };
   selectTranscript: { id: string };
   selectAction: { id: string };
   importTranscript: { title: string; text: string };

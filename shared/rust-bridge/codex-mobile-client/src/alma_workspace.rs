@@ -90,7 +90,7 @@ pub fn bootstrap(rootfs_data: &Path, application_support: &Path)
     ],16*1024*1024)?);
     let info=EnvironmentInfo {
         shell:ShellInfo {name:"bash".into(),path:"/bin/bash".into()},
-        executor_version:"0.166.0".into(),provider_id:None,cwd:Some(uri(CWD)?),
+        executor_version:"0.167.0".into(),provider_id:None,cwd:Some(uri(CWD)?),
         user_home_dir:Some(uri("/workspace/tmp/home")?),platform_os:Some("linux".into()),
         prepend_path_dirs:vec![],temporary_directories:Some(vec![uri(SCRATCH)?]),temp_dir:Some(uri(SCRATCH)?),
         capabilities:EnvironmentCapabilities::default(),
@@ -144,7 +144,7 @@ pub(crate) fn bootstrap_attempt(rootfs_data: &Path, application_support: &Path, 
     let backend=Arc::new(crate::ish_exec_backend::IshExecBackend::new(instance.clone(),policy.clone(),std::time::Duration::from_secs(15))
         .map_err(|_|IshBootstrapError::Ish("role executor unavailable".into()))?);
     let info=EnvironmentInfo {
-        shell:ShellInfo{name:"bash".into(),path:"/bin/bash".into()},executor_version:"0.166.0".into(),provider_id:None,
+        shell:ShellInfo{name:"bash".into(),path:"/bin/bash".into()},executor_version:"0.167.0".into(),provider_id:None,
         cwd:Some(uri(&scope.cwd)?),user_home_dir:Some(uri(&format!("{}/home",scope.scratch))?),platform_os:Some("linux".into()),
         prepend_path_dirs:vec![],temporary_directories:Some(vec![uri(&scope.scratch)?]),temp_dir:Some(uri(&scope.scratch)?),
         capabilities:EnvironmentCapabilities::default(),

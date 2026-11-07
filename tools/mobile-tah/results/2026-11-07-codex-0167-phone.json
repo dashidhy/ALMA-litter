@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUTC": "2026-11-07T09:05:02.548008+00:00",
+  "status": "codex_tah_foreground_qualified_with_shared_provider_findings",
+  "appVersion": "0.4.2 (15)",
+  "providerVersions": {
+    "codex": "0.167.0",
+    "kimiSDK": "2.4.1",
+    "zcodeSDK": "3.17.2"
+  },
+  "device": "iPhone 12 Pro / iOS 27.2",
+  "evidenceDirectory": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107",
+  "artifact": {
+    "status": "mac-qualified-phone-candidate",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/candidate/AlmaTAHTauri.app",
+    "appVersion": "0.4.2",
+    "appBuild": "15",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "514611fa86cf1346f83a78d73a15ec333df99a73d2be92f7c975ced991fd990e",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "8f754d9ac8b5c5673223d0bf7490740b7a80c8d76a0fb56880bed9a40e88c219",
+    "nativeSourcesMatchCurrent": true,
+    "nativeArchiveSHA256": "e82b19231cca5ce74b8f3b6dec3251f6e5acab67966a4b3f1a6dbaef3f1d4d31",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "4332d5c066672c79f5991d6c09aeaf242eaef73ea10ebc13a07ee41ccb666ad3",
+        "files": 140
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": true
+  },
+  "architecture": "Phone-owned TAH Framework -> Provider Adapter -> Provider backend; Mac only launches/observes tests.",
+  "tests": {
+    "codexShort": {
+      "accepted": true,
+      "status": "accepted",
+      "machinePassed": true,
+      "statistics": {
+        "driverTotalSeconds": 128.1155018749996,
+        "revisionTotalSeconds": 94.358,
+        "rawObservedSeconds": 11.732326458,
+        "rawPlusRevisionSeconds": 106.090326,
+        "stageSeconds": {
+          "actor": 66.944,
+          "completed": 0.0,
+          "critic": 0.171,
+          "extra_guardian": 26.936,
+          "preparing": 0.163,
+          "saving_safety": 0.144
+        },
+        "toolCount": 9,
+        "toolFailureCount": 0,
+        "operationErrorCount": 0,
+        "providerNoticeCount": 0,
+        "recordedWebToolCount": 0,
+        "toolKinds": {
+          "tool.native_surplus": 7,
+          "tool.text_edit": 1,
+          "tool.text_read": 1
+        },
+        "timingScope": "Revision wall-clock stage intervals plus sampled Raw duration; driver total additionally includes setup/readbacks/between-revision gaps. Actor includes provider/tool time."
+      },
+      "manualReviewPassed": true,
+      "evidenceActionID": "97d628ad-d305-4a6f-9c0b-458eb94a78da"
+    },
+    "kimiRetry": {
+      "accepted": true,
+      "status": "accepted",
+      "machinePassed": true,
+      "statistics": {
+        "driverTotalSeconds": 338.3745235416718,
+        "revisionTotalSeconds": 281.457,
+        "rawObservedSeconds": 43.60068225,
+        "rawPlusRevisionSeconds": 325.057682,
+        "stageSeconds": {
+          "actor": 191.26,
+          "completed": 0.0,
+          "critic": 0.126,
+          "extra_guardian": 89.817,
+          "preparing": 0.162,
+          "saving_safety": 0.092
+        },
+        "toolCount": 21,
+        "toolFailureCount": 0,
+        "operationErrorCount": 0,
+        "providerNoticeCount": 0,
+        "recordedWebToolCount": 0,
+        "toolKinds": {
+          "tool.text_edit": 1,
+          "tool.text_read": 16,
+          "tool.text_write": 4
+        },
+        "timingScope": "Revision wall-clock stage intervals plus sampled Raw duration; driver total additionally includes setup/readbacks/between-revision gaps. Actor includes provider/tool time."
+      },
+      "manualReviewPassed": true,
+      "evidenceActionID": "6e6644dd-bfbe-45b1-a047-c96d7f02adad",
+      "samePackageAndConfiguration": true,
+      "sdkRetryActivities": 0,
+      "priorEventsPreserved": 529
+    },
+    "zcodeShort": {
+      "accepted": false,
+      "status": "manual_review_failed",
+      "machinePassed": true,
+      "statistics": {
+        "driverTotalSeconds": 549.9986782083288,
+        "revisionTotalSeconds": 355.786,
+        "rawObservedSeconds": 180.808042167,
+        "rawPlusRevisionSeconds": 536.594042,
+        "stageSeconds": {
+          "actor": 256.079,
+          "completed": 0.0,
+          "critic": 0.136,
+          "extra_guardian": 99.307,
+          "preparing": 0.16,
+          "saving_safety": 0.104
+        },
+        "toolCount": 35,
+        "toolFailureCount": 0,
+        "operationErrorCount": 0,
+        "providerNoticeCount": 0,
+        "recordedWebToolCount": 0,
+        "toolKinds": {
+          "tool.native_surplus": 6,
+          "tool.text_edit": 6,
+          "tool.text_read": 20,
+          "tool.text_write": 3
+        },
+        "timingScope": "Revision wall-clock stage intervals plus sampled Raw duration; driver total additionally includes setup/readbacks/between-revision gaps. Actor includes provider/tool time."
+      },
+      "manualReviewPassed": false,
+      "evidenceActionID": "098b054b-1465-4359-9e5a-2c78ed8e791f",
+      "priorEventsPreserved": 546,
+      "finding": "V0 additionally classifies the explicitly synthetic arithmetic typo as ASR ambiguity; V1/V2 correct it. One finding affects two strict semantic checks. Model-output review finding, not an observed interface/execution failure."
+    },
+    "codexNVIDIA": {
+      "passed": true,
+      "model": "gpt-6-astra / xhigh",
+      "language": "zh-CN",
+      "webEnabled": true,
+      "driverSeconds": 1152.88341783332,
+      "revisionSeconds": [
+        863.807,
+        123.332,
+        93.536
+      ],
+      "tools": 82,
+      "toolFailures": 0,
+      "webEvents": 18,
+      "webDetail": "Includes Find in page; URL labels alone do not prove Fetch.",
+      "priorEventsPreserved": 499,
+      "checks": {
+        "driverCompleted": true,
+        "fullTranscriptImported": true,
+        "allThreePublished": true,
+        "sixReadbacks": true,
+        "priorJournalEventsUnchanged": true,
+        "canonicalHashesValid": true,
+        "v1OriginalNotesPrefixPreserved": true,
+        "v1HeadingUnique": true,
+        "v2ExactRetitle": true,
+        "asrUnchanged": true,
+        "v1FiveTopLevelPoints": true
+      },
+      "independentReview": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/phone/codex-long/independent-review.json"
+    },
+    "kimiInitial": {
+      "status": "actor_failed_at_v1",
+      "reason": "kimi_connection_failed / APIConnectionError after SDK retry",
+      "closeCaptureReleaseCompleted": true,
+      "cause": "No underlying DNS/TLS/HTTP diagnostic; cannot attribute to VPN or upgrade."
+    },
+    "wrongProviderGuard": {
+      "passed": true,
+      "selectedProvider": "zcode",
+      "expectedProvider": "codex",
+      "failureCode": "provider_mismatch",
+      "stage": "authorization",
+      "noActionOrTranscriptCreated": true,
+      "journalEventsUnchanged": 563,
+      "scope": "Real phone negative guard; stops before import/Raw/model task dispatch, not a provider failure."
+    }
+  },
+  "memory": {
+    "allSamplesPeakAppMiB": 58.01806640625,
+    "executionWindowPeakAppMiB": 57.471,
+    "sampleCount": 221,
+    "scope": "App PID2814 at5s via USB userspace DVT; excludes WebKit, Raw and initial~27s of V0; full-sample peak was~7.246s after V2 end."
+  },
+  "power": {
+    "measuredForUpgrade": false,
+    "reason": "Charging/full; previous0.4.1 power remains approximate non-blocking reference."
+  },
+  "lifecycle": {
+    "retestedOnUpgrade": false,
+    "baselineReport": "docs/ios/2026-11-07-lifecycle-power.md",
+    "continuousBackgroundExecutionEstablished": false
+  },
+  "dataIntegrity": {
+    "preUpgradeEvents": 481,
+    "postInstallUnchanged": true,
+    "afterAllTestsAndNegativeGuardEvents": 563,
+    "allOldEventsRetained": true
+  },
+  "cleanup": {
+    "atUTC": "2026-11-07T08:48:50.302549+00:00",
+    "scope": "Only this isolated experiment compiler/Xcode intermediates; originals, live source worktrees, Time Machine snapshots and phone data untouched.",
+    "targetBeforeBytes": 33355227136,
+    "targetAfterBytes": 4677812224,
+    "immediateFreeBeforeBytes": 58263076864,
+    "immediateFreeAfterBytes": 58297503744,
+    "retainedNativeArchive": {
+      "path": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace/ALMA-litter/shared/rust-bridge/target/aarch64-apple-ios/ios-dev/libalma_tah_ui_lib.a",
+      "bytes": 4677808976,
+      "sha256": "e82b19231cca5ce74b8f3b6dec3251f6e5acab67966a4b3f1a6dbaef3f1d4d31"
+    },
+    "retainedApp": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/candidate/AlmaTAHTauri.app",
+    "removedOwnedPaths": [
+      "shared/rust-bridge/target/ios-dev",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/.fingerprint",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/gn_out",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/incremental",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/.cargo-build-lock",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/libalma_tah_ui_lib.d",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/.cargo-lock",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/examples",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/build",
+      "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/.cargo-artifact-lock",
+      "shared/rust-bridge/target/aarch64-apple-ios/debug",
+      "tools/mobile-tah/.cache/TauriDerivedData",
+      "tools/alma-ios-lab/backend_regression/.cache/target"
+    ]
+  },
+  "sourceWorkspaces": {
+    "root": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/workspace",
+    "codexBranch": "codex/ios-0.167",
+    "appBranch": "codex/ios-0.167-integration",
+    "originalDevelopmentWorktreesPreserved": true
+  },
+  "sourceReview": {
+    "portedPaths": 33,
+    "upstreamOverlaps": 11,
+    "sourceChecks": 18,
+    "typescriptChecks": 11,
+    "executorContractCases": 24,
+    "bindingsByteIdentical": true,
+    "nativeBuildPassed": true
+  },
+  "authorization": {
+    "existingCodexCredentialReused": true,
+    "newLoginRequested": false,
+    "reuseOnlyTestGuard": true
+  },
+  "limits": [
+    "Current TAH text/file/Web use case, not full desktop CLI equivalence.",
+    "No exhaustive factual audit of NVIDIA notes.",
+    "Kimi initial connection failure and ZCode strict semantic finding remain recorded."
+  ]
+}

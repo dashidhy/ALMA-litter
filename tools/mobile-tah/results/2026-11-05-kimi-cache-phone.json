@@ -1,0 +1,1041 @@
+{
+  "date": "2026-11-05",
+  "provider": "kimi",
+  "release": "2.4.1",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "appVersion": "0.4.0 (13)",
+  "phoneOwned": true,
+  "passed": true,
+  "checks": {
+    "completed": true,
+    "sixOutputs": true,
+    "v1CorrectionAndAttribution": true,
+    "v2ExactRetitle": true,
+    "asrUnchanged": true
+  },
+  "seconds": 371.5927805833053,
+  "stageStartSeconds": {
+    "authorization": 0.0008839999791234732,
+    "import": 4.41603908338584,
+    "raw_check": 4.695209208410233,
+    "create_action": 48.265271625015885,
+    "send_v0": 48.52790437499061,
+    "read_v0_notes": 122.18392008333467,
+    "read_v0_asr_terms": 122.45542758330703,
+    "send_v1": 122.72336962493137,
+    "read_v1_notes": 249.78367183334194,
+    "read_v1_asr_terms": 250.0452329167165,
+    "send_v2": 250.30582004156895,
+    "read_v2_notes": 371.05478620831855,
+    "read_v2_asr_terms": 371.32406183332205,
+    "completed": 371.5927805833053
+  },
+  "webEnabled": false,
+  "scope": "Synthetic transcript, Raw Guardian and V0/V1/V2, two output files read back after each revision. Includes model time; not isolated SDK load timing or energy measurement.",
+  "appArtifact": {
+    "status": "mac-qualified-phone-candidate",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app",
+    "appVersion": "0.4.0",
+    "appBuild": "13",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "09714f00121d957fded393b40a918e7500cf41ff58342fbbd056621562bba93f",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "98712ba0b91d4df13219faff9189df1321274fc26ad98935910d892b45844439",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "005f659596eb326af4d17a40daa82ca325ade4e3d26046ddf1095c1d3771e637",
+        "files": 139
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": true
+  },
+  "fixtureSHA256": "8386fdd8103c29af271d65af6f395a4edae114fba769bae0941746ced0d67179",
+  "report": {
+    "consentSource": "explicit_mobile_tah_qualification_launch_flag",
+    "elapsedSeconds": 371.5927805833053,
+    "needsUserUnlocked": false,
+    "outcomes": [
+      {
+        "file": "structured-notes.md",
+        "renderedSHA256": "d9ad6608157474b652776ccf4e32847729bcadaf631b53c805a5e3e7e2b0c484",
+        "renderedUTF8Bytes": 1469,
+        "revision": 0,
+        "sanitizedText": "# 合成资格验证转录的结构化笔记\n\n## 概述\n\n转录为一段简短的合成演示文稿，主题为“Café Segmentation”（咖啡馆分割）。讲者依次说明该分割方法的基本定义、演示所用的数据规模，并明确说明未报告准确率测量。整段仅约 16 秒，共三句，无对话、无后续补充。\n\n## 笔记\n\n### 1. 方法定义 [00:00]\n\nCafé Segmentation（咖啡馆分割）是一种图像分割方法：它将每张图像的每个像素（each image pixel）分配为前景（foreground）或背景（background），即典型的二分类像素级分割。\n\n### 2. 演示数据规模 [00:08]\n\n演示包含 3 批（batches）、每批 4 张图像，即转录中所称的“共 14 张图像”。\n\n> 说明：3 × 4 = 12，与讲者所说的 14 不一致。转录自注承认其中含有一处故意的算术笔误（\"deliberately contains one arithmetic typo\"），故这属于讲者陈述中的数字错误，而非转写（ASR）疑点；按任务要求不作静默更正，此处仅如实记录原陈述并标明其算术不一致。\n\n### 3. 准确率声明 [00:16]\n\n讲者明确表示：该演示未报告任何准确率测量（\"No accuracy measurement was reported for this demonstration.\"）。\n\n## 小结\n\n- Café Segmentation：像素级前景/背景二分类分割。\n- 演示数据：3 批 × 4 张，转录记为共 14 张（存在算术不一致，如上说明）。\n- 无准确率测量结果报告。\n",
+        "textTruncated": false
+      },
+      {
+        "file": "suspicious-asr-terms.md",
+        "renderedSHA256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+        "renderedUTF8Bytes": 382,
+        "revision": 0,
+        "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n没有影响语义完整性的 ASR 疑点需要复核。\n",
+        "textTruncated": false
+      },
+      {
+        "file": "structured-notes.md",
+        "renderedSHA256": "1a457423b92a8ec827ec31e77084f93378bdefa61c37582d0477b5f3c62ac893",
+        "renderedUTF8Bytes": 1954,
+        "revision": 1,
+        "sanitizedText": "# 合成资格验证转录的结构化笔记\n\n## 概述\n\n转录为一段简短的合成演示文稿，主题为“Café Segmentation”（咖啡馆分割）。讲者依次说明该分割方法的基本定义、演示所用的数据规模，并明确说明未报告准确率测量。整段仅约 16 秒，共三句，无对话、无后续补充。\n\n## 笔记\n\n### 1. 方法定义 [00:00]\n\nCafé Segmentation（咖啡馆分割）是一种图像分割方法：它将每张图像的每个像素（each image pixel）分配为前景（foreground）或背景（background），即典型的二分类像素级分割。前景/背景（foreground/background）标签保持不变。\n\n### 2. 演示数据规模 [00:08]\n\n#### Batch count\n\n- 用户提供的算术修正：根据后续指令（revision v1），正确的图像总数为 12，因为 3 × 4 = 12。此修正来自用户提供的指令，而非讲者陈述或验证性测量。\n- 原始讲者陈述（按来源归属保留）：讲者称演示包含 3 批（batches）、每批 4 张图像，\"for a total of 14 images\"，即转录中所称的“共 14 张图像”。这属于讲者陈述中的数字错误：转录自注承认其中含有一处故意的算术笔误（\"deliberately contains one arithmetic typo\"），故它是讲者的来源主张，而非转写（ASR）疑点；按任务要求不作静默更正，仅在此如实记录并标明修正来源。\n\n### 3. 准确率声明 [00:16]\n\n讲者明确表示：该演示未报告任何准确率测量（\"No accuracy measurement was reported for this demonstration.\"）。本笔记保留“无准确率测量”这一状态，未添加任何测量值。\n\n## 小结\n\n- Café Segmentation：像素级前景/背景（foreground/background）二分类分割。\n- 演示数据（Batch count）：3 批 × 4 张 = 12 张；讲者原称共 14 张，经用户提供的算术修正更正为 12，原陈述按来源保留。\n- 无准确率测量结果报告。\n",
+        "textTruncated": false
+      },
+      {
+        "file": "suspicious-asr-terms.md",
+        "renderedSHA256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+        "renderedUTF8Bytes": 382,
+        "revision": 1,
+        "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n没有影响语义完整性的 ASR 疑点需要复核。\n",
+        "textTruncated": false
+      },
+      {
+        "file": "structured-notes.md",
+        "renderedSHA256": "5b05a7261297b643bbdef70786ff6b2a8637149ca1aa75f64a9a02b96b7c77a3",
+        "renderedUTF8Bytes": 1974,
+        "revision": 2,
+        "sanitizedText": "# 合成资格验证转录的结构化笔记\n\n## 概述\n\n转录为一段简短的合成演示文稿，主题为“Café Segmentation”（咖啡馆分割）。讲者依次说明该分割方法的基本定义、演示所用的数据规模，并明确说明未报告准确率测量。整段仅约 16 秒，共三句，无对话、无后续补充。\n\n## 笔记\n\n### 1. 方法定义 [00:00]\n\nCafé Segmentation（咖啡馆分割）是一种图像分割方法：它将每张图像的每个像素（each image pixel）分配为前景（foreground）或背景（background），即典型的二分类像素级分割。前景/背景（foreground/background）标签保持不变。\n\n### 2. 演示数据规模 [00:08]\n\n#### Arithmetic correction\n\n- 用户提供的算术修正：根据后续指令（revision v1），正确的图像总数为 12，因为 3 × 4 = 12。此修正来自用户提供的指令，而非讲者陈述或验证性测量。\n- 原始讲者陈述（按来源归属保留）：讲者称演示包含 3 批（batches）、每批 4 张图像，\"for a total of 14 images\"，即转录中所称的“共 14 张图像”。这属于讲者陈述中的数字错误：转录自注承认其中含有一处故意的算术笔误（\"deliberately contains one arithmetic typo\"），故它是讲者的来源主张，而非转写（ASR）疑点；按任务要求不作静默更正，仅在此如实记录并标明修正来源。\n\n### 3. 准确率声明 [00:16]\n\n讲者明确表示：该演示未报告任何准确率测量（\"No accuracy measurement was reported for this demonstration.\"）。本笔记保留“无准确率测量”这一状态，未添加任何测量值。\n\n## 小结\n\n- Café Segmentation：像素级前景/背景（foreground/background）二分类分割。\n- 演示数据（Arithmetic correction）：3 批 × 4 张 = 12 张；讲者原称共 14 张，经用户提供的算术修正更正为 12，原陈述按来源保留。\n- 无准确率测量结果报告。\n",
+        "textTruncated": false
+      },
+      {
+        "file": "suspicious-asr-terms.md",
+        "renderedSHA256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+        "renderedUTF8Bytes": 382,
+        "revision": 2,
+        "sanitizedText": "# 尚待复核的 ASR 疑点\n\n本索引仅列出仍可能影响上下文语义或语义完整性的未解决 ASR 疑点。编号与笔记正文中的可见标记对应。已解决的疑点、不影响语义的识别变体，以及讲者自身的不确定性不列入；这不表示原转录中的每个词都经过验证。\n\n没有影响语义完整性的 ASR 疑点需要复核。\n",
+        "textTruncated": false
+      }
+    ],
+    "phaseDeadlineSeconds": 300,
+    "phoneOwned": true,
+    "schemaVersion": 1,
+    "stage": "completed",
+    "status": "completed",
+    "steps": [
+      {
+        "elapsedSeconds": 0.0008839999791234732,
+        "stage": "authorization",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 0.0022704582661390305,
+        "stage": "authorization",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 2.319922541733831,
+        "stage": "authorization",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 2.3275317917577922,
+        "stage": "authorization",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.410041833296418,
+        "stage": "authorization",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.41603908338584,
+        "stage": "import",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.420298791723326,
+        "stage": "import",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.687077458249405,
+        "stage": "import",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.695209208410233,
+        "stage": "raw_check",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.700447583338246,
+        "stage": "raw_check",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": true,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 4.707822999916971,
+        "stage": "raw_check",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 48.26392879174091,
+        "stage": "raw_check",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 48.265271625015885,
+        "stage": "create_action",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 48.2661419166252,
+        "stage": "create_action",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": ""
+        }
+      },
+      {
+        "elapsedSeconds": 48.5227415417321,
+        "stage": "create_action",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": true,
+          "hasError": false,
+          "outputLanguageFrozen": false,
+          "phase": "draft"
+        }
+      },
+      {
+        "elapsedSeconds": 48.52790437499061,
+        "stage": "send_v0",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": true,
+          "hasError": false,
+          "outputLanguageFrozen": false,
+          "phase": "draft"
+        }
+      },
+      {
+        "elapsedSeconds": 48.53166320826858,
+        "stage": "send_v0",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": false,
+          "phase": "draft"
+        }
+      },
+      {
+        "elapsedSeconds": 48.78856116672978,
+        "stage": "send_v0",
+        "state": {
+          "acceptedRevisions": [],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "actor"
+        }
+      },
+      {
+        "elapsedSeconds": 120.38344783335924,
+        "stage": "send_v0",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.18204024992883,
+        "stage": "send_v0",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.18392008333467,
+        "stage": "read_v0_notes",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.18503833329305,
+        "stage": "read_v0_notes",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.4414365417324,
+        "stage": "read_v0_notes",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.45166241656989,
+        "stage": "read_v0_notes",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.45542758330703,
+        "stage": "read_v0_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.45772187504917,
+        "stage": "read_v0_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.71548845828511,
+        "stage": "read_v0_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.71988945826888,
+        "stage": "read_v0_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.72336962493137,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.72576020844281,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 122.97938087489456,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "extra_guardian"
+        }
+      },
+      {
+        "elapsedSeconds": 169.6408647915814,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "actor"
+        }
+      },
+      {
+        "elapsedSeconds": 248.22159400000237,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 249.7800849166233,
+        "stage": "send_v1",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 249.78367183334194,
+        "stage": "read_v1_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 249.78504383331165,
+        "stage": "read_v1_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.04142895829864,
+        "stage": "read_v1_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.04351758328266,
+        "stage": "read_v1_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.0452329167165,
+        "stage": "read_v1_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.04715300002135,
+        "stage": "read_v1_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.3010154166259,
+        "stage": "read_v1_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.30344179156236,
+        "stage": "read_v1_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.30582004156895,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.3079321666155,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 250.82078666659072,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "extra_guardian"
+        }
+      },
+      {
+        "elapsedSeconds": 297.2502972499933,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "actor"
+        }
+      },
+      {
+        "elapsedSeconds": 368.9910933333449,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.0519615833182,
+        "stage": "send_v2",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.05478620831855,
+        "stage": "read_v2_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.05662216665223,
+        "stage": "read_v2_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.31871345825493,
+        "stage": "read_v2_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.3222516665701,
+        "stage": "read_v2_notes",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.32406183332205,
+        "stage": "read_v2_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.3260758749675,
+        "stage": "read_v2_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": true,
+          "canCheckRaw": false,
+          "canCreateAction": false,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.5885578750167,
+        "stage": "read_v2_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.5911417501047,
+        "stage": "read_v2_asr_terms",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      },
+      {
+        "elapsedSeconds": 371.5927805833053,
+        "stage": "completed",
+        "state": {
+          "acceptedRevisions": [
+            0,
+            1,
+            2
+          ],
+          "busy": false,
+          "canCheckRaw": false,
+          "canCreateAction": true,
+          "canSend": false,
+          "hasError": false,
+          "outputLanguageFrozen": true,
+          "phase": "completed"
+        }
+      }
+    ],
+    "workflowMayStillBeRunning": false
+  }
+}

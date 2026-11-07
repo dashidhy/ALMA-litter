@@ -1,0 +1,739 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "status": "CORE_PHONE_INTEGRATION_PASSED",
+  "scope": {
+    "app": "com.alma.litter.agent-probe",
+    "platform": "iOS",
+    "actionInstanceID": "3a92da08-200d-4585-8b65-d7b18dd989af",
+    "material": "synthetic qualification transcript",
+    "summary": "Core real-phone Kimi integration passed across Raw Guardian and V0–V3 publication, real WebSearch/FetchURL, owned lifecycle, preserved journal data, and cached provider switching.",
+    "sanitization": "Allowlisted metadata, counts, hashes and public test URLs. Original journal row contents, credential values and handles, raw model text, and HTTP bodies are omitted."
+  },
+  "release": {
+    "releaseTag": "@moonshot-ai/kimi-code@2.4.1",
+    "releaseVersion": "2.4.1",
+    "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+    "sdkVersion": "0.22.0",
+    "sdkIndexSHA256": "a85fa13949e2b3fb9bbf08a143d122123598ecac778e97d40716cde2b1e97e78",
+    "permissionPatchSHA256": "a73d4c08efbdb59dbb732e3adc51eec83d31f27d12c8eca6a737872b3cfb9e02"
+  },
+  "cleanupHardenedBuild": {
+    "tests": {
+      "groups": 12,
+      "passed": 12,
+      "failed": 0,
+      "source": "tools/mobile-tah/.cache/kimi-final-checks.log"
+    },
+    "xcodeBuild": "PASS",
+    "buildSource": "tools/mobile-tah/.cache/kimi-final-build.log",
+    "installAndLaunchLogged": true,
+    "installSource": "tools/mobile-tah/.cache/kimi-final-install.log",
+    "launchSource": "tools/mobile-tah/.cache/kimi-final-launch.log",
+    "runtimeManifestSHA256": "8440bebe8469d691df56ed989551cf3453dd72413c8dafb6667146e808c38ae0",
+    "guestSHA256": "2b68bc688d5536b47cff64fb5ee4aa12ed2226507d311dbc578117673fa15a4c",
+    "rootfsLockSHA256": "121f61e704e53396f429cbb57db2d9b3b06818eaa3d8bd3fce63f89ea5e96ea7",
+    "resourcesSource": "tools/mobile-tah/.cache/kimi-final-resources.log",
+    "identity": {
+      "generatedProject": {
+        "path": "tools/mobile-tah/.cache/tauri-app/project.yml",
+        "bytes": 7815,
+        "sha256": "d575981a1473d10ac3316eecd0b9c17fd6e6293005301fe8d7cb3ea7880b698c"
+      },
+      "pbxproj": {
+        "path": "tools/mobile-tah/.cache/tauri-app/AlmaTAHTauri.xcodeproj/project.pbxproj",
+        "bytes": 33421,
+        "sha256": "c2d8bfe1eae032f9997aa17bfbf647953aec0817bb14587901059fd5293fc9d4"
+      },
+      "linkedRustArchive": {
+        "path": "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/libalma_tah_ui_lib.a",
+        "bytes": 3994355400,
+        "sha256": "14b0e41edb2244061b499676f28cc10e111acb39927d6358f31758a3b410af4b"
+      },
+      "executable": {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/AlmaTAHTauri",
+        "bytes": 460497760,
+        "sha256": "588b58872d847343489c86a63638c51b52d8b635b9b941a828a89c8a866ef675"
+      },
+      "machOUUID": "44BE0F11-26C8-35CF-87DC-1CE97C209C61",
+      "bundleIdentifier": "com.alma.litter.agent-probe",
+      "sourceRuntimeManifest": {
+        "path": "tools/mobile-tah/.cache/kimi-runtimes/8440bebe8469d691df56ed989551cf3453dd72413c8dafb6667146e808c38ae0/kimi-runtime/runtime-manifest.json",
+        "bytes": 154579,
+        "sha256": "8440bebe8469d691df56ed989551cf3453dd72413c8dafb6667146e808c38ae0"
+      },
+      "builtRuntimeManifest": {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/kimi-runtime/runtime-manifest.json",
+        "bytes": 154579,
+        "sha256": "8440bebe8469d691df56ed989551cf3453dd72413c8dafb6667146e808c38ae0"
+      },
+      "builtGuest": {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/kimi-runtime/guest.mjs",
+        "bytes": 803139,
+        "sha256": "2b68bc688d5536b47cff64fb5ee4aa12ed2226507d311dbc578117673fa15a4c"
+      },
+      "builtSDK": {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/kimi-runtime/sdk/index.mjs",
+        "bytes": 8552870,
+        "sha256": "a85fa13949e2b3fb9bbf08a143d122123598ecac778e97d40716cde2b1e97e78"
+      },
+      "rootfsID": "alma-tools=kimi-121f61e704e53396f429cbb57db2d9b3b06818eaa3d8bd3fce63f89ea5e96ea7;arch=aarch64",
+      "runtimeInventoryFilesVerified": 878,
+      "generatedResourceMatches": [
+        {
+          "generated": {
+            "path": "shared/tah-runtime/generated/alma-tah.js",
+            "bytes": 1410053,
+            "sha256": "c782f7ace003442d8b288f9a61c416f951e88c64c741d7135dd4bcae28b35a3b"
+          },
+          "built": {
+            "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/alma-tah.js",
+            "bytes": 1410053,
+            "sha256": "c782f7ace003442d8b288f9a61c416f951e88c64c741d7135dd4bcae28b35a3b"
+          },
+          "equal": true
+        },
+        {
+          "generated": {
+            "path": "tools/mobile-tah/.cache/app/mobile-config.json",
+            "bytes": 17627,
+            "sha256": "231af3abc1ab58917820c3cb75aa16f6d493994ed5ea0f16f633d77cfb85c155"
+          },
+          "built": {
+            "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app/mobile-config.json",
+            "bytes": 17627,
+            "sha256": "231af3abc1ab58917820c3cb75aa16f6d493994ed5ea0f16f633d77cfb85c155"
+          },
+          "equal": true
+        }
+      ],
+      "evidenceScope": "Generated Xcode inputs and local built app product associated with retained successful install/launch logs."
+    }
+  },
+  "preservation": {
+    "baselineSource": "tools/mobile-tah/.cache/kimi-phone-before/consistent.sqlite3",
+    "baselineDatabaseSHA256": "d9eaf1df706fa75633b3d0fb6f1b0cd661b3ecaed99d0d400efb6e2144c874d0",
+    "table": "events",
+    "comparedColumns": [
+      "operation_id",
+      "stream_id",
+      "version",
+      "kind",
+      "header",
+      "payload",
+      "sha256"
+    ],
+    "originalEventRows": 127,
+    "comparison": "All column values compared exactly by operation_id, including header and payload BLOB bytes.",
+    "exports": [
+      {
+        "revision": 0,
+        "source": "tools/mobile-tah/.cache/kimi-phone-v0-journal/tah.sqlite3",
+        "databaseSHA256": "8ca584c09007ea776b39e901d5e7aa13891205b79f05b3b590bddbe0aa2f6035",
+        "totalEventRows": 147,
+        "originalRowsMatched": 127,
+        "originalRowsMissing": 0,
+        "originalRowsChanged": 0,
+        "sqliteIntegrity": "ok",
+        "pendingWrites": 0
+      },
+      {
+        "revision": 1,
+        "source": "tools/mobile-tah/.cache/kimi-phone-v1-journal/tah.sqlite3",
+        "databaseSHA256": "83637bdba61c6a8601dcdd0a01847fe6a7c72a8da96d41c354ad6354ff4ae4bd",
+        "totalEventRows": 151,
+        "originalRowsMatched": 127,
+        "originalRowsMissing": 0,
+        "originalRowsChanged": 0,
+        "sqliteIntegrity": "ok",
+        "pendingWrites": 0
+      },
+      {
+        "revision": 2,
+        "source": "tools/mobile-tah/.cache/kimi-phone-v2-journal/tah.sqlite3",
+        "databaseSHA256": "b584cc45db7b897a079efd1c75ca4b30d241a3175085c79e4a6763ce8697aa01",
+        "totalEventRows": 159,
+        "originalRowsMatched": 127,
+        "originalRowsMissing": 0,
+        "originalRowsChanged": 0,
+        "sqliteIntegrity": "ok",
+        "pendingWrites": 0
+      },
+      {
+        "revision": 3,
+        "source": "tools/mobile-tah/.cache/kimi-phone-v3-journal/tah.sqlite3",
+        "databaseSHA256": "c2c969c34400dec392e8d6e0ec0f3ccabe7646cbfef81ac877a602b71177c637",
+        "totalEventRows": 163,
+        "originalRowsMatched": 127,
+        "originalRowsMissing": 0,
+        "originalRowsChanged": 0,
+        "sqliteIntegrity": "ok",
+        "pendingWrites": 0
+      }
+    ]
+  },
+  "rawGuardian": {
+    "status": "PASS",
+    "assessment": "ALLOW",
+    "startedAt": "2026-11-03T09:37:27Z",
+    "endedAt": "2026-11-03T09:38:17Z",
+    "nativeDurationSeconds": 50,
+    "closeCaptureRelease": "completed",
+    "diagnosticSource": "tools/mobile-tah/.cache/kimi-phone-diagnostics.json",
+    "assessmentSource": "tools/mobile-tah/.cache/kimi-phone-v2-journal/tah.sqlite3",
+    "checkedAtEpochMs": 1793698697137
+  },
+  "revisions": [
+    {
+      "revision": 0,
+      "operationStatus": "completed",
+      "publicationStatus": "PASS",
+      "publicationCommitID": "publication/8527209d-93cf-4fbb-bf67-419081b27c99",
+      "acceptedRevision": 0,
+      "providerID": "kimi",
+      "inference": {
+        "modelID": "kimi-for-coding",
+        "reasoningEffortID": "low"
+      },
+      "interactionLanguage": "zh-CN",
+      "actionLanguage": "en",
+      "webEnabled": false,
+      "startedAt": "2026-11-03T09:39:09.809Z",
+      "endedAt": "2026-11-03T09:40:28.337Z",
+      "durationMs": 78528,
+      "durationSource": "exported operation.presentation timestamps",
+      "stages": [
+        {
+          "phase": "preparing",
+          "startedAt": "2026-11-03T09:39:09.809Z",
+          "endedAt": "2026-11-03T09:39:09.861Z",
+          "durationMs": 52
+        },
+        {
+          "phase": "actor",
+          "startedAt": "2026-11-03T09:39:09.861Z",
+          "endedAt": "2026-11-03T09:40:28.301Z",
+          "durationMs": 78440
+        },
+        {
+          "phase": "critic",
+          "startedAt": "2026-11-03T09:40:28.301Z",
+          "endedAt": "2026-11-03T09:40:28.337Z",
+          "durationMs": 36
+        },
+        {
+          "phase": "completed",
+          "startedAt": "2026-11-03T09:40:28.337Z",
+          "endedAt": "2026-11-03T09:40:28.337Z",
+          "durationMs": 0
+        }
+      ],
+      "criticDecision": "PASS",
+      "criticIssues": 0,
+      "criticRounds": 1,
+      "actorRounds": 1,
+      "candidateDigest": "891f3cc48db7f14e5084cb6b21c603507be5cc1f087da1feb57fa897b71e4cee",
+      "files": [
+        {
+          "relativePath": "structured-notes.md",
+          "bytes": 1338,
+          "sha256": "81b7232b4dc907f3862bdaba280b54e395b73ab0425a3161d9a85905661fd7f4",
+          "verified": true
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "bytes": 382,
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "verified": true
+        }
+      ],
+      "workingLog": {
+        "bytes": 2191,
+        "sha256": "1d46c9b89a2f084f2608e628420acfe78d66eb34733b0c8ab7f6542819e81cc0",
+        "limited": false,
+        "hashVerified": true
+      },
+      "toolStatuses": [
+        {
+          "tool": "Glob",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Read",
+          "status": "completed",
+          "count": 4
+        },
+        {
+          "tool": "Write",
+          "status": "completed",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "revision": 1,
+      "operationStatus": "completed",
+      "publicationStatus": "PASS",
+      "publicationCommitID": "publication/441bae62-f947-4238-ac8a-4eb069b1dcf2",
+      "acceptedRevision": 1,
+      "providerID": "kimi",
+      "inference": {
+        "modelID": "kimi-for-coding",
+        "reasoningEffortID": "low"
+      },
+      "interactionLanguage": "zh-CN",
+      "actionLanguage": "en",
+      "webEnabled": false,
+      "startedAt": "2026-11-03T09:46:53.886Z",
+      "endedAt": "2026-11-03T09:49:11.962Z",
+      "durationMs": 138076,
+      "durationSource": "exported operation.presentation timestamps",
+      "stages": [
+        {
+          "phase": "preparing",
+          "startedAt": "2026-11-03T09:46:53.886Z",
+          "endedAt": "2026-11-03T09:46:53.941Z",
+          "durationMs": 55
+        },
+        {
+          "phase": "extra_guardian",
+          "startedAt": "2026-11-03T09:46:53.941Z",
+          "endedAt": "2026-11-03T09:47:42.417Z",
+          "durationMs": 48476
+        },
+        {
+          "phase": "saving_safety",
+          "startedAt": "2026-11-03T09:47:42.417Z",
+          "endedAt": "2026-11-03T09:47:42.460Z",
+          "durationMs": 43
+        },
+        {
+          "phase": "actor",
+          "startedAt": "2026-11-03T09:47:42.460Z",
+          "endedAt": "2026-11-03T09:49:11.911Z",
+          "durationMs": 89451
+        },
+        {
+          "phase": "critic",
+          "startedAt": "2026-11-03T09:49:11.911Z",
+          "endedAt": "2026-11-03T09:49:11.961Z",
+          "durationMs": 50
+        },
+        {
+          "phase": "completed",
+          "startedAt": "2026-11-03T09:49:11.961Z",
+          "endedAt": "2026-11-03T09:49:11.962Z",
+          "durationMs": 1
+        }
+      ],
+      "criticDecision": "PASS",
+      "criticIssues": 0,
+      "criticRounds": 1,
+      "actorRounds": 1,
+      "candidateDigest": "1a938a6b7c64c787553ccab1d5a33bda15b2c905a8eb3c97514c2506d8d02a45",
+      "files": [
+        {
+          "relativePath": "structured-notes.md",
+          "bytes": 1331,
+          "sha256": "277a6ad267bbeb110acf6ed1c57055fd9866ce6aeb3de64e1b53f5ef660bff5a",
+          "verified": true
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "bytes": 382,
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "verified": true
+        }
+      ],
+      "workingLog": {
+        "bytes": 4354,
+        "sha256": "851a636134a23ff69a5ffa5d6c7b346b2ae69f2c1aaaac28c6592e0669ddbaae",
+        "limited": false,
+        "hashVerified": true
+      },
+      "toolStatuses": [
+        {
+          "tool": "Edit",
+          "status": "completed",
+          "count": 3
+        },
+        {
+          "tool": "Glob",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Read",
+          "status": "completed",
+          "count": 8
+        }
+      ],
+      "exactCorrectionInstructionVerified": true,
+      "correctedTotal12Verified": true
+    },
+    {
+      "revision": 2,
+      "operationStatus": "completed",
+      "publicationStatus": "PASS",
+      "publicationCommitID": "publication/f76c420e-0282-4efc-a8e6-1ce37ea28a9a",
+      "acceptedRevision": 2,
+      "providerID": "kimi",
+      "inference": {
+        "modelID": "kimi-for-coding",
+        "reasoningEffortID": "high"
+      },
+      "interactionLanguage": "zh-CN",
+      "actionLanguage": "en",
+      "webEnabled": true,
+      "startedAt": "2026-11-03T10:06:41.442Z",
+      "endedAt": "2026-11-03T10:09:27.606Z",
+      "durationMs": 166164,
+      "durationSource": "exported operation.presentation timestamps",
+      "stages": [
+        {
+          "phase": "preparing",
+          "startedAt": "2026-11-03T10:06:41.442Z",
+          "endedAt": "2026-11-03T10:06:41.507Z",
+          "durationMs": 65
+        },
+        {
+          "phase": "extra_guardian",
+          "startedAt": "2026-11-03T10:06:41.507Z",
+          "endedAt": "2026-11-03T10:07:24.965Z",
+          "durationMs": 43458
+        },
+        {
+          "phase": "saving_safety",
+          "startedAt": "2026-11-03T10:07:24.965Z",
+          "endedAt": "2026-11-03T10:07:25.050Z",
+          "durationMs": 85
+        },
+        {
+          "phase": "actor",
+          "startedAt": "2026-11-03T10:07:25.050Z",
+          "endedAt": "2026-11-03T10:09:27.550Z",
+          "durationMs": 122500
+        },
+        {
+          "phase": "critic",
+          "startedAt": "2026-11-03T10:09:27.550Z",
+          "endedAt": "2026-11-03T10:09:27.606Z",
+          "durationMs": 56
+        },
+        {
+          "phase": "completed",
+          "startedAt": "2026-11-03T10:09:27.606Z",
+          "endedAt": "2026-11-03T10:09:27.606Z",
+          "durationMs": 0
+        }
+      ],
+      "criticDecision": "PASS",
+      "criticIssues": 0,
+      "criticRounds": 1,
+      "actorRounds": 1,
+      "candidateDigest": "e406dfe2be8f660c0614bd69e7e61d4639284a5fe4a0d082cb02bb68c21607e2",
+      "files": [
+        {
+          "relativePath": "structured-notes.md",
+          "bytes": 2186,
+          "sha256": "e6bc9cb73bbe51187d959ac52c6849482b81237020cdd639f621a54b37554386",
+          "verified": true
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "bytes": 382,
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "verified": true
+        }
+      ],
+      "workingLog": {
+        "bytes": 5670,
+        "sha256": "758296e566afe8361e8c525f5aa1776fa15bbb40ba7dbc25fec591f1c11e9035",
+        "limited": false,
+        "hashVerified": true
+      },
+      "toolStatuses": [
+        {
+          "tool": "Edit",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "FetchURL",
+          "status": "failed",
+          "count": 2
+        },
+        {
+          "tool": "Glob",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Read",
+          "status": "completed",
+          "count": 6
+        },
+        {
+          "tool": "WebSearch",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Write",
+          "status": "completed",
+          "count": 1
+        }
+      ],
+      "webOutcome": {
+        "search": "PASS",
+        "fetch": "PROVIDER_BLOCKED",
+        "phoneFetchAttempts": 2,
+        "phoneToolErrorClass": "dns_denied_during_local_fallback",
+        "providerErrorType": "websearch_audit_failed",
+        "classificationBasis": "Phone tool failures plus the separate official-service probe for the same public TensorFlow URL and the locked SDK cloud-first fallback path.",
+        "fullWebAcceptance": "PASS_WITH_REVISION_3_FETCHURL",
+        "hostServiceHTTPStatus": 403
+      }
+    },
+    {
+      "revision": 3,
+      "operationStatus": "completed",
+      "publicationStatus": "PASS",
+      "publicationCommitID": "publication/4afba549-ff39-43e6-93ab-dc43a44cb91b",
+      "acceptedRevision": 3,
+      "providerID": "kimi",
+      "inference": {
+        "modelID": "kimi-for-coding",
+        "reasoningEffortID": "low"
+      },
+      "interactionLanguage": "zh-CN",
+      "actionLanguage": "en",
+      "webEnabled": true,
+      "startedAt": "2026-11-03T10:32:07.952Z",
+      "endedAt": "2026-11-03T10:34:25.129Z",
+      "durationMs": 137177,
+      "durationSource": "exported operation.presentation timestamps",
+      "stages": [
+        {
+          "phase": "preparing",
+          "startedAt": "2026-11-03T10:32:07.952Z",
+          "endedAt": "2026-11-03T10:32:08.038Z",
+          "durationMs": 86
+        },
+        {
+          "phase": "extra_guardian",
+          "startedAt": "2026-11-03T10:32:08.038Z",
+          "endedAt": "2026-11-03T10:33:08.524Z",
+          "durationMs": 60486
+        },
+        {
+          "phase": "saving_safety",
+          "startedAt": "2026-11-03T10:33:08.524Z",
+          "endedAt": "2026-11-03T10:33:08.587Z",
+          "durationMs": 63
+        },
+        {
+          "phase": "actor",
+          "startedAt": "2026-11-03T10:33:08.587Z",
+          "endedAt": "2026-11-03T10:34:25.071Z",
+          "durationMs": 76484
+        },
+        {
+          "phase": "critic",
+          "startedAt": "2026-11-03T10:34:25.071Z",
+          "endedAt": "2026-11-03T10:34:25.129Z",
+          "durationMs": 58
+        },
+        {
+          "phase": "completed",
+          "startedAt": "2026-11-03T10:34:25.129Z",
+          "endedAt": "2026-11-03T10:34:25.129Z",
+          "durationMs": 0
+        }
+      ],
+      "criticDecision": "PASS",
+      "criticIssues": 0,
+      "criticRounds": 1,
+      "actorRounds": 1,
+      "candidateDigest": "d5b24640b3592ef35c84dd64606d63bae078d9a2620e8dcf2bb5b9cd8c4912ea",
+      "files": [
+        {
+          "relativePath": "structured-notes.md",
+          "bytes": 2034,
+          "sha256": "af6062b3ee71a3612fec2451fc120c5e4442d590f67ac2fe7e936ac6ac923834",
+          "verified": true
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "bytes": 382,
+          "sha256": "253efc59cbb5427afe0050f9228c00e492abed1d494516a7cb2f8adf314196de",
+          "verified": true
+        }
+      ],
+      "workingLog": {
+        "bytes": 3215,
+        "sha256": "4bff932ea2874395deea8adf25ca847ca17e3de30f0090985c4285decd346de9",
+        "limited": false,
+        "hashVerified": true
+      },
+      "toolStatuses": [
+        {
+          "tool": "Edit",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "FetchURL",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Glob",
+          "status": "completed",
+          "count": 1
+        },
+        {
+          "tool": "Read",
+          "status": "completed",
+          "count": 6
+        }
+      ],
+      "webOutcome": {
+        "fetch": "PASS",
+        "targetURL": "https://docs.pytorch.org/vision/stable/models.html",
+        "phoneFetchAttempts": 1,
+        "completedFetchToolOrdinal": 8,
+        "referencesVerified": [
+          "DeepLabV3",
+          "FCN",
+          "LRASPP"
+        ],
+        "publicURLCitationVerified": true,
+        "total12Preserved": true,
+        "contentOutsideExternalReferenceUnchanged": true
+      },
+      "nativeLifecycle": {
+        "source": "tools/mobile-tah/.cache/kimi-phone-final-diagnostics.json",
+        "sourceSHA256": "a67de446033fb00903e598f290e07dda3e722d0a51795bf5d701760cc0cd8922",
+        "attempts": 2,
+        "verifiedCounts": {
+          "start": 2,
+          "nextEvent": 2,
+          "close": 2,
+          "capture": 2,
+          "release": 2
+        },
+        "status": "PASS"
+      },
+      "persistedDraft": {
+        "source": "tools/mobile-tah/.cache/kimi-phone-ui-check.json",
+        "sourceSHA256": "13061c04f41fb866d8ebee9d87e5a44ed364a5ef4e3ed7900f27f98fc0fb2a34",
+        "instructionBytes": 240,
+        "instructionSHA256": "f5c2b5c32a43e83d3d20389b1d09a2c2e1dd897acc0658482e013361bdded791",
+        "matchesExpectedSyntheticInstruction": true,
+        "terminalPeriodVerified": true
+      }
+    }
+  ],
+  "publicationChecks": {
+    "allFileLengthsAndSHA256Verified": true,
+    "allCriticDecisions": "PASS",
+    "V1TotalCorrectedTo12": true,
+    "asrFileIdenticalAcrossV0V1V2V3": true,
+    "V3Total12Preserved": true,
+    "V3ChangesOnlyExternalReference": true,
+    "priorKimiPublicationsRetained": true
+  },
+  "hostFetchServiceProbes": {
+    "execution": "Native Mac host calling the official /coding/v1/fetch service with authorized credentials",
+    "results": [
+      {
+        "source": "tools/mobile-tah/.cache/kimi-fetch-service-probe.json",
+        "targetURL": "https://www.tensorflow.org/tutorials/images/segmentation",
+        "httpStatus": 403,
+        "responseBytes": 138,
+        "seconds": 0.34219687499999996,
+        "errorType": "websearch_audit_failed"
+      },
+      {
+        "source": "tools/mobile-tah/.cache/kimi-fetch-service-probe.json",
+        "targetURL": "https://example.com/",
+        "httpStatus": 200,
+        "responseBytes": 1302,
+        "seconds": 3.003692208
+      },
+      {
+        "source": "tools/mobile-tah/.cache/kimi-fetch-service-probe-2.json",
+        "targetURL": "https://docs.pytorch.org/vision/stable/models.html",
+        "httpStatus": 200,
+        "responseBytes": 14975,
+        "seconds": 6.845891334
+      },
+      {
+        "source": "tools/mobile-tah/.cache/kimi-fetch-service-probe-2.json",
+        "targetURL": "https://en.wikipedia.org/wiki/Image_segmentation",
+        "httpStatus": 200,
+        "responseBytes": 74149,
+        "seconds": 5.979776083
+      }
+    ],
+    "qualificationScope": "Host service responses, independently supplemented by revision 3 phone FetchURL evidence."
+  },
+  "providerSwitching": {
+    "codexCachedAuthorization": {
+      "status": "PASS",
+      "providerID": "codex",
+      "state": "valid",
+      "checkedAt": "2026-11-03T10:13:37.949Z",
+      "source": "tools/mobile-tah/.cache/kimi-phone-return-codex-auth.json"
+    },
+    "priorNvidiaHistoryRead": {
+      "status": "PASS",
+      "revisions": [
+        0,
+        1
+      ],
+      "evidenceType": "recorded UI observation",
+      "observedDate": "2026-11-03",
+      "observedLocalTime": "18:22",
+      "timezone": "Asia/Shanghai"
+    },
+    "kimiCachedReconnect": {
+      "status": "PASS",
+      "providerID": "kimi",
+      "state": "valid",
+      "checkedAt": "2026-11-03T10:24:41.203Z",
+      "source": "tools/mobile-tah/.cache/kimi-phone-return-kimi-auth.json"
+    },
+    "crossProviderNewGeneration": {
+      "status": "NOT_TESTED"
+    }
+  },
+  "limits": [
+    "The cloud fetch service can reject individual URLs. TensorFlow returned 403 websearch_audit_failed, and direct fallback remains disabled by the service-only boundary.",
+    "Long-transcript chunking and long-running Kimi inference were not tested.",
+    "Background and physical-lock execution were not tested.",
+    "Power consumption was not measured.",
+    "Cross-provider new generation was not tested. Cached auth switching and existing history reads passed."
+  ],
+  "ownedMacToolQualification": {
+    "status": "PASS",
+    "evidenceScope": "Earlier owned-policy Read/Glob/Grep and Actor Write/Edit synthetic-HTTP tests.",
+    "inputsSource": "tools/alma-ios-lab/kimi_owned_probe/.cache/integrated-inputs.json",
+    "runtimeManifestSHA256": "aace22419d604cb313d36d8115c1ad96d71707edb83a13429db9ee8335f013f6",
+    "guestSHA256": "be0915f8d9a37d32c0cd1bf867b136980fede5bfead2f7780e2b437570ed151b",
+    "rootfsLockSHA256": "121f61e704e53396f429cbb57db2d9b3b06818eaa3d8bd3fce63f89ea5e96ea7",
+    "guardianSource": "tools/alma-ios-lab/kimi_owned_probe/.cache/tools-guardian-success-validation.json",
+    "actorSource": "tools/alma-ios-lab/kimi_owned_probe/.cache/tools-actor-success-validation.json"
+  },
+  "coreIntegrationPassed": true,
+  "webAcceptance": {
+    "status": "PASS",
+    "searchEvidenceRevision": 2,
+    "fetchEvidenceRevision": 3,
+    "serviceOnly": true,
+    "providerRestrictionRetained": "TensorFlow URL returned HTTP 403 websearch_audit_failed. The guest rejects the SDK direct-fetch fallback."
+  },
+  "pendingCoreChecks": []
+}

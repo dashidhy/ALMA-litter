@@ -1,0 +1,518 @@
+{
+  "date": "2026-11-03",
+  "stage": "Alma TAH integration review and Mac compatibility experiments",
+  "appBase": "fe444683",
+  "release": {
+    "releaseTag": "@moonshot-ai/kimi-code@2.4.1",
+    "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+    "sdkVersion": "0.22.0",
+    "sdkIndexSHA256": "a85fa13949e2b3fb9bbf08a143d122123598ecac778e97d40716cde2b1e97e78",
+    "permissionPatchSHA256": "a73d4c08efbdb59dbb732e3adc51eec83d31f27d12c8eca6a737872b3cfb9e02"
+  },
+  "artifactVerification": {
+    "files": 744,
+    "bytes": 14899500,
+    "treeSHA256": "181f2ce4969c128754e1fa6525a974080f23616d08e0731468c814eaf98c488f"
+  },
+  "catalog": {
+    "status": "200",
+    "models": [
+      {
+        "id": "kimi-for-coding",
+        "name": null,
+        "thinking": null
+      },
+      {
+        "id": "kimi-for-coding-highspeed",
+        "name": null,
+        "thinking": null
+      },
+      {
+        "id": "k3-256k",
+        "name": null,
+        "thinking": null
+      },
+      {
+        "id": "k3.1-pro-highspeed",
+        "name": null,
+        "thinking": null
+      },
+      {
+        "id": "k3",
+        "name": null,
+        "thinking": null
+      },
+      {
+        "id": "k3.1-pro",
+        "name": null,
+        "thinking": null
+      }
+    ],
+    "error": null
+  },
+  "offline": [
+    {
+      "run": "release-241-offline-01",
+      "passed": true,
+      "hostSeconds": 33.35301425005309,
+      "peakSampledHostRSSBytes": 705986560,
+      "guestExit": 0,
+      "terminal": {
+        "type": "result",
+        "elapsedMs": 30094,
+        "success": true,
+        "mode": "fixture",
+        "requests": 3,
+        "networkAttempts": [],
+        "phases": {
+          "sdk_import": {
+            "elapsedMs": 19172.728,
+            "cpuUserMs": 17129.761,
+            "cpuSystemMs": 1273.232,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131391488,
+              "heapUsed": 104696168,
+              "external": 3077021,
+              "arrayBuffers": 55253
+            }
+          },
+          "harness_create": {
+            "elapsedMs": 760.8899999999994,
+            "cpuUserMs": 728.821,
+            "cpuSystemMs": 20.378,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131915776,
+              "heapUsed": 108661912,
+              "external": 3079509,
+              "arrayBuffers": 55653
+            }
+          },
+          "session_create": {
+            "elapsedMs": 4260.114000000001,
+            "cpuUserMs": 2577.65,
+            "cpuSystemMs": 600.385,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141615104,
+              "heapUsed": 106920384,
+              "external": 3237116,
+              "arrayBuffers": 213260
+            }
+          },
+          "configuration_readback": {
+            "elapsedMs": 2035.8279999999977,
+            "cpuUserMs": 1908.345,
+            "cpuSystemMs": 75.655,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141615104,
+              "heapUsed": 105269064,
+              "external": 3374961,
+              "arrayBuffers": 351105
+            }
+          },
+          "fixture_turn": {
+            "elapsedMs": 3392.1589999999997,
+            "cpuUserMs": 3196.134,
+            "cpuSystemMs": 104.126,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141615104,
+              "heapUsed": 112800344,
+              "external": 3271197,
+              "arrayBuffers": 247341
+            }
+          },
+          "session_close": {
+            "elapsedMs": 159.83699999999953,
+            "cpuUserMs": 153.174,
+            "cpuSystemMs": 4.746,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141615104,
+              "heapUsed": 114272632,
+              "external": 3288582,
+              "arrayBuffers": 264726
+            }
+          },
+          "harness_close": {
+            "elapsedMs": 104.60399999999936,
+            "cpuUserMs": 99.453,
+            "cpuSystemMs": 3.466,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141615104,
+              "heapUsed": 114938000,
+              "external": 3293497,
+              "arrayBuffers": 269641
+            }
+          }
+        },
+        "eventCount": 20,
+        "readContentRoundTrip": true,
+        "toolResults": [
+          {
+            "isError": false,
+            "synthetic": false
+          },
+          {
+            "isError": false,
+            "synthetic": false
+          }
+        ]
+      }
+    },
+    {
+      "run": "release-241-cancel-01",
+      "passed": true,
+      "hostSeconds": 30.884307499974966,
+      "peakSampledHostRSSBytes": 705527808,
+      "guestExit": 0,
+      "terminal": {
+        "type": "result",
+        "elapsedMs": 27516,
+        "success": true,
+        "mode": "cancel",
+        "requests": 1,
+        "networkAttempts": [],
+        "phases": {
+          "sdk_import": {
+            "elapsedMs": 18839.296000000002,
+            "cpuUserMs": 16721.754,
+            "cpuSystemMs": 1318.299,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131129344,
+              "heapUsed": 104618824,
+              "external": 3077021,
+              "arrayBuffers": 55253
+            }
+          },
+          "harness_create": {
+            "elapsedMs": 731.4140000000007,
+            "cpuUserMs": 700.95,
+            "cpuSystemMs": 19.064,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131391488,
+              "heapUsed": 108597344,
+              "external": 3079509,
+              "arrayBuffers": 55653
+            }
+          },
+          "session_create": {
+            "elapsedMs": 4534.065000000002,
+            "cpuUserMs": 2608.403,
+            "cpuSystemMs": 756.952,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141352960,
+              "heapUsed": 107066848,
+              "external": 3242116,
+              "arrayBuffers": 218260
+            }
+          },
+          "configuration_readback": {
+            "elapsedMs": 1879.3780000000006,
+            "cpuUserMs": 1766.496,
+            "cpuSystemMs": 72.681,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141352960,
+              "heapUsed": 105053264,
+              "external": 3372961,
+              "arrayBuffers": 349105
+            }
+          },
+          "fixture_turn": {
+            "elapsedMs": 980.663999999997,
+            "cpuUserMs": 948.017,
+            "cpuSystemMs": 25.606,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141352960,
+              "heapUsed": 110016728,
+              "external": 3397219,
+              "arrayBuffers": 373363
+            }
+          },
+          "session_close": {
+            "elapsedMs": 296.7489999999998,
+            "cpuUserMs": 256.407,
+            "cpuSystemMs": 11.489,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141352960,
+              "heapUsed": 111325200,
+              "external": 3405837,
+              "arrayBuffers": 381981
+            }
+          },
+          "harness_close": {
+            "elapsedMs": 88.66100000000006,
+            "cpuUserMs": 83.829,
+            "cpuSystemMs": 3.403,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 141352960,
+              "heapUsed": 111863392,
+              "external": 3409837,
+              "arrayBuffers": 385981
+            }
+          }
+        },
+        "eventCount": 6,
+        "readContentRoundTrip": false,
+        "toolResults": []
+      }
+    }
+  ],
+  "liveAttempts": [
+    {
+      "run": "release-241-live-01",
+      "scope": "Mac iSH guest with native-host HTTPS broker",
+      "realModel": true,
+      "credentialDeliveredToGuest": false,
+      "hostSeconds": 84.532028958,
+      "hostExit": null,
+      "peakRSSBytes": 614367232,
+      "signal": "SIGTERM",
+      "passed": false,
+      "requests": []
+    },
+    {
+      "run": "release-241-live-02",
+      "scope": "Mac iSH guest with native-host HTTPS broker",
+      "realModel": true,
+      "credentialDeliveredToGuest": false,
+      "hostSeconds": 153.704408625,
+      "hostExit": 0,
+      "guestExit": 124,
+      "peakRSSBytes": 679755776,
+      "signal": null,
+      "brokerDrained": true,
+      "passed": false,
+      "requests": []
+    },
+    {
+      "run": "release-241-live-03",
+      "scope": "Mac iSH guest with native-host HTTPS broker",
+      "realModel": true,
+      "credentialDeliveredToGuest": false,
+      "hostSeconds": 153.603845625,
+      "hostExit": 0,
+      "guestExit": 124,
+      "peakRSSBytes": 589889536,
+      "signal": null,
+      "fatal": "consumer_ack_timeout",
+      "brokerDrained": true,
+      "passed": false,
+      "requests": [
+        {
+          "path": "/coding/v1/chat/completions",
+          "startedMs": 34577.34774999999,
+          "status": 200,
+          "bytes": 972,
+          "elapsedMs": 34486.725792000005
+        }
+      ]
+    },
+    {
+      "run": "release-241-live-04",
+      "scope": "Mac iSH guest with native-host HTTPS broker",
+      "realModel": true,
+      "credentialDeliveredToGuest": false,
+      "hostSeconds": 153.614290208,
+      "hostExit": 0,
+      "guestExit": 124,
+      "peakRSSBytes": 638189568,
+      "signal": null,
+      "fatal": "consumer_ack_timeout",
+      "brokerDrained": true,
+      "passed": false,
+      "requests": [
+        {
+          "path": "/coding/v1/chat/completions",
+          "startedMs": 30530.5975,
+          "status": 200,
+          "bytes": 254,
+          "elapsedMs": 37985.551792
+        }
+      ]
+    },
+    {
+      "run": "release-241-live-05",
+      "scope": "Mac iSH guest with native-host HTTPS broker",
+      "realModel": true,
+      "credentialDeliveredToGuest": false,
+      "hostSeconds": 60.059070708,
+      "hostExit": 0,
+      "guestExit": 0,
+      "peakRSSBytes": 714506240,
+      "signal": null,
+      "brokerDrained": true,
+      "passed": true,
+      "requests": [
+        {
+          "path": "/coding/v1/chat/completions",
+          "startedMs": 30591.446125,
+          "status": 200,
+          "bytes": 4093,
+          "elapsedMs": 9143.495541
+        },
+        {
+          "path": "/coding/v1/chat/completions",
+          "startedMs": 40881.720875,
+          "status": 200,
+          "bytes": 20993,
+          "elapsedMs": 10102.130375
+        },
+        {
+          "path": "/coding/v1/chat/completions",
+          "startedMs": 51461.83279099999,
+          "status": 200,
+          "bytes": 6185,
+          "elapsedMs": 7723.677209000001
+        }
+      ],
+      "terminal": {
+        "type": "result",
+        "elapsedMs": 56411,
+        "success": true,
+        "mode": "live",
+        "requests": 3,
+        "networkAttempts": [],
+        "phases": {
+          "sdk_import": {
+            "elapsedMs": 18955.038,
+            "cpuUserMs": 16661.427,
+            "cpuSystemMs": 1443.277,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131391488,
+              "heapUsed": 104542264,
+              "external": 3075943,
+              "arrayBuffers": 55260
+            }
+          },
+          "harness_create": {
+            "elapsedMs": 731.6790000000001,
+            "cpuUserMs": 693.606,
+            "cpuSystemMs": 26.433,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 131391488,
+              "heapUsed": 108486232,
+              "external": 3078431,
+              "arrayBuffers": 55660
+            }
+          },
+          "session_create": {
+            "elapsedMs": 4393.715,
+            "cpuUserMs": 2555.516,
+            "cpuSystemMs": 692.104,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 140828672,
+              "heapUsed": 107049648,
+              "external": 3239838,
+              "arrayBuffers": 217067
+            }
+          },
+          "configuration_readback": {
+            "elapsedMs": 2021.5279999999984,
+            "cpuUserMs": 1886.137,
+            "cpuSystemMs": 83.517,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 140828672,
+              "heapUsed": 105363400,
+              "external": 3377683,
+              "arrayBuffers": 354912
+            }
+          },
+          "fixture_turn": {
+            "elapsedMs": 29689.621,
+            "cpuUserMs": 7610.538,
+            "cpuSystemMs": 308.166,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 140828672,
+              "heapUsed": 116051416,
+              "external": 3440345,
+              "arrayBuffers": 410094
+            }
+          },
+          "session_close": {
+            "elapsedMs": 222.4559999999983,
+            "cpuUserMs": 176.679,
+            "cpuSystemMs": 19.595,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 140828672,
+              "heapUsed": 104586568,
+              "external": 3103027,
+              "arrayBuffers": 72776
+            }
+          },
+          "harness_close": {
+            "elapsedMs": 76.73500000000058,
+            "cpuUserMs": 70.718,
+            "cpuSystemMs": 2.56,
+            "memory": {
+              "rss": 0,
+              "heapTotal": 140828672,
+              "heapUsed": 105135344,
+              "external": 3105943,
+              "arrayBuffers": 75692
+            }
+          }
+        },
+        "eventCount": 124,
+        "readContentRoundTrip": true,
+        "toolResults": [
+          {
+            "name": "Read",
+            "isError": false,
+            "synthetic": false
+          },
+          {
+            "name": "Write",
+            "isError": false,
+            "synthetic": false
+          }
+        ]
+      }
+    }
+  ],
+  "pending": [
+    "Kimi registration/profile/schema/source adoption",
+    "Provider-aware native account and Keychain composition",
+    "Kimi backend in the iOS Rust-owned executor",
+    "HTTP/pipe cancellation and quiescence in that executor",
+    "Provider switch UI and old journal compatibility",
+    "Real WebSearch/FetchURL grants",
+    "Full TAH Raw/Extra Guardian, Actor, Critic, V0/V1",
+    "Phone latency, memory and background behavior"
+  ],
+  "phoneActions": false,
+  "nativeAppSourceChanged": false,
+  "acceptedLive": "release-241-live-05",
+  "transportNotes": [
+    "Host keeps real credential; guest receives placeholder only.",
+    "Node direct-spawn stdio is a socketpair on this Mac. POSIX pipe relay passed the final streaming run.",
+    "Host waits for consumer ACK and joins broker tasks before pass.",
+    "Three pipe regression tests passed: body destroy, header abort, chunk ACK.",
+    "Live note checks assert source-only marker roundtrip, successful Read+Write and key fact presence; semantic quality evaluation remains separate."
+  ],
+  "testSourceHashes": {
+    "run.py": "0d02a7edd2b4408ac8eb6f002dc581f026a9624842c34e0d16e36714ee93232a",
+    "probe.mjs": "bdadac258fc7df7347eb6ab569285ef59f673549b410eb8eef08e4f2c74fb56d",
+    "pipe-fetch.mjs": "4e2d66ea1789442d252c3588557ebfec8a0c00c9199d4ac23220e8c118b57aa6",
+    "live-host.mjs": "a609d44c607aabe5568b4457ac97ce7f5c80114497a0398e4efea27294adcc6b",
+    "pipe-host.py": "8f6e2c445be7b98476e71b31e7cb2fd88fd4ff25292cc69ed9746b6ebe360fe6",
+    "pipe-fetch.test.mjs": "d62a8ebc0697f4e4f6281d57ee9fe79788093b19a6c382b6201ff7c49aad307a"
+  }
+}

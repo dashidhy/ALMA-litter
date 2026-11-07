@@ -145,7 +145,26 @@ struct TAHUIPermissions: Equatable, Sendable {
     var loadHistory = false
 }
 
+struct TAHUIAuthorization: Equatable, Sendable {
+    struct Replacement: Decodable, Equatable, Sendable {
+        let id: String
+        let kind: String
+        let providerID: String
+    }
+    var providers: [TAHUIChoice] = []
+    var providerID: String?
+    var state = "unauthed"
+    var phase = "idle"
+    var inspecting = false
+    var account: String?
+    var noticeCode: String?
+    var replacement: Replacement?
+    var canManage = false
+    var canConfirmReplacement = false
+}
+
 struct TAHUIPresentation: Equatable, Sendable {
+    var authorization = TAHUIAuthorization()
     var transcripts: [TAHUIChoice] = []
     var transcriptID: String?
     var actions: [TAHUIChoice] = []

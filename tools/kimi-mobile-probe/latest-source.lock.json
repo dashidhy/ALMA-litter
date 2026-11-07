@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/MoonshotAI/kimi-code",
+  "releaseTag": "@moonshot-ai/kimi-code@2.4.1",
+  "releaseVersion": "2.4.1",
+  "releasePublishedAt": "2026-10-30T09:50:16Z",
+  "releaseId": 428866477,
+  "releaseURL": "https://github.com/MoonshotAI/kimi-code/releases/tag/%40moonshot-ai/kimi-code%402.4.1",
+  "tagObjectSHA": "1fc1d165c83b175873a46897e1e9db73dc70c984",
+  "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+  "sourceArchiveURL": "https://codeload.github.com/MoonshotAI/kimi-code/tar.gz/2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+  "sourceArchiveSHA256": "040c503ca03f4852f827cb8d0ea50c49a535a6bda0177d47e56d34ea37d16c92",
+  "sourceArchiveBytes": 25595613,
+  "pnpmLockSHA256": "fb6eb570afd4e4b3beab3570a333059e6e4b4fb92b9df640a51ea8df8b9663f9",
+  "sdkPackage": "@moonshot-ai/kimi-code-sdk",
+  "sdkVersion": "0.22.0",
+  "sdkIndexSHA256": "5664680fdf03d133e959655ebe36d3ca0282bec4365289e4e79893c3e02a678a",
+  "permissionPatchSHA256": "a73d4c08efbdb59dbb732e3adc51eec83d31f27d12c8eca6a737872b3cfb9e02",
+  "permissionPatch": {
+    "origin": "ALMA/prototypes/kimi-native/permission-rules.patch",
+    "status": "applied unchanged",
+    "target": "packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts",
+    "beforeSHA256": "99d5c3a018c77648f23658810a1e73475312cd9b1ccdcce4110d4cb866c230ae",
+    "afterSHA256": "1cbffb25afb03a65fdb53cc697d73785a1dcc8f2f15dee6c62936764f34694b6",
+    "text": "diff --git a/packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts b/packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts\nindex 046ed8c..544b159 100644\n--- a/packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts\n+++ b/packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts\n@@ -5,6 +5,8 @@ import { ScopeActivation, registerScopedService } from '#/_base/di/scope';\n import { IAgentScopeContext } from '#/agent/scopeContext/scopeContext';\n import { IAgentStateService } from '#/agent/state/agentState';\n import { IEventDispatcher } from '#/state/eventDispatcher';\n+import { IConfigService } from '#/app/config/config';\n+import { PERMISSION_SECTION, type PermissionConfig } from './configSection';\n import {\n   IAgentPermissionRulesService,\n   type PermissionApprovalResultRecord,\n@@ -23,12 +25,14 @@ export class AgentPermissionRulesService implements IAgentPermissionRulesService\n     @IEventDispatcher private readonly dispatcher: IEventDispatcher,\n     @IAgentScopeContext private readonly scopeContext: IAgentScopeContext,\n     @IAgentStateService private readonly agentState: IAgentStateService,\n+    @IConfigService private readonly config: IConfigService,\n   ) {\n     this.agentState.contributeState(permissionRulesKey);\n   }\n \n   get rules(): readonly PermissionRule[] {\n-    return [...this.agentState.get(permissionRulesKey).rules];\n+    const configured = this.config.get<PermissionConfig | undefined>(PERMISSION_SECTION)?.rules ?? [];\n+    return [...configured, ...this.agentState.get(permissionRulesKey).rules];\n   }\n \n   get sessionApprovalRulePatterns(): readonly string[] {\n"
+  },
+  "buildConfigSHA256": "4924fda1cee2178d82fe68e9d9625dbf970f1a969d57e28cd528cbb64aa84879",
+  "toolchain": {
+    "nodeVersion": "v24.15.0",
+    "nodeSHA256": "3200fbd9f7fd4410426dd541e10d1ab829d3472f270d743c7fabd1696c03fe32",
+    "pnpmVersion": "10.33.0",
+    "pnpmEntrySHA256": "b276da51dc8ca5b0d3ee3371695b50fc8b3244b281b091c63a3f082a88dadeb9",
+    "tsdownVersion": "0.23.1",
+    "typescriptVersion": "7.0.2"
+  },
+  "artifact": {
+    "path": ".cache/latest-release/artifact/opt/kimi",
+    "treeSHA256": "e16a2345d623c63a0f3d2100b54d8bbc8f50bc02d42f7cb2e8558f7acb8c8e5b",
+    "files": 744,
+    "bytes": 14900616,
+    "sdkFiles": [
+      {
+        "path": "sdk/decode-C2QXD_I0.mjs",
+        "bytes": 44056,
+        "sha256": "c3c697f914e6f66dc123709ef5ca424fed13254ed6dc9901d5ca575afbbf8a99"
+      },
+      {
+        "path": "sdk/dist-DbnA67sm.mjs",
+        "bytes": 15672,
+        "sha256": "956074394f78f57bbaeec1219e00fda9b6c36fa858c831df2b2d00afaaf3004b"
+      },
+      {
+        "path": "sdk/esm-DRxL2ubq.mjs",
+        "bytes": 824110,
+        "sha256": "753f146318f4aa9f9d7a636268ff8863360b80701aa12360805fbebe1c3fa886"
+      },
+      {
+        "path": "sdk/file-type-BklGUV19.mjs",
+        "bytes": 107480,
+        "sha256": "4defef962f192795ca8f265c309059cfc0fc70dabc6ab5d6f694726a7c3ea60c"
+      },
+      {
+        "path": "sdk/index.d.mts",
+        "bytes": 355525,
+        "sha256": "dbed217169081899a3c31185628b3e1712fa428cb69f2aaca5c509bf775fa984"
+      },
+      {
+        "path": "sdk/index.mjs",
+        "bytes": 8553986,
+        "sha256": "5664680fdf03d133e959655ebe36d3ca0282bec4365289e4e79893c3e02a678a"
+      },
+      {
+        "path": "sdk/multipart-parser-ZaBUuVX1.mjs",
+        "bytes": 9059,
+        "sha256": "6b971d8dcb02ddfb017a975e626ca4117b2416af6003561f5e8ea35249a9d57e"
+      },
+      {
+        "path": "sdk/rolldown-runtime-B2pWE-_A.mjs",
+        "bytes": 1976,
+        "sha256": "e2d52ec1cfcbda9c7fe9fce438a25ca460c58a376d982795b838382f7ffb54b2"
+      },
+      {
+        "path": "sdk/src-Y37EtXVa.mjs",
+        "bytes": 22796,
+        "sha256": "a21a438ee64c5e9f17ccd5775a6983e3ef8fe914fb413209e73aa7e717ce0de6"
+      },
+      {
+        "path": "sdk/src-eIjdISot.mjs",
+        "bytes": 214029,
+        "sha256": "4d6465652c43bfa96366de4daccb6f7552337b11dd5f23a4ee99165859113e0d"
+      },
+      {
+        "path": "sdk/webp-dec-wasm-B9j7DpF0.mjs",
+        "bytes": 184308,
+        "sha256": "3f2f4bbd785d38f6906e4ef31adad5794d824fc8be6653a35b7bcc45772f3b48"
+      }
+    ],
+    "externalPackages": [
+      {
+        "name": "@antfu/utils",
+        "version": "9.3.0"
+      },
+      {
+        "name": "smol-toml",
+        "version": "1.6.1"
+      },
+      {
+        "name": "yazl",
+        "version": "3.3.1"
+      },
+      {
+        "name": "buffer-crc32",
+        "version": "1.0.0"
+      },
+      {
+        "name": "zod",
+        "version": "4.3.6"
+      }
+    ],
+    "artifactManifestPath": ".cache/latest-release/build/artifact-files.json",
+    "artifactManifestSHA256": "9df9cb92494e1f84830e42f7251d9ca0f25e004088a46525f9378418eb85017c"
+  },
+  "adaptations": [
+    "Apply the original permission-rules.patch byte-for-byte to expose configured rules before session rules.",
+    "Build only packages/node-sdk with its unmodified upstream tsdown configuration and build:dts script.",
+    "Install the SDK workspace closure with pnpm --frozen-lockfile --ignore-scripts, using an isolated copy of the old store.",
+    "Package all dist files as sdk/ and flatten the declared runtime dependency closure as node_modules/, rejecting version conflicts.",
+    "Enable sequential preparation, execution and finalization of all tools when the mobile guest sets ALMA_KIMI_SERIAL_TOOLS=1."
+  ],
+  "verification": {
+    "scope": "macOS arm64 Node 24.15.0, in-memory model fixture, real SDK Harness and tools",
+    "sdkImport": true,
+    "configuredTools": [
+      "Read",
+      "Write"
+    ],
+    "configuredPermissionRules": [
+      {
+        "decision": "ask",
+        "scope": "user",
+        "pattern": "Read"
+      },
+      {
+        "decision": "ask",
+        "scope": "user",
+        "pattern": "Write"
+      }
+    ],
+    "fixture": {
+      "passed": true,
+      "modelRequests": 3,
+      "approvalCallbacks": [
+        "Read",
+        "Write"
+      ],
+      "realSuccessfulToolResults": 2,
+      "readContentRoundTrip": true,
+      "terminalReason": "completed",
+      "networkAttempts": []
+    },
+    "cancellation": {
+      "passed": true,
+      "terminalReason": "cancelled",
+      "networkAttempts": []
+    },
+    "artifactInventoryVerified": true,
+    "reproductionStatus": "Clean offline source rebuild with both reviewed patches reproduced every locked artifact file.",
+    "realProviderAccess": false,
+    "phoneAccess": false,
+    "helperPatchCommandPassed": true,
+    "serialTools": {
+      "status": "passed",
+      "activation": "ALMA_KIMI_SERIAL_TOOLS=1",
+      "testGroups": 3,
+      "mixedToolCalls": 16,
+      "actualExecutionMaximum": 1,
+      "normalizedLifecycleMaximum": 1,
+      "cancellationRequestedCalls": 12,
+      "cancellationExecutedCalls": 1,
+      "parallelControlMaximum": 11,
+      "test": "tools/mobile-tah/kimi_serial_checks.mjs"
+    }
+  },
+  "releaseVsMain": {
+    "comparedMainCommit": "077239666a11e8b2f7b2a9fd8588cc063d38343b",
+    "mainEnvironmentFilesAbsentInRelease": [
+      "packages/agent-core-v2/src/app/environment/environment.ts",
+      "packages/agent-core-v2/src/environment/environment.ts",
+      "packages/agent-core-v2/src/remote/server/environment.ts",
+      "packages/kap-server/src/routes/environment.ts"
+    ],
+    "releaseRuntimeFiles": [
+      "packages/agent-core-v2/src/runtime/runtime.ts",
+      "packages/agent-core-v2/src/runtime/localRuntime.ts",
+      "packages/agent-core-v2/src/runtime/standaloneRuntime.ts"
+    ],
+    "note": "Environment APIs observed on main are outside this release artifact and require separate version qualification."
+  },
+  "buildCommands": [
+    "python3 tools/kimi-mobile-probe/prepare_latest.py --verify-only",
+    "python3 tools/kimi-mobile-probe/prepare_latest.py --rebuild --offline",
+    "pnpm --filter @moonshot-ai/kimi-code-sdk... install --frozen-lockfile --ignore-scripts --prefer-offline --store-dir ../build/pnpm-store --reporter append-only",
+    "pnpm --filter @moonshot-ai/kimi-code-sdk run build"
+  ],
+  "buildLogs": [
+    ".cache/latest-release/build/logs/install.log",
+    ".cache/latest-release/build/logs/sdk-build.log",
+    ".cache/latest-release/build/logs/host-fixture.log",
+    ".cache/latest-release/build/logs/host-cancel.log",
+    ".cache/latest-release/build/logs/permission-patch.log"
+  ],
+  "limitations": [
+    "Upstream API Extractor succeeds with four TSDoc warnings.",
+    "The SDK package is private in upstream. This artifact is built from the CLI release source, not an npm SDK release.",
+    "Node >=24.15.0 is the upstream declared engine. Guest Node 22/iSH behavior is separately qualified by the parent experiment.",
+    "Optional image/WebP paths include Wasm chunks. The text-only fixture does not qualify those paths.",
+    "The configured-permission rules fix remains a local patch.",
+    "Main environment APIs are absent at the pinned release revision."
+  ],
+  "preparationHelperSHA256": "9d43228bb575aec12392a8bb226729edddcb4c36c82a2da6dc92be8102fc2ecf",
+  "sourceAudit": {
+    "archiveFilesChecked": 4516,
+    "modifiedUpstreamFiles": [
+      "packages/agent-core-v2/src/agent/permissionRules/permissionRulesService.ts",
+      "packages/agent-core-v2/src/agent/toolExecutor/toolExecutorService.ts"
+    ],
+    "sdkDistMatchesArtifact": true,
+    "tagSignatureStatus": "unsigned"
+  },
+  "serialToolsPatchSHA256": "2ba3608334b27c7b57147660af4e9cd87582d5a5983c4ec2c3a871d71c81884a",
+  "serialToolsPatch": {
+    "target": "packages/agent-core-v2/src/agent/toolExecutor/toolExecutorService.ts",
+    "beforeSHA256": "c9b0a6f0ba91a9908dfceef482f1e76e98d8e69800a1921ce5869dbdd9e59b3b",
+    "afterSHA256": "4e07eb919901c7e3236ac5981ca0347d9d3c8a6fb6951cdeff1eafabae43f8d5",
+    "text": "--- a/packages/agent-core-v2/src/agent/toolExecutor/toolExecutorService.ts\n+++ b/packages/agent-core-v2/src/agent/toolExecutor/toolExecutorService.ts\n@@ -195,6 +195,12 @@\n         this.log,\n       ),\n     );\n+    // The mobile host enables ordered execution for every granted tool.\n+    if (process.env['ALMA_KIMI_SERIAL_TOOLS'] === '1') {\n+      yield* this.executeSerial(preflighted, calls, options);\n+      return;\n+    }\n+\n     const preparedTasks: Array<{\n       task: ToolExecutionTask;\n       call: PreflightedToolCall;\n@@ -280,6 +286,46 @@\n     } finally {\n       await timedResults.return?.();\n       await Promise.allSettled(finalizations);\n+    }\n+  }\n+\n+  private async *executeSerial(\n+    preflighted: readonly PreflightedToolCall[],\n+    allCalls: readonly ToolCall[],\n+    options: ToolExecutorExecuteOptions,\n+  ): AsyncIterable<ToolExecutionResult> {\n+    let stopBatch = false;\n+    for (const [index, call] of preflighted.entries()) {\n+      let prepared: {\n+        task: ToolExecutionTask;\n+        resolvedAccesses?: ToolAccesses;\n+        stopBatchAfterThis?: boolean;\n+      };\n+      if (stopBatch) {\n+        prepared = this.prepareSkippedToolCall(call, options);\n+      } else if (options.signal.aborted && call.kind === 'runnable') {\n+        this.dispatchToolCall(call, call.args, options);\n+        prepared = {\n+          task: makeResolvedTask(\n+            makeErrorToolResult(call, call.args, abortedToolOutput(call.toolName, options.signal.reason)),\n+            'aborted',\n+          ),\n+        };\n+      } else {\n+        prepared = await this.prepareToolCall(call, allCalls, options);\n+      }\n+      if (prepared.stopBatchAfterThis === true) stopBatch = true;\n+\n+      const startedAt = Date.now();\n+      const executed = await prepared.task.execute(options.signal);\n+      const timedResult: TimedToolResult = {\n+        index,\n+        result: executed.result,\n+        outcome: executed.outcome,\n+        durationMs: Math.max(0, Date.now() - startedAt),\n+      };\n+      // Finalize and publish this result before preparing the next tool.\n+      yield await this.finalizeTimedResult({ ...prepared, call }, timedResult, options);\n     }\n   }\n \n",
+    "activation": "ALMA_KIMI_SERIAL_TOOLS=1",
+    "behavior": "Prepare, execute, finalize and publish one tool result before preparing the next call in the model batch."
+  },
+  "previousSDKIndexSHA256": "a85fa13949e2b3fb9bbf08a143d122123598ecac778e97d40716cde2b1e97e78"
+}

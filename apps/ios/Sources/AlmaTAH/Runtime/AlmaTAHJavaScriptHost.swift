@@ -3,6 +3,12 @@ import Dispatch
 import Foundation
 import JavaScriptCore
 
+/// Private Provider-to-Adapter categories carried as immutable values.
+enum TAHProviderPlatformError: String, Error, Sendable {
+    case unavailable, timeout, cleanup
+    var wireCode: String { "provider_" + rawValue }
+}
+
 /// A system-managed serial queue keeps long JS jobs off both the UI actor and
 /// Swift's cooperative pool. The actor retains the executor for its entire life.
 /// JavaScriptCore serializes at VM granularity, not at a particular OS thread.
@@ -31,12 +37,13 @@ actor AlmaTAHJavaScriptHost {
     private var operations: [String: Task<Void, Never>] = [:]
     private var stopped = false
 
-    init(bundle: String, platform: @escaping PlatformCall, enableNativeBytePrimitives: Bool = true) async throws {
+    init(bundle: String, platform: @escaping PlatformCall, enableNativeBytePrimitives: Bool = true,
+         providerDirectory: URL? = nil) async throws {
         self.platform = platform
-        try initialize(bundle, enableNativeBytePrimitives: enableNativeBytePrimitives)
+        try initialize(bundle, enableNativeBytePrimitives: enableNativeBytePrimitives, providerDirectory: providerDirectory)
     }
 
-    private func initialize(_ bundle: String, enableNativeBytePrimitives: Bool) throws {
+    private func initialize(_ bundle: String, enableNativeBytePrimitives: Bool, providerDirectory: URL?) throws {
         dispatchPrecondition(condition: .notOnQueue(.main))
         guard let context = JSContext() else { throw HostError.unavailable }
         self.context = context
@@ -74,6 +81,23 @@ actor AlmaTAHJavaScriptHost {
         context.setObject(reply, forKeyedSubscript: "__almaNativeReply" as NSString)
         context.setObject(timer, forKeyedSubscript: "__almaNativeTimer" as NSString)
         context.setObject(cancelTimer, forKeyedSubscript: "__almaNativeCancelTimer" as NSString)
+        // Only signed App resources are evaluated. Each chunk is read on this
+        // actor's serial executor at first provider use, never on the UI actor.
+        let loadProvider: @convention(block) (String) -> Bool = { [weak context] provider in
+            guard let context, let directory = providerDirectory,
+                  ["codex", "kimi", "zcode"].contains(provider),
+                  let manifestData = try? Data(contentsOf: directory.appendingPathComponent("bundle-manifest.json")),
+                  let manifest = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
+                  let chunks = manifest["chunks"] as? [String: [String: Any]],
+                  let expected = chunks[provider],
+                  let data = try? Data(contentsOf: directory.appendingPathComponent("alma-provider-\(provider).js")),
+                  data.count == expected["bytes"] as? Int,
+                  SHA256.hash(data: data).map({ String(format: "%02x", $0) }).joined() == expected["sha256"] as? String,
+                  let source = String(data: data, encoding: .utf8) else { return false }
+            context.evaluateScript(source)
+            return context.exception == nil
+        }
+        context.setObject(loadProvider, forKeyedSubscript: "__almaLoadProviderChunk" as NSString)
         try evaluate(Self.bootstrap)
         try evaluate(bundle)
     }
@@ -135,7 +159,8 @@ actor AlmaTAHJavaScriptHost {
                 let result = try await Self.performPlatform(platform, method: method, json: json)
                 if !Task.isCancelled { await self?.completeOperation(id, json: result, error: "") }
             } catch {
-                if !Task.isCancelled { await self?.completeOperation(id, json: "null", error: "unavailable") }
+                let code = (error as? TAHProviderPlatformError)?.wireCode ?? "unavailable"
+                if !Task.isCancelled { await self?.completeOperation(id, json: "null", error: code) }
             }
         }
     }

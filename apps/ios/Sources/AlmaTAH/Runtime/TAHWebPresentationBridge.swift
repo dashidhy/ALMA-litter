@@ -4,6 +4,10 @@ import Foundation
 @MainActor
 protocol TAHWebPresentationControlling: TAHPresentationController {
     var workingLogUsesChannel: Bool { get }
+    func selectProvider(id: String)
+    func authorizeProvider()
+    func requestAuthorizationReplacement(kind: String)
+    func confirmAuthorizationReplacement(id: String, confirmed: Bool)
     func inspectAuthorization()
     func checkpointDraft() async throws
     func openWorkingLog(actionID: String, position: Int?)
@@ -95,6 +99,7 @@ final class TAHWebPresentationBridge {
     nonisolated private static func encodeSnapshot(_ state: TAHUIPresentation, draft: TAHUIDraft) async throws -> String {
         dispatchPrecondition(condition: .notOnQueue(.main))
         let presentation: [String: Any] = [
+            "authorization": Self.authorization(state.authorization),
             "transcripts": state.transcripts.map(Self.choice), "transcriptID": Self.nullable(state.transcriptID),
             "actions": state.actions.map(Self.choice), "editor": Self.context(state.editor),
             "models": state.models.map(Self.choice), "efforts": state.efforts.map(Self.choice),
@@ -128,6 +133,20 @@ final class TAHWebPresentationBridge {
         switch method {
         case "refresh":
             try input.keys([]); controller.refresh()
+        case "selectProvider":
+            try input.keys(["providerID"])
+            controller.selectProvider(id: try input.decode(Provider.self).providerID)
+        case "authorizeProvider", "signIn":
+            try input.keys([]); controller.authorizeProvider()
+        case "requestAuthorizationReplacement":
+            try input.keys(["kind"])
+            let kind = try input.decode(ReplacementKind.self).kind
+            guard ["reauth", "switch_account", "sign_out"].contains(kind) else { throw BridgeError.invalidPayload }
+            controller.requestAuthorizationReplacement(kind: kind)
+        case "confirmAuthorizationReplacement":
+            try input.keys(["id", "confirmed"])
+            let value = try input.decode(Confirmation.self)
+            controller.confirmAuthorizationReplacement(id: value.id, confirmed: value.confirmed)
         case "inspectAuthorization":
             try input.keys([]); controller.inspectAuthorization()
         case "selectTranscript":
@@ -197,6 +216,20 @@ final class TAHWebPresentationBridge {
         }
         return try await snapshot()
     }
+
+    nonisolated private static func authorization(_ value: TAHUIAuthorization) -> [String: Any] {
+        let replacement: Any = value.replacement.map {
+            ["id": $0.id, "kind": $0.kind, "providerID": $0.providerID]
+        } ?? NSNull() as Any
+        return ["providers": value.providers.map(choice), "providerID": nullable(value.providerID),
+                "state": value.state, "phase": value.phase, "inspecting": value.inspecting,
+                "account": nullable(value.account), "noticeCode": nullable(value.noticeCode),
+                "replacement": replacement, "canManage": value.canManage, "canConfirmReplacement": value.canConfirmReplacement]
+    }
+
+    private struct Provider: Decodable { let providerID: String }
+    private struct ReplacementKind: Decodable { let kind: String }
+    private struct Confirmation: Decodable { let id: String; let confirmed: Bool }
 
     nonisolated private static func nullable<T>(_ value: T?) -> Any { value.map { $0 as Any } ?? NSNull() }
     nonisolated private static func choice(_ value: TAHUIChoice) -> [String: Any] {

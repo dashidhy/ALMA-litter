@@ -27,6 +27,24 @@ import Foundation
             "replacement":nilValue,"actorCatalog":["models":[["handle":"catalog-model","displayName":"Catalog Model",
                 "efforts":[["handle":"medium","displayName":"Medium"]],"defaultEffortHandle":"medium",
                 "contextWindows":["availableTokens":[32000],"defaultTokens":32000]]],"defaultModelHandle":"catalog-model"]]
+        var providerAuthJSON = authJSON
+        providerAuthJSON["providers"] = [["id":"codex","displayName":"Codex"],["id":"kimi","displayName":"Kimi Code"]]
+        providerAuthJSON["providerID"] = "kimi"
+        providerAuthJSON["state"] = "unauthed"
+        providerAuthJSON["inspection"] = nilValue
+        providerAuthJSON["actorCatalog"] = nilValue
+        let providerState = C.project(auth:try decode(providerAuthJSON,C.AppAuth.self),raw:nil,action:nil,
+            draft:TAHUIDraft(),language:.english,commandBusy:false,now:Date())
+        try expect(providerState.authorization.providers.map(\.id) == ["codex","kimi"]
+            && providerState.authorization.providerID == "kimi" && providerState.authorization.canManage
+            && providerState.permissions.importTranscript && providerState.models.isEmpty,
+            "unauthenticated Kimi opens workspace with provider selection and import")
+        providerAuthJSON["replacement"] = ["id":"replace-identity","kind":"switch_provider","providerID":"codex"]
+        let replacementState = C.project(auth:try decode(providerAuthJSON,C.AppAuth.self),raw:nil,action:nil,
+            draft:TAHUIDraft(),language:.english,commandBusy:false,now:Date())
+        try expect(replacementState.authorization.replacement?.id == "replace-identity"
+            && !replacementState.authorization.canManage && !replacementState.permissions.send,
+            "replacement confirmation retains Core identity and freezes conflicting commands")
         var rawJSON: [String: Any] = ["materialID":"material","providerID":"codex","state":"allowed","busy":false,
             "consentGranted":true,"expiresAt":"2030-02-01T00:00:00Z","explanation":"Public Guardian explanation"]
         var actionJSON: [String: Any] = ["id":"action","transcriptID":"transcript","language":"en","phase":"draft",
@@ -89,6 +107,7 @@ import Foundation
         var delegated: [String] = []
         let platform: C.ProviderPlatform = { method,_ in
             delegated.append(method)
+            if method == "runtime.prepareProvider" { return "null" }
             guard method == "credential.load" else { throw TAHRuntimeError.invalid_request }
             return #"{"version":1,"providerID":null,"state":"unauthed","credential":null,"account":null,"checkedAt":null}"#
         }
@@ -114,8 +133,78 @@ import Foundation
         let material = try JSONDecoder().decode(TAHRuntimeValue.self,from:bytes)
         try expect(material["rawTranscript"] == .string(text),"production SQLite retains exact imported UTF-8")
         await store.close()
-        try expect(delegated.allSatisfy{$0=="credential.load"},"zero provider/model operations")
-        let output: [String:Any] = ["passed":true,"checks":checks,"providerCalls":0,"realCoreMaterialImport":true]
+        try expect(delegated.allSatisfy{$0=="credential.load" || $0=="runtime.prepareProvider"},"zero provider/model operations")
+        // Real Web -> controller -> JS AuthService replacement semantics, with
+        // in-memory metadata and a cancelled native authorization boundary.
+        var metadata = #"{"version":1,"providerID":"codex","state":"invalid","credential":"b3BhcXVlLWhhbmRsZQ==","account":"existing-account","checkedAt":null}"#
+        var providerRequests: [(String, String)] = []
+        let authPlatform: C.ProviderPlatform = { method, payload in
+            switch method {
+            case "runtime.prepareProvider": return "null"
+            case "credential.load": return metadata
+            case "credential.save":
+                let value = try JSONDecoder().decode(TAHRuntimeValue.self,from:Data(payload.utf8))
+                metadata = String(decoding:try JSONEncoder().encode(value["record"]!),as:UTF8.self)
+                return "null"
+            case "credential.reset":
+                let value = try JSONDecoder().decode(TAHRuntimeValue.self,from:Data(payload.utf8))
+                let record = TAHRuntimeValue.object(["version":.integer(1),"providerID":value["providerID"]!,
+                    "state":.string("unauthed"),"credential":.null,"account":.null,"checkedAt":.null])
+                metadata = String(decoding:try JSONEncoder().encode(record),as:UTF8.self)
+                return "null"
+            default:
+                providerRequests.append((method,payload))
+                throw TAHRuntimeError.cancelled
+            }
+        }
+        let providerController = try await C(bundleURL:bundle,configurationJSON:config,journalDirectory:directory,providerPlatform:authPlatform)
+        let bridge = TAHWebPresentationBridge(controller:providerController)
+        func waitFor(_ predicate: () -> Bool) async throws {
+            for _ in 0..<250 {
+                if predicate() { return }
+                try await Task.sleep(for:.milliseconds(20))
+            }
+            throw TAHRuntimeError.unavailable
+        }
+        _ = try await bridge.dispatch(method:"selectProvider",valueJSON:#"{"providerID":"kimi"}"#)
+        try await waitFor { providerController.presentation.authorization.canConfirmReplacement }
+        let replacement = providerController.presentation.authorization.replacement!
+        try expect(replacement.kind == "switch_provider" && replacement.providerID == "kimi"
+            && providerController.presentation.authorization.providerID == "codex",
+            "web provider switch requests Core confirmation before replacing existing account")
+        _ = try await bridge.dispatch(method:"confirmAuthorizationReplacement",valueJSON:"{\"id\":\"\(replacement.id)\",\"confirmed\":false}")
+        try await waitFor { providerController.presentation.authorization.replacement == nil && !providerController.presentation.isBusy }
+        try expect(providerController.presentation.authorization.providerID == "codex"
+            && providerController.presentation.authorization.account == "existing-account",
+            "cancelled replacement retains existing Codex account")
+        _ = try await bridge.dispatch(method:"selectProvider",valueJSON:#"{"providerID":"kimi"}"#)
+        try await waitFor { providerController.presentation.authorization.canConfirmReplacement }
+        let confirmedID = providerController.presentation.authorization.replacement!.id
+        _ = try await bridge.dispatch(method:"confirmAuthorizationReplacement",valueJSON:"{\"id\":\"\(confirmedID)\",\"confirmed\":true}")
+        try await waitFor { providerController.presentation.authorization.providerID == "kimi" && !providerController.presentation.isBusy }
+        try expect(providerController.presentation.transcriptID == transcriptID && providerController.presentation.authorization.state == "unauthed",
+            "confirmed replacement selects unauthenticated Kimi and preserves journal selection")
+        _ = try await bridge.dispatch(method:"authorizeProvider",valueJSON:"{}")
+        try await waitFor { !providerRequests.isEmpty && !providerController.presentation.isBusy }
+        let request = try JSONDecoder().decode(TAHRuntimeValue.self,from:Data(providerRequests[0].1.utf8))
+        try expect(providerRequests.count == 1 && providerRequests[0].0 == "provider.kimi.inspect"
+            && request["kind"] == .string("authenticate") && request["credentialHandle"] == .null,
+            "Connect Kimi reaches native secure authorization with no token in JavaScript")
+        await providerController.shutdown()
+        let restoredProvider = try await C(bundleURL:bundle,configurationJSON:config,journalDirectory:directory,providerPlatform:authPlatform)
+        try expect(restoredProvider.presentation.authorization.providerID == "kimi"
+            && restoredProvider.presentation.transcriptID == transcriptID,
+            "selected Kimi metadata and transcript selection survive controller restart")
+        restoredProvider.selectProvider(id:"zcode")
+        for _ in 0..<250 {
+            if !restoredProvider.presentation.isBusy { break }
+            try await Task.sleep(for:.milliseconds(20))
+        }
+        try expect(restoredProvider.presentation.authorization.providerID == "zcode"
+            && restoredProvider.presentation.authorization.state == "unauthed",
+            "ZCode selection uses original AuthService without authorizing or running a model")
+        await restoredProvider.shutdown()
+        let output: [String:Any] = ["passed":true,"checks":checks,"providerCalls":0,"nativeAuthorizationBoundaryChecks":providerRequests.count,"realCoreMaterialImport":true]
         print(String(data:try JSONSerialization.data(withJSONObject:output,options:[.sortedKeys]),encoding:.utf8)!)
     }
 }
@@ -132,7 +221,7 @@ def main():
     sources=[]; source_hashes={}
     # Main owns the host and may edit it concurrently: compile immutable byte snapshots.
     for original in sorted(BASE.rglob('*.swift')):
-        if original.name == 'TAHCodexPlatform.swift': continue  # actual Rust bindings belong to full native builds
+        if original.name in {'TAHCodexPlatform.swift', 'TAHZCodeCredentialStore.swift', 'TAHZCodeLogin.swift'}: continue  # actual Rust bindings belong to full native builds
         data=original.read_bytes(); source_hashes[str(original.relative_to(ROOT))]=hashlib.sha256(data).hexdigest()
         copied=out/'sources'/original.relative_to(BASE); copied.parent.mkdir(parents=True,exist_ok=True)
         copied.write_bytes(data); sources.append(str(copied))
@@ -140,6 +229,8 @@ def main():
     config={'profiles':[{'id':'codex','displayName':'Codex','authRouteID':'codex-auth','taskRouteID':'codex-task','guardianModel':'unused-offline-smoke','guardianEffort':'medium','disabledModels':[],'profileIdentity':'0'*64}],
             'resources':{key:(mac/'system_prompts'/file).read_text() for key,file in [('actorPromptTemplate','actor_prompt_v4_2.txt'),('rawGuardianPrompt','safety_guardian_raw_prompt_v0_3.txt'),('extraGuardianPrompt','safety_guardian_extra_prompt_v0_6.txt'),('safetyPolicy','safety_guardian_policy_v0_2.txt')]},
             'actionInstructions':(mac/'action_instructions/structured_notes_v4_3.txt').read_text()}
+    config['profiles'].append({**config['profiles'][0], 'id':'kimi', 'displayName':'Kimi Code', 'authRouteID':'kimi-auth', 'taskRouteID':'kimi-task'})
+    config['profiles'].append({**config['profiles'][0], 'id':'zcode', 'displayName':'ZCode', 'authRouteID':'zcode-auth', 'taskRouteID':'zcode-task'})
     (out/'configuration.json').write_text(json.dumps(config))
     bundle=ROOT/'shared/tah-runtime/generated/alma-tah.js'
     common=['-swift-version','6','-strict-concurrency=complete','-parse-as-library','-module-cache-path',str(out/'cache')]
@@ -160,7 +251,8 @@ def main():
         'bundleSHA256':hashlib.sha256(bundle.read_bytes()).hexdigest(),
         'simulatorPlatform':run(['xcrun','vtool','-show-build',str(out/'simulator.dylib')]).stdout,
         'limits':['No simulator/device launch','No live authorization, Guardian, actor or provider/backend flow','Formatting uses native inline Markdown; full desktop Markdown parity not established']})
-    (Path(__file__).parent/'controller-smoke-result.json').write_text(json.dumps(result,indent=2)+'\n')
+    result_path = Path(os.environ.get('TAH_CONTROLLER_SMOKE_RESULT', str(Path(__file__).parent/'controller-smoke-result.json')))
+    result_path.write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2))
 
 if __name__=='__main__':main()

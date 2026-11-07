@@ -13,7 +13,8 @@ use crate::scoped_files::{Access, ScopedFiles};
 use codex_config::TomlValue;
 use codex_core::config::Config;
 use codex_exec_server::{
-    EnvironmentCapabilities, EnvironmentInfo, ExecParams, FileSystemSandboxContext, ShellInfo,
+    EnvironmentCapabilities, EnvironmentInfo, ExecBackend, ExecParams, ExecProcess,
+    FileSystemSandboxContext, ProcessId, ShellInfo,
 };
 use codex_protocol::config_types::{
     ShellEnvironmentPolicyInherit, WebSearchMode, WindowsSandboxProxySettingsMode,
@@ -80,6 +81,7 @@ struct FactoryState {
     used: Mutex<BTreeSet<uuid::Uuid>>,
 }
 
+#[derive(Clone)]
 pub(crate) struct ProviderScopeFactory {
     state: Arc<FactoryState>,
 }
@@ -213,6 +215,43 @@ impl PreparedScope {
     pub(crate) fn layout(&self) -> &ScopeLayout {
         &self.layout
     }
+    pub(crate) fn dispose_before_start(mut self) -> io::Result<()> {
+        if let Some(resources) = &self.resources { dispose_resources(resources)?; }
+        self.resources.take();
+        Ok(())
+    }
+
+    /// Bind a trusted guest provider to the same factory lease and filesystem
+    /// grants used by the native provider. Network admission remains native.
+    pub(crate) fn bind_guest(mut self) -> io::Result<Arc<GuestScope>> {
+        let resources = self.resources.as_ref().ok_or_else(|| invalid("scope already bound"))?;
+        let runtime = resources.state.workspace.join(".runtime/kimi");
+        ScopedFiles::open(&runtime, Access::ReadOnly)?;
+        self.layout.filesystem.insert("/workspace/.runtime/kimi".into(), "read".into());
+        let fence = Arc::new(ExecutionFence::default());
+        let policy = Arc::new(ScopePolicy {
+            instance: resources.state.instance.clone(),
+            layout: self.layout.clone(),
+            fence: fence.clone(),
+            gate: Arc::new(Semaphore::new(1)),
+            quarantined: resources.state.quarantined.clone(),
+        });
+        drop(policy.grant().map_err(|_| invalid("guest grant unavailable"))?);
+        let backend = Arc::new(IshExecBackend::new(resources.state.instance.clone(), policy, DRAIN_TIMEOUT)
+            .and_then(|backend| backend.with_stdin_budget(32 * 1024 * 1024))
+            .and_then(|backend| backend.with_output_budget(16 * 1024 * 1024))
+            .map(IshExecBackend::with_consumed_output)
+            .map_err(|_| invalid("guest executor unavailable"))?);
+        Ok(Arc::new(GuestScope {
+            layout: self.layout.clone(),
+            writable_roots: self.writable_roots.clone(),
+            immutable: self.immutable.clone(),
+            backend,
+            fence,
+            claimed: AtomicBool::new(false),
+            state: Mutex::new(GuestState { resources: self.resources.take(), quiescent: false }),
+        }))
+    }
     /// One-shot binding after the Adapter has projected the mobile native profile
     /// using this layout. Neither model/effort nor Code Mode is changed here.
     pub(crate) fn bind(
@@ -332,6 +371,124 @@ impl PreparedScope {
     }
 }
 
+struct GuestState {
+    resources: Option<Resources>,
+    quiescent: bool,
+}
+
+pub(crate) struct GuestScope {
+    layout: ScopeLayout,
+    writable_roots: Vec<String>,
+    immutable: BTreeMap<String, [u8; 32]>,
+    backend: Arc<IshExecBackend>,
+    fence: Arc<ExecutionFence>,
+    claimed: AtomicBool,
+    state: Mutex<GuestState>,
+}
+
+impl GuestScope {
+    pub(crate) fn layout(&self) -> &ScopeLayout { &self.layout }
+    pub(crate) fn is_quiescent(&self) -> bool {
+        self.state.lock().map(|state| state.quiescent).unwrap_or(false)
+    }
+
+    pub(crate) async fn spawn(&self, argv: Vec<String>, env: HashMap<String, String>)
+        -> io::Result<Arc<dyn ExecProcess>> {
+        if self.claimed.swap(true, Ordering::AcqRel) { return Err(invalid("guest already claimed")); }
+        let result = self.backend.start(ExecParams {
+            process_id: ProcessId::new(format!("kimi-{}", self.layout.scope_id)),
+            metadata: None, argv, cwd: uri(&self.layout.workspace_root)?,
+            env_policy: None, shell_snapshot: None, env, tty: false, pipe_stdin: true,
+            arg0: None, sandbox: None, enforce_managed_network: false,
+            managed_network: None, network_proxy: None,
+        }).await.map_err(io::Error::other)?;
+        Ok(result.process)
+    }
+
+    /// Called after the backend has joined HTTP/read/write owners and observed
+    /// actual owned-process closure. A failed drain keeps the factory quarantined.
+    pub(crate) async fn finish(&self, complete: bool) -> io::Result<()> {
+        self.fence.close();
+        let deadline = tokio::time::Instant::now() + DRAIN_TIMEOUT;
+        loop {
+            {
+                let mut state = self.state.lock().map_err(|_| invalid("guest scope poisoned"))?;
+                let resources = state.resources.as_ref().ok_or_else(|| invalid("guest scope disposed"))?;
+                if !complete || resources.state.quarantined.load(Ordering::Acquire) {
+                    resources.state.quarantined.store(true, Ordering::Release);
+                    return Err(invalid("guest cleanup incomplete"));
+                }
+                if self.fence.drained() && self.backend.active_process_count() == 0 {
+                    state.quiescent = true;
+                    return Ok(());
+                }
+                if tokio::time::Instant::now() >= deadline {
+                    resources.state.quarantined.store(true, Ordering::Release);
+                    return Err(invalid("guest scope drain deadline exceeded"));
+                }
+            }
+            tokio::time::sleep(Duration::from_millis(25)).await;
+        }
+    }
+
+    pub(crate) fn capture(&self) -> io::Result<ScopeSnapshot> {
+        let state = self.state.lock().map_err(|_| invalid("guest scope poisoned"))?;
+        if !state.quiescent { return Err(invalid("guest scope is not quiescent")); }
+        let resources = state.resources.as_ref().ok_or_else(|| invalid("guest scope disposed"))?;
+        capture_resources(resources, &self.immutable, &self.writable_roots)
+    }
+
+    pub(crate) fn dispose(&self) -> io::Result<()> {
+        let mut state = self.state.lock().map_err(|_| invalid("guest scope poisoned"))?;
+        if state.resources.is_none() { return Ok(()); }
+        if !state.quiescent { return Err(invalid("guest scope is not quiescent")); }
+        dispose_resources(state.resources.as_ref().unwrap())?;
+        state.resources.take();
+        Ok(())
+    }
+}
+
+impl Drop for GuestScope {
+    fn drop(&mut self) {
+        self.fence.close();
+        if let Some(resources) = self.state.get_mut().unwrap_or_else(|error| error.into_inner()).resources.take() {
+            if !self.claimed.load(Ordering::Acquire) { resources.remove_before_start(); }
+            else { resources.state.quarantined.store(true, Ordering::Release); }
+        }
+    }
+}
+
+fn capture_resources(resources: &Resources, immutable: &BTreeMap<String, [u8; 32]>, writable_roots: &[String])
+    -> io::Result<ScopeSnapshot> {
+    let view_path = resources.root.join("view");
+    let view = ScopedFiles::open(&view_path, Access::ReadOnly)?;
+    for (path, expected) in immutable {
+        let metadata = view.metadata(Path::new(path))?;
+        if !metadata.is_file() || metadata.nlink() != 1
+            || sha256(&view.read_file(Path::new(path), MAX_INPUT_BYTES)?) != *expected {
+            return Err(invalid("immutable material changed"));
+        }
+    }
+    let mut snapshot = ScopeSnapshot { files: vec![], directories: vec![] };
+    let mut bytes = 0;
+    for root in writable_roots {
+        capture_tree(&view_path, &view, root, 0, false, &mut bytes, &mut snapshot)?;
+    }
+    Ok(snapshot)
+}
+
+fn dispose_resources(resources: &Resources) -> io::Result<()> {
+    for path in [&resources.root, &resources.controller] {
+        if let Err(error) = std::fs::remove_dir_all(path) {
+            if error.kind() != io::ErrorKind::NotFound {
+                resources.state.quarantined.store(true, Ordering::Release);
+                return Err(invalid("scope disposal incomplete"));
+            }
+        }
+    }
+    Ok(())
+}
+
 impl Drop for PreparedScope {
     fn drop(&mut self) {
         if let Some(resources) = self.resources.take() {
@@ -399,26 +556,7 @@ impl BoundScope {
             .resources
             .as_ref()
             .ok_or_else(|| invalid("scope disposed"))?;
-        let view_path = resources.root.join("view");
-        let view = ScopedFiles::open(&view_path, Access::ReadOnly)?;
-        for (path, expected) in &self.immutable {
-            let metadata = view.metadata(Path::new(path))?;
-            if !metadata.is_file()
-                || metadata.nlink() != 1
-                || sha256(&view.read_file(Path::new(path), MAX_INPUT_BYTES)?) != *expected
-            {
-                return Err(invalid("immutable material changed"));
-            }
-        }
-        let mut snapshot = ScopeSnapshot {
-            files: vec![],
-            directories: vec![],
-        };
-        let mut bytes = 0;
-        for root in &self.writable_roots {
-            capture_tree(&view_path, &view, root, 0, false, &mut bytes, &mut snapshot)?;
-        }
-        Ok(snapshot)
+        capture_resources(resources, &self.immutable, &self.writable_roots)
     }
 
     /// Release the instance lease only after genuine runtime+scope drain and
@@ -432,14 +570,7 @@ impl BoundScope {
             return Err(invalid("scope is not quiescent"));
         }
         let resources = state.resources.as_ref().unwrap();
-        for path in [&resources.root, &resources.controller] {
-            if let Err(error) = std::fs::remove_dir_all(path) {
-                if error.kind() != io::ErrorKind::NotFound {
-                    resources.state.quarantined.store(true, Ordering::Release);
-                    return Err(invalid("scope disposal incomplete"));
-                }
-            }
-        }
+        dispose_resources(resources)?;
         state.resources.take();
         Ok(())
     }

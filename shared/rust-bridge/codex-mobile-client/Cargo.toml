@@ -38,6 +38,7 @@ alleycat-claude-bridge = { workspace = true }
 alleycat-opencode-bridge = { workspace = true }
 tokio = { workspace = true }
 async-trait = { workspace = true }
+codex-utils-rustls-provider = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 sha2 = { workspace = true }
@@ -53,6 +54,7 @@ futures = { workspace = true }
 url = { workspace = true }
 uuid = { workspace = true }
 reqwest = { workspace = true }
+hyper-util = { version = "=0.1.20", features = ["client-proxy", "client-proxy-system"], optional = true }
 tracing-subscriber = { workspace = true }
 shlex = { workspace = true }
 linkify = "0.10"
@@ -66,7 +68,7 @@ remote-cli = ["codex-slingshot/json-line-transport"]
 rpc-trace = []
 # Qualification only: native JIT-disabled V8, without the desktop memory sandbox.
 # Not enabled by normal app builds or on Android/desktop.
-alma-code-mode-probe = ["dep:codex-code-mode-runtime", "dep:codex-code-mode-protocol"]
+alma-code-mode-probe = ["dep:codex-code-mode-runtime", "dep:codex-code-mode-protocol", "dep:hyper-util", "reqwest/socks", "reqwest/system-proxy"]
 
 [dev-dependencies]
 tempfile = "3"

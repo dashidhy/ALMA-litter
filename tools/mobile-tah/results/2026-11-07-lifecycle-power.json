@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUTC": "2026-11-07T05:34:23.559070+00:00",
+  "appVersion": "0.4.1 (14)",
+  "device": "iPhone 12 Pro",
+  "osVersion": "27.2",
+  "providerVersions": {
+    "codex": "0.166.0",
+    "kimi": "2.4.1",
+    "zcode": "3.17.2"
+  },
+  "evidenceDirectory": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde",
+  "lanes": {
+    "kimi": {
+      "foregroundNVIDIA": {
+        "passed": true,
+        "driverSeconds": 592.325824958345,
+        "revisionSeconds": [
+          246.757,
+          127.32,
+          116.372
+        ],
+        "toolCount": 23,
+        "toolFailures": 0,
+        "baselineEventsPreserved": 419,
+        "validation": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/kimi-long/validation.json"
+      },
+      "power": {
+        "taskInterval": {
+          "intervalSeconds": 558.4084796905518,
+          "observedSeconds": 558.4084564465519,
+          "samples": 559,
+          "wholeDevicePercentPerHour": 30.22166296475238,
+          "estimatedBatteryPercentagePoints": 4.687786713165361,
+          "startSecondsInTrace": 37.99634528160095,
+          "endSecondsInTrace": 596.4048249721527,
+          "taskIntervalSeconds": 558.4084796905518,
+          "thermalStates": [
+            "Nominal"
+          ],
+          "chargingOverlapSeconds": 0
+        },
+        "v0Actor": {
+          "intervalSeconds": 246.59800004959106,
+          "observedSeconds": 246.59798979859065,
+          "samples": 247,
+          "wholeDevicePercentPerHour": 24.884841669897344,
+          "estimatedBatteryPercentagePoints": 1.704597758959136,
+          "startSecondsInTrace": 96.90700006484985,
+          "endSecondsInTrace": 343.5050001144409,
+          "taskIntervalSeconds": 246.59800004959106,
+          "thermalStates": [
+            "Nominal"
+          ],
+          "chargingOverlapSeconds": 0
+        },
+        "nativeBattery": {
+          "firstPercent": 100,
+          "lastPercent": 94.9999988079071,
+          "states": [
+            "unplugged"
+          ],
+          "lowPowerModes": [
+            false
+          ],
+          "sampleCount": 18,
+          "scope": "Coarse system-reported battery levels; not used to derive hourly power"
+        },
+        "referenceOnly": true,
+        "blocking": false
+      },
+      "ordinaryBackgroundRecovery": {
+        "passed": true,
+        "report": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/kimi-bg-v0/result.json"
+      },
+      "physicalLockRecovery": {
+        "passed": true,
+        "report": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/kimi-lock-v0/result.json"
+      },
+      "continuousBackgroundExecutionEstablished": false
+    },
+    "zcode": {
+      "foregroundNVIDIA": {
+        "passed": true,
+        "driverSeconds": 882.637508499989,
+        "revisionSeconds": [
+          489.986,
+          150.077,
+          145.604
+        ],
+        "toolCount": 35,
+        "toolFailures": 1,
+        "baselineEventsPreserved": 454,
+        "validation": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/zcode-long/validation.json"
+      },
+      "power": {
+        "taskInterval": {
+          "intervalSeconds": 851.0363006591797,
+          "observedSeconds": 851.0362651371804,
+          "samples": 853,
+          "wholeDevicePercentPerHour": 25.104568345737214,
+          "estimatedBatteryPercentagePoints": 5.934693911899244,
+          "startSecondsInTrace": 33.69120764732361,
+          "endSecondsInTrace": 884.7275083065033,
+          "taskIntervalSeconds": 851.0363006591797,
+          "thermalStates": [
+            "Fair",
+            "Nominal"
+          ],
+          "chargingOverlapSeconds": 0
+        },
+        "v0Actor": {
+          "intervalSeconds": 489.81699991226196,
+          "observedSeconds": 489.81697951526195,
+          "samples": 490,
+          "wholeDevicePercentPerHour": 19.86542698774324,
+          "estimatedBatteryPercentagePoints": 2.7028954010881563,
+          "startSecondsInTrace": 89.74799990653992,
+          "endSecondsInTrace": 579.5649998188019,
+          "taskIntervalSeconds": 489.81699991226196,
+          "thermalStates": [
+            "Nominal"
+          ],
+          "chargingOverlapSeconds": 0
+        },
+        "nativeBattery": {
+          "firstPercent": 75,
+          "lastPercent": 60.00000238418579,
+          "states": [
+            "unplugged"
+          ],
+          "lowPowerModes": [
+            false
+          ],
+          "sampleCount": 22,
+          "scope": "Coarse system-reported battery levels; not used to derive hourly power"
+        },
+        "referenceOnly": true,
+        "blocking": false
+      },
+      "ordinaryBackgroundRecovery": {
+        "passed": true,
+        "report": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/zcode-bg-v0/result.json",
+        "notesLanguage": "en",
+        "webEnabled": false
+      },
+      "physicalLockRecovery": {
+        "passed": true,
+        "report": "tools/mobile-tah/.cache/phone-lifecycle-power-20261107-avo7jyde/zcode-lock-v0/result.json",
+        "notesLanguage": "zh-CN",
+        "webEnabled": true,
+        "secondsAfterForegroundConfirmation": 1075.368436,
+        "toolFailures": 1,
+        "retryActivityCount": 1
+      },
+      "continuousBackgroundExecutionEstablished": false
+    }
+  },
+  "powerScope": "Short-window Instruments whole-device estimates, including display/system; no CPU profiling tables; user accepts approximation. Not exact battery depletion, app-only power, or a controlled cross-provider A/B. ZCode native battery 75 to 60 differs from estimated integral 5.93 points; retain both, no further precision investigation requested.",
+  "memory": {
+    "kimiPeakAppMiB": 521.4,
+    "kimiCoverage": "V0 later part and revisions; excludes Raw/initial load and independent WebKit",
+    "zcodePeakAppMiB": 613.4559555053711,
+    "zcodeSamples": 179,
+    "scope": "5s App physFootprint samples, not instantaneous peak"
+  },
+  "lifecycleScope": "No Instruments/LLDB/memory sampler/foreground qualification driver in lifecycle trials; manual UI V0; same action/cycle recovered. Pending snapshots are not exact OS suspension traces. Current Tauri host does not contain sustained background scheduling.",
+  "unpluggedTestsComplete": true,
+  "recordersAndObserversStopped": true,
+  "screenSharingStopped": true,
+  "phoneChargingObserved": true,
+  "runtimeCodeChangedThisRound": false,
+  "storage": {
+    "immediateFreeGiB": 67.89,
+    "newLargeNativeBuilds": 0
+  },
+  "nextWork": "Codex 0.167 adaptation in isolated workspaces; existing acceptance does not qualify upgraded binary."
+}

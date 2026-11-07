@@ -1,0 +1,496 @@
+{
+  "date": "2026-11-04",
+  "status": "PHONE_CODEX_AND_KIMI_NVIDIA_V0_V1_PASS",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "app": {
+    "version": "0.3.6",
+    "build": "12",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executable": "AlmaTAHTauri",
+    "executableSHA256": "67be3ef934dd874bbcbef919ce14880bb7dd81902230dc10294c18f33109d1d4",
+    "trustedJSSHA256": "cb76eaf22966ebad82e6dae094fcc3bb3af365ae98e1494a79b72f3fd509aff4",
+    "kimiRuntimeManifestSHA256": "9d5e9f1724220c87fdca6238adb1c067bd7bcfd63c5e0e1bc6ddf5e37502e8f9",
+    "kimiGuestSHA256": "b9d715ba896168d32c8246cffb5b69e4a6bb6bacba2241336b4c162fcd358455",
+    "runtimeFilesVerified": 878
+  },
+  "case": "Full NVIDIA transcript, fresh V0 and title-only V1 for each provider",
+  "providers": {
+    "codex": {
+      "actionID": "610f0057-ca03-43d6-8d31-6ef07ac800e4",
+      "rawGuardian": "ALLOW",
+      "extraGuardian": "ALLOW",
+      "revisions": [
+        {
+          "revision": 0,
+          "cycleID": "fbac8521-1128-4b9d-bc27-04972b9cd175",
+          "startedAt": "2026-11-04T11:55:25.434Z",
+          "endedAt": "2026-11-04T12:09:37.168Z",
+          "seconds": 851.734,
+          "model": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "language": "zh-CN",
+          "webEnabled": true,
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-04T11:55:25.434Z"
+            },
+            {
+              "id": "2",
+              "phase": "actor",
+              "at": "2026-11-04T11:55:25.526Z"
+            },
+            {
+              "id": "3",
+              "phase": "critic",
+              "at": "2026-11-04T12:09:37.048Z"
+            },
+            {
+              "id": "4",
+              "phase": "completed",
+              "at": "2026-11-04T12:09:37.168Z"
+            }
+          ],
+          "workingLogSHA256": "16067ae7de7b26b03256e5fa579694db045a761fe8c1e059ab16bee82becbf8c",
+          "workingLogBytes": 16597,
+          "workingEvents": 38,
+          "eventCounts": [
+            {
+              "kind": "activity",
+              "status": "completed",
+              "count": 5
+            },
+            {
+              "kind": "tool",
+              "status": "completed",
+              "count": 31
+            },
+            {
+              "kind": "tool",
+              "status": "failed",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "revision": 1,
+          "cycleID": "42f598da-1890-4b38-a0eb-b9530fa94f04",
+          "startedAt": "2026-11-04T12:23:12.665Z",
+          "endedAt": "2026-11-04T12:24:19.140Z",
+          "seconds": 66.475,
+          "model": {
+            "modelID": "gpt-6-astra",
+            "reasoningEffortID": "xhigh"
+          },
+          "language": "zh-CN",
+          "webEnabled": true,
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-04T12:23:12.665Z"
+            },
+            {
+              "id": "2",
+              "phase": "extra_guardian",
+              "at": "2026-11-04T12:23:12.801Z"
+            },
+            {
+              "id": "3",
+              "phase": "saving_safety",
+              "at": "2026-11-04T12:23:30.386Z"
+            },
+            {
+              "id": "4",
+              "phase": "actor",
+              "at": "2026-11-04T12:23:30.537Z"
+            },
+            {
+              "id": "5",
+              "phase": "critic",
+              "at": "2026-11-04T12:24:19.004Z"
+            },
+            {
+              "id": "6",
+              "phase": "completed",
+              "at": "2026-11-04T12:24:19.140Z"
+            }
+          ],
+          "workingLogSHA256": "548a60c6a33c0aa0e82126c50511bb8e5c29298f93b4d1303fc4768c397b5206",
+          "workingLogBytes": 5154,
+          "workingEvents": 17,
+          "eventCounts": [
+            {
+              "kind": "activity",
+              "status": "completed",
+              "count": 2
+            },
+            {
+              "kind": "activity",
+              "status": "pass",
+              "count": 1
+            },
+            {
+              "kind": "tool",
+              "status": "completed",
+              "count": 13
+            },
+            {
+              "kind": "tool",
+              "status": "failed",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "publications": [
+        {
+          "actionInstanceID": "610f0057-ca03-43d6-8d31-6ef07ac800e4",
+          "cycleID": "fbac8521-1128-4b9d-bc27-04972b9cd175",
+          "providerID": "codex",
+          "revisionIndex": 0,
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "52f6b543fa2c1dee669456eca0170ebaa5c06cb0cca916cda1794c0c906b72b5",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1,
+          "actorAttempts": [
+            {
+              "attemptID": "60c91c5a-3915-42dc-95b9-5f5ec5fe02d0",
+              "round": 0,
+              "inference": {
+                "modelID": "gpt-6-astra",
+                "reasoningEffortID": "xhigh"
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "relativePath": "structured-notes.md",
+              "byteLength": 55940,
+              "sha256": "36d5898ed9767308468cecd5ec49ac680f74d95005dabd49984d3a9586d3f5f6"
+            },
+            {
+              "relativePath": "suspicious-asr-terms.md",
+              "byteLength": 4084,
+              "sha256": "9dcbd86a16bdbe7e8430e21418adbefb4356237e31f807e9eb45dfb4dd120876"
+            }
+          ]
+        },
+        {
+          "actionInstanceID": "610f0057-ca03-43d6-8d31-6ef07ac800e4",
+          "cycleID": "42f598da-1890-4b38-a0eb-b9530fa94f04",
+          "providerID": "codex",
+          "revisionIndex": 1,
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "9eb633f725f7e76479be791ab7b35c05f77a2fc616506b1ff25cd1a577eab2a7",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1,
+          "actorAttempts": [
+            {
+              "attemptID": "6d0485a1-fedd-4515-a5d4-50bf328c093b",
+              "round": 0,
+              "inference": {
+                "modelID": "gpt-6-astra",
+                "reasoningEffortID": "xhigh"
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "relativePath": "structured-notes.md",
+              "byteLength": 55878,
+              "sha256": "b04e46ab9d408785823a725b71a265b0675f0bc2d040d59991fa026458fa5aae"
+            },
+            {
+              "relativePath": "suspicious-asr-terms.md",
+              "byteLength": 4084,
+              "sha256": "9dcbd86a16bdbe7e8430e21418adbefb4356237e31f807e9eb45dfb4dd120876"
+            }
+          ]
+        }
+      ],
+      "v1Checks": {
+        "requestedTitle": true,
+        "remainingNotesBodyIdentical": true,
+        "asrIndexIdentical": true
+      }
+    },
+    "kimi": {
+      "actionID": "f0f5e54f-1db2-4c52-a905-985e24866ad6",
+      "rawGuardian": "ALLOW",
+      "extraGuardian": "ALLOW",
+      "revisions": [
+        {
+          "revision": 0,
+          "cycleID": "20c4de08-577b-40a8-af6b-61c984455827",
+          "startedAt": "2026-11-04T12:37:07.004Z",
+          "endedAt": "2026-11-04T12:58:36.167Z",
+          "seconds": 1289.163,
+          "model": {
+            "modelID": "k3.1-pro",
+            "reasoningEffortID": "max"
+          },
+          "language": "zh-CN",
+          "webEnabled": true,
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-04T12:37:07.004Z"
+            },
+            {
+              "id": "2",
+              "phase": "actor",
+              "at": "2026-11-04T12:37:07.093Z"
+            },
+            {
+              "id": "3",
+              "phase": "critic",
+              "at": "2026-11-04T12:58:36.089Z"
+            },
+            {
+              "id": "4",
+              "phase": "completed",
+              "at": "2026-11-04T12:58:36.167Z"
+            }
+          ],
+          "workingLogSHA256": "dccd35b3e66caf5e4a2b2c28f288bf05e58700aef55af9afa0fd9b576f224c5f",
+          "workingLogBytes": 22566,
+          "workingEvents": 89,
+          "eventCounts": [
+            {
+              "kind": "activity",
+              "status": "completed",
+              "count": 7
+            },
+            {
+              "kind": "tool",
+              "status": "completed",
+              "count": 76
+            },
+            {
+              "kind": "tool",
+              "status": "failed",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "revision": 1,
+          "cycleID": "a8c910bc-0e46-4d98-86f5-f0c1f42c9940",
+          "startedAt": "2026-11-04T13:06:29.010Z",
+          "endedAt": "2026-11-04T13:09:05.396Z",
+          "seconds": 156.386,
+          "model": {
+            "modelID": "k3.1-pro",
+            "reasoningEffortID": "max"
+          },
+          "language": "zh-CN",
+          "webEnabled": true,
+          "stages": [
+            {
+              "id": "1",
+              "phase": "preparing",
+              "at": "2026-11-04T13:06:29.010Z"
+            },
+            {
+              "id": "2",
+              "phase": "extra_guardian",
+              "at": "2026-11-04T13:06:29.128Z"
+            },
+            {
+              "id": "3",
+              "phase": "saving_safety",
+              "at": "2026-11-04T13:07:21.611Z"
+            },
+            {
+              "id": "4",
+              "phase": "actor",
+              "at": "2026-11-04T13:07:21.734Z"
+            },
+            {
+              "id": "5",
+              "phase": "critic",
+              "at": "2026-11-04T13:09:05.287Z"
+            },
+            {
+              "id": "6",
+              "phase": "completed",
+              "at": "2026-11-04T13:09:05.396Z"
+            }
+          ],
+          "workingLogSHA256": "38083ac59ad213c45cef5f541fc0287a88f1912ba633af193bfcd1f54713a06a",
+          "workingLogBytes": 3408,
+          "workingEvents": 11,
+          "eventCounts": [
+            {
+              "kind": "activity",
+              "status": "completed",
+              "count": 2
+            },
+            {
+              "kind": "activity",
+              "status": "pass",
+              "count": 1
+            },
+            {
+              "kind": "tool",
+              "status": "completed",
+              "count": 8
+            }
+          ]
+        }
+      ],
+      "publications": [
+        {
+          "actionInstanceID": "f0f5e54f-1db2-4c52-a905-985e24866ad6",
+          "cycleID": "20c4de08-577b-40a8-af6b-61c984455827",
+          "providerID": "kimi",
+          "revisionIndex": 0,
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "5fce5c681af8e116829e23bd28250215142b9af3d757531a3a4b5a22808c859e",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1,
+          "actorAttempts": [
+            {
+              "attemptID": "ee5abcd9-d9ab-4283-a2c7-cfe9d047c8a5",
+              "round": 0,
+              "inference": {
+                "modelID": "k3.1-pro",
+                "reasoningEffortID": "max"
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "relativePath": "structured-notes.md",
+              "byteLength": 45841,
+              "sha256": "9335b664c606b2fba31b38f1b97c03956e26fc46295d1e993536e2cf649b4562"
+            },
+            {
+              "relativePath": "suspicious-asr-terms.md",
+              "byteLength": 1273,
+              "sha256": "797b6fe60aac032303b43c135f8ffa5db35fd0e81add367baebb5f1e78333f55"
+            }
+          ]
+        },
+        {
+          "actionInstanceID": "f0f5e54f-1db2-4c52-a905-985e24866ad6",
+          "cycleID": "a8c910bc-0e46-4d98-86f5-f0c1f42c9940",
+          "providerID": "kimi",
+          "revisionIndex": 1,
+          "critic": {
+            "schemaVersion": 1,
+            "contractID": "structured_notes/v2",
+            "candidateDigest": "441228d3cb0c03a731ad6132187d71a1ae8c6a7b17a17123e007cd1d471d0764",
+            "decision": "PASS",
+            "issues": []
+          },
+          "actorRounds": 1,
+          "actorAttempts": [
+            {
+              "attemptID": "562f1fb3-7510-4566-a967-bd1183443373",
+              "round": 0,
+              "inference": {
+                "modelID": "k3.1-pro",
+                "reasoningEffortID": "max"
+              }
+            }
+          ],
+          "artifacts": [
+            {
+              "relativePath": "structured-notes.md",
+              "byteLength": 45824,
+              "sha256": "2dc754f1218a1a1c25c9cc73138a2c45c41a1ce91f451b5afdf3296d1905a440"
+            },
+            {
+              "relativePath": "suspicious-asr-terms.md",
+              "byteLength": 1273,
+              "sha256": "797b6fe60aac032303b43c135f8ffa5db35fd0e81add367baebb5f1e78333f55"
+            }
+          ]
+        }
+      ],
+      "v1Checks": {
+        "requestedTitle": true,
+        "remainingNotesBodyIdentical": true,
+        "asrIndexIdentical": true
+      }
+    }
+  },
+  "journal": {
+    "beforeEvents": 216,
+    "afterEvents": 242,
+    "allOriginalRowsByteIdentical": true,
+    "integrity": "ok",
+    "pendingWrites": 0
+  },
+  "lifecycle": {
+    "actorAttemptDirectoriesReleased": [
+      "60c91c5a-3915-42dc-95b9-5f5ec5fe02d0",
+      "6d0485a1-fedd-4515-a5d4-50bf328c093b",
+      "ee5abcd9-d9ab-4283-a2c7-cfe9d047c8a5",
+      "562f1fb3-7510-4566-a967-bd1183443373"
+    ],
+    "kimiFinalMethods": [
+      {
+        "method": "provider.kimi.nextEvent",
+        "at": "2026-11-04T13:09:05Z",
+        "outcome": "end_turn"
+      },
+      {
+        "method": "provider.kimi.close",
+        "outcome": "returned",
+        "at": "2026-11-04T13:09:05Z"
+      },
+      {
+        "at": "2026-11-04T13:09:05Z",
+        "outcome": "returned",
+        "method": "provider.kimi.capture"
+      },
+      {
+        "method": "provider.kimi.release",
+        "outcome": "returned",
+        "at": "2026-11-04T13:09:05Z"
+      },
+      {
+        "at": "2026-11-04T13:09:07Z",
+        "outcome": "returned",
+        "method": "provider.kimi.inspect"
+      }
+    ]
+  },
+  "equivalence": {
+    "releaseBases": {
+      "codex": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+      "kimi": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7"
+    },
+    "codexPatchedPathsByteIdentical": 33,
+    "ffiBindingFilesByteIdentical": 4,
+    "kimiSDKFilesByteIdentical": 744,
+    "kimiGuestByteIdentical": true,
+    "guestBytes": 808109,
+    "trustedBundleDifference": "One stale, uncalled approveKimiTool predicate now reflects the existing five-tool missing-file fix. The active guest already contained the fix and is byte-identical. Current-source baseline and relocated trusted bundles are byte-identical.",
+    "metadataChanges": "Kimi profile identity and SDK provenance reflect the relocated sources."
+  },
+  "kimi250Decision": "Reviewed and deferred by user; reassess the next official release after 2.5.0. This acceptance uses 2.4.1 and SDK 0.22.0.",
+  "limits": [
+    "Foreground functional acceptance; no new background or power measurement.",
+    "Artifact/contract integrity and the requested V1 delta were checked; no exhaustive factual audit."
+  ]
+}

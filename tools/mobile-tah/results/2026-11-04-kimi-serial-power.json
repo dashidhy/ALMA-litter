@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-04",
+  "status": "NVIDIA_V0_PHONE_PASS_WITH_POWER_SAMPLES",
+  "scope": {
+    "app": "com.alma.litter.agent-probe",
+    "device": "iPhone 12 Pro",
+    "os": "iOS 27.0.1",
+    "scopeBoundary": "TAH Framework -> Provider Adapter -> Provider Backend",
+    "sanitization": "Counts, timing, hashes, static error categories and sampled performance only. Transcript text, notes contents, credentials and native HTTP bodies omitted."
+  },
+  "build": {
+    "version": "0.3.5",
+    "build": "11",
+    "resources": {
+      "kimi-runtime/runtime-manifest.json": {
+        "bytes": 154579,
+        "sha256": "fd6ade0446ffe61774087c86181d16e67d836796be633024037b28d3a0804e9e"
+      },
+      "kimi-runtime/guest.mjs": {
+        "bytes": 808109,
+        "sha256": "b9d715ba896168d32c8246cffb5b69e4a6bb6bacba2241336b4c162fcd358455"
+      },
+      "kimi-runtime/sdk/index.mjs": {
+        "bytes": 8553986,
+        "sha256": "5664680fdf03d133e959655ebe36d3ca0282bec4365289e4e79893c3e02a678a"
+      },
+      "alma-tah.js": {
+        "bytes": 1410053,
+        "sha256": "c782f7ace003442d8b288f9a61c416f951e88c64c741d7135dd4bcae28b35a3b"
+      },
+      "mobile-config.json": {
+        "bytes": 17627,
+        "sha256": "52f7d302fd96bda54504b2e6de07c902b392d74a057c09200893547b9942f785"
+      }
+    },
+    "runtimeInventoryFilesVerified": 878
+  },
+  "sdk": {
+    "releaseVersion": "2.4.1",
+    "sdkVersion": "0.22.0",
+    "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+    "sdkIndexSHA256": "5664680fdf03d133e959655ebe36d3ca0282bec4365289e4e79893c3e02a678a",
+    "serialToolsPatchSHA256": "2ba3608334b27c7b57147660af4e9cd87582d5a5983c4ec2c3a871d71c81884a"
+  },
+  "tests": {
+    "sdkAdapterPassed": 105,
+    "sdkSerialPassed": 3,
+    "nativeKimiPassed": 29,
+    "ownedExecutorPassed": 24,
+    "adoptionCheck": "PASS",
+    "typescriptCheck": "PASS",
+    "signedBuildInstallLaunch": "PASS"
+  },
+  "phone": {
+    "actionID": "7822534b-e279-48a0-9096-7d27adc83db9",
+    "status": "completed",
+    "model": {
+      "modelID": "k3.1-pro",
+      "reasoningEffortID": "max"
+    },
+    "language": "zh-CN",
+    "webEnabled": true,
+    "startedAt": "2026-11-04T02:34:52.025Z",
+    "endedAt": "2026-11-04T03:00:59.315Z",
+    "elapsedSeconds": 1567.29,
+    "critic": {
+      "schemaVersion": 1,
+      "contractID": "structured_notes/v2",
+      "candidateDigest": "1ddcfe9b17a5965c6ce8253a55e46594bcb4ec3a3b13554fcd0d16b9fb4d62bb",
+      "decision": "PASS",
+      "issues": []
+    },
+    "criticRounds": [
+      {
+        "round": 0,
+        "result": {
+          "schemaVersion": 1,
+          "contractID": "structured_notes/v2",
+          "candidateDigest": "1ddcfe9b17a5965c6ce8253a55e46594bcb4ec3a3b13554fcd0d16b9fb4d62bb",
+          "decision": "PASS",
+          "issues": []
+        }
+      }
+    ],
+    "files": [
+      {
+        "relativePath": "structured-notes.md",
+        "byteLength": 43519,
+        "sha256": "3634d78a95460b44a62a42480911204fe91556fa5708d3f915d0422437b870c0"
+      },
+      {
+        "relativePath": "suspicious-asr-terms.md",
+        "byteLength": 1680,
+        "sha256": "3b7cf96cdc12e2bc8b65dd1a368dcf9b59123ef25cb13601866362604d257335"
+      }
+    ],
+    "toolCount": 86,
+    "toolStatuses": {
+      "completed": 79,
+      "failed": 7
+    },
+    "toolKinds": {
+      "tool.text_read": 7,
+      "tool.web": 72,
+      "tool.text_write": 2,
+      "tool.text_edit": 2,
+      "tool.text_search": 2,
+      "tool.workspace_list": 1
+    },
+    "workingLogVerified": true,
+    "baselineRows": 171,
+    "baselineRowsMatched": 171,
+    "currentRows": 212,
+    "sqliteIntegrity": "ok",
+    "pendingWrites": 0
+  },
+  "cleanup": {
+    "closeCaptureReleaseReturned": true,
+    "ownedAttemptID": "27042946-ac3a-4d00-aeb2-3d84c1c8ccf0",
+    "ownedAttemptRemoved": true
+  },
+  "power": {
+    "metric": "Whole-device sampled energy rate, percent of battery/hour. Windows are separate from CPU profiling. Late run is clipped to Actor completion for comparison.",
+    "userConfirmedUnplugged": true,
+    "screenSharing": "off throughout each power-only window",
+    "runs": [
+      {
+        "run": 1,
+        "start": "2026-11-04T10:03:44.610000+08:00",
+        "traceDurationSeconds": 108.014692,
+        "wholeWindow": {
+          "observedSeconds": 105.99586599599999,
+          "systemPowerPercentPerHour": 7.601453558423327,
+          "estimatedBatteryPercentagePoints": 0.22381184798707118
+        },
+        "actorOnly": null,
+        "postActor": null,
+        "brightnessPercent": [
+          51.0
+        ],
+        "thermalStates": [
+          "Nominal"
+        ],
+        "chargingIntervals": 0,
+        "powerSampleCount": 106
+      },
+      {
+        "run": 2,
+        "start": "2026-11-04T10:31:37.384000+08:00",
+        "traceDurationSeconds": 105.593606,
+        "wholeWindow": {
+          "observedSeconds": 103.00824766700002,
+          "systemPowerPercentPerHour": 7.669296457645923,
+          "estimatedBatteryPercentagePoints": 0.219444663594677
+        },
+        "actorOnly": null,
+        "postActor": null,
+        "brightnessPercent": [
+          51.0
+        ],
+        "thermalStates": [
+          "Nominal"
+        ],
+        "chargingIntervals": 0,
+        "powerSampleCount": 103
+      },
+      {
+        "run": 3,
+        "start": "2026-11-04T10:35:19.367000+08:00",
+        "traceDurationSeconds": 118.940626,
+        "wholeWindow": {
+          "observedSeconds": 117.96842000000004,
+          "systemPowerPercentPerHour": 17.264827711261038,
+          "estimatedBatteryPercentagePoints": 0.5657512351860225
+        },
+        "actorOnly": {
+          "observedSeconds": 117.96842000000004,
+          "systemPowerPercentPerHour": 17.264827711261038,
+          "estimatedBatteryPercentagePoints": 0.5657512351860225
+        },
+        "postActor": null,
+        "brightnessPercent": [
+          51.0
+        ],
+        "thermalStates": [
+          "Nominal"
+        ],
+        "chargingIntervals": 0,
+        "powerSampleCount": 118
+      },
+      {
+        "run": 4,
+        "start": "2026-11-04T10:47:36.946000+08:00",
+        "traceDurationSeconds": 170.669818,
+        "wholeWindow": {
+          "observedSeconds": 168.99638812799998,
+          "systemPowerPercentPerHour": 12.909974049445951,
+          "estimatedBatteryPercentagePoints": 0.6060386069951599
+        },
+        "actorOnly": {
+          "observedSeconds": 168.99638812799998,
+          "systemPowerPercentPerHour": 12.909974049445951,
+          "estimatedBatteryPercentagePoints": 0.6060386069951599
+        },
+        "postActor": null,
+        "brightnessPercent": [
+          51.0
+        ],
+        "thermalStates": [
+          "Nominal"
+        ],
+        "chargingIntervals": 0,
+        "powerSampleCount": 169
+      },
+      {
+        "run": 5,
+        "start": "2026-11-04T10:52:49.918000+08:00",
+        "traceDurationSeconds": 638.057322,
+        "wholeWindow": {
+          "observedSeconds": 637.0090360110007,
+          "systemPowerPercentPerHour": 13.699557146958679,
+          "estimatedBatteryPercentagePoints": 2.424094914433823
+        },
+        "actorOnly": {
+          "observedSeconds": 488.7501180440004,
+          "systemPowerPercentPerHour": 15.435480305431554,
+          "estimatedBatteryPercentagePoints": 2.095581339262643
+        },
+        "postActor": {
+          "observedSeconds": 148.25891796700034,
+          "systemPowerPercentPerHour": 7.976915566586582,
+          "estimatedBatteryPercentagePoints": 0.32851357517118
+        },
+        "brightnessPercent": [
+          51.0
+        ],
+        "thermalStates": [
+          "Nominal"
+        ],
+        "chargingIntervals": 0,
+        "powerSampleCount": 637
+      }
+    ]
+  },
+  "cpu": {
+    "wallInterval": {
+      "start_local": "2026-11-04T10:41:18.722+08:00",
+      "end_local": "2026-11-04T10:42:31.868+08:00",
+      "metadata_duration_s": 73.145533,
+      "usage_table_end_ns": 73145533084,
+      "first_sample_ns": 391861958,
+      "last_sample_ns": 73072849541,
+      "observed_sample_span_s": 72.680987583
+    },
+    "sampleAccounting": {
+      "all_rows": 17366,
+      "all_rows_weight_ms": 17366,
+      "usable_backtrace_rows": 17354,
+      "usable_backtrace_weight_ms": 17354,
+      "empty_backtrace_rows": 12,
+      "empty_backtrace_weight_ms": 12,
+      "sample_weight_ns": 1000000,
+      "observed_states": [
+        "Running"
+      ],
+      "settings": {
+        "target": "single process",
+        "record_waiting_threads": false,
+        "kernel_callstacks": false,
+        "context_switch_sampling": false,
+        "high_frequency_sampling": false
+      },
+      "share_denominator_ms": 17354,
+      "weight_meaning": "Sum the exported weight once per sample. Time Profiler assigns statistical weight from sampling frequency. Exact scheduler CPU-duration measurement is unavailable.",
+      "inclusive_meaning": "A function or category receives each matching sample weight once, deduplicating repeated frames. Inclusive entries overlap and require separate comparison.",
+      "empty_backtrace_by_thread_ms": {
+        "Main Thread": 9,
+        "node-14": 2,
+        "node-24": 1
+      }
+    },
+    "categories": {
+      "ish_task_execution": {
+        "weight_ms": 15093,
+        "sample_weight_share_pct": 86.9713,
+        "by_thread_ms": {
+          "node-14": 8756,
+          "node-19": 1356,
+          "node-18": 1330,
+          "node-17": 1297,
+          "node-16": 1280,
+          "ish-superviso-1 #2": 892,
+          "node-23": 39,
+          "node-21": 38,
+          "node-24": 35,
+          "node-22": 34,
+          "node-20": 33,
+          "node-15": 3
+        }
+      },
+      "all_node_named_threads": {
+        "weight_ms": 14201,
+        "sample_weight_share_pct": 81.8313,
+        "by_thread_ms": {
+          "node-14": 8756,
+          "node-19": 1356,
+          "node-18": 1330,
+          "node-17": 1297,
+          "node-16": 1280,
+          "node-23": 39,
+          "node-21": 38,
+          "node-24": 35,
+          "node-22": 34,
+          "node-20": 33,
+          "node-15": 3
+        }
+      },
+      "native_main_thread": {
+        "weight_ms": 1307,
+        "sample_weight_share_pct": 7.5314,
+        "by_thread_ms": {
+          "Main Thread": 1307
+        }
+      },
+      "any_javascriptcore_binary_frame": {
+        "weight_ms": 831,
+        "sample_weight_share_pct": 4.7885,
+        "by_thread_ms": {
+          "JavaScriptCore libpas scavenger": 361,
+          "Main Thread": 337,
+          "ALMA TAH #1": 41,
+          "ALMA TAH #4": 23,
+          "ALMA TAH #2": 21,
+          "ALMA TAH #3": 8,
+          "Heap Helper Thread #7": 5,
+          "Heap Helper Thread #8": 5,
+          "Heap Helper Thread #6": 4,
+          "Heap Helper Thread #9": 4,
+          "ALMA TAH #5": 3,
+          "Heap Helper Thread #3": 3,
+          "Heap Helper Thread #4": 3,
+          "Heap Helper Thread #5": 3,
+          "Heap Helper Thread #1": 2,
+          "Heap Helper Thread #2": 2,
+          "Log work queue": 2,
+          "JSC Heap Collector Thread #2": 2,
+          "JSC Heap Collector Thread #1": 1,
+          "tokio-rt-worker #1": 1
+        }
+      },
+      "tah_swift_host_paths": {
+        "weight_ms": 48,
+        "sample_weight_share_pct": 0.2766,
+        "by_thread_ms": {
+          "ALMA TAH #1": 18,
+          "Main Thread": 12,
+          "ALMA TAH #2": 10,
+          "ALMA TAH #4": 7,
+          "ALMA TAH #3": 1
+        }
+      }
+    },
+    "modeledProcessCPU": {
+      "rows": 7276,
+      "start_ns": 390000000,
+      "end_ns": 73145533084,
+      "covered_ns": 72755533084,
+      "duration_weighted_mean_pct": 23.868975,
+      "max_10ms_bucket_pct": 410.0,
+      "usage_integral_core_seconds": 17.366,
+      "median_bucket_pct": 0.0,
+      "p95_bucket_pct_nearest_rank": 110.0
+    },
+    "attribution": "iSH task execution dominates this host-process capture. Observed JSC/TAH serialization paths are small.",
+    "limitations": [
+      "Sample-weight categories overlap. They are not shares of battery consumption.",
+      "Guest Node/V8 symbols are unresolved, so guest work cannot be separated from emulation and synchronization.",
+      "Power-only windows exclude the separate CPU trace."
+    ]
+  },
+  "batteryDisplayObservation": {
+    "beforeActorPercent": 92,
+    "beforeActorLocalTime": "2026-11-04T10:34:52+08:00",
+    "afterObservationPercent": 82,
+    "afterObservationLocalTime": "2026-11-04T11:09:00+08:00",
+    "scope": "Rounded UI values over about34minutes, including approximately8minutes after publication and subsequent reading. This is not isolated Actor energy."
+  },
+  "limitations": [
+    "One full NVIDIA V0 qualification with this final build. No claim of universal provider compatibility.",
+    "Power is whole-device short-window instrument estimation, with51% brightness and sharing off. The final window is clipped to publication time.",
+    "No controlled before/after Kimi power trace was captured for the initial hot state.",
+    "Rule Critic PASS verifies the application outcome contract. Notes factual accuracy was not exhaustively audited."
+  ],
+  "evidence": {
+    "phoneJournal": "tools/mobile-tah/.cache/kimi-power-2026-11-04/after-consistent.sqlite3",
+    "powerTrace": "tools/mobile-tah/.cache/kimi-power-2026-11-04/kimi-cooling-idle.trace",
+    "powerSummary": "tools/mobile-tah/.cache/kimi-power-2026-11-04/power-summary.json",
+    "cpuTrace": "tools/mobile-tah/.cache/kimi-power-2026-11-04/kimi-actor-cpu.trace",
+    "cpuAnalysis": "tools/mobile-tah/.cache/kimi-power-2026-11-04/cpu-analysis.json"
+  }
+}

@@ -23,7 +23,7 @@ const ObservedAppActions=AppActions as unknown as new (
 )=>AppActions & WorkingViewSource;
 
 const id=z.uuid(), empty=z.strictObject({});
-const configSchema=z.strictObject({profiles:z.array(z.strictObject({id:z.enum(['codex','qoder']),displayName:z.string(),authRouteID:z.string(),taskRouteID:z.string(),guardianModel:z.string(),guardianEffort:z.string(),disabledModels:z.array(z.string()),allowedModels:z.array(z.string()).optional(),profileIdentity:z.string().regex(/^[a-f0-9]{64}$/)})).min(1),
+const configSchema=z.strictObject({profiles:z.array(z.strictObject({id:z.enum(['codex','qoder','kimi','zcode']),displayName:z.string(),authRouteID:z.string(),taskRouteID:z.string(),guardianModel:z.string(),guardianEffort:z.string(),disabledModels:z.array(z.string()),allowedModels:z.array(z.string()).optional(),profileIdentity:z.string().regex(/^[a-f0-9]{64}$/)})).min(1),
   resources:z.strictObject({actorPromptTemplate:z.string(),rawGuardianPrompt:z.string(),extraGuardianPrompt:z.string(),safetyPolicy:z.string()}),actionInstructions:z.string()});
 
 /** iOS composition root. No role ordering, policy decisions, receipt acceptance,
@@ -53,6 +53,8 @@ export function createMobileRuntime(adapters: ReadonlyMap<string,MobileProviderA
       auth=new AuthService(storage,context=>scheduler.schedule({declaredInputBytes:0,signal:context.signal,run:signal=>adapters.get(context.providerID)!.authenticate({...context,signal})}),
         (provider,catalog)=>{const p=profiles.find(p=>p.id===provider);return !!p&&catalog.models.some(m=>isAppModelAllowed(p,m.handle))&&catalog.models.some(m=>m.handle===p.guardianModel&&m.efforts.some(e=>e.handle===p.guardianEffort));});
       await auth.initialize();
+      const selected = auth.snapshot().providerID;
+      if (selected) await adapters.get(selected)?.prepare?.();
       // The build's hash-checked observation seam adds only this optional callback.
       // It fires after Core changes Raw state, particularly after terminal cleanup;
       // a store commit ACK alone is too early to infer that checking has finished.
@@ -64,8 +66,15 @@ export function createMobileRuntime(adapters: ReadonlyMap<string,MobileProviderA
     },
     'auth.snapshot':async v=>{empty.parse(v);return snapshot();},
     'auth.inspect':async v=>{empty.parse(v);if(required().busy)throw new AppBridgeError('busy');await auth!.inspect();return snapshot();},
-    'auth.select':async v=>{const input=z.strictObject({providerID:z.enum(['codex','qoder'])}).parse(v);if(!profiles.some(p=>p.id===input.providerID))throw new AppBridgeError('invalid_request');await auth!.select(input.providerID);return snapshot();},
+    'auth.select':async v=>{const input=z.strictObject({providerID:z.enum(['codex','qoder','kimi','zcode'])}).parse(v);if(!profiles.some(p=>p.id===input.providerID))throw new AppBridgeError('invalid_request');await auth!.select(input.providerID);await adapters.get(input.providerID)?.prepare?.();return snapshot();},
     'auth.authorize':async v=>{empty.parse(v);await auth!.authorize();return snapshot();},
+    'auth.cancel':async v=>{empty.parse(v);await auth!.cancel();return snapshot();},
+    'auth.replacement':async v=>{
+      const input=z.strictObject({kind:z.enum(['switch_provider','switch_account','reauth','sign_out']),providerID:z.enum(['codex','qoder','kimi','zcode']).optional()}).parse(v);
+      if(input.providerID&&!profiles.some(p=>p.id===input.providerID))throw new AppBridgeError('invalid_request');
+      await auth!.requestReplacement(input.kind,input.providerID);return snapshot();
+    },
+    'auth.confirm':async v=>{const input=z.strictObject({id,confirmed:z.boolean()}).parse(v);await auth!.confirmReplacement(input.id,input.confirmed);const selected=auth!.snapshot().providerID;if(selected)await adapters.get(selected)?.prepare?.();return snapshot();},
     'material.put':async v=>{
       const {materialID,...value}=z.strictObject({...transcriptMaterialSchema.shape,materialID:id}).parse(v);
       const stream=`material/${materialID}`,existing=await journal.readLast(stream);

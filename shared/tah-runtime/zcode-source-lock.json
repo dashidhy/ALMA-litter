@@ -1,0 +1,12 @@
+{
+  "releaseTag": "v3.17.2",
+  "sourceCommit": "a9fe401eede6e6e5e01be9048679c206fe6f02d9",
+  "files": {
+    "adapter.ts": "80cbf04726e7a5dd2430e4cf34b28bc97eaa2cfc4a4b2e988f9ad412e076a700",
+    "normalizer.ts": "17ed200f0ac604d0ed965af88c25caa81c4703c074a5e9edeade021699fe4886",
+    "failure.ts": "ab04bd13bfe1baeb1ea504a474c1a9539614918f9bd61947bdb7b8333f834733",
+    "contract.ts": "5e2829b03df2a0bb3d5375979940576e3a0c5306928bef67339dcb8cd8205139",
+    "native-provider.ts": "778aaec6e3975acdb1350da0b7c061c89f51dd655613e4a9eab484d04b92a788",
+    "usage.ts": "e6f2b039768ba4ec20f43af3a6f33fe7ac85233636a6a3f65a127f947e82636a"
+  }
+}

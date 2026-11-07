@@ -64,6 +64,10 @@ pub struct IshExecBackend {
     policy: Arc<dyn ExecutionPolicy>,
     cleanup_timeout: Duration,
     active: Arc<Mutex<HashSet<String>>>,
+    stdin_budget: usize,
+    output_budget: usize,
+    output_chunks: usize,
+    consumed_output: bool,
 }
 
 impl IshExecBackend {
@@ -75,7 +79,31 @@ impl IshExecBackend {
         if cleanup_timeout.is_zero() || cleanup_timeout > Duration::from_secs(120) {
             return Err(error("invalid owned cleanup deadline"));
         }
-        Ok(Self { instance, policy, cleanup_timeout, active: Arc::default() })
+        Ok(Self { instance, policy, cleanup_timeout, active: Arc::default(), stdin_budget: STDIN_BYTES, output_budget: OUTPUT_BYTES, output_chunks: OUTPUT_CHUNKS, consumed_output: false })
+    }
+    /// A provider protocol may carry bounded HTTP response bytes over owned
+    /// stdin. Keep the default shell limit and opt in explicitly for that lane.
+    pub fn with_stdin_budget(mut self, bytes: usize) -> Result<Self, ExecServerError> {
+        if !(STDIN_BYTES..=32 * 1024 * 1024).contains(&bytes) {
+            return Err(error("invalid stdin submission budget"));
+        }
+        self.stdin_budget = bytes;
+        Ok(self)
+    }
+    pub fn with_output_budget(mut self, bytes: usize) -> Result<Self, ExecServerError> {
+        if !(OUTPUT_BYTES..=32 * 1024 * 1024).contains(&bytes) {
+            return Err(error("invalid output retention budget"));
+        }
+        self.output_budget = bytes;
+        self.output_chunks = OUTPUT_CHUNKS.max(bytes / 1024);
+        Ok(self)
+    }
+    /// Opt-in protocol lane with one authoritative reader. Each read cursor
+    /// acknowledges previously delivered output, freeing its retained storage.
+    /// Rewinding after acknowledgment is rejected. Shell replay keeps the default.
+    pub fn with_consumed_output(mut self) -> Self {
+        self.consumed_output = true;
+        self
     }
 }
 
@@ -143,7 +171,7 @@ impl ExecBackend for IshExecBackend {
                 active.insert(id.clone());
             }
             let mut reservation = Reservation { active: self.active.clone(), id, armed: true };
-            let events = ExecProcessEventLog::bounded(OUTPUT_CHUNKS + 4, OUTPUT_BYTES + 4096)?;
+            let events = ExecProcessEventLog::bounded(self.output_chunks + 4, self.output_budget + 4096)?;
             let prepared = self.policy.prepare(&params).await
                 .map_err(|reason| error(match reason {
                     PolicyError::Denied => "execution policy denied",
@@ -175,6 +203,10 @@ impl ExecBackend for IshExecBackend {
                 cancel: AtomicBool::new(false), cancel_notify: Notify::new(),
                 cleanup_timeout: self.cleanup_timeout, active: self.active.clone(),
                 pipe_stdin: params.pipe_stdin,
+                stdin_budget: self.stdin_budget,
+                output_budget: self.output_budget,
+                output_chunks: self.output_chunks,
+                consumed_output: self.consumed_output,
             });
             let process = Arc::new(Process { runtime: runtime.clone() });
             reservation.armed = false;
@@ -210,10 +242,22 @@ struct State {
     closed: bool,
     failure: Option<String>,
     cleanup_failed: bool,
+    acknowledged_output: u64,
+    delivered_output: u64,
 }
 impl State {
     fn sequence(&mut self) -> u64 { self.next_seq += 1; self.next_seq }
-    fn read(&self, after: u64, cap: usize) -> ReadResponse {
+    fn read(&mut self, after: u64, cap: usize, consumed_output: bool) -> Result<ReadResponse, ExecServerError> {
+        if consumed_output {
+            if after < self.acknowledged_output || after > self.delivered_output {
+                return Err(error("invalid acknowledged output cursor"));
+            }
+            while self.chunks.front().is_some_and(|chunk| chunk.seq <= after) {
+                let chunk = self.chunks.pop_front().expect("front was present");
+                self.bytes -= chunk.chunk.0.len();
+            }
+            self.acknowledged_output = after;
+        }
         let mut chunks = Vec::new();
         let mut bytes = 0;
         let mut last = after;
@@ -222,11 +266,13 @@ impl State {
             if !chunks.is_empty() && bytes + chunk.chunk.0.len() > cap { more = true; break; }
             bytes += chunk.chunk.0.len(); last = chunk.seq; chunks.push(chunk.clone());
         }
-        ReadResponse {
-            chunks, next_seq: if more { last + 1 } else { self.next_seq + 1 },
+        let next_seq = if more { last + 1 } else { self.next_seq + 1 };
+        self.delivered_output = self.delivered_output.max(next_seq - 1);
+        Ok(ReadResponse {
+            chunks, next_seq,
             exited: self.exited, exit_code: self.exit_code, closed: self.closed,
             failure: self.failure.clone(), sandbox_denied: false,
-        }
+        })
     }
 }
 
@@ -243,6 +289,10 @@ struct Runtime {
     cleanup_timeout: Duration,
     active: Arc<Mutex<HashSet<String>>>,
     pipe_stdin: bool,
+    stdin_budget: usize,
+    output_budget: usize,
+    output_chunks: usize,
+    consumed_output: bool,
 }
 impl Runtime {
     fn wake(&self) { self.wake.send_modify(|n| *n = n.wrapping_add(1)); }
@@ -261,7 +311,7 @@ impl Runtime {
     fn output(&self, stream: Stream, bytes: &[u8]) -> Result<(), ()> {
         let mut state = lock(&self.state);
         let count = bytes.len().div_ceil(CHUNK_BYTES);
-        if state.bytes.saturating_add(bytes.len()) > OUTPUT_BYTES || state.chunks.len() + count > OUTPUT_CHUNKS {
+        if state.bytes.saturating_add(bytes.len()) > self.output_budget || state.chunks.len() + count > self.output_chunks {
             return Err(());
         }
         let stream = match stream { Stream::Stdout => ExecOutputStream::Stdout,
@@ -399,13 +449,13 @@ impl ExecProcess for Process {
             if after == u64::MAX { return Err(error("invalid output cursor")); }
             let cap = max_bytes.unwrap_or(64 * 1024).clamp(1, 64 * 1024);
             let mut wake = self.runtime.wake.subscribe();
-            let collect = || lock(&self.runtime.state).read(after, cap);
-            let page = collect();
+            let collect = || lock(&self.runtime.state).read(after, cap, self.runtime.consumed_output);
+            let page = collect()?;
             if !page.chunks.is_empty() || page.closed || page.failure.is_some() || page.next_seq > after + 1 { return Ok(page); }
             if let Some(ms) = wait_ms.filter(|m| *m != 0) {
                 let _ = tokio::time::timeout(Duration::from_millis(ms.min(60_000)), wake.changed()).await;
             }
-            Ok(collect())
+            collect()
         })
     }
     fn write(&self, chunk: Vec<u8>) -> ExecProcessFuture<'_, WriteResponse> {
@@ -416,7 +466,7 @@ impl ExecProcess for Process {
             if chunk.len() > 32 * 1024 { return Err(error("stdin chunk exceeds supported budget")); }
             {
                 let mut state = lock(&self.runtime.state);
-                if state.stdin_bytes.saturating_add(chunk.len()) > STDIN_BYTES {
+                if state.stdin_bytes.saturating_add(chunk.len()) > self.runtime.stdin_budget {
                     return Err(error("stdin submission budget exceeded"));
                 }
                 // No delivery acknowledgment exists. Charge before enqueueing so

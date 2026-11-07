@@ -1,0 +1,10 @@
+{
+  "id": "kimi",
+  "displayName": "Kimi Code (Prototype)",
+  "authRouteID": "kimi.auth",
+  "taskRouteID": "kimi.task",
+  "guardianModel": "kimi-for-coding",
+  "guardianEffort": "low",
+  "allowedModels": ["kimi-for-coding", "k3-256k", "k3", "k3.1-pro", "k3.1-pro-highspeed", "kimi-for-coding-highspeed"],
+  "disabledModels": []
+}

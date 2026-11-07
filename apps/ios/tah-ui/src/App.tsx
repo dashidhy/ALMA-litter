@@ -86,7 +86,7 @@ function Workspace({ state, controller, openLibrary, openSettings, chatStyle }: 
           onClick={event => { instructionsInput.current?.blur(); event.currentTarget.blur(); }}><Icon name="hideKeyboard" /></button>
         <button className="send-button" aria-label={p.canOmitInstructions ? 'Send to create notes' : 'Send revision'} type="submit" disabled={disabled || !p.permissions.send || (!p.canOmitInstructions && !draft.instructions.trim())}><Icon name="send" /></button></div>
       </div>
-    </form> : <footer className="home-footer"><span>alma</span><button className="text-button" disabled={disabled || p.isBusy} onClick={() => { void controller.run('inspectAuthorization', {}); }}>Inspect authorization</button></footer>}
+    </form> : <footer className="home-footer"><span>alma</span><button className="text-button" disabled={disabled || p.isBusy} onClick={() => { if (p.authorization?.state !== 'valid') openSettings(); else void controller.run('inspectAuthorization', {}); }}>{p.authorization?.state === 'valid' ? 'Inspect authorization' : 'Connect a provider'}</button></footer>}
     </div>
     {state.workingLogID && p.editor ? <WorkingLogPanel key={state.workingLogID} id={state.workingLogID} actionID={p.editor.actionID} log={state.workingLog === undefined ? p.workingLog : state.workingLog}
       pending={state.pending !== null} error={state.commandError || state.connectionError || state.workingStreamError}
@@ -134,8 +134,7 @@ export default function App({ controller: supplied }: { controller?: UIControlle
     {notReady ? <><header className="app-header"><span className="header-mark">alma</span><h1>Structured Notes</h1><span /></header>
       <main className="connection-page"><h2>{state.connectionError || state.snapshot?.error ? 'Connect to Alma' : 'Preparing your workspace'}</h2><Errors state={state} />
         {p?.isBusy && !state.connectionError ? <p className="loading-line" role="status"><span className="spinner" aria-hidden="true" />{phases[p.status] ?? (p.status.trim() || 'Preparing…')}</p> : null}
-        <div className="connection-actions"><button className="primary" disabled={state.pending !== null} onClick={() => { void controller.run('signIn', {}); }}>Sign in with ChatGPT</button>
-          <button className="secondary" disabled={state.pending !== null} onClick={() => { void controller.run('refresh', {}); }}>Reconnect</button></div>
+        <div className="connection-actions"><button className="secondary" disabled={state.pending !== null} onClick={() => { void controller.run('refresh', {}); }}>Reconnect</button></div>
       </main></> : <Workspace key={selectionIdentity(state.snapshot!)} state={state} controller={controller} chatStyle={chatStyle} openLibrary={() => setSheet('library')} openSettings={() => setSheet('settings')} />}
     {!notReady && sheet === 'library' ? <Library p={p!} controller={controller} disabled={state.pending !== null || Boolean(state.connectionError)} error={state.commandError || state.connectionError || p!.error} title={importTitle} text={importText} setTitle={setImportTitle} setText={setImportText} close={() => setSheet(null)} /> : null}
     {!notReady && sheet === 'settings' ? <Settings p={p!} draft={state.draft!} controller={controller} disabled={state.pending !== null || Boolean(state.connectionError)} error={state.commandError || state.connectionError || p!.error || themeError} theme={theme} chatStyle={chatStyle} setChatStyle={next => { setChatStyle(next); saveChatStyle(next); }} setTheme={next => {

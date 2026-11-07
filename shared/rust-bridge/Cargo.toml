@@ -9,25 +9,26 @@ members = [
 resolver = "3"
 
 [workspace.dependencies]
-codex-app-server = { path = "../third_party/codex/codex-rs/app-server" }
-codex-app-server-client = { path = "../third_party/codex/codex-rs/app-server-client" }
-codex-app-server-protocol = { path = "../third_party/codex/codex-rs/app-server-protocol" }
-codex-protocol = { path = "../third_party/codex/codex-rs/protocol" }
-codex-core = { path = "../third_party/codex/codex-rs/core" }
-codex-code-mode-protocol = { path = "../third_party/codex/codex-rs/code-mode-protocol" }
-codex-code-mode-runtime = { path = "../third_party/codex/codex-rs/code-mode-runtime", default-features = false }
-codex-exec-server = { path = "../third_party/codex/codex-rs/exec-server" }
-codex-file-system = { path = "../third_party/codex/codex-rs/file-system" }
-codex-utils-path-uri = { path = "../third_party/codex/codex-rs/utils/path-uri" }
-codex-login = { path = "../third_party/codex/codex-rs/login" }
-codex-shell-command = { path = "../third_party/codex/codex-rs/shell-command" }
-codex-apply-patch = { path = "../third_party/codex/codex-rs/apply-patch" }
-codex-arg0 = { path = "../third_party/codex/codex-rs/arg0" }
-codex-feedback = { path = "../third_party/codex/codex-rs/feedback" }
-codex-cloud-config = { path = "../third_party/codex/codex-rs/cloud-config" }
-codex-config = { path = "../third_party/codex/codex-rs/config" }
-codex-utils-absolute-path = { path = "../third_party/codex/codex-rs/utils/absolute-path" }
-codex-git-utils = { path = "../third_party/codex/codex-rs/git-utils" }
+codex-utils-rustls-provider = { path = "../../../ALMA-codex/codex-rs/utils/rustls-provider" }
+codex-app-server = { path = "../../../ALMA-codex/codex-rs/app-server" }
+codex-app-server-client = { path = "../../../ALMA-codex/codex-rs/app-server-client" }
+codex-app-server-protocol = { path = "../../../ALMA-codex/codex-rs/app-server-protocol" }
+codex-protocol = { path = "../../../ALMA-codex/codex-rs/protocol" }
+codex-core = { path = "../../../ALMA-codex/codex-rs/core" }
+codex-code-mode-protocol = { path = "../../../ALMA-codex/codex-rs/code-mode-protocol" }
+codex-code-mode-runtime = { path = "../../../ALMA-codex/codex-rs/code-mode-runtime", default-features = false }
+codex-exec-server = { path = "../../../ALMA-codex/codex-rs/exec-server" }
+codex-file-system = { path = "../../../ALMA-codex/codex-rs/file-system" }
+codex-utils-path-uri = { path = "../../../ALMA-codex/codex-rs/utils/path-uri" }
+codex-login = { path = "../../../ALMA-codex/codex-rs/login" }
+codex-shell-command = { path = "../../../ALMA-codex/codex-rs/shell-command" }
+codex-apply-patch = { path = "../../../ALMA-codex/codex-rs/apply-patch" }
+codex-arg0 = { path = "../../../ALMA-codex/codex-rs/arg0" }
+codex-feedback = { path = "../../../ALMA-codex/codex-rs/feedback" }
+codex-cloud-config = { path = "../../../ALMA-codex/codex-rs/cloud-config" }
+codex-config = { path = "../../../ALMA-codex/codex-rs/config" }
+codex-utils-absolute-path = { path = "../../../ALMA-codex/codex-rs/utils/absolute-path" }
+codex-git-utils = { path = "../../../ALMA-codex/codex-rs/git-utils" }
 # Pinned to the same immutable commit as the kittylitter daemon so the phone
 # and host share one immutable Alleycat release revision. All crates come from
 # the same source so the `Bridge` trait identity is consistent; forked until
@@ -105,7 +106,7 @@ codegen-units = 16
 [patch.crates-io]
 # Exact Codex V8 fork; prepared and hash-checked by prepare_native_v8.py.
 # The opt-in iOS qualification lane supplies verified plain iOS native assets.
-v8 = { path = "../../.build/vendor/codex-v8" }
+v8 = { path = "../../../ALMA-codex/ios/.build/vendor/codex-v8" }
 # Upstream age crypto migration: ML-KEM 0.3 / KEM 0.3, compatible with Russh/Clatter.
 age = { git = "https://github.com/str4d/rage", rev = "b5b68c4f4f7ea5c368bc060f6fe0237549c3a13f" }
 
@@ -120,4 +121,4 @@ tungstenite = { git = "https://github.com/openai-oss-forks/tungstenite-rs", rev 
 
 # Exact upstream source plus reviewed owned-session lifecycle patch.
 [patch."https://github.com/dnakov/litter-ish.git"]
-ish-embed-host = { path = "../../.build/vendor/litter-ish-owned/embed/host" }
+ish-embed-host = { path = "../../../ALMA-codex/ios/.build/vendor/litter-ish-owned/embed/host" }

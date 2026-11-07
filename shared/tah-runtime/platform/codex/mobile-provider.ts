@@ -47,9 +47,15 @@ export const mobileCodexProvider:MobileProviderAdapter={
     if(context.providerID!=='codex')throw new AuthOperationError('protocol');
     // Native inspection performs account/model/quota calls with the existing
     // same-App Keychain. Only a revocable opaque handle reaches trusted JS.
-    const receipt=await nativeCall<any>('provider.codex.inspect',{kind:context.kind,credentialHandle:context.credential?Buffer.from(context.credential).toString('utf8'):null});
-    if(context.signal.aborted)throw new DOMException('Aborted','AbortError');
+    const receipt=await nativeCall<any>('provider.codex.inspect',{kind:context.kind,credentialHandle:context.credential?Buffer.from(context.credential).toString('utf8'):null})
+      .catch((error: unknown) => {
+        const code = (error as { code?: unknown })?.code;
+        if (code === 'provider_cleanup' || code === 'cleanup') throw new AuthOperationError('cleanup');
+        if (code === 'provider_timeout' || code === 'timeout') throw new AuthOperationError('timeout');
+        throw new AuthOperationError('unavailable');
+      });
     assertClosed(receipt.closed);
+    if(context.signal.aborted)throw new DOMException('Aborted','AbortError');
     assertInitializeReceipt(receipt.initialize,receipt.controllerHome);
     assertAccountReceipt(receipt.account);
     const models:any[]=[];let defaultModelHandle:string|null=null;
@@ -66,7 +72,20 @@ export const mobileCodexProvider:MobileProviderAdapter={
   },
   async run(built,credential,onEvent,signal){
     const scope=scopeSchema.parse(await nativeCall('provider.codex.prepare',{attempt:built.attempt,inputFiles:serializeInput(built),credentialHandle:Buffer.from(credential).toString('utf8')}));
-    const call=<T=any>(operation:string,value:object={})=>nativeCall<T>(`provider.codex.${operation}`,{handle:scope.handle,...value});
+    let cleanupError: AuthOperationError | undefined;
+    const call = async <T = any>(operation: string, value: object = {}): Promise<T> => {
+      try {
+        const result = await nativeCall<T>(`provider.codex.${operation}`, { handle: scope.handle, ...value });
+        if (operation === 'close') assertClosed(result);
+        return result;
+      } catch (error) {
+        if (operation === 'close' || operation === 'authRelease' || operation === 'release') {
+          cleanupError ??= new AuthOperationError('cleanup');
+          throw cleanupError;
+        }
+        throw error;
+      }
+    };
     const profile=mobileNativeProfile(built,scope.workspaceRoot,scope.scratchRoot);
     const ledger=new NormalizedEventLedgerV1(built.attempt.attemptID);
     let sequence=0,eventTail=Promise.resolve(),eventError:unknown,closeReceipt:any;
@@ -78,7 +97,7 @@ export const mobileCodexProvider:MobileProviderAdapter={
       },
       async notify(method,params){await call('notify',{method,params:params??null});},
       async *events(){for(;;){const result=await call('nextEvent');if(result.done)return;yield result.event;}},
-      async close(){closeReceipt??=await call('close');assertClosed(closeReceipt);return closeReceipt;},
+      async close(){closeReceipt??=await call('close');return closeReceipt;},
     };
     const adapter=new CodexGuestAdapterV1({executablePath:'/opt/alma/provider/codex/bin/codex',workspaceRoot:scope.workspaceRoot,
       // Native in_process does not construct the standalone daemon's remote
@@ -93,8 +112,9 @@ export const mobileCodexProvider:MobileProviderAdapter={
       const terminal=await adapter.run({attempt:built.attempt,signal,credential:{byteLength:credential.byteLength,consume(){if(consumed)throw new Error('Credential already borrowed');consumed=true;return Uint8Array.from(credential);}},
         workspace:{listMaterials:()=>built.attempt.workspace.materials,readMaterial:path=>{const b=built.inputBytes.get(path);if(!b)throw new Error('Unknown material');return Uint8Array.from(b);},putCandidate(){throw new Error('Qualification-only workspace writer is not enabled');}},
         emit:event=>{const e=normalizedEventSchema.parse({...event,attemptID:built.attempt.attemptID,sequence:++sequence});ledger.observe(e);eventTail=eventTail.then(()=>onEvent?.(e)).then(()=>{},error=>{eventError??=error;});}});
-      await eventTail;if(eventError)throw eventError;ledger.assertTerminal(terminal);
+      await eventTail;
       if(terminal.kind==='failed'&&terminal.failure.family==='cleanup')throw new AuthOperationError('cleanup');
+      if(eventError)throw eventError;ledger.assertTerminal(terminal);
       assertClosed(closeReceipt);
       const capture=captureSchema.parse(await call('capture'));
       if(capture.scopeID!==scope.handle)throw new Error('Candidate scope mismatch');
@@ -109,6 +129,13 @@ export const mobileCodexProvider:MobileProviderAdapter={
         return {relativePath:entry.relativePath,kind:entry.kind,byteLength:entry.byteLength};
       });
       return {terminal,candidateManifest:manifest,candidateFiles:files};
-    }finally{await call('release');}
+    } finally {
+      try { await call('release'); }
+      finally {
+        // The guest adapter can return cancelled after a failed close. Keep the
+        // native cleanup failure authoritative through terminal and event checks.
+        if (cleanupError) throw cleanupError;
+      }
+    }
   },
 };

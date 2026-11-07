@@ -116,14 +116,15 @@ it('shows request waiting inside the open sheet before native busy acknowledgeme
   expect(host.querySelector('.pending-command')).toBeNull();
   expect(fixture.calls.some(call => call.method === 'checkpointDraft')).toBe(true);
 });
-it('shows native startup errors and offers sign in while the native projection is preparing', async () => {
-  const fixture = makeFixture(); fixture.snapshot.ready = false; fixture.snapshot.error = 'Sign in with ChatGPT to continue.';
+it('shows native startup errors and retries preparation independently of provider login', async () => {
+  const fixture = makeFixture(); fixture.snapshot.ready = false; fixture.snapshot.error = 'Could not prepare TAH.';
   fixture.snapshot.presentation.isBusy = true; fixture.snapshot.presentation.status = 'preparing';
   await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
-  expect(host.textContent).toContain('Sign in with ChatGPT to continue.');
-  expect(button('Sign in with ChatGPT').disabled).toBe(false);
-  await act(async () => button('Sign in with ChatGPT').click());
-  expect(fixture.calls.some(c => c.method === 'signIn')).toBe(true);
+  expect(host.textContent).toContain('Could not prepare TAH.');
+  expect(button('Sign in with ChatGPT')).toBeUndefined();
+  expect(button('Reconnect').disabled).toBe(false);
+  await act(async () => button('Reconnect').click());
+  expect(fixture.calls.some(c => c.method === 'refresh')).toBe(true);
 });
 it('uses native reasoning IDs, freezes output language and renders user instructions literally', async () => {
   const fixture = makeFixture();
@@ -194,4 +195,83 @@ it('wires the default App to change events across StrictMode setup and cleanup',
     await act(async () => fixture.changed());
     expect(fixture.calls.filter(c => c.method === 'snapshot')).toHaveLength(2);
   } finally { delete window.__TAH_UI_FIXTURE__; }
+});
+
+function providerFixture() {
+  const fixture = makeFixture();
+  fixture.snapshot.presentation.authorization = {
+    providers: [{ id: 'codex', title: 'Codex', enabled: true }, { id: 'kimi', title: 'Kimi Code', enabled: true }],
+    providerID: 'kimi', state: 'unauthed', phase: 'idle', inspecting: false, account: null,
+    noticeCode: null, replacement: null, canManage: true, canConfirmReplacement: false,
+  };
+  return fixture;
+}
+it('opens the workspace unauthenticated and connects Kimi using an empty native command', async () => {
+  const fixture = providerFixture(); fixture.snapshot.presentation.models = [];
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  expect(host.querySelector('.connection-page')).toBeNull();
+  await act(async () => button('Open settings').click());
+  expect(button('Connect Kimi Code').disabled).toBe(false);
+  expect(host.querySelector('input[type="password"]')).toBeNull();
+  await act(async () => button('Connect Kimi Code').click());
+  expect(fixture.calls.find(call => call.method === 'authorizeProvider')).toEqual({ method: 'authorizeProvider', value: {} });
+  expect(fixture.calls.some(call => call.method === 'signIn')).toBe(false);
+});
+it('connects ZCode through native browser authorization without accepting a token in web UI', async () => {
+  const fixture = providerFixture();
+  fixture.snapshot.presentation.authorization!.providers.push({ id: 'zcode', title: 'ZCode', enabled: true });
+  fixture.snapshot.presentation.authorization!.providerID = 'zcode';
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  await act(async () => button('Open settings').click());
+  expect(host.textContent).toContain('BigModel’s official sign-in page');
+  expect(host.querySelector('input[type="password"]')).toBeNull();
+  await act(async () => button('Connect ZCode').click());
+  expect(fixture.calls.find(call => call.method === 'authorizeProvider')).toEqual({ method: 'authorizeProvider', value: {} });
+});
+it('sends provider selection to native without replacing draft text or historical rows', async () => {
+  const fixture = providerFixture();
+  const original = structuredClone(fixture.snapshot);
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  await act(async () => button('Open settings').click());
+  const select = host.querySelector<HTMLSelectElement>('select[aria-label="Provider"]')!;
+  await act(async () => { select.value = 'codex'; select.dispatchEvent(new Event('change', { bubbles: true })); });
+  expect(fixture.calls.find(call => call.method === 'selectProvider')).toEqual({ method: 'selectProvider', value: { providerID: 'codex' } });
+  expect(fixture.snapshot.draft.instructions).toBe(original.draft.instructions);
+  expect(fixture.snapshot.presentation.timeline).toEqual(original.presentation.timeline);
+});
+it.each([true, false])('confirms or cancels the exact native replacement identity (confirmed=%s)', async confirmed => {
+  const fixture = providerFixture();
+  Object.assign(fixture.snapshot.presentation.authorization!, {
+    providerID: 'codex', state: 'valid', canManage: false, canConfirmReplacement: true,
+    replacement: { id: 'replacement-from-native', kind: 'switch_provider', providerID: 'kimi' },
+  });
+  fixture.snapshot.presentation.isBusy = true;
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  await act(async () => button('Open settings').click());
+  expect(host.textContent).toContain('Switch to Kimi Code?');
+  expect(host.querySelector<HTMLSelectElement>('select[aria-label="Provider"]')!.disabled).toBe(true);
+  await act(async () => button(confirmed ? 'Confirm connection change' : 'Keep current connection').click());
+  expect(fixture.calls.find(call => call.method === 'confirmAuthorizationReplacement')).toEqual({
+    method: 'confirmAuthorizationReplacement', value: { id: 'replacement-from-native', confirmed },
+  });
+});
+it('blocks duplicate authorization while native secure entry is active', async () => {
+  const fixture = providerFixture();
+  Object.assign(fixture.snapshot.presentation.authorization!, { phase: 'authorizing', canManage: false });
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  await act(async () => button('Open settings').click());
+  expect(host.textContent).toContain('Connecting to Kimi Code…');
+  expect(button('Connect Kimi Code').disabled).toBe(true);
+});
+it.each([['Kimi K2.5', 'Kimi K2.5'], ['  ', 'kimi-for-coding']])('shows Kimi public model names with ID fallback (%s)', async (title, expected) => {
+  const fixture = providerFixture();
+  fixture.snapshot.presentation.models = [{ id: 'kimi-for-coding', title, enabled: true }];
+  fixture.snapshot.draft.settings.providerID = 'kimi';
+  fixture.snapshot.draft.settings.modelID = 'kimi-for-coding';
+  await act(async () => root.render(<App controller={new UIController(fixture.transport.call as Call)} />));
+  expect(host.querySelector('.configuration-button')?.textContent).toContain(expected);
+  await act(async () => button('Open settings').click());
+  const option = host.querySelector<HTMLOptionElement>('option[value="kimi-for-coding"]')!;
+  expect(option.textContent).toBe(expected);
+  expect(option.value).toBe('kimi-for-coding');
 });

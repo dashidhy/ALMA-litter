@@ -9,7 +9,7 @@ import { TahAttemptExecutionErrorV1, type TahFrameworkAttemptPortV1 } from "../f
 import { isAppModelAllowed, type AppModelPolicy } from "./model-policy.js";
 
 export interface AppProviderProfile extends AppModelPolicy {
-  readonly id: "codex" | "qoder";
+  readonly id: "codex" | "qoder" | "kimi" | "zcode";
   readonly displayName: string;
   readonly authRouteID: string;
   readonly taskRouteID: string;

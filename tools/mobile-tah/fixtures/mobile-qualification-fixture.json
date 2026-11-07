@@ -1,0 +1,12 @@
+{
+  "title": "Provider regression — synthetic batch count",
+  "transcript": "# SYNTHETIC QUALIFICATION TRANSCRIPT\n\nThis text is invented test data, not a real recording. It deliberately contains one arithmetic typo for a later user correction.\n\n[00:00] Café Segmentation assigns each image pixel to foreground or background.\n[00:08] The demonstration has 3 batches of 4 images, for a total of 14 images.\n[00:16] No accuracy measurement was reported for this demonstration.\n",
+  "outputLanguage": "zh-CN",
+  "interactionLanguage": "zh-CN",
+  "webEnabled": false,
+  "deltas": [
+    "",
+    "For this synthetic fixture, correct the image total to 12 because 3 × 4 = 12. Label this as a user-provided arithmetic correction, and retain the original statement that the total was 14 as an attributed source claim. Put this material in a subsection titled \"Batch count\". Preserve the foreground/background labels and the absence of an accuracy measurement.",
+    "Replace the subsection title \"Batch count\" with \"Arithmetic correction\". Retain the corrected total of 12, its user-provided correction label, and the attributed original claim of 14. Keep the other notes content and both required output files. Do not claim online verification."
+  ]
+}

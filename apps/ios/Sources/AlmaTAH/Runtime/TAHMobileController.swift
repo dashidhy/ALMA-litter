@@ -58,10 +58,10 @@ final class TAHMobileController: TAHPresentationController {
         let source = try await Self.readUTF8(bundleURL, limit: 32 * 1024 * 1024)
         guard case .object = try Self.decode(Value.self, configurationJSON) else { throw TAHRuntimeError.invalid_request }
         do {
-            host = try await AlmaTAHJavaScriptHost(bundle: source) { [weak self] method, json in
+            host = try await AlmaTAHJavaScriptHost(bundle: source, platform: { [weak self] method, json in
                 guard let self else { throw TAHRuntimeError.unavailable }
                 return try await self.platform(method, json: json)
-            }
+            }, providerDirectory: bundleURL.deletingLastPathComponent())
             _ = try await host!.invoke("runtime.initialize", json: configurationJSON)
             ready = true; commandBusy = true
             selectedTranscript = saved.transcripts.first?.id
@@ -115,7 +115,7 @@ final class TAHMobileController: TAHPresentationController {
             rebuild()
             return "null"
         default:
-            guard method.hasPrefix("provider.") || method.hasPrefix("credential.") else { throw TAHRuntimeError.invalid_request }
+            guard method.hasPrefix("provider.") || method.hasPrefix("credential.") || method == "runtime.prepareProvider" else { throw TAHRuntimeError.invalid_request }
             return try await providerPlatform(method, json) // opaque provider boundary; never decode Codex wire
         }
     }
@@ -197,6 +197,34 @@ final class TAHMobileController: TAHPresentationController {
     }
     /// Explicit authorization inspection; never silently triggered by a read/refresh.
     func inspectAuthorization() { command { [self] in acceptAuth(try await call("auth.inspect")) } }
+    func selectProvider(id: String) {
+        guard presentation.authorization.canManage, auth?.providers?.contains(where: { $0.id == id }) == true,
+              auth?.providerID != id else { return }
+        command { [self] in
+            if auth?.state == "unauthed" {
+                acceptAuth(try await call("auth.select", ["providerID": .string(id)]))
+            } else {
+                acceptAuth(try await call("auth.replacement", ["kind": .string("switch_provider"), "providerID": .string(id)]))
+            }
+        }
+    }
+    func authorizeProvider() {
+        guard presentation.authorization.canManage, auth?.providerID != nil else { return }
+        command { [self] in
+            if auth?.state == "unauthed" { acceptAuth(try await call("auth.authorize")) }
+            else { acceptAuth(try await call("auth.replacement", ["kind": .string("reauth")])) }
+        }
+    }
+    func requestAuthorizationReplacement(kind: String) {
+        guard presentation.authorization.canManage, ["reauth", "switch_account", "sign_out"].contains(kind) else { return }
+        command { [self] in acceptAuth(try await call("auth.replacement", ["kind": .string(kind)])) }
+    }
+    func confirmAuthorizationReplacement(id: String, confirmed: Bool) {
+        guard !commandBusy, auth?.replacement?.id == id else { return }
+        command { [self] in
+            acceptAuth(try await call("auth.confirm", ["id": .string(id), "confirmed": .bool(confirmed)]))
+        }
+    }
     private func requestRefresh(forceFull: Bool = false) {
         guard ready else { return }
         refreshPending = true
@@ -405,8 +433,10 @@ final class TAHMobileController: TAHPresentationController {
         guard ready else { throw CancellationError() }
         let readIdentity = identityEpoch
         if draft.settings.providerID != auth?.providerID {
-            draft.settings = TAHUIRevisionSettings(providerID: auth?.providerID); chooseDefaultModel()
+            draft.settings = TAHUIRevisionSettings(providerID: auth?.providerID)
+            draft.consent = false
         }
+        if draft.settings.modelID == nil { chooseDefaultModel() }
         guard let selected = selectedMaterial else { historyBaseline = nil; historyReload = nil; rebuild(); return }
         var nextAction: AppAction?
         var missingActionID: String?
@@ -479,7 +509,10 @@ final class TAHMobileController: TAHPresentationController {
         draft = saved.drafts[action.id + "/" + action.editorToken] ?? TAHUIDraft(outputLanguage: action.language,
             settings: action.draftSettings ?? TAHUIRevisionSettings(), instructions: "", consent: false)
         if action.initialSettingsFrozen { draft.outputLanguage = action.language }
-        if draft.settings.providerID != auth?.providerID { draft.settings = TAHUIRevisionSettings(providerID: auth?.providerID) }
+        if draft.settings.providerID != auth?.providerID {
+            draft.settings = TAHUIRevisionSettings(providerID: auth?.providerID)
+            draft.consent = false
+        }
         if draft.settings.modelID == nil { chooseDefaultModel() }
     }
     private func chooseDefaultModel() {
@@ -642,6 +675,7 @@ final class TAHMobileController: TAHPresentationController {
         var state = TAHUIPresentation()
         let authorization = auth?.ready == true
         let busy = commandBusy || raw?.busy == true || action?.editorMode == "running" || auth?.inspecting == true
+            || (auth != nil && auth?.phase != "idle") || auth?.replacement != nil
         let editable = !busy && action?.editorMode == "editing"
         let allowed = raw?.allows(providerID: auth?.providerID, now: now) == true
         let storedConsent = (raw?.providerID == auth?.providerID && raw?.consentGranted == true)
@@ -652,6 +686,11 @@ final class TAHMobileController: TAHPresentationController {
         let validModel = draft.settings.providerID == auth?.providerID && model != nil
             && (draft.settings.reasoningEffortID == nil || model!.efforts.contains { $0.handle == draft.settings.reasoningEffortID })
             && (draft.settings.contextWindowTokens == nil || model!.contextWindows?.availableTokens.contains(draft.settings.contextWindowTokens!) == true)
+        state.authorization = .init(providers: (auth?.providers ?? []).map { .init(id: $0.id, title: $0.displayName) },
+            providerID: auth?.providerID, state: auth?.state ?? "unauthed", phase: auth?.phase ?? "idle",
+            inspecting: auth?.inspecting ?? false, account: auth?.account, noticeCode: auth?.noticeCode,
+            replacement: auth?.replacement, canManage: !busy && auth != nil,
+            canConfirmReplacement: !commandBusy && auth?.replacement != nil && auth?.phase == "idle")
         state.editor = action.map { .init(actionID: $0.id, editorToken: $0.editorToken) }
         state.models = models.map { .init(id: $0.handle, title: $0.displayName) }
         // Show the exact selected level; provider descriptions are explanatory prose.
@@ -834,9 +873,12 @@ final class TAHMobileController: TAHPresentationController {
     // Only neutral Mac App contract JSON is decoded here. Unknown extra App fields are ignored.
     struct AppAuth: Decodable, Sendable {
         struct Inspection: Decodable, Equatable, Sendable { let state: String; let finishedAt: String?; let failures: [String] }
+        struct Provider: Decodable, Sendable { let id: String; let displayName: String }
+        let providers: [Provider]?
+        let noticeCode: String?
         let providerID: String?; let state: String; let phase: String; let inspecting: Bool
         let account: String?
-        let inspection: Inspection?; let replacement: Value?; let actorCatalog: Catalog?
+        let inspection: Inspection?; let replacement: TAHUIAuthorization.Replacement?; let actorCatalog: Catalog?
         let sourceID: String?; let sourceRevision: Int?
         var ready: Bool { state == "valid" && phase == "idle" && !inspecting && replacement == nil && inspection?.state == "succeeded" && inspection?.finishedAt != nil && inspection?.failures.isEmpty == true }
     }

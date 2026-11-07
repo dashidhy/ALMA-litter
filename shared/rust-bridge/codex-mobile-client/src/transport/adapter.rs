@@ -38,6 +38,7 @@ impl AppServerAdapter {
         channel_capacity: usize,
     ) -> Result<Self, TransportError> {
         let args = RemoteAppServerConnectArgs {
+            required_human_approval: false,
             endpoint: RemoteAppServerEndpoint::WebSocket {
                 websocket_url: websocket_url.clone(),
                 auth_token: None,

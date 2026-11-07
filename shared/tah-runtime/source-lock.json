@@ -35,7 +35,7 @@
     "providers/codex/adapter/src/warnings.ts": "b3e6a6f452c543223c2e7e0c7f1b37ac1be76d026374aec71988fc888b6b35e2",
     "providers/codex/app-profile.json": "bf74ffdce5f73b8170a04e12b3a2d1417bad3fc274f6329a92dc9406a2deb9d2",
     "src/app-runtime/actions.ts": "6a9f33faaa55f40dbe25472229e927ba8a42e95751b6471dbb5d5cac63fcfa20",
-    "src/app-runtime/attempt-port.ts": "95f7c5a164bee6cd06a6a8b973b7e69f737d7a2c1a63a76242dacd430344dc18",
+    "src/app-runtime/attempt-port.ts": "66e15669c2e793a596c39940db0333116f008cb4498b99524ffb7141eaea406c",
     "src/app-runtime/auth-driver.ts": "82dd8a327fd54227f385b0f01af8df86e505ca79a14f593e2f9ee39fd04dbed6",
     "src/app-runtime/auth-projection.ts": "f9af4beef22e74b48ed777ca096ab29fbc45b123fc7d7061ee722c5969f3511d",
     "src/app-runtime/bridge.ts": "fdb0bc76720505e7bf50e5a60cc1d99ea0e39b351c8ec406a253aa0d375c2c49",
@@ -61,7 +61,7 @@
     "src/auth-prototype/guest-security.ts": "fc2e88af04f045a86e15e1c924a690b8864cb215241035b521222d5fefa287bf",
     "src/auth-prototype/inspection.ts": "8d996bb7702683f4b44ebf0f4c1753dda37acaa211dd6d8c73b1bfab3f21a91b",
     "src/auth-prototype/notices.ts": "abbb495ecf1b7fbe496361d29d0b1aa632b4dff053fa9429a6f37ad5c1fad97f",
-    "src/auth-prototype/protocol.ts": "68a6080f24a1dac9645f7494a7253617a106fbf540c155f2295d3c432338f534",
+    "src/auth-prototype/protocol.ts": "280c36dbc7b5091a0c6d6e21169ed50e13b69e07f526aafe5c397d594034389a",
     "src/auth-prototype/service.ts": "64cc31a3f326f5138f4a5a19b11c591c1394b1e587b78a19a0b3acde19a71aef",
     "src/auth-prototype/storage.ts": "2a3ca52090be66d7d3cf97df24ca1c7b501208a37296cacaf1554bf7a6591126",
     "src/auth-prototype/vm-driver.ts": "1307eb7dd634f587a176f11304416a440d2337bc24762db93f78333bd75bf675",
@@ -127,5 +127,21 @@
     "src/superbox/operation.ts": "c2ccd09f97eec80d78ccfa4eb7e64425b1d27fdd2742b531ecd73eb0ccaffb7f",
     "src/superbox/process-client.ts": "21a0fef2db4fab40eff16f7d718606986b86b4d3e14a80b5045f8806e9b29e21",
     "src/superbox/wire.ts": "7ba78c8d5fae9fb208b0d067dbdb427ede400b5a156ff3f86abcdb9958e22ea2"
-  }
+  },
+  "reviewedAdoptions": [
+    {
+      "path": "src/auth-prototype/protocol.ts",
+      "source": "/Users/dashidhy/.codex/worktrees/alma-prototype-kimi/ALMA/app/TAH/src/auth-prototype/protocol.ts",
+      "beforeSHA256": "68a6080f24a1dac9645f7494a7253617a106fbf540c155f2295d3c432338f534",
+      "afterSHA256": "df9e86663dae67422031192d4de22e80cd55e956e868976e407bbdcc0fc45f90",
+      "change": "Add only kimi to AUTH_PROVIDERS and providerIDSchema, identical to Mac source"
+    },
+    {
+      "path": "src/app-runtime/attempt-port.ts",
+      "source": "/Users/dashidhy/.codex/worktrees/alma-prototype-kimi/ALMA/app/TAH/src/app-runtime/attempt-port.ts",
+      "beforeSHA256": "95f7c5a164bee6cd06a6a8b973b7e69f737d7a2c1a63a76242dacd430344dc18",
+      "afterSHA256": "bb4b7c96bf937d36dd00f66b8d70b0df06d4acc36dcc752a8c7860c7d7545a30",
+      "change": "Add only existing Mac Kimi provider inventory/ID declarations"
+    }
+  ]
 }

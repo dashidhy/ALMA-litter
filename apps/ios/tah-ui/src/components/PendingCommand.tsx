@@ -4,6 +4,8 @@ import type { Command } from '../contract';
 // UI request admission only. Model execution/progress stays native-owned.
 export const PendingCommandContext = createContext<Command | null>(null);
 const labels: Record<Command, string> = {
+  selectProvider: 'Selecting provider…', authorizeProvider: 'Connecting provider…',
+  requestAuthorizationReplacement: 'Preparing connection change…', confirmAuthorizationReplacement: 'Updating connection…',
   refresh: 'Refreshing…', inspectAuthorization: 'Checking connection…',
   selectTranscript: 'Opening transcript…', selectAction: 'Opening notes…',
   importTranscript: 'Importing transcript…', selectInteractionLanguage: 'Updating language…',

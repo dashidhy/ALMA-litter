@@ -1,0 +1,139 @@
+{
+  "date": "2026-11-07",
+  "status": "signed-ios-candidate-build-verified",
+  "appVersion": "0.4.1",
+  "appBuild": "14",
+  "appPath": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/candidates/0.4.1-14/AlmaTAHTauri.app",
+  "scope": "Mac build/signing/resource and native-input verification only; not installed or executed on phone",
+  "providers": {
+    "codex": {
+      "repository": "https://github.com/openai/codex.git",
+      "releaseTag": "rust-v0.166.0",
+      "sourceCommit": "6ff1e1ca3b30fc8b914720681fcf5fe62e95f856",
+      "tagObject": "593389380740f7b4762771573c447ccfdc59742f"
+    },
+    "kimi": {
+      "repository": "https://github.com/MoonshotAI/kimi-code",
+      "releaseTag": "@moonshot-ai/kimi-code@2.4.1",
+      "releaseVersion": "2.4.1",
+      "sourceCommit": "2c73f3f50af4fa7f2540ca0d2e33b07a1408e3a7",
+      "sourceArchiveSHA256": "040c503ca03f4852f827cb8d0ea50c49a535a6bda0177d47e56d34ea37d16c92",
+      "sdkVersion": "0.22.0",
+      "pnpmLockSHA256": "fb6eb570afd4e4b3beab3570a333059e6e4b4fb92b9df640a51ea8df8b9663f9",
+      "tagObject": "1fc1d165c83b175873a46897e1e9db73dc70c984"
+    },
+    "zcode": {
+      "repository": "https://github.com/zai-org/ZCode",
+      "releaseTag": "v3.17.2",
+      "sourceCommit": "a9fe401eede6e6e5e01be9048679c206fe6f02d9",
+      "tagObject": "a9fe401eede6e6e5e01be9048679c206fe6f02d9"
+    }
+  },
+  "verification": {
+    "status": "mac-qualified-phone-candidate",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/candidates/0.4.1-14/AlmaTAHTauri.app",
+    "appVersion": "0.4.1",
+    "appBuild": "14",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "0b69c41d39338687f2e22d0bb76f249109b8b6823217220e864474a9e1219fe2",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "10d2d3d4c0631a87d88c74fcdacc97e5c409acbe40d9e63a3eedf753989e7547",
+    "nativeSourcesMatchCurrent": true,
+    "nativeArchiveSHA256": "7e457e25fc78e85178244f9ed7fb0ce87b9cadf1cba50099112046f26794ead5",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "4332d5c066672c79f5991d6c09aeaf242eaef73ea10ebc13a07ee41ccb666ad3",
+        "files": 140
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": true
+  },
+  "nativeBuild": {
+    "exitCode": 0,
+    "seconds": 2017.4180682080332,
+    "peakTargetBytes": 32767975424,
+    "command": [
+      "bash",
+      "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/alma-ios-lab/cargo_ios.sh",
+      "rustc",
+      "--lib",
+      "--offline",
+      "-p",
+      "alma-tah-ui",
+      "--target",
+      "aarch64-apple-ios",
+      "--profile",
+      "ios-dev",
+      "-j",
+      "2",
+      "--crate-type",
+      "staticlib"
+    ],
+    "scope": "Tauri native archive compiled from the release-pinned provider forks; device acceptance is recorded separately"
+  },
+  "nativeProxySourceIncluded": true,
+  "mainModelStreaming": "off",
+  "loadProfileEnabled": false,
+  "nvidiaFixtureSHA256": "abf7e3a1207902db21d70cdcf1f74704d2b7c1668b59a67df8804c0d80dda0f7",
+  "checks": {
+    "nativeRegressionsPassed": 72,
+    "frontendTypecheckAndBuild": "passed",
+    "zcodeRootTypecheck": "passed",
+    "zcodeRootLintErrors": 0,
+    "zcodeRootLintWarnings": 86,
+    "mismatchedAppVersionRejected": true,
+    "codesignDeepStrict": "passed",
+    "nativeArchiveAndBindingsMatch": true,
+    "actualPlatform": "iOS",
+    "minimumOS": "18.0",
+    "sdk": "27.2",
+    "proxyGuardMarkerInSignedExecutable": true,
+    "hostNetworkInActualCompilerDependencies": true
+  },
+  "integrationCorrection": "Use module-relative host_network references when sources are path-included as zcode_native; enable matching proxy dependency/features in the App local-agent feature.",
+  "cleanup": {
+    "removed": [
+      {
+        "path": "shared/rust-bridge/target/aarch64-apple-ios/ios-dev/deps/libalma_tah_ui_lib-4ec158c032187f26.a",
+        "bytes": 4664515792,
+        "reason": "superseded static archive; current archive and signed rollback retained"
+      },
+      {
+        "path": "tools/mobile-tah/.cache/rollback-before-http1",
+        "bytes": 773166147,
+        "reason": "superseded backup or task-owned Xcode intermediates"
+      },
+      {
+        "path": "tools/mobile-tah/.cache/TauriDerivedData/Build/Intermediates.noindex",
+        "bytes": 30215238,
+        "reason": "superseded backup or task-owned Xcode intermediates"
+      }
+    ],
+    "deduplicatedArchiveBytes": 4665949232,
+    "obsoleteDependencyBytesRemoved": 6601679997,
+    "obsoleteDependencyGenerationsRemoved": 96
+  },
+  "immediateFreeBytes": 91144695808,
+  "retained": {
+    "candidateAppBytes": 773353134,
+    "rollbackApp": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/rollback-20261107/AlmaTAHTauri.app",
+    "nativeArchiveBytes": 4665949232,
+    "nativeTargetAllocatedKiB": 18160036
+  },
+  "releaseUpgradeAssessment": "docs/ios/2026-11-07-provider-release-assessment.md",
+  "providersUpgraded": false,
+  "phoneTouched": false
+}

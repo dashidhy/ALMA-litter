@@ -744,6 +744,7 @@ async fn connect_bridge_stream(
     let label = format!("ssh-bridge://{}", runtime_label(&kind));
     info!("ssh bridge stream connect start kind={kind:?} label={label}");
     let args = RemoteAppServerConnectArgs {
+        required_human_approval: false,
         endpoint: RemoteAppServerEndpoint::WebSocket {
             websocket_url: label.clone(),
             auth_token: None,
@@ -774,6 +775,7 @@ async fn connect_codex_via_ssh(
         }
     };
     let args = RemoteAppServerConnectArgs {
+        required_human_approval: false,
         endpoint: RemoteAppServerEndpoint::WebSocket {
             websocket_url: websocket_url.clone(),
             auth_token: None,

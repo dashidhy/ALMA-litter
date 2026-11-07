@@ -1,0 +1,269 @@
+{
+  "scope": "ALMA-litter pre-phone TAH prototype composition",
+  "status": "signed composition verified, final ZCode runtime replacement pending main",
+  "appVersion": "0.4.0",
+  "appBuild": "13",
+  "sourceFiles": [
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Presentation/controller-smoke.py",
+      "sha256": "26768124da435b6b72c03381eccd58ac87d1d90daa1a8be7efc944babe4ff8b1",
+      "bytes": 21180
+    },
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Runtime/AlmaTAHJavaScriptHost.swift",
+      "sha256": "6977e05641144132c772fcc8cbe5fe323da1576963def1d85598e5297cfec01d",
+      "bytes": 12321
+    },
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Runtime/TAHCodexPlatform.swift",
+      "sha256": "92dac4b4af1f7c9e11159e5ef4db87882eb19e187aaf02a16bd85f20dcdf4430",
+      "bytes": 14633
+    },
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Runtime/TAHMobileController.swift",
+      "sha256": "3e2ec8d276a6b121ac93cbc6319623b67a3b204f3da39bac81b3665b7a876932",
+      "bytes": 76142
+    },
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Runtime/TAHZCodeCredentialStore.swift",
+      "sha256": "d71ceb1ceadc5d58327c8d57eb785a3829a4d0fcb65f610c3b10ab5d86eba38b",
+      "bytes": 3023
+    },
+    {
+      "path": "apps/ios/Sources/AlmaTAH/Runtime/TAHZCodeLogin.swift",
+      "sha256": "cfc0094ca48707c703297f6db6f4578bc8f9780c736c0b2a6838419cc04ea115",
+      "bytes": 5003
+    },
+    {
+      "path": "apps/ios/tah-ui/src/__tests__/App.test.tsx",
+      "sha256": "54217c57658f596e3abab5fba74b9a2e2b06649b8709d86248fd37177ab6de7f",
+      "bytes": 17744
+    },
+    {
+      "path": "apps/ios/tah-ui/src/components/Settings.tsx",
+      "sha256": "07ab305b5fe7508c00e1d3ec7557e7515d62296d7991671ca292eaf662849b8b",
+      "bytes": 9106
+    },
+    {
+      "path": "docs/ios/2026-11-05-provider-composition.md",
+      "sha256": "094ff7a398891fa3184f444d18466c130a61a64e8871b2dbabb738c74f5a4b54",
+      "bytes": 10154
+    },
+    {
+      "path": "shared/rust-bridge/Cargo.lock",
+      "sha256": "8c830813b18a8028e9ff58e90b940070df2dc20737cc826e31c69efa1eb8a7d8",
+      "bytes": 414652
+    },
+    {
+      "path": "shared/rust-bridge/Cargo.toml",
+      "sha256": "5b26f960b95ba5c7dc1a1ac01d526a2c1ef253fe21c4bed8c8be18feac57aaee",
+      "bytes": 6011
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/Cargo.toml",
+      "sha256": "790aa6f6030806eb8c6d72dc806c92ef6afc72ae141a41b01d8408a489d2243c",
+      "bytes": 3480
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/lib.rs",
+      "sha256": "553c1e05462046121cb6ab0be77419f1ec7313de87ee18fb378aa8dea5b751e9",
+      "bytes": 11948
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/mobile_tah_host.rs",
+      "sha256": "e4cc710b44e38f84127cceef3644d1422f8474799266981e3697661d18368906",
+      "bytes": 31928
+    },
+    {
+      "path": "shared/rust-bridge/codex-mobile-client/src/mobile_zcode.rs",
+      "sha256": "6f05b707b97e38fc27e55a6978c6ad4efd2777dc36202ab13f39312330c2c363",
+      "bytes": 18444
+    },
+    {
+      "path": "shared/tah-runtime/platform/entry.ts",
+      "sha256": "8862b263aeeee565fd359103d774eea47a1fd47ea5cff8bbbcc59a05fc7459ba",
+      "bytes": 1077
+    },
+    {
+      "path": "shared/tah-runtime/platform/exports.ts",
+      "sha256": "35e133dd24e2b004c540380a3a82d812ff69ab7139bddfc446bf4352e5193884",
+      "bytes": 1062
+    },
+    {
+      "path": "shared/tah-runtime/platform/provider.ts",
+      "sha256": "8b80951bb2b000cbe76a6c83af8bfaad89042a0d5fbf17d7af3a0bc120d45bd8",
+      "bytes": 829
+    },
+    {
+      "path": "shared/tah-runtime/platform/runtime.ts",
+      "sha256": "7b8cac5e517732173e5a4726429c17dc830e019d09f1f8a8fdd371c5d1b80ea9",
+      "bytes": 9999
+    },
+    {
+      "path": "shared/tah-runtime/platform/zcode/mobile-provider.ts",
+      "sha256": "6425336ebf26e41c6e96e454e038e77f8ae70d331b2e596b69c373e44bd7868b",
+      "bytes": 274
+    },
+    {
+      "path": "shared/tah-runtime/source-lock.json",
+      "sha256": "ee9a946fd0bca7dc779d9380c29cf24258e9e5a790651452e28766abaaf6b7a0",
+      "bytes": 14971
+    },
+    {
+      "path": "shared/tah-runtime/upstream/src/app-runtime/attempt-port.ts",
+      "sha256": "66e15669c2e793a596c39940db0333116f008cb4498b99524ffb7141eaea406c",
+      "bytes": 3537
+    },
+    {
+      "path": "shared/tah-runtime/upstream/src/auth-prototype/protocol.ts",
+      "sha256": "280c36dbc7b5091a0c6d6e21169ed50e13b69e07f526aafe5c397d594034389a",
+      "bytes": 5080
+    },
+    {
+      "path": "shared/tah-runtime/zcode-source-lock.json",
+      "sha256": "a53c669a255523bad0c3d1cdb5eeac3e46bdb4f8d475f6ec2f2498a64af30bfa",
+      "bytes": 551
+    },
+    {
+      "path": "tools/mobile-tah/build_bundle.mjs",
+      "sha256": "cc707c38df989d60d78fd13b4fc7a5642ab2a0ca47c4ddb0c8984a5d387404c0",
+      "bytes": 9287
+    },
+    {
+      "path": "tools/mobile-tah/build_tauri.py",
+      "sha256": "93eac8c679a3fbef8113f99efcb0c78073133c0722d4e4db626db54f97faa7af",
+      "bytes": 2771
+    },
+    {
+      "path": "tools/mobile-tah/native_v8_inputs.py",
+      "sha256": "c3bff4d3bbbb553aab74a1ef227b68df25628c576f90698e1c4844c0be561ff6",
+      "bytes": 2339
+    },
+    {
+      "path": "tools/mobile-tah/native_v8_inputs_test.py",
+      "sha256": "ff1d37b8d520ff9a20a28e23b922a1caab5230030399b16bbb416f4f03ad0bf0",
+      "bytes": 2200
+    },
+    {
+      "path": "tools/mobile-tah/prepare_app.py",
+      "sha256": "83b1add4c23f74aa54cdb5d23ebc554c3d87fc00e0253cad2983d2005da97152",
+      "bytes": 6831
+    },
+    {
+      "path": "tools/mobile-tah/prepare_tauri_app.py",
+      "sha256": "135bc36967959209d4351c2fd0ca7bf5bbf0285158740922999f05c1f6064c04",
+      "bytes": 4796
+    },
+    {
+      "path": "tools/mobile-tah/provider_loading_checks.mjs",
+      "sha256": "4a2e8a1b05f712820e4d1583b797ca9639133b121ead3e12790f010ead87f9b4",
+      "bytes": 2350
+    },
+    {
+      "path": "tools/mobile-tah/provider_loading_checks.swift",
+      "sha256": "be3ecdcc902a8772e1158a227ea2c700d37a63b50e4511bad6108517666d1927",
+      "bytes": 1523
+    },
+    {
+      "path": "tools/mobile-tah/provider_sources.py",
+      "sha256": "9f6557e4dcfde291abde603bd5ed5337247e86ce43c58cc4c7d75bc575003f2d",
+      "bytes": 13915
+    },
+    {
+      "path": "tools/mobile-tah/tsconfig.json",
+      "sha256": "d0456e05776bd14731693be6a44c33a4c95b669639d4ca1db1deab96177d8d20",
+      "bytes": 727
+    },
+    {
+      "path": "tools/mobile-tah/verify_app.py",
+      "sha256": "642a24644357afd73cb2fceadf9a0a4e61d80c0324c1b4a868f6a784092fe2f7",
+      "bytes": 4460
+    },
+    {
+      "path": "tools/mobile-tah/working_stream_checks.py",
+      "sha256": "10ec81d8a13b0807ef37884b52f446ae73dc46bfda7ac03a58b0c54bd6480bb5",
+      "bytes": 4808
+    },
+    {
+      "path": "tools/mobile-tah/zcode_handle_checks.py",
+      "sha256": "039fd02d085342df00d3686bf64b27de97408edcedc69ffb71ef390f0a9aaf8e",
+      "bytes": 3412
+    },
+    {
+      "path": "tools/mobile-tah/zcode_keychain_checks.swift",
+      "sha256": "bc258c18d221c78fba3cf565301222b802bb7b455945b6627cd6fa378eb056e2",
+      "bytes": 3618
+    },
+    {
+      "path": "tools/mobile-tah/zcode_login_checks.py",
+      "sha256": "d44c7c9d69f8b2cce275349cd1daf44392985c54f8d96fc365416de7fa0cc442",
+      "bytes": 6058
+    },
+    {
+      "path": "tools/scripts/uniffi-bindings-input-hash.sh",
+      "sha256": "38f7ba2f082a37adfa524da2c15a480928e7f176bf7cb93ebdf550c8217c59df",
+      "bytes": 1892
+    }
+  ],
+  "artifact": {
+    "status": "composition-build-awaiting-final-resources",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app",
+    "appVersion": "0.4.0",
+    "appBuild": "13",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "749618247fcd77c7a1e25191064b3d542e6721880b580a909947baed78b2aadd",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "98712ba0b91d4df13219faff9189df1321274fc26ad98935910d892b45844439",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "80802764a11c0fe6f83ae4beeaae04b3250d9a3960b6dd87ddb17edee634a165",
+        "files": 138
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": false
+  },
+  "checks": {
+    "browserTests": 194,
+    "coreReplay": "V0/V1/V2 and historical outputs passed",
+    "providerLoading": "Node and three fresh JavaScriptCore contexts passed",
+    "controller": "Mac execution and simulator typecheck passed",
+    "nativeIOSMetadata": "passed",
+    "nativeArchive": "passed; review rebuild362.789s",
+    "actualSwiftBindings": "19 production sources pass Swift5/6 with zero diagnostics",
+    "keychainCAS": "20 competing writers admit one; stale/write/read/signout scenarios passed with Security substitute",
+    "loginUI": "four production-class dismissal/cancellation scenarios pass with UIKit/native substitutes",
+    "handleRegistry": "production registry methods pass opaque BoundAuthorization fixture; native owner generation semantics separately qualified",
+    "nativeV8Inputs": "exact generated binding/sidecar accepted; five negative cases rejected",
+    "workingStream": "model-free memory/SQLite/channel checks passed",
+    "signedResources": "all runtime file identities, three provider chunks, Core and Kimi Node/cache identity match",
+    "codesign": "deep strict passed"
+  },
+  "unverified": [
+    "Device launch and runtime performance",
+    "Final ZCode runtime generation has not replaced ed9 in this artifact"
+  ],
+  "committed": false,
+  "phoneTouched": false,
+  "modelRequestsByThisWorker": false,
+  "baseline": ".cache/zcode-composition/baseline-status.txt and baseline.patch",
+  "cacheCleanup": {
+    "removedOldIncrementalCaches": [
+      "codex_core-1q44vtblkv9dk",
+      "codex_app_server-3jm4ir7vvcxvt"
+    ],
+    "scope": "rebuildable incremental caches older than 72h, unused by current processes"
+  }
+}

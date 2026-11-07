@@ -1,0 +1,426 @@
+{
+  "date": "2026-11-05",
+  "provider": "zcode",
+  "release": "3.17.2",
+  "device": "iPhone 12 Pro / iOS 27.0.1",
+  "appVersion": "0.4.0 (13)",
+  "scope": "Short synthetic batch-count transcript; real Coding Plan, phone-owned Core/Adapter/native backend. V0/V1 automatic driver; V2/V3 normal UI. No Mac role dispatch. Not a long NVIDIA, energy, or background qualification.",
+  "passed": true,
+  "checks": {
+    "allPublished": true,
+    "canonicalHashes": true,
+    "v2ExactRetitle": true,
+    "v3ExactRetitle": true,
+    "v1v2v3ASRUnchanged": true,
+    "v3WebSearch": true,
+    "v3WebFetch": true,
+    "v3AllToolsCompleted": true
+  },
+  "instructionsV3": "请先使用 WebSearch 和 WebFetch 核对 https://docs.pytorch.org/vision/stable/models.html 中的 foreground/background 术语。然后只将小节名及引用中的 Arithmetic correction 替换成 Batch count；其余笔记和 ASR 疑点文件逐字保持不变，不添加网页内容，也不为虚构的 Café Segmentation 编造来源。",
+  "artifactV3": {
+    "status": "mac-qualified-phone-candidate",
+    "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/TauriDerivedData/Build/Products/Release-iphoneos/AlmaTAHTauri.app",
+    "appVersion": "0.4.0",
+    "appBuild": "13",
+    "bundleID": "com.alma.litter.agent-probe",
+    "executableSHA256": "b46b87cc668635290db7f960cc07bc400f1bd33a5eb01e3a484ce236c2132c6f",
+    "trustedBundleSHA256": "7698ae343fd3b3b337234390762de377ebdd19a35e58940f862990ccb0746786",
+    "nativeBuildIdentitySHA256": "4fafcfabdc72b7a5f24d404640d070fb0133878f38fadbcf95c9a056b8b6efae",
+    "runtimeAssets": {
+      "kimi": {
+        "manifestSHA256": "e08d2b24617a21b81ed127202cbdd12f6389c685c628e60c6e36251e5258d788",
+        "files": 1009
+      },
+      "zcode": {
+        "manifestSHA256": "305fdaca9cde0851e6ab65896be95e6af784b1265e1820292f97387d1839882a",
+        "files": 140
+      }
+    },
+    "kimiCacheManifestSHA256": "1202dce701019ea2370ee1d559015afbabb5b978817eca7a4dea09e22cd5c454",
+    "profiles": [
+      "codex",
+      "kimi",
+      "zcode"
+    ],
+    "signed": true,
+    "codesignDeepStrictPassed": true,
+    "phoneTouched": false,
+    "phoneTestReady": true
+  },
+  "priorRuntimeManifestSHA256": "005f659596eb326af4d17a40daa82ca325ade4e3d26046ddf1095c1d3771e637",
+  "revisions": [
+    {
+      "revision": 0,
+      "phase": "completed",
+      "model": {
+        "modelID": "GLM-5.3",
+        "reasoningEffortID": "low"
+      },
+      "webEnabled": false,
+      "seconds": 296.52,
+      "stageSeconds": {
+        "preparing": 0.055,
+        "actor": 296.396,
+        "critic": 0.069
+      },
+      "toolCount": 8,
+      "toolFailures": 1,
+      "tools": [
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Write",
+          "detail": "Tool returned an error",
+          "status": "failed"
+        },
+        {
+          "title": "Write",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Tool activity",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Write",
+          "detail": "Completed",
+          "status": "completed"
+        }
+      ],
+      "outputs": [
+        {
+          "relativePath": "structured-notes.md",
+          "byteLength": 1467,
+          "sha256": "9eb4c24001450f51957b68975b79c2436e12a68563d06e25aa7ea1f124bacc34"
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "byteLength": 982,
+          "sha256": "4f908c29c45e241ed06bb20a837bd556509872dbb5d93c9476c619e94c9b7363"
+        }
+      ]
+    },
+    {
+      "revision": 1,
+      "phase": "completed",
+      "model": {
+        "modelID": "GLM-5.3",
+        "reasoningEffortID": "low"
+      },
+      "webEnabled": false,
+      "seconds": 505.236,
+      "stageSeconds": {
+        "preparing": 0.058,
+        "extra_guardian": 107.187,
+        "saving_safety": 0.062,
+        "actor": 397.872,
+        "critic": 0.056
+      },
+      "toolCount": 13,
+      "toolFailures": 1,
+      "tools": [
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Tool activity",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Edit",
+          "detail": "Tool returned an error",
+          "status": "failed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Edit",
+          "detail": "Completed",
+          "status": "completed"
+        },
+        {
+          "title": "Edit",
+          "detail": "Completed",
+          "status": "completed"
+        }
+      ],
+      "outputs": [
+        {
+          "relativePath": "structured-notes.md",
+          "byteLength": 1734,
+          "sha256": "369f1f6dbff00caac356b21c571872da63ae1b150a2b4a002c27682afc07d27e"
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "byteLength": 719,
+          "sha256": "32287bb160da2806319dbc97f2dc5821b211e0b75cb4a7849128e9f107252f2b"
+        }
+      ]
+    },
+    {
+      "revision": 2,
+      "phase": "completed",
+      "model": {
+        "modelID": "GLM-5.3",
+        "reasoningEffortID": "low"
+      },
+      "webEnabled": true,
+      "seconds": 388.872,
+      "stageSeconds": {
+        "preparing": 0.069,
+        "extra_guardian": 66.02,
+        "saving_safety": 0.083,
+        "actor": 322.636,
+        "critic": 0.063
+      },
+      "toolCount": 13,
+      "toolFailures": 0,
+      "tools": [
+        {
+          "title": "Read",
+          "detail": "Completed (total=6891ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=59ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=54ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=5205ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Tool activity",
+          "detail": "Completed (total=1387ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=8968ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=62ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=66ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=62ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Web access",
+          "detail": "Completed (total=32482ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Web access",
+          "detail": "Completed (total=42481ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Edit",
+          "detail": "Completed (total=24261ms, permission=0ms, read=33ms, write=47ms, match=1ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Tool activity",
+          "detail": "Completed (total=12743ms, permission=0ms)",
+          "status": "completed"
+        }
+      ],
+      "outputs": [
+        {
+          "relativePath": "structured-notes.md",
+          "byteLength": 1744,
+          "sha256": "32c96034d1a04b90bfd8ec9e852f8a5e173e71603b8fe0d9914bf4c08bbd8d36"
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "byteLength": 719,
+          "sha256": "32287bb160da2806319dbc97f2dc5821b211e0b75cb4a7849128e9f107252f2b"
+        }
+      ]
+    },
+    {
+      "revision": 3,
+      "phase": "completed",
+      "model": {
+        "modelID": "GLM-5.3",
+        "reasoningEffortID": "low"
+      },
+      "webEnabled": true,
+      "seconds": 304.829,
+      "stageSeconds": {
+        "preparing": 0.085,
+        "extra_guardian": 60.15,
+        "saving_safety": 0.11,
+        "actor": 244.419,
+        "critic": 0.064
+      },
+      "toolCount": 12,
+      "toolFailures": 0,
+      "tools": [
+        {
+          "title": "Read",
+          "detail": "Completed (total=4406ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=62ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=56ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=3055ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Tool activity",
+          "detail": "Bash: Completed (total=1383ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=7033ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=62ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=69ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Read",
+          "detail": "Completed (total=60ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Web access",
+          "detail": "WebFetch: Completed (total=56744ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Web access",
+          "detail": "WebSearch: Completed (total=20001ms, permission=0ms)",
+          "status": "completed"
+        },
+        {
+          "title": "Edit",
+          "detail": "Completed (total=5392ms, permission=0ms, read=27ms, write=38ms, match=1ms)",
+          "status": "completed"
+        }
+      ],
+      "outputs": [
+        {
+          "relativePath": "structured-notes.md",
+          "byteLength": 1734,
+          "sha256": "369f1f6dbff00caac356b21c571872da63ae1b150a2b4a002c27682afc07d27e"
+        },
+        {
+          "relativePath": "suspicious-asr-terms.md",
+          "byteLength": 719,
+          "sha256": "32287bb160da2806319dbc97f2dc5821b211e0b75cb4a7849128e9f107252f2b"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Automatic 300-second driver deadline expired during V1; Core continued and canonical publication completed. Original timed_out report is retained.",
+    "V0/V1 each recovered from one tool failure. V2/V3 had no failed tools.",
+    "V2/V3 are inverse retitle tasks with the same web target, but model rounds and tools differ; timings are individual observations, not controlled performance proof.",
+    "Tool durations are SDK wall times; filesystem subspans are partial and may exclude scheduling/transport.",
+    "Provider timing activity was not retained in the Core working-log projection; isolated SDK load and model-request totals are not claimed."
+  ],
+  "evidence": {
+    "journal": ".cache/zcode-v3-complete/tah.sqlite3",
+    "journalSHA256": "30173f68a0e2fed927263284ac96dfee0e201f81664be80e182f938dc015d04f",
+    "walSHA256": "637bb20d49e789c58c5407faf8d38e0f152b6a9abe4ac30a55327dc28f30a69f",
+    "legacyDriverReport": ".cache/zcode-quota-phone-qualification.json"
+  }
+}

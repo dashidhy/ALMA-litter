@@ -63,6 +63,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     private var changed: TAHUIChanged?
     private var observationGeneration = UUID()
     private var lifecycleRefreshScheduled = false
+    private var qualificationStarted = false
     private var workingCallback: TAHUIWorkingSend?
     private var workingSubscription: UInt64?
     private var highestWorkingSubscription: UInt64 = 0
@@ -124,7 +125,27 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     }
 
     @objc nonisolated private func lifecycleChanged() {
-        Task { @MainActor [weak self] in self?.scheduleLifecycleRefresh() }
+        Task { @MainActor [weak self] in
+            self?.scheduleLifecycleRefresh()
+            self?.startQualificationIfReady()
+        }
+    }
+
+    private func startQualificationIfReady() {
+        // Tauri 首次建立 bridge 时场景可能仍为 inactive。复用正式前台
+        // 生命周期事件启动测试，避免把正常启动过渡误报成用户锁屏。
+        guard !qualificationStarted,
+              (ProcessInfo.processInfo.arguments.contains("--mobile-tah-qualification") || ProcessInfo.processInfo.arguments.contains("--mobile-tah-long-qualification")),
+              UIApplication.shared.applicationState == .active,
+              UIApplication.shared.isProtectedDataAvailable,
+              let controller else { return }
+        qualificationStarted = true
+        Task { @MainActor in
+            let previousIdleSetting = UIApplication.shared.isIdleTimerDisabled
+            UIApplication.shared.isIdleTimerDisabled = true
+            defer { UIApplication.shared.isIdleTimerDisabled = previousIdleSetting }
+            await TAHMobileQualification.run(controller: controller)
+        }
     }
 
     private func scheduleLifecycleRefresh() {
@@ -153,20 +174,6 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
             startIfNeeded()
             return try pendingSnapshot()
         }
-        if request.method == "signIn" {
-            guard !starting, controller == nil else { throw TAHRuntimeError.busy }
-            starting = true
-            Task { @MainActor in
-                defer {
-                    starting = false
-                    changed?()
-                    if failure == nil { startIfNeeded() }
-                }
-                do { _ = try await ChatGPTOAuth.login(); failure = nil }
-                catch { failure = "Sign-in did not complete. Please try again." }
-            }
-            return try pendingSnapshot()
-        }
         if request.method == "openExternal" {
             guard let address = try request.value["url"]?.string(), let url = URL(string: address),
                   ["https", "http"].contains(url.scheme?.lowercased() ?? ""), url.host != nil,
@@ -183,7 +190,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     private func startIfNeeded() {
         guard controller == nil, !starting, failure == nil else { return }
         starting = true
-        Task { @MainActor in
+        Task { @MainActor [self] in
             defer { starting = false; changed?() }
             do {
                 guard let fs = Bundle.main.url(forResource: "fs", withExtension: nil),
@@ -203,8 +210,11 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
                 workingChannel.update(core.presentation.workingLog)
                 observeProjection()
                 diagnostic("ready")
+                // 复用已有真机验收驱动；仅显式测试启动时运行。整轮仍由手机
+                // 的同一个 controller/Core 调度，避免投屏抢占用户输入法。
+                startQualificationIfReady()
             } catch {
-                failure = "Could not prepare TAH. Check your ChatGPT sign-in and reopen the app."
+                failure = "Could not prepare TAH. Reopen the app to try again."
                 diagnostic("preparation_failed")
             }
         }

@@ -471,6 +471,7 @@ pub async fn connect_app_server_client(
     log_session_info(&params, &agent, response.session.as_ref(), resume_from);
     let label = format!("alleycat://{}/{}", params.node_id, agent);
     let args = RemoteAppServerConnectArgs {
+        required_human_approval: false,
         endpoint: RemoteAppServerEndpoint::WebSocket {
             websocket_url: format!("ws://alleycat/{agent}"),
             auth_token: None,

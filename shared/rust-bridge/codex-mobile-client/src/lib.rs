@@ -6,8 +6,14 @@
 // Upstream app-server dispatch futures exceed the default layout query depth on iOS.
 #![recursion_limit = "256"]
 
+// Provider sources are composed behind the existing single UniFFI facade.
+// Kimi's shared execution imports resolve to the exact Codex fork modules below.
+extern crate self as alma_codex_ios;
+
+#[path = "../../../../../ALMA-codex/ios/native/src/auth_refresh.rs"]
 pub mod auth_refresh;
 pub mod tah_attempt;
+#[path = "../../../../../ALMA-codex/ios/native/src/execution_fence.rs"]
 pub mod execution_fence;
 #[cfg(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe"))]
 mod tah_runner;
@@ -48,31 +54,55 @@ pub async fn tah_qualification_execute(server_id:String,account_fingerprint:Stri
     #[cfg(not(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe")))]
     { let _=(server_id,account_fingerprint); "{\"outcome\":\"failure\",\"failure\":\"qualification_unavailable\"}".into() }
 }
+#[path = "../../../../../ALMA-codex/ios/native/src/alma_local_profile.rs"]
 mod alma_local_profile;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/alma_code_mode.rs"]
 mod alma_code_mode;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/provider_backend.rs"]
 mod provider_backend;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
-mod provider_scope;
+#[path = "../../../../../ALMA-codex/ios/native/src/provider_scope.rs"]
+pub mod provider_scope;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/provider_bridge.rs"]
 mod provider_bridge;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/provider_runtime_config.rs"]
 mod provider_runtime_config;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
 mod mobile_tah_host;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-ZCode/ios/native/src/lib.rs"]
+mod zcode_native;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+mod mobile_zcode;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/runtime_bootstrap.rs"]
+mod runtime_bootstrap;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-kimi-code/ios/native/src/kimi_backend.rs"]
+mod kimi_backend;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-kimi-code/ios/native/src/kimi_assets.rs"]
+mod kimi_assets;
 
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+#[path = "../../../../../ALMA-codex/ios/native/src/embedded_runtime.rs"]
 mod embedded_runtime;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
 mod alma_workspace;
 
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
+#[path = "../../../../../ALMA-codex/ios/native/src/ish_exec_backend.rs"]
 pub mod ish_exec_backend;
 
 #[cfg(unix)]
+#[path = "../../../../../ALMA-codex/ios/native/src/scoped_files.rs"]
 pub mod scoped_files;
 #[cfg(unix)]
+#[path = "../../../../../ALMA-codex/ios/native/src/scoped_executor_fs.rs"]
 pub mod scoped_executor_fs;
 
 #[cfg(all(target_os = "ios", not(target_abi = "macabi")))]
@@ -82,6 +112,7 @@ pub mod ish_runtime;
 // `generate-bindings.sh` feeds to uniffi-bindgen must contain these so the
 // generated Swift/Kotlin has `IshRunResult` / `IshBootstrapError` /
 // `ishBootstrap` / `ishDefaultCwd` / `ishRun` symbols on every lane.
+#[path = "../../../../../ALMA-codex/ios/native/src/ish_types.rs"]
 pub mod ish_types;
 pub mod proot_types;
 

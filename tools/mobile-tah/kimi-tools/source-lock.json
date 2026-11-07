@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "alpineVersion": "3.21",
+  "architecture": "aarch64",
+  "rootfsID": "354d49ec25295e6c",
+  "rootfsPackageLockPath": "tools/alma-ios-lab/results/2026-10-31-ish-package-lock.json",
+  "rootfsPackageLockSHA256": "d2d26db54cc18c5f96242444d07eab7ed6b46ca2b5e5c0938b82b3afe1d43e81",
+  "rootfsLibraries": [
+    {
+      "package": "musl",
+      "version": "1.2.5-r12",
+      "apkSHA256": "f37e73d41880bbc653b771c7d8962c8739bff773503f5155c14fab1bd7c4d52f",
+      "path": "/lib/ld-musl-aarch64.so.1",
+      "bytes": 723480,
+      "sha256": "a965363d0cb99ab9b28f4c51ee6bb64162b4e204f0d20efda72541a2e4147a5e"
+    },
+    {
+      "package": "libgcc",
+      "version": "14.2.0-r4",
+      "apkSHA256": "7cfdc00f102d3b98fe563b31e7a59a7b7ab61850c1751915f34e419e83ef2653",
+      "path": "/usr/lib/libgcc_s.so.1",
+      "bytes": 133008,
+      "sha256": "69c45f16064b7b61b9a3d64c37395d13368a8fe719745d49e9508ec650fea971"
+    }
+  ],
+  "packages": [
+    {
+      "name": "ripgrep",
+      "version": "14.1.1-r0",
+      "architecture": "aarch64",
+      "archive": "ripgrep-14.1.1-r0.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/community/aarch64/ripgrep-14.1.1-r0.apk",
+      "sha256": "4491576f6fb3ae0cff20a0369bc0cb59f3b1af925bef9f10b76b0fae0c8d8d6b",
+      "bytes": 1345821,
+      "dependencies": [
+        "so:libc.musl-aarch64.so.1",
+        "so:libgcc_s.so.1",
+        "so:libpcre2-8.so.0"
+      ],
+      "pkginfoSHA256": "52e515e308aff89ae240920bc3d5d7ff4679840effc68809826d1270037ef5d4",
+      "files": [
+        {
+          "member": "usr/bin/rg",
+          "path": "usr/bin/rg",
+          "bytes": 3149720,
+          "sha256": "6c1a2363f8237e3105690d9cea18908957e93936dbed76841fda13ab6765d432"
+        }
+      ]
+    },
+    {
+      "name": "pcre2",
+      "version": "10.43-r1",
+      "architecture": "aarch64",
+      "archive": "pcre2-10.43-r1.apk",
+      "url": "https://dl-cdn.alpinelinux.org/alpine/v3.21/main/aarch64/pcre2-10.43-r1.apk",
+      "sha256": "525f1b4c7560ef6561b0a43e6a160bcda368254c58595fa43eff672b01031be1",
+      "bytes": 270859,
+      "dependencies": [
+        "so:libc.musl-aarch64.so.1"
+      ],
+      "pkginfoSHA256": "bc255c766a682568bd7c689cbb2084d38ab1fa502b1f9566e2e336af5045cf09",
+      "files": [
+        {
+          "member": "usr/lib/libpcre2-8.so.0.12.0",
+          "path": "usr/lib/libpcre2-8.so.0.12.0",
+          "bytes": 657160,
+          "sha256": "a409689c8fcbc019819b05b7d9397ca15dfe73a2accd258d5e4247e30174bd55"
+        }
+      ]
+    }
+  ],
+  "signatureVerification": {
+    "command": "apk verify /packages/ripgrep-14.1.1-r0.apk /packages/pcre2-10.43-r1.apk",
+    "result": "Both APK signatures verified by apk inside the copied phone rootfs with its trusted Alpine keys."
+  },
+  "adaptations": [
+    "Copy the clean pinned fakefs and install both retained signed APKs with apk add --no-network.",
+    "Preserve every installed baseline package and install rg at /usr/bin/rg with APK-owned 0755 metadata.",
+    "Use APK-owned /usr/lib PCRE2 files and SONAME symlinks, together with the pinned existing musl and libgcc."
+  ],
+  "rootfsBuildVersion": 2,
+  "baseTreeSHA256": "dc515464352ff16989594280ddb759698229d177ecccdd4142e752c464d0b9f1",
+  "icuEmbedding": {
+    "dataPath": "usr/share/icu/74.2/icudt74l.dat",
+    "dataSHA256": "ec1035db29767d51df2161dc8dcdb1700140a56e0cc70262444f20c89bed081d",
+    "libraryPath": "usr/lib/libicudata.so.74.2",
+    "originalLibrarySHA256": "a8a959195940f14fccfa7ad7eaab9c5d19fc30c3797d78e541757cafc3050748",
+    "embeddedLibrarySHA256": "c0c1dc1c77a7b1b8959ad061740f0183f8911918d7ded05217ea25b708286d76",
+    "symbol": "icudt74_dat",
+    "alignment": 16,
+    "soname": "libicudata.so.74",
+    "reason": "Use private ELF mappings for the pinned ICU data in the owned guest environment."
+  }
+}

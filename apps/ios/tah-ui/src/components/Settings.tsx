@@ -10,8 +10,39 @@ export function Settings({ p, draft, controller, disabled, error, theme, setThem
 }) {
   const update = (patch: Partial<Draft>) => controller.editSettings({ ...draft, ...patch });
   const settings = (patch: Partial<Draft['settings']>) => update({ settings: { ...draft.settings, ...patch } });
+  const auth = p.authorization;
+  const providerName = auth?.providers.find(provider => provider.id === auth.providerID)?.title || auth?.providerID || 'provider';
+  const replacement = auth?.replacement;
+  const replacementProvider = auth?.providers.find(provider => provider.id === replacement?.providerID)?.title || replacement?.providerID;
   return <Sheet title="Settings" close={close}>
     {error ? <p className="error" role="alert">{error}</p> : null}
+    {auth ? <section className="settings-section"><h3>Provider connection</h3>
+      <label className="field">Provider<select aria-label="Provider" value={auth.providerID ?? ''} disabled={disabled || !auth.canManage}
+        onChange={event => { void controller.run('selectProvider', { providerID: event.target.value }); }}>
+        <option value="" disabled>Choose a provider</option>
+        {auth.providers.map(provider => <option key={provider.id} value={provider.id} disabled={!provider.enabled}>{provider.title || provider.id}</option>)}
+      </select></label>
+      <p className="hint" role="status">{auth.phase === 'authorizing' ? `Connecting to ${providerName}…`
+        : auth.inspecting ? 'Checking authorization and models…' : auth.state === 'valid' ? `Connected to ${providerName}`
+          : auth.state === 'invalid' ? 'Authorization needs attention.' : `Connect ${providerName} to start processing.`}</p>
+      {auth.account ? <p className="hint">{auth.account}</p> : null}
+      {auth.noticeCode ? <p className="hint">{auth.noticeCode.replaceAll('_', ' ')}</p> : null}
+      {replacement ? <div role="group" aria-label="Confirm provider change">
+        <p>{replacement.kind === 'switch_provider' ? `Switch to ${replacementProvider}?` : replacement.kind === 'sign_out' ? `Disconnect ${providerName}?` : `Replace the ${providerName} connection?`}</p>
+        <p className="hint">This replaces the active provider connection. Your saved notes and transcripts stay available.</p>
+        <button className="row-button" disabled={disabled || !auth.canConfirmReplacement} onClick={() => { void controller.run('confirmAuthorizationReplacement', { id: replacement.id, confirmed: true }); }}>Confirm connection change</button>
+        <button className="row-button" disabled={disabled || !auth.canConfirmReplacement} onClick={() => { void controller.run('confirmAuthorizationReplacement', { id: replacement.id, confirmed: false }); }}>Keep current connection</button>
+      </div> : <>
+        <button className="row-button" disabled={disabled || !auth.canManage || !auth.providerID}
+          onClick={() => { void controller.run('authorizeProvider', {}); }}>{auth.state === 'unauthed' ? (auth.providerID === 'codex' ? 'Sign in with ChatGPT' : `Connect ${providerName}`) : 'Replace connection'}</button>
+        <button className="row-button" disabled={disabled || !auth.canManage || auth.state !== 'valid'}
+          onClick={() => { void controller.run('inspectAuthorization', {}); }}>Inspect authorization</button>
+        {auth.state !== 'unauthed' ? <button className="row-button" disabled={disabled || !auth.canManage}
+          onClick={() => { void controller.run('requestAuthorizationReplacement', { kind: 'sign_out' }); }}>Disconnect provider</button> : null}
+        {auth.providerID === 'zcode' ? <p className="hint">Connect opens BigModel’s official sign-in page. Your Coding Plan credentials are stored in this device’s Keychain.</p> : null}
+        {auth.providerID === 'kimi' ? <p className="hint">Connect opens a native secure entry dialog. Your API key is stored in this device’s Keychain.</p> : null}
+      </>}
+    </section> : null}
     <section className="settings-section"><h3>Reading appearance</h3>
       <div className="segmented"><button aria-pressed={theme === 'ink'} onClick={() => setTheme('ink')}>Ink</button><button aria-pressed={theme === 'paper'} onClick={() => setTheme('paper')}>Paper</button></div>
     </section>
@@ -51,8 +82,8 @@ export function Settings({ p, draft, controller, disabled, error, theme, setThem
       <label className="toggle-row"><span>Web access</span><input type="checkbox" role="switch" checked={draft.settings.webEnabled} disabled={disabled || !p.permissions.edit} onChange={e => settings({ webEnabled: e.target.checked })} /></label>
       {!p.models.length ? <p className="hint">Inspect authorization to load the provider’s model catalog.</p> : null}
     </section>
-    <section className="settings-section"><h3>Provider connection</h3>
+    {!auth ? <section className="settings-section"><h3>Provider connection</h3>
       <button className="row-button" disabled={disabled || p.isBusy} onClick={() => { void controller.run('inspectAuthorization', {}); }}>Inspect authorization</button>
-    </section>
+    </section> : null}
   </Sheet>;
 }

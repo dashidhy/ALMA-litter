@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2023",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "strict": true,
@@ -9,6 +9,18 @@
     "baseUrl": "../../shared/tah-runtime",
     "paths": {
       "zod": [
+        "vendor/zod/index.d.ts"
+      ],
+      "@alma/zcode/*": [
+        "../../../ALMA-ZCode/ios/tah-adapter/*"
+      ],
+      "@alma/tah/*": [
+        "upstream/src/*"
+      ],
+      "@alma/platform/*": [
+        "platform/*"
+      ],
+      "@alma/vendor/zod": [
         "vendor/zod/index.d.ts"
       ]
     },

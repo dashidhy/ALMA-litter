@@ -1317,6 +1317,7 @@ pub(crate) fn remote_connect_args(config: &ServerConfig) -> (String, RemoteAppSe
     };
 
     let args = RemoteAppServerConnectArgs {
+        required_human_approval: false,
         endpoint: RemoteAppServerEndpoint::WebSocket {
             websocket_url: url.clone(),
             auth_token: None,
@@ -2155,6 +2156,7 @@ mod tests {
 
     fn test_remote_args(label: &str) -> RemoteAppServerConnectArgs {
         RemoteAppServerConnectArgs {
+            required_human_approval: false,
             endpoint: RemoteAppServerEndpoint::WebSocket {
                 websocket_url: format!("test://{label}"),
                 auth_token: None,

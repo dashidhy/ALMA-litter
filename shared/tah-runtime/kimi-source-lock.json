@@ -1,0 +1,14 @@
+{
+  "source": "/Users/dashidhy/.codex/worktrees/alma-prototype-kimi/ALMA/app/TAH/providers/kimi",
+  "gitHead": "d07ee29faa7211ba2c904847194933330d649c0c",
+  "files": {
+    "adapter/src/auth-driver.ts": "b6bff050c73ea6363a42c6ede52939e62058b1a27ab23b609dbcc24d5137a9cd",
+    "adapter/src/guest-adapter.ts": "0bb6101d1f96b1133b0fadc69ac9b315d5db56850c1df59452ecd10c33fc522e",
+    "adapter/src/models.ts": "c06cb70ef15abef85450deba50b93a324abce049759b2a7c7c5015f15afcc3e0",
+    "adapter/src/native-sdk.ts": "16d8cc5c6658a166f5b192e5178011ba618c8f79743040bd17dbd3d80bf35277",
+    "adapter/src/policy.ts": "b68ff2779448e881acd7c4bf53d08bc49dbbb982ace81a75bd898726eecddb34",
+    "adapter/src/tool-details.ts": "280a2077e953fc17930377b34a85a736bb9d4d55134bc37dc7035bd379febcab",
+    "app-profile.json": "d7b108378be2a41ac9858b0bbdd5e42c0d0af8a3d8cfa1959e528c9fb3e873da",
+    "LICENSE.upstream": "23cc68e17992e0b512ae2e80afc5787d7d8e0fbfbdb4fff54ec0245508fa400e"
+  }
+}

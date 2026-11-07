@@ -5,8 +5,10 @@ import { providerAccountUsageSchema } from "../contract/account-usage.js";
 export const AUTH_PROVIDERS = Object.freeze([
   Object.freeze({ id: "codex" as const, displayName: "Codex" }),
   Object.freeze({ id: "qoder" as const, displayName: "Qoder" }),
+  Object.freeze({ id: "kimi" as const, displayName: "Kimi Code (Prototype)" }),
+  Object.freeze({ id: "zcode" as const, displayName: "ZCode" }),
 ]);
-export const providerIDSchema = z.enum(["codex", "qoder"]);
+export const providerIDSchema = z.enum(["codex", "qoder", "kimi", "zcode"]);
 export type AuthProviderID = z.infer<typeof providerIDSchema>;
 export const MAX_CREDENTIAL_BYTES = 64 * 1024;
 export const MAX_WIRE_BYTES = 192 * 1024;

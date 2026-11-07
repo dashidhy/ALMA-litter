@@ -6,30 +6,61 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
   const originalExports=AlmaTAH, native=__almaPlatformCall, checks=[];
   const expect=(condition,label)=>{if(!condition)throw new Error(label);checks.push(label);};
   const deferred=()=>{let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};};
+  const waitFor=async(promise,label)=>{
+    let timer;
+    try{
+      return await Promise.race([promise,new Promise((_,reject)=>{
+        timer=setTimeout(()=>reject(new Error(`Fixture barrier timed out: ${label}`)),10000);
+      })]);
+    }finally{clearTimeout(timer);}
+  };
   const until=async (fn,test)=>{for(let n=0;n<2000;n++){const v=await fn();if(test(v))return v;await new Promise(r=>setTimeout(r,2));}throw new Error('Fixture barrier timed out');};
   const rejects=async (fn,code,label)=>{let error;try{await fn();}catch(e){error=e;}expect(error?.code===code,label);};
-  let base,storeCalls=0,providerCalls=0,liveCore,completedWhileActive=false,completedWhileInactive=false;
+  const ackDelayMS=input.workingStreamACKDelayMS??0;
+  if(![0,20].includes(ackDelayMS))throw new Error('Unsupported fixture ACK delay');
+  const activeCompletion=deferred(),inactiveCompletion=deferred(),uiBlocked=deferred(),uiRelease=deferred();
+  let base,storeCalls=0,providerCalls=0,liveCore,observedOperationID,holdNextAction=false;
+  let completedWhileActive=false,completedWhileInactive=false;
   const originalView=originalExports.AppActions.prototype.workingView;
   originalExports.AppActions.prototype.workingView=function(...args){liveCore=this;return originalView.apply(this,args);};
   const captured=new Error('Captured replay provider');
   globalThis.AlmaTAH={...originalExports,createMobileRuntime(adapters){base=adapters.get('codex');return {async invoke(){throw captured;}};}};
   try{await workingReplayFixture.invoke('proof',input);}catch(error){if(error!==captured)throw error;}
   finally{globalThis.AlmaTAH=originalExports;}
+  // Observe the real synchronous publication while the actor's UI ACK is gated.
+  // Delivery may coalesce this intermediate state with the final cleanup state.
+  const {LatestAppNotifications}=__almaWorkingTestRequire('/upstream/src/app-runtime/notifications.ts');
+  const originalPublish=LatestAppNotifications.prototype.publish;
+  LatestAppNotifications.prototype.publish=function(key,value){
+    if(value.operationID===observedOperationID&&value.phase==='completed'&&liveCore?.busy){
+      const view=originalView.call(liveCore,value.actionID,value.operationID);
+      expect(view.phase==='completed'&&!view.finished,'Completed phase is not finished while Core is active');
+      completedWhileActive=true;activeCompletion.resolve(value.sourceRevision);
+    }
+    return originalPublish.call(this,key,value);
+  };
   globalThis.__almaPlatformCall=async(method,value)=>{
     if(method.startsWith('provider.')){providerCalls++;throw new Error('Native provider forbidden');}
     if(method.startsWith('store.'))storeCalls++;
-    if(method==='ui.actionChanged'&&value.phase==='completed'&&liveCore){
-      const view=originalView.call(liveCore,value.actionID,value.operationID);
-      if(liveCore.busy){expect(!view.finished,'Completed phase is not finished while Core is active');completedWhileActive=true;}
-      else {expect(view.finished,'Final cleanup notification exposes inactive finished owner');completedWhileInactive=true;}
+    if(method==='ui.actionChanged'&&value.operationID===observedOperationID&&holdNextAction){
+      holdNextAction=false;uiBlocked.resolve();await waitFor(uiRelease.promise,'release gated UI ACK');
     }
-    return native(method,value);
+    let finalRevision;
+    if(method==='ui.actionChanged'&&value.operationID===observedOperationID&&value.phase==='completed'&&liveCore){
+      const view=originalView.call(liveCore,value.actionID,value.operationID);
+      expect(!liveCore.busy&&view.finished,'Final cleanup notification exposes inactive finished owner');
+      completedWhileInactive=true;finalRevision=value.sourceRevision;
+    }
+    if(method==='ui.actionChanged'&&ackDelayMS)await new Promise(resolve=>setTimeout(resolve,ackDelayMS));
+    const result=await native(method,value);
+    if(finalRevision!==undefined)inactiveCompletion.resolve(finalRevision);
+    return result;
   };
   const actors=[], actorReady=[deferred(),deferred()], guardianRelease=deferred(),guardianReady=deferred();
   const provider={...base,async run(built,bytes,emit,signal){
     const role=built.attempt.role;
     if(role==='extra_guardian'){
-      guardianReady.resolve(); await guardianRelease.promise;
+      guardianReady.resolve(); await waitFor(guardianRelease.promise,'release Guardian');
     }
     if(role!=='actor')return base.run(built,bytes,emit,signal);
     let sequence=0;
@@ -37,7 +68,7 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
     actors.push(actor);actorReady[actors.length-1].resolve(actor);
     if(signal.aborted)actor.release.resolve();
     signal.addEventListener('abort',()=>actor.release.resolve(),{once:true});
-    await actor.release.promise;
+    await waitFor(actor.release.promise,'release actor');
     if(signal.aborted)return {terminal:{kind:'cancelled'},candidateManifest:[],candidateFiles:new Map()};
     return base.run(built,bytes,e=>emit({...e,sequence:++sequence}),signal);
   }};
@@ -47,15 +78,19 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
     const ready=()=>until(()=>call('auth.snapshot'),s=>s.inspection?.state==='succeeded'&&!s.inspecting&&s.phase==='idle');
     await ready();
     const actionID=__almaUUID(),operationID=__almaUUID(),materialID=__almaUUID(),transcriptID=__almaUUID();
+    observedOperationID=operationID;
     await call('material.put',{materialID,transcriptID,title:'Working stream fixture',rawTranscript:input.transcript});
     await call('raw.check',{materialID,operationID:__almaUUID(),consent:true,interactionLanguage:'en'});
     await until(()=>call('raw.status',{materialID}),s=>!s.busy);await call('action.create',{actionID,materialID,language:'en'});
     const send=operationID=>call('action.send',{actionID,operationID,instructions:actors.length?input.deltas[1]:input.deltas[0],inference:{modelID:'gpt-5.6-luna',reasoningEffortID:'low'},interactionLanguage:'en',grantWeb:false,consent:true});
     await rejects(()=>call('action.workingOpen',{actionID,operationID}),'unavailable','No in-memory execution does not fall back to journal');
-    await send(operationID);const actor=await actorReady[0].promise;
+    await send(operationID);const actor=await waitFor(actorReady[0].promise,'first actor ready');
     await actor.emit({kind:'tool_started',toolCallID:'read',operation:'text_read',detail:'A'});
     let frame=await call('action.workingOpen',{actionID,operationID});
     expect(frame.reset&&frame.revision===1&&!frame.finished&&frame.events.at(-1).detail==='A','Real runtime opens actor memory');
+    holdNextAction=true;
+    await actor.emit({kind:'tool_updated',toolCallID:'read',detail:'A'});
+    await waitFor(uiBlocked.promise,'actor UI notification entered');
     const before=storeCalls;
     for(let n=0;n<100;n++)await actor.emit({kind:'tool_updated',toolCallID:'read',detail:'latest-'+n});
     frame=await call('action.workingNext',{streamID:frame.streamID,afterRevision:frame.revision});
@@ -67,13 +102,18 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
     await actor.emit({kind:'tool_completed',toolCallID:'read',status:'completed',detail:'latest-99'});
     await actor.emit({kind:'activity',phase:'queued',detail:'Queued'});
     actor.release.resolve();
+    const activeRevision=await waitFor(activeCompletion.promise,'completed publication while active');
     // Completion barrier uses the session itself, never reads a snapshot/log.
     frame=await until(async()=>{
       const next=await call('action.workingNext',{streamID:frame.streamID,afterRevision:frame.revision});
       if(!next.unchanged)frame=next;return frame;
     },value=>value.finished);
     expect(frame.phase==='completed'&&frame.finished,'Retained owner survives terminal cleanup');
+    expect(completedWhileActive&&!completedWhileInactive,'Core completes while its intermediate UI ACK remains gated');
+    uiRelease.resolve();
+    const inactiveRevision=await waitFor(inactiveCompletion.promise,'inactive terminal notification delivered');
     expect(completedWhileActive&&completedWhileInactive,'Same-phase active-to-inactive handoff observed on actual Core');
+    expect(inactiveRevision>activeRevision,'Delivered terminal revision includes final cleanup after active publication');
     const terminal=await call('action.workingOpen',{actionID,operationID});
     expect(terminal.finished&&terminal.reset&&terminal.events.some(e=>e.role==='actor'),'Open after completion returns same-operation retained view');
     expect(!JSON.stringify(terminal).includes('PRIVATE_GUARDIAN_REPLAY'),'Private Guardian data excluded');
@@ -85,10 +125,10 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
     await rejects(()=>otherRuntime.invoke('action.workingOpen',{actionID,operationID}),'unavailable','Restarted runtime cannot claim old in-memory owner');
     await otherRuntime.invoke('runtime.shutdown',{});
     await ready();
-    const nextOperation=__almaUUID();await send(nextOperation);await guardianReady.promise;
+    const nextOperation=__almaUUID();await send(nextOperation);await waitFor(guardianReady.promise,'Guardian ready');
     await rejects(()=>call('action.workingNext',{streamID:terminal.streamID,afterRevision:1}),'unavailable','New execution invalidates old operation stream');
     await rejects(()=>call('action.workingOpen',{actionID,operationID:nextOperation}),'unavailable','Guardian-only current scope is unavailable');
-    guardianRelease.resolve();const second=await actorReady[1].promise;
+    guardianRelease.resolve();const second=await waitFor(actorReady[1].promise,'second actor ready');
     const current=await call('action.workingOpen',{actionID,operationID:nextOperation});
     expect(current.operationID===nextOperation&&!current.finished&&current.events.every(e=>!e.id.endsWith(':read')),'New scope has its own tracker');
     await rejects(()=>call('action.workingOpen',{actionID,operationID}),'unavailable','Retained old operation never crosses revision');
@@ -102,9 +142,13 @@ globalThis.AlmaMobileRuntime={async invoke(method,input){
       'Actual Core terminal view changes running status to stopped only after inactive');
     await call('runtime.shutdown');
     await rejects(()=>call('action.workingOpen',{actionID,operationID:nextOperation}),'unavailable','Shutdown clears owner and session');
-    return {passed:true,modelCalls:false,realCredentials:false,nativeProviderCalls:providerCalls,checks};
+    return {passed:true,modelCalls:false,realCredentials:false,nativeProviderCalls:providerCalls,
+      ackDelayMS,activeRevision,inactiveRevision,checks};
   }finally{
-    guardianRelease.resolve();for(const actor of actors)actor.release.resolve();
-    await call('runtime.shutdown');globalThis.__almaPlatformCall=native;originalExports.AppActions.prototype.workingView=originalView;
+    uiRelease.resolve();guardianRelease.resolve();for(const actor of actors)actor.release.resolve();
+    try{await call('runtime.shutdown');}finally{
+      globalThis.__almaPlatformCall=native;originalExports.AppActions.prototype.workingView=originalView;
+      LatestAppNotifications.prototype.publish=originalPublish;
+    }
   }
 }};
