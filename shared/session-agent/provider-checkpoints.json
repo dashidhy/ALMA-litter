@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "qualifiedAppBuild": "0.5.0 (37)",
+  "providers": [
+    {
+      "provider": "codex",
+      "repository": "https://github.com/dashidhy/ALMA-codex.git",
+      "branch": "codex/session-agent-shared-skills",
+      "commit": "10eee5dd7855195bcc378a08f6187fbdf95b8e8b",
+      "upstreamTag": "rust-v0.169.0",
+      "upstreamCommit": "d32063f96c2dff1dc96af839b3952abb6acfeda4"
+    },
+    {
+      "provider": "kimi",
+      "repository": "https://github.com/dashidhy/ALMA-kimi-code.git",
+      "branch": "dev/ios",
+      "commit": "780af5b849528f0e7470ddd0a595074d3b279016",
+      "upstreamTag": "@moonshot-ai/kimi-code@2.6.2",
+      "upstreamCommit": "6a8493df3e1d796a63f7c7ca0de76c1e690cd943"
+    },
+    {
+      "provider": "zcode",
+      "repository": "https://github.com/dashidhy/ALMA-ZCode.git",
+      "branch": "dev/ios",
+      "commit": "30b108e354f74653643f30f38a5c1106edd8f671",
+      "upstreamTag": "v3.18.2",
+      "upstreamCommit": "fec975905a2abd4c07e35c40d51fa097a2258ec9"
+    }
+  ]
+}

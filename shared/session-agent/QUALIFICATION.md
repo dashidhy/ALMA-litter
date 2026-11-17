@@ -8,6 +8,8 @@ Qualified iPhone build: **0.5.0 (37)**. This is the independent Session Agent pr
 | Kimi CLI / SDK | 2.6.2 / 0.23.1, `6a8493df3e1d796a63f7c7ca0de76c1e690cd943` |
 | ZCode | 3.18.2, `fec975905a2abd4c07e35c40d51fa097a2258ec9` |
 
+Use the fork commits in `provider-checkpoints.json` together with this App branch. Fetch each pinned official release tag from its upstream repository for the source-identity checks; ordinary branch pushes do not publish release tags.
+
 ## Review and verification
 
 - Reviewed Rust session ownership, local inference configuration, authorization bindings, native persistence, event projection, shared Skill discovery and file boundaries against the old TAH adapters and the pinned provider sources.
@@ -17,6 +19,8 @@ Qualified iPhone build: **0.5.0 (37)**. This is the independent Session Agent pr
 - The existing TAH working-event components and preview limits remain in use. Queued ZCode tools still display `running`; Agent commentary and Skill choice remain Agent-owned.
 - All three providers passed real iPhone QA, web access, shared-Skill file generation, old-thread resume after the SDK update, and cold App reopen with the same native thread and remembered conversation context. Actual Codex native turn metadata and Kimi/ZCode native configuration receipts confirmed the selected models and effort.
 - Frontend tests, shared Rust session tests, native scoped-file regressions, provider SDK/adapter tests and ZCode's type/lint/architecture gates are recorded in local qualification evidence. Codex source checks classify all 215 upstream features and verify version/patch identity.
+
+ZCode's pre-push lint, schema and architecture gates passed. The upstream affected-test selector chose all 169 engineering specs for the release-wide diff and intentionally skipped that broad suite; it was not counted as a test pass. The mobile SDK/adapter/runtime checks above were executed separately.
 
 ## Fresh manual-test state
 
