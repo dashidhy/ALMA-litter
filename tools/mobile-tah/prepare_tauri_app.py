@@ -10,6 +10,17 @@ FS=Path(json.loads(rootfs_manifest.read_text())['fs'])
 zcode_runtime=prepare_zcode_runtime()
 subprocess.run([sys.executable,str(HERE/'prepare_app.py'),'--config-only'],check=True,cwd=REPO)
 identity=write_build_identity(rootfs_manifest,kimi_runtime)
+skill_resources=REPO/'shared/session-agent/skills'
+skill_identity=HERE/'.cache/app/skill-package-identity.json'
+skill_files=sorted((skill_resources/'builtin-v1').glob('*/SKILL.md'))
+if {p.parent.name for p in skill_files}!={'asr-review','structured-notes'}:raise RuntimeError('Incomplete App skill package')
+skill_identity.write_text(json.dumps({'version':'builtin-v1','files':[{'path':str(p.relative_to(skill_resources)),'sha256':digest(p)}for p in skill_files]},indent=2)+'\n')
+role_resources=REPO/'shared/session-agent/roles'
+role_definition=role_resources/'role-and-capabilities.json'
+role_identity=HERE/'.cache/app/role-definition-identity.json'
+role=json.loads(role_definition.read_text())
+if role.get('schemaVersion')!=1 or not role.get('template'):raise RuntimeError('Invalid App role definition')
+role_identity.write_text(json.dumps({'id':role['id'],'version':role['version'],'path':role_definition.name,'sha256':digest(role_definition)},indent=2)+'\n')
 core=Path(provider_sources()['tahRuntime'])
 if args.resources_only:
  print(json.dumps({'kimiRuntime':str(kimi_runtime),'rootfsManifest':str(rootfs_manifest),'rootfs':str(FS),'configuration':str(HERE/'.cache/app/mobile-config.json'),'providerBuildIdentity':str(identity),'appVersion':APP_VERSION,'appBuild':APP_BUILD}));sys.exit(0)
@@ -33,13 +44,13 @@ if args.load_profile:
  zcode_runtime=prepare(zcode_runtime,'zcode',profile)
  info['ALMALoadProfile']=True
 resources=[FS,kimi_runtime,zcode_runtime,core/'generated/bundle-manifest.json',*sorted((core/'generated').glob('alma-provider-*.js')),core/'generated/alma-tah.js',HERE/'.cache/app/mobile-config.json',identity,native_identity]
-resources += [HERE/'fixtures/mobile-qualification-fixture.json']
+resources += [HERE/'fixtures/mobile-qualification-fixture.json',skill_resources,skill_identity,role_resources,role_identity]
 if args.long_fixture:
  fixture=args.long_fixture.resolve(strict=True)
  if fixture.name != 'mobile-qualification-nvidia.json' or fixture.stat().st_size > 1024*1024: raise ValueError('Invalid long fixture resource')
  resources += [fixture]
 settings={'DEVELOPMENT_TEAM':'C6635V7W82','CODE_SIGN_STYLE':'Automatic','SWIFT_VERSION':'5.9','SWIFT_STRICT_CONCURRENCY':'complete','SWIFT_APPROACHABLE_CONCURRENCY':'NO','SWIFT_DEFAULT_ACTOR_ISOLATION':'nonisolated','PRODUCT_BUNDLE_IDENTIFIER':'com.alma.litter.agent-probe','TARGETED_DEVICE_FAMILY':'1','SUPPORTED_PLATFORMS':'iphoneos','SUPPORTS_MACCATALYST':'NO','GENERATE_INFOPLIST_FILE':'NO','HEADER_SEARCH_PATHS':[str(BIND)],'SWIFT_INCLUDE_PATHS':[str(BIND)],'OTHER_LDFLAGS':['$(inherited)',str(LIB),'-lc++','-lz','-lresolv','-lsqlite3'],'DEBUG_INFORMATION_FORMAT':'dwarf','ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES':True,'ASSETCATALOG_COMPILER_APPICON_NAME':'AppIcon'}
-target={'type':'application','platform':'iOS','sources':[{'path':str(p)}for p in sources]+[{'path':str(GEN/'Sources')},{'path':str(GEN/'Assets.xcassets')},{'path':str(GEN/'LaunchScreen.storyboard')}]+[{'path':str(p),'buildPhase':'resources',**({'type':'folder'}if p in (FS,kimi_runtime,zcode_runtime) else{})}for p in resources],
+target={'type':'application','platform':'iOS','sources':[{'path':str(p)}for p in sources]+[{'path':str(GEN/'Sources')},{'path':str(GEN/'Assets.xcassets')},{'path':str(GEN/'LaunchScreen.storyboard')}]+[{'path':str(p),'buildPhase':'resources',**({'type':'folder'}if p in (FS,kimi_runtime,zcode_runtime,skill_resources,role_resources) else{})}for p in resources],
  'info':{'path':str(OUT/'Info.plist'),'properties':info},'entitlements':{'path':str(OUT/'AlmaTAHTauri.entitlements'),'properties':{'com.apple.developer.kernel.extended-virtual-addressing':True}},
  'dependencies':[{'sdk':x+'.framework'}for x in ['UIKit','Foundation','JavaScriptCore','CoreFoundation','AuthenticationServices','SafariServices','CryptoKit','Security','Network','SystemConfiguration','CoreGraphics','Metal','MetalKit','QuartzCore','WebKit']]}
 spec={'name':'AlmaTAHTauri','options':{'deploymentTarget':{'iOS':'18.0'}},'settings':{'base':settings},'targets':{'AlmaTAHTauri':target},'schemes':{'AlmaTAHTauri':{'build':{'targets':{'AlmaTAHTauri':'all'}},'run':{'config':'Release'}}}}

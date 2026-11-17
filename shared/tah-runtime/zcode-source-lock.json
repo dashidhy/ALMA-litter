@@ -1,6 +1,6 @@
 {
-  "releaseTag": "v3.17.2",
-  "sourceCommit": "a9fe401eede6e6e5e01be9048679c206fe6f02d9",
+  "releaseTag": "v3.18.2",
+  "sourceCommit": "fec975905a2abd4c07e35c40d51fa097a2258ec9",
   "files": {
     "adapter.ts": "80cbf04726e7a5dd2430e4cf34b28bc97eaa2cfc4a4b2e988f9ad412e076a700",
     "normalizer.ts": "17ed200f0ac604d0ed965af88c25caa81c4703c074a5e9edeade021699fe4886",

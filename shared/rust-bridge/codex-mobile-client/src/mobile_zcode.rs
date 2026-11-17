@@ -136,7 +136,7 @@ impl ZCodeHost {
             })
             .await
     }
-    fn authorization(&self, value: &Value) -> Result<Arc<BoundAuthorization>> {
+    pub(crate) fn authorization(&self, value: &Value) -> Result<Arc<BoundAuthorization>> {
         let handle = text(value, "credentialHandle")?;
         let current = self.handle.lock().map_err(unavailable)?;
         match current.as_ref() {

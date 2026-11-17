@@ -4,9 +4,9 @@ import { Sheet } from './Sheet';
 import { CriticPassed, Progressing, WorkingEventRow } from './Working';
 import { useEventLogScroll } from '../useEventLogScroll';
 
-export function WorkingLogPanel({ id, actionID, log, pending, error, close, refresh }: {
+export function WorkingLogPanel({ id, actionID, log, pending, error, close, refresh, caption }: {
   id: string; actionID: string; log: WorkingLog | null | undefined; pending: boolean; error: string | null;
-  close: () => void; refresh: () => void;
+  close: () => void; refresh: () => void; caption?: string;
 }) {
   const selected = log?.id === id && log.actionID === actionID ? log : null;
   const duration = selected ? workingDuration(selected.startedAt, selected.endedAt) : null;
@@ -14,7 +14,7 @@ export function WorkingLogPanel({ id, actionID, log, pending, error, close, refr
   const { scrollRef, contentRef, atBottom, following, latest } = useEventLogScroll();
   return <Sheet title="Working events" close={close}>
     <section className="working-log-panel" aria-busy={selected?.loading ?? false}>
-      {selected ? <p className="hint log-caption">v{selected.revisionIndex}{duration ? ` · Worked for ${duration}` : ''}</p> : null}
+      {selected ? <p className="hint log-caption">{caption ?? `v${selected.revisionIndex}`}{duration ? ` · Worked for ${duration}` : ''}</p> : null}
       {error ? <p className="error" role="alert">{error}</p> : null}
       {!selected ? <p className="notice" role="status">This working log is no longer selected. Close this sheet and open it again.</p> : <>
         {selected.limited ? <p className="notice">Earlier activity was omitted by the log limit.</p> : null}

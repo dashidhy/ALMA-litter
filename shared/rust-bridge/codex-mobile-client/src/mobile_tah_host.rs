@@ -18,6 +18,9 @@ use std::pin::Pin;
 use std::sync::{Arc, Mutex, OnceLock};
 use uuid::Uuid;
 
+#[path = "session_agent_runtime.rs"]
+mod session_agent_runtime;
+
 #[derive(Debug, thiserror::Error, uniffi::Error)]
 pub enum MobileTahError {
     #[error("mobile provider unavailable")] Unavailable,
@@ -85,6 +88,7 @@ impl NativeServerRequestHandler for RefreshHandler {
 
 #[derive(uniffi::Object)]
 pub struct MobileTahHost {
+    agent: session_agent_runtime::AgentController,
     runtime: tokio::sync::OnceCell<PreparedHost>,
     bundle_fs: PathBuf,
     support: PathBuf,
@@ -352,7 +356,7 @@ impl MobileTahHost {
         let support=PathBuf::from(application_support);
         if !support.is_absolute(){return Err(invalid())}
         let state=Arc::new(Mutex::new(State{credentials:HashMap::new(),leases:HashMap::new(),kimi_credentials:HashMap::new()}));
-        Ok(Arc::new(Self{runtime:tokio::sync::OnceCell::new(),bundle_fs:PathBuf::from(bundle_fs),support,state,
+        Ok(Arc::new(Self{agent:session_agent_runtime::AgentController::new(),runtime:tokio::sync::OnceCell::new(),bundle_fs:PathBuf::from(bundle_fs),support,state,
             code_mode:tokio::sync::OnceCell::new(),kimi_entries:Mutex::new(HashMap::new()),
             kimi_ready:tokio::sync::OnceCell::new(),zcode_ready:tokio::sync::OnceCell::new(),
             zcode:crate::mobile_zcode::ZCodeHost::new()}))
@@ -363,12 +367,12 @@ impl MobileTahHost {
     async fn prepare_provider(&self,provider:&str)->Result<()> {
         if !["codex","kimi","zcode"].contains(&provider){return Err(invalid())}
         let runtime=self.runtime.get_or_try_init(||async{
-            let workspace=self.support.join("mobile-tah-runtime/workspace");
-            let controllers=self.support.join("mobile-tah-runtime/controllers");
+            let workspace=self.support.join("Alma");
+            let controllers=workspace.join("provider-state");
             std::fs::create_dir_all(&workspace).map_err(unavailable)?;
             std::fs::create_dir_all(&controllers).map_err(unavailable)?;
             let instance=crate::runtime_bootstrap::bootstrap_mobile_tah(&self.bundle_fs,&self.support,&workspace).map_err(unavailable)?;
-            let factory=ProviderScopeFactory::new(instance,workspace.clone(),controllers).map_err(unavailable)?;
+            let factory=ProviderScopeFactory::for_app_storage(instance,workspace.clone(),controllers).map_err(unavailable)?;
             let bridge=NativeProviderBridge::new(factory.clone()).with_native_request_handler(Arc::new(RefreshHandler{state:self.state.clone()}));
             Ok(PreparedHost{bridge,factory,workspace})
         }).await?;
@@ -381,9 +385,15 @@ impl MobileTahHost {
         Ok(())
     }
 
-    async fn call_inner(&self,method:String,payload:String)->Result<String>{
+    async fn call_inner(self:&Arc<Self>,method:String,payload:String)->Result<String>{
         if payload.len()>16*1024*1024{return Err(invalid())}
         let v:Value=serde_json::from_str(&payload).map_err(unavailable)?;
+        if method.starts_with("agent.") {
+            let value=match session_agent_runtime::AgentController::call(self.clone(),&method,v).await {
+                Ok(value)=>value,Err(code)=>json!({"error":code}),
+            };
+            return serde_json::to_string(&value).map_err(unavailable);
+        }
         if method=="runtime.prepareProvider" {
             self.prepare_provider(text(&v,"providerID")?).await?;
             return Ok("null".into());
@@ -473,11 +483,20 @@ impl MobileTahHost {
         let mut overrides:BTreeMap<String,TomlValue>=crate::alma_local_profile::alma_local_cli_overrides(web).into_iter().collect();
         for (k,v)in profile["threadConfig"].as_object().ok_or_else(invalid)?{
             if k=="features"{for(k,v)in v.as_object().ok_or_else(invalid)?{overrides.insert(format!("features.{k}"),serde_json::from_value(v.clone()).map_err(unavailable)?);}}
+            else if k=="skills" {
+                // Flatten these overrides to the same keys as the base profile;
+                // otherwise its dotted false value would override the new table.
+                if let Some(value)=v.get("include_instructions"){overrides.insert("skills.include_instructions".into(),serde_json::from_value(value.clone()).map_err(unavailable)?);}
+                if let Some(value)=v.get("bundled").and_then(|v|v.get("enabled")){overrides.insert("skills.bundled.enabled".into(),serde_json::from_value(value.clone()).map_err(unavailable)?);}
+            }
             else{overrides.insert(k.clone(),serde_json::from_value(v.clone()).map_err(unavailable)?);}
         }
         overrides.insert("model".into(),text(profile,"modelID")?.into());
         overrides.insert("approval_policy".into(),"never".into());
         let prepared=PreparedRuntimeConfig::load(PathBuf::from(layout.controller_home),PathBuf::from(layout.workspace_root),overrides.into_iter().collect(),web,&self.tokens(h)?).await.map_err(unavailable)?;
+        let prepared=if text(profile,"permissionProfileID")?=="alma-session-agent" {
+            prepared.with_persistent_state(profile["sessionThreadID"].as_str()).await.map_err(unavailable)?
+        }else{prepared};
         self.prepared()?.bridge.start(h,text(profile,"permissionProfileID")?.into(),prepared,self.code_mode.get_or_try_init(|| async { crate::alma_code_mode::IosCodeModeProbeProvider::initialize().map_err(unavailable) }).await?.clone()).await.map_err(unavailable)?;
         self.change(h,Phase::Bound,Phase::Started)
     }

@@ -96,3 +96,7 @@ tools/app-store-screenshots/
 .agents/
 .antigravitycli/
 skills-lock.json
+
+# Device qualification artifacts may contain real conversations and screenshots.
+# Commit reusable fixtures and the curated qualification summary instead.
+tools/mobile-tah/results/

@@ -1,0 +1,160 @@
+{
+  "stage": "Codex baseline retained; Kimi and ZCode single-provider persistent conversations and common Skills qualified on real iPhone",
+  "updated": "2026-11-17",
+  "checks": {
+    "scopedFilesTests": 17,
+    "sessionStoreTests": 17,
+    "frontendSuiteTests": 218,
+    "iOSRustCheck": "passed by final native compilation",
+    "SwiftParse": "passed",
+    "latestFrontendTypecheck": "passed",
+    "SwiftCompile": "passed; existing orientation warning remains"
+  },
+  "build": {
+    "log": "tools/mobile-tah/.cache/working36-build.log",
+    "note": "Shared Skills and role definition ship as signed App resources; native SDK pins unchanged",
+    "firstAttempt": "Stopped by 40-minute cold-build deadline; no compiler errors observed; cached dependency artifacts retained.",
+    "nativeArchive": "passed; qualified provider/runtime composition",
+    "swiftAndLink": "passed; installed",
+    "appVersion": "0.5.0 (36)"
+  },
+  "pending": [
+    "Provider/authorization handoff and context alignment in one Alma conversation (explicitly outside this round)"
+  ],
+  "phone": {
+    "device": "00008101-001C25CC22D0001E",
+    "bundle": "com.alma.litter.agent-probe",
+    "installedBaseline": "0.5.0 (23)",
+    "installedCandidate": "0.5.0 (36)",
+    "observations": [
+      "Legacy lifecycle auto-start race found on phone and fixed in Swift; new entry now stays independent.",
+      "Before persistence fix, empty thread had no native rollout and could not resume; no user/model request had been sent."
+    ],
+    "initialStorageEvidence": "tools/mobile-tah/.cache/session-agent-device/initial-storage/report.json",
+    "initialStorageVerified": {
+      "emptyAssets": true,
+      "zeroMessages": true,
+      "originalUnchanged": true,
+      "sharedSkillContentsMatchSource": true
+    },
+    "emptyThreadResumeEvidence": "tools/mobile-tah/.cache/session-agent-device/empty-persistence-v2/report.json",
+    "qaReopenEvidence": "tools/mobile-tah/.cache/session-agent-device/qa-reopen/report.json",
+    "firstQA": {
+      "passed": true,
+      "sourceRead": true,
+      "forcedReview": false,
+      "assetsEmpty": true,
+      "coldResumeSameThread": true,
+      "messagesNotDuplicated": true
+    },
+    "skillComposition": {
+      "bothSkillFilesRead": true,
+      "nativeWebUsed": true,
+      "threeOutputsSaved": true,
+      "all254SegmentsPreserved": true,
+      "originalUnchanged": true,
+      "fileOrderNotAnAcceptanceRequirement": true
+    },
+    "reviewReuse": {
+      "reportHashUnchanged": true,
+      "correctedTranscriptHashUnchanged": true,
+      "notesUpdated": true
+    },
+    "nativeSkillDiscovery": {
+      "passed": true,
+      "finding": "Fixed with one explicit App capability-root selection; native list and read passed.",
+      "evidence": "tools/mobile-tah/.cache/session-agent-device/native-skills/",
+      "fixedEvidence": "tools/mobile-tah/.cache/session-agent-device/build18/native-skills-snapshot.json"
+    },
+    "compaction": {
+      "completed": true,
+      "seconds": 48,
+      "sameThreadAfterReopen": true,
+      "sameAlmaHistory": true,
+      "evidence": "tools/mobile-tah/.cache/session-agent-device/compaction/report.json"
+    },
+    "cancelEvidence": "tools/mobile-tah/.cache/session-agent-device/cancel/report.json",
+    "forcedExitEvidence": "tools/mobile-tah/.cache/session-agent-device/forced-exit/report.json",
+    "containerRelocation": {
+      "nativeHistoryPresent": true,
+      "originalThread": "01a1e3f5-3489-7502-ba8f-105412abdafe",
+      "evidence": "tools/mobile-tah/.cache/session-agent-device/container-relocation/old-index-locations.json",
+      "fixVerifiedOnPhone": true,
+      "recoveryEvidence": "tools/mobile-tah/.cache/session-agent-device/build18/recovery-report.json"
+    },
+    "secondWorkspace": {
+      "sessionId": "2185ee21-19d0-4940-9abf-487dfa36e7b2",
+      "threadId": "01a1e416-88b2-76b1-b19e-b2065b23dadf"
+    },
+    "manualUI": {
+      "qa": "passed",
+      "readerReturnAndLinks": "User confirmed fixed in build 19",
+      "asrReviewPresentation": "Actual phone report updated to two tables and verified; machine metadata hidden in reading view",
+      "userConfirmedPersistentCore": "2026-11-17: user completed ASR review, structured notes and two QA turns; citation navigation remains defective in the signed baseline."
+    },
+    "offline": {
+      "status": "deferred_by_user",
+      "reason": "2026-11-16: user prioritizes the core flow and explicitly defers disconnection/error handling; no offline request was sent."
+    },
+    "asrTables": {
+      "unresolved": 29,
+      "resolved": 84,
+      "allIDsPreserved": 113,
+      "evidence": "tools/mobile-tah/results/2026-11-16-session-agent/table-check.json"
+    },
+    "userFreshWorkspace": {
+      "sessionId": "66c0d1d5-1806-4091-ae3f-6b54c9ca02a7",
+      "threadId": "01a1e56d-299e-7cc3-950e-6e8762642c16",
+      "messagesAtHandoff": 0,
+      "assetsAtHandoff": 0,
+      "model": "gpt-6-astra",
+      "effort": "xhigh",
+      "source": "Full NVIDIA transcript"
+    },
+    "deliberateLegacyRollback": "0.4.2 (15)",
+    "providerQualification": "tools/mobile-tah/results/2026-11-17-provider-sessions/README.md",
+    "latestHandoff": "tools/mobile-tah/results/2026-11-17-zcode-working-details/handoff.json"
+  },
+  "constraints": [
+    "No delegated agents were spawned: tool policy requires explicit delegation authorization.",
+    "Kimi/ZCode Alma adapters changed; frozen upstream SDK versions unchanged.",
+    "Skill library is App-level shared; raw transcript is immutable; assets direct write.",
+    "Foreground and restart scope; web default enabled; no guardian/critic."
+  ],
+  "acceptanceReport": "tools/mobile-tah/results/2026-11-17-provider-sessions/README.md",
+  "deferredByUser": [
+    "Network disconnection and broader exception-handling discussion/testing",
+    "Corrected transcript UI with timestamps and merged turns",
+    "App functional navigation and linked-file navigation: required later, not a P0 gate",
+    "Background execution and foreground-return policies: separate discussion",
+    "Provider-specialized Skills"
+  ],
+  "archive": "tools/mobile-tah/results/2026-11-17-provider-sessions/archive.json",
+  "presentationPreview": "tools/mobile-tah/results/2026-11-16-session-agent/asr-review-tables-preview.md",
+  "roleAndCapabilities": {
+    "definition": "shared/session-agent/roles/role-and-capabilities.json",
+    "content": "Current Codex prompt preserved byte-for-byte after rendering",
+    "codex": "Creation, first turn, same-thread two-turn continuation and cold-resume phone checks passed",
+    "kimi": "Native SYSTEM.md mapping active in the persistent session profile; phone multi-turn and cold resume passed",
+    "zcode": "Native systemPrompt mapping active in the persistent session profile; phone multi-turn and cold resume passed",
+    "ordinaryTurns": "No repeated role text added to normal messages",
+    "evidence": "tools/mobile-tah/results/2026-11-16-session-agent/role-and-capabilities.json",
+    "initialContextEvidence": "tools/mobile-tah/results/2026-11-16-session-agent/role-initial-context.json"
+  },
+  "knownProductIssues": [
+    "ASR Review still displays UUID/order/sample positions; restoring human-readable time is identified but not implemented in this role task."
+  ],
+  "uiFollowup": "tools/mobile-tah/results/2026-11-17-session-agent-ui/acceptance.json",
+  "controlWiringReview": "tools/mobile-tah/results/2026-11-17-session-agent-ui/control-wiring-review.json",
+  "workingEvents": "tools/mobile-tah/results/2026-11-17-working-events/acceptance.json",
+  "checksScope": "Build34 actual iPhone Kimi/ZCode model, WebSearch, shared Skills, full NVIDIA assets, immutable source and same-thread cold resume; Codex baseline23 retained. Navigation WIP isolated, no new background/disconnection policy qualification.",
+  "currentP0": "Single-provider persistent conversation/common Skills completed for Codex, Kimi, ZCode; cross-authorization handoff is next and not implemented in this round",
+  "unreleasedWorkingTree": {
+    "navigation": "isolated in ALMA/frontier/mobile/results/navigation-deferred-20261117/navigation-wip.patch",
+    "providerIntegration": "qualified build34; sources retained locally, no commit/push"
+  },
+  "navigationBacklog": "ALMA/frontier/mobile/NAVIGATION_BACKLOG.md",
+  "previousArchive": "tools/mobile-tah/results/2026-11-17-working-events/archive.json",
+  "workingEventsAlignment": "tools/mobile-tah/results/2026-11-17-working-events-alignment/README.md",
+  "workingEventDetails": "tools/mobile-tah/results/2026-11-17-zcode-working-details/README.md"
+}

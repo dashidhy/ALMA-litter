@@ -1956,6 +1956,14 @@ fn route_app_server_event(
         AppServerEvent::Lagged { skipped } => {
             warn!("event: lagged, skipped {skipped} events");
         }
+        AppServerEvent::ThreadStreamDisconnected(error) => {
+            // Only this native Cloud reply stream ended; preserve the shared
+            // connection and route the SDK's per-thread error notification.
+            let _ = event_tx.send(ServerEvent::Notification {
+                runtime_kind,
+                notification: codex_app_server_protocol::ServerNotification::Error((**error).clone()),
+            });
+        }
         AppServerEvent::Disconnected { message } => {
             warn!("event: disconnected: {message}");
             append_android_debug_log(&format!("disconnected={message}"));

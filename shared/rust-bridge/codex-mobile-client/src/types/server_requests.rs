@@ -621,6 +621,8 @@ pub struct AppListThreadsRequest {
 impl From<AppListThreadsRequest> for upstream::ThreadListParams {
     fn from(value: AppListThreadsRequest) -> Self {
         Self {
+            include_attached_threads: false,
+            current_account_only: false,
             attached_to_thread_id: None,
             excluded_thread_ids: None,
             cursor: value.cursor,
@@ -960,6 +962,7 @@ pub struct AppRefreshModelsRequest {
 impl From<AppRefreshModelsRequest> for upstream::ModelListParams {
     fn from(value: AppRefreshModelsRequest) -> Self {
         Self {
+            model_provider: None,
             cursor: value.cursor,
             limit: value.limit,
             include_hidden: value.include_hidden,

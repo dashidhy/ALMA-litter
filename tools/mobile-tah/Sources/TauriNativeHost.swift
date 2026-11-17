@@ -57,6 +57,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     static let shared = TauriTAHService()
     private var controller: TAHMobileController?
     private var platform: TAHCodexPlatform?
+    private var platformTask: Task<TAHCodexPlatform, Error>?
     private var bridge: TAHWebPresentationBridge?
     private var starting = false
     private var failure: String?
@@ -64,6 +65,8 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     private var observationGeneration = UUID()
     private var lifecycleRefreshScheduled = false
     private var qualificationStarted = false
+    private var sessionAgentActive = false
+    private var agentAutomationTask: Task<Void, Never>?
     private var workingCallback: TAHUIWorkingSend?
     private var workingSubscription: UInt64?
     private var highestWorkingSubscription: UInt64 = 0
@@ -104,6 +107,22 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
         // Only the host integrates UIKit lifecycle; the controller owns Core events.
         for name in [UIApplication.didBecomeActiveNotification, UIApplication.significantTimeChangeNotification] {
             NotificationCenter.default.addObserver(self, selector: #selector(lifecycleChanged), name: name, object: nil)
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(agentEnteredBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        if agentAutomationTask == nil, ProcessInfo.processInfo.arguments.contains("--session-agent-automation") {
+            agentAutomationTask = Task { @MainActor [weak self] in
+                await TAHSessionAgentAutomation.run { [weak self] request in
+                    guard let self else { throw TAHRuntimeError.unavailable }
+                    return try await self.call(request)
+                }
+            }
+        }
+    }
+
+    @objc private func agentEnteredBackground() {
+        guard sessionAgentActive, let platform else { return }
+        Task { @MainActor in
+            _ = try? await platform.sessionAgentCall("agent.close", json: "{}")
         }
     }
 
@@ -149,6 +168,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     }
 
     private func scheduleLifecycleRefresh() {
+        guard !sessionAgentActive else { return }
         guard changed != nil, !lifecycleRefreshScheduled else { return }
         lifecycleRefreshScheduled = true
         let generation = observationGeneration
@@ -157,13 +177,34 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
             self.lifecycleRefreshScheduled = false
             guard self.observationGeneration == generation, self.changed != nil else { return }
             if let controller = self.controller { controller.refresh() }
-            else { self.startIfNeeded() }
+            // The landing page now has two independent entry points. Merely
+            // becoming active must not start the legacy workflow underneath
+            // Session Agent; its own explicit snapshot request starts it.
         }
     }
 
     func call(_ text: String) async throws -> String {
         struct Request: Decodable { let method: String; let value: TAHRuntimeValue }
         let request = try JSONDecoder().decode(Request.self, from: Data(text.utf8))
+        if request.method == "agent.launchInfo" {
+            let open = ProcessInfo.processInfo.arguments.contains("--session-agent-open") || ProcessInfo.processInfo.arguments.contains("--session-agent-automation")
+            return open ? "{\"openAgent\":true}" : "{\"openAgent\":false}"
+        }
+        if request.method.hasPrefix("agent.") {
+            if let controller, controller.presentation.isBusy { return "{\"error\":\"legacy_task_busy\"}" }
+            sessionAgentActive = true
+            if let controller {
+                await controller.shutdown()
+                self.controller = nil; bridge = nil
+                workingChannel.update(nil)
+            }
+            let native = try await ensurePlatform()
+            let value = String(decoding: try JSONEncoder().encode(request.value), as: UTF8.self)
+            let leaving = request.method == "agent.leave"
+            let result = try await native.sessionAgentCall(leaving ? "agent.close" : request.method, json: value)
+            if leaving { sessionAgentActive = false }
+            return result
+        }
         if request.method == "snapshot" {
             startIfNeeded()
             if let bridge { return try await bridge.snapshot() }
@@ -188,7 +229,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
     }
 
     private func startIfNeeded() {
-        guard controller == nil, !starting, failure == nil else { return }
+        guard !sessionAgentActive, controller == nil, !starting, failure == nil else { return }
         starting = true
         Task { @MainActor [self] in
             defer { starting = false; changed?() }
@@ -198,8 +239,7 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
                       let config = Bundle.main.url(forResource: "mobile-config", withExtension: "json") else { throw TAHRuntimeError.unavailable }
                 let supplied = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
                 let support = URL(fileURLWithPath: try TAHRuntimeResources.canonicalPath(supplied.path), isDirectory: true)
-                let native = try await TAHCodexPlatform(bundleFS: fs, support: support)
-                platform = native
+                let native = try await ensurePlatform()
                 let core = try await TAHMobileController(bundleURL: js, configurationJSON: String(contentsOf: config, encoding: .utf8),
                     journalDirectory: support.appendingPathComponent("mobile-tah-journal")) { method, json in try await native.call(method, json: json) }
                 controller = core
@@ -218,6 +258,20 @@ public func almaTAHUICall(_ id: UInt64, _ input: UnsafePointer<CChar>?, _ reply:
                 diagnostic("preparation_failed")
             }
         }
+    }
+
+    private func ensurePlatform() async throws -> TAHCodexPlatform {
+        if let platform { return platform }
+        if let platformTask { return try await platformTask.value }
+        let task = Task { @MainActor () throws -> TAHCodexPlatform in
+            guard let fs = Bundle.main.url(forResource: "fs", withExtension: nil) else { throw TAHRuntimeError.unavailable }
+            let supplied = try FileManager.default.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let support = URL(fileURLWithPath: try TAHRuntimeResources.canonicalPath(supplied.path), isDirectory: true)
+            return try await TAHCodexPlatform(bundleFS: fs, support: support)
+        }
+        platformTask = task
+        do { let native = try await task.value; platform = native; platformTask = nil; return native }
+        catch { platformTask = nil; throw error }
     }
 
     private func pendingSnapshot() throws -> String {

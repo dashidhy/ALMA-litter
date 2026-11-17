@@ -1,0 +1,10 @@
+{
+  "app": "/Users/dashidhy/Public/projects/agent/ALMA-litter/tools/mobile-tah/.cache/codex-0167-upgrade-20261107/candidate/AlmaTAHTauri.app",
+  "version": "0.4.2",
+  "build": "15",
+  "codesignVerification": "codesign --verify --deep --strict passed before the new native build",
+  "identitySHA256": "59e5b97eaa4f6d286d611ef40897f242ade56e82e235e424900b06ddab4199a9",
+  "codexBaseline": "2f2f9536a261d2b4e03feb42e6e1a1d97f188eb4",
+  "hostBaseline": "887d23a504ff090c9334245ce3fe9e18f67399c1",
+  "policy": "Retain this already archived signed App as rollback; do not include it in temporary build cleanup."
+}

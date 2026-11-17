@@ -1,0 +1,7 @@
+{
+  "sourcePath": "/Users/dashidhy/Public/projects/agent/ALMA/frontier/mobile/webrtc_vad_demo/fixtures/nvidia-source.json",
+  "sourceSHA256": "11788d4736c1fd15d8784680ed46535d5dbe5e299c38cc3894dadfd9eccb7180",
+  "segmentCount": 254,
+  "transcriptSHA256": "9afd2bf3789baf55e2136d7afe7d29583c03808dbe00295672a26f605c88d1d7",
+  "transformation": "Preserve each original segment id/order/text/startSample/endSample; no ASR or inferred time boundary."
+}

@@ -93,6 +93,40 @@ final class TAHCodexPlatform {
         catch MobileTahError.InvalidRequest { recordKimiDiagnostic(method, outcome: "failed", category: "native_invalid_request"); throw TAHRuntimeError.invalid_request }
     }
 
+    /// Platform-only credential ingress for the new Rust-owned conversation.
+    /// The webview never supplies a token or chooses an opaque credential handle.
+    func sessionAgentCall(_ method: String, json: String) async throws -> String {
+        guard method.hasPrefix("agent.") else { throw TAHRuntimeError.invalid_request }
+        if method == "agent.inspectAuthorization" {
+            let value = try JSONDecoder().decode(TAHRuntimeValue.self, from: Data(json.utf8))
+            guard let provider = try value["provider"]?.string(), Self.supports(provider) else { throw TAHRuntimeError.invalid_request }
+            let handle: String
+            if let existing = handles[provider] { handle = existing }
+            else { handle = try await restoreCredential(provider) }
+            return try await backend.call(method: "provider.\(provider).inspect", payload: encode(.object(["credentialHandle": .string(handle)])))
+        }
+        if ["agent.open", "agent.login"].contains(method) {
+            var value = try JSONDecoder().decode(TAHRuntimeValue.self, from: Data(json.utf8))
+            guard case .object(var fields) = value else { throw TAHRuntimeError.invalid_request }
+            let providerJSON = try await backend.call(method: "agent.provider", payload: json)
+            let providerValue = try JSONDecoder().decode(TAHRuntimeValue.self, from: Data(providerJSON.utf8))
+            let provider = try providerValue["provider"]?.string() ?? "codex"
+            guard Self.supports(provider) else { throw TAHRuntimeError.invalid_request }
+            let handle: String
+            do {
+                if method == "agent.login" { handle = try await authorize(provider) }
+                else if let existing = handles[provider] { handle = existing }
+                else { handle = try await restoreCredential(provider) }
+            } catch {
+                return "{\"error\":\"authorization_required\"}"
+            }
+            fields["credentialHandle"] = .string(handle)
+            value = .object(fields)
+            return try await backend.call(method: method == "agent.login" ? "agent.open" : method, payload: encode(value))
+        }
+        return try await backend.call(method: method, payload: json)
+    }
+
     private func recordKimiDiagnostic(_ method: String, outcome: String, category: String?) {
         guard method.hasPrefix("provider.kimi.") else { return }
         var row = ["method": method, "outcome": outcome, "at": ISO8601DateFormatter().string(from: Date())]
@@ -176,6 +210,8 @@ final class TAHCodexPlatform {
             handle = try backend.registerCredential(tokens: ChatgptAuthRefreshTokens(
                 accessToken: tokens.accessToken, accountId: tokens.accountID, planType: tokens.planType))
         }
+        // Native Codex/Kimi registration invalidates the process-local ZCode handle.
+        if provider != "zcode" { handles.removeValue(forKey: "zcode") }
         handles[provider] = handle
         return handle
     }
@@ -201,6 +237,8 @@ final class TAHCodexPlatform {
             handle = try backend.registerCredential(tokens: ChatgptAuthRefreshTokens(
                 accessToken: tokens.accessToken, accountId: tokens.accountID, planType: tokens.planType))
         }
+        // Native Codex/Kimi registration invalidates the process-local ZCode handle.
+        if provider != "zcode" { handles.removeValue(forKey: "zcode") }
         handles[provider] = handle
         return handle
     }

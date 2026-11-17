@@ -13,6 +13,10 @@ extern crate self as alma_codex_ios;
 #[path = "../../../../../ALMA-codex/ios/native/src/auth_refresh.rs"]
 pub mod auth_refresh;
 pub mod tah_attempt;
+#[cfg(unix)]
+pub mod session_agent_store;
+pub mod session_agent_role;
+pub mod session_agent_role_adapters;
 #[path = "../../../../../ALMA-codex/ios/native/src/execution_fence.rs"]
 pub mod execution_fence;
 #[cfg(all(target_os="ios",not(target_abi="macabi"),feature="alma-code-mode-probe"))]
@@ -71,6 +75,9 @@ mod provider_bridge;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
 #[path = "../../../../../ALMA-codex/ios/native/src/provider_runtime_config.rs"]
 mod provider_runtime_config;
+#[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
+#[path = "../../../../../ALMA-codex/ios/native/src/persistent_home.rs"]
+mod persistent_home;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]
 mod mobile_tah_host;
 #[cfg(all(target_os = "ios", not(target_abi = "macabi"), feature = "alma-code-mode-probe"))]

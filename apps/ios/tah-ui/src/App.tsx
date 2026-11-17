@@ -27,8 +27,8 @@ function Errors({ state }: { state: UIState }) {
   const errors = [...new Set([state.connectionError, state.commandError, state.snapshot?.presentation.error].filter(Boolean))];
   return errors.length ? <div className="errors" role="alert">{errors.map(error => <p key={error}>{error}</p>)}</div> : null;
 }
-function Workspace({ state, controller, openLibrary, openSettings, chatStyle }: {
-  state: UIState; controller: UIController; openLibrary: () => void; openSettings: () => void; chatStyle: ChatStyle;
+function Workspace({ state, controller, openLibrary, openSettings, chatStyle, onExit }: {
+  state: UIState; controller: UIController; openLibrary: () => void; openSettings: () => void; chatStyle: ChatStyle; onExit?: () => void;
 }) {
   const p = state.snapshot!.presentation;
   const draft = state.draft!;
@@ -48,7 +48,7 @@ function Workspace({ state, controller, openLibrary, openSettings, chatStyle }: 
   }} /></>;
   return <>
     <header className="app-header"><button className="icon-button" aria-label="Open transcript library" onClick={openLibrary}><Icon name="library" /></button>
-      <h1>Structured Notes</h1><button className="icon-button" aria-label="Open settings" onClick={openSettings}><Icon name="settings" /></button></header>
+      <h1>{onExit ? <button className="legacy-home-button" onClick={onExit} aria-label="返回 Alma 首页">Structured Notes ‹</button> : 'Structured Notes'}</h1><button className="icon-button" aria-label="Open settings" onClick={openSettings}><Icon name="settings" /></button></header>
     <div className="work-area" ref={area}>
     <main className={`workspace-scroll${p.editor ? ' has-composer' : ''}`}>
       <button className="source-row" onClick={openLibrary}><Icon name="document" /><span><small>TRANSCRIPT</small><strong>{transcript?.title ?? 'Choose a transcript'}</strong></span><Icon name="chevron" /></button>
@@ -95,7 +95,7 @@ function Workspace({ state, controller, openLibrary, openSettings, chatStyle }: 
   </>;
 }
 
-export default function App({ controller: supplied }: { controller?: UIController }) {
+export default function App({ controller: supplied, onExit }: { controller?: UIController; onExit?: () => void }) {
   const shell = useViewport();
   const [controller] = useState(() => supplied ?? new UIController(call, subscribeChanges, subscribeWorking));
   const state = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
@@ -135,7 +135,7 @@ export default function App({ controller: supplied }: { controller?: UIControlle
       <main className="connection-page"><h2>{state.connectionError || state.snapshot?.error ? 'Connect to Alma' : 'Preparing your workspace'}</h2><Errors state={state} />
         {p?.isBusy && !state.connectionError ? <p className="loading-line" role="status"><span className="spinner" aria-hidden="true" />{phases[p.status] ?? (p.status.trim() || 'Preparing…')}</p> : null}
         <div className="connection-actions"><button className="secondary" disabled={state.pending !== null} onClick={() => { void controller.run('refresh', {}); }}>Reconnect</button></div>
-      </main></> : <Workspace key={selectionIdentity(state.snapshot!)} state={state} controller={controller} chatStyle={chatStyle} openLibrary={() => setSheet('library')} openSettings={() => setSheet('settings')} />}
+      </main></> : <Workspace key={selectionIdentity(state.snapshot!)} state={state} controller={controller} chatStyle={chatStyle} openLibrary={() => setSheet('library')} openSettings={() => setSheet('settings')} onExit={onExit} />}
     {!notReady && sheet === 'library' ? <Library p={p!} controller={controller} disabled={state.pending !== null || Boolean(state.connectionError)} error={state.commandError || state.connectionError || p!.error} title={importTitle} text={importText} setTitle={setImportTitle} setText={setImportText} close={() => setSheet(null)} /> : null}
     {!notReady && sheet === 'settings' ? <Settings p={p!} draft={state.draft!} controller={controller} disabled={state.pending !== null || Boolean(state.connectionError)} error={state.commandError || state.connectionError || p!.error || themeError} theme={theme} chatStyle={chatStyle} setChatStyle={next => { setChatStyle(next); saveChatStyle(next); }} setTheme={next => {
       saveReadingTheme(next); setTheme(next);

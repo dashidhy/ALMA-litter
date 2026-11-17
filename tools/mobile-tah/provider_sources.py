@@ -17,8 +17,8 @@ import shutil
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 OUT = HERE / '.cache/app'
-APP_VERSION = '0.4.2'
-APP_BUILD = '15'
+APP_VERSION = '0.5.0'
+APP_BUILD = '37'
 
 
 def digest(path):
@@ -139,6 +139,10 @@ def prepare_zcode_runtime():
         raise ValueError('Set ALMA_ZCODE_RUNTIME to an explicitly prepared ZCode runtime generation')
     source = configured_path('ALMA_ZCODE_RUNTIME', default)
     manifest = json.loads((source / 'runtime-manifest.json').read_text())
+    for name in ['asset-files.cjs', 'protocol-writer.cjs']:
+        helper = REPO / 'shared/session-agent/runtime' / name
+        if not (source / name).is_file() or digest(source / name) != digest(helper):
+            raise ValueError('Rebuild ZCode runtime with the current App runtime: ' + name)
     if manifest.get('schemaVersion') != 1:
         raise ValueError('Unsupported ZCode runtime manifest')
     names = set()
@@ -232,6 +236,8 @@ def native_input_records(sources):
         *sorted((tauri / 'src').rglob('*.rs')),
         *sorted(path for path in (tauri / 'icons').rglob('*') if path.is_file()),
         *sorted(path for path in (tauri.parent / 'dist').rglob('*') if path.is_file()),
+        *sorted((REPO / 'shared/session-agent/fixtures').glob('*.md')),
+        REPO / 'shared/session-agent/zcode-event-policy.json',
     ]]
     return native_files
 

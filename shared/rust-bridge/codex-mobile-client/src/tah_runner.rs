@@ -71,7 +71,7 @@ async fn inspect_session(session: &ServerSession, info: Option<&TahQualification
     let mut selected = info.is_none(); let mut defaults = 0;
     for page_index in 0..8 {
         let page: p::ModelListResponse = rpc(session, p::ClientRequest::ModelList {
-            request_id: id(), params: p::ModelListParams { cursor, limit: Some(128), include_hidden: Some(false) },
+            request_id: id(), params: p::ModelListParams { cursor, limit: Some(128), include_hidden: Some(false), model_provider: None },
         }).await?;
         if page.data.len() > 128 { return Err("catalog_limit"); }
         for model in page.data {

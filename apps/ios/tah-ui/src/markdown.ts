@@ -10,6 +10,7 @@ export function safeLink(href: string): string | null {
     return ['https:', 'http:'].includes(url.protocol) && !url.username && !url.password ? url.href : null;
   } catch { return null; }
 }
+export function createMarkdownRenderer(resolveLink: (href: string) => string | null = safeLink): (text: string) => string {
 const parser = new Marked({ gfm: true, breaks: false, renderer: {
   // Escape source HTML before parsing it into any DOM, preventing embedded resource loads.
   html({ text }) { return escape(text); },
@@ -17,7 +18,7 @@ const parser = new Marked({ gfm: true, breaks: false, renderer: {
   code({ text }) { return `<pre tabindex="0" role="region" aria-label="Code"><code>${escape(text)}</code></pre>`; },
   link({ href, title, tokens }) {
     const label = this.parser.parseInline(tokens);
-    const url = safeLink(href);
+    const url = resolveLink(href);
     return url ? `<a href="${escape(url)}"${title ? ` title="${escape(title)}"` : ''} target="_blank" rel="noopener noreferrer">${label}</a>` : label;
   },
   table(token) {
@@ -27,7 +28,7 @@ const parser = new Marked({ gfm: true, breaks: false, renderer: {
   },
 } });
 
-export function renderMarkdown(text: string): string {
+return function render(text: string): string {
   return DOMPurify.sanitize(parser.parse(text, { async: false }), {
     ALLOWED_TAGS: ['p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'strong', 'em', 'del', 'blockquote',
       'pre', 'code', 'a', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'div', 'span', 'input'],
@@ -36,4 +37,7 @@ export function renderMarkdown(text: string): string {
     ADD_URI_SAFE_ATTR: ['tabindex', 'target', 'rel', 'type', 'checked', 'disabled', 'start', 'align'],
     ALLOWED_URI_REGEXP: /^https?:\/\//i,
   });
+};
 }
+
+export const renderMarkdown = createMarkdownRenderer();
